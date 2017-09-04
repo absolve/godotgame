@@ -1,0 +1,109 @@
+[gd_scene load_steps=12 format=1]
+
+[ext_resource path="res://sprites/button_rate_normal.png" type="Texture" id=1]
+[ext_resource path="res://sprites/button_rate_pressed.png" type="Texture" id=2]
+[ext_resource path="res://sprites/label_flappy_bird.png" type="Texture" id=3]
+[ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=4]
+[ext_resource path="res://sprites/button_play_pressed.png" type="Texture" id=5]
+[ext_resource path="res://scripts/stratgame.gd" type="Script" id=6]
+[ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=7]
+[ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=8]
+[ext_resource path="res://sprites/background_day.png" type="Texture" id=9]
+[ext_resource path="res://stages/bird.tscn" type="PackedScene" id=10]
+[ext_resource path="res://stages/movebg.tscn" type="PackedScene" id=11]
+
+[node name="root" type="Node"]
+
+[node name="hud" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="btn_rate" type="TextureButton" parent="hud"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 57.0
+margin/top = 135.0
+margin/right = 88.0
+margin/bottom = 164.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 1 )
+textures/pressed = ExtResource( 2 )
+
+[node name="title" type="TextureFrame" parent="hud"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 28.0
+margin/top = 70.0
+margin/right = 117.0
+margin/bottom = 94.0
+texture = ExtResource( 3 )
+stretch_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hud"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 16.0
+margin/top = 160.0
+margin/right = 129.0
+margin/bottom = 189.0
+alignment = 0
+
+[node name="btn_start" type="TextureButton" parent="hud/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 52.0
+margin/bottom = 29.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 4 )
+textures/pressed = ExtResource( 5 )
+script/script = ExtResource( 6 )
+
+[node name="btn_score" type="TextureButton" parent="hud/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 56.0
+margin/top = 0.0
+margin/right = 108.0
+margin/bottom = 29.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 7 )
+textures/pressed = ExtResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+texture = ExtResource( 9 )
+centered = false
+
+[node name="bird" parent="." instance=ExtResource( 10 )]
+
+transform/pos = Vector2( 71.5123, 110.488 )
+
+[node name="movebg" parent="." instance=ExtResource( 11 )]
+
+

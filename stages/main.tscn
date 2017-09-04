@@ -1,8 +1,59 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=29 format=1]
 
 [ext_resource path="res://sprites/background_day.png" type="Texture" id=1]
 [ext_resource path="res://stages/bird.tscn" type="PackedScene" id=2]
-[ext_resource path="res://stages/bg.tscn" type="PackedScene" id=3]
+[ext_resource path="res://stages/move_pipe.tscn" type="PackedScene" id=3]
+[ext_resource path="res://stages/movebg.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/startbtn.gd" type="Script" id=5]
+[ext_resource path="res://sprites/instructions.png" type="Texture" id=6]
+[ext_resource path="res://scripts/score.gd" type="Script" id=7]
+[ext_resource path="res://sprites/number_large_0.png" type="Texture" id=8]
+[ext_resource path="res://sprites/button_pause.png" type="Texture" id=9]
+[ext_resource path="res://scripts/btn_pause.gd" type="Script" id=10]
+[ext_resource path="res://scripts/gameover.gd" type="Script" id=11]
+[ext_resource path="res://sprites/label_game_over.png" type="Texture" id=12]
+[ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=13]
+[ext_resource path="res://sprites/button_play_pressed.png" type="Texture" id=14]
+[ext_resource path="res://scripts/startgame.gd" type="Script" id=15]
+[ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=16]
+[ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=17]
+[ext_resource path="res://sprites/panel_score.png" type="Texture" id=18]
+[ext_resource path="res://sprites/number_middle_0.png" type="Texture" id=19]
+[ext_resource path="res://sprites/medal_bronze.png" type="Texture" id=20]
+[ext_resource path="res://sprites/label_new.png" type="Texture" id=21]
+[ext_resource path="res://scripts/newscore.gd" type="Script" id=22]
+[ext_resource path="res://sprites/rect_black.png" type="Texture" id=23]
+[ext_resource path="res://sprites/button_menu.png" type="Texture" id=24]
+[ext_resource path="res://scripts/btn_menu.gd" type="Script" id=25]
+[ext_resource path="res://sprites/button_resume.png" type="Texture" id=26]
+[ext_resource path="res://scripts/btn_resume.gd" type="Script" id=27]
+
+[sub_resource type="Animation" id=1]
+
+resource/name = "show"
+length = 1.0
+loop = false
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("TextureFrame:visibility/opacity")
+tracks/0/interp = 1
+tracks/0/imported = false
+tracks/0/keys = { "times":FloatArray( 0, 0.7 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 0.0, 1.0 ] }
+tracks/1/type = "value"
+tracks/1/path = NodePath("panel:rect/pos")
+tracks/1/interp = 2
+tracks/1/imported = false
+tracks/1/keys = { "times":FloatArray( 0, 1 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ Vector2( 16, 270 ), Vector2( 16, 90 ) ] }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:visibility/visible")
+tracks/2/interp = 1
+tracks/2/imported = false
+tracks/2/keys = { "times":FloatArray( 0 ), "transitions":FloatArray( 1 ), "update":1, "values":[ true ] }
+tracks/3/type = "value"
+tracks/3/path = NodePath("button:visibility/visible")
+tracks/3/interp = 1
+tracks/3/imported = false
+tracks/3/keys = { "times":FloatArray( 0, 1 ), "transitions":FloatArray( 1, 1 ), "update":1, "values":[ false, true ] }
 
 [node name="Node" type="Node"]
 
@@ -11,14 +62,333 @@
 texture = ExtResource( 1 )
 centered = false
 
-[node name="RigidBody2D" parent="." instance=ExtResource( 2 )]
+[node name="bird" parent="." instance=ExtResource( 2 )]
 
-gravity_scale = 1.0
+transform/pos = Vector2( 36, 120 )
+z/z = 1
 
-[node name="StaticBody2D" parent="." instance=ExtResource( 3 )]
+[node name="movepipe" parent="." instance=ExtResource( 3 )]
 
-transform/pos = Vector2( 168.427, 256 )
+editor/display_folded = true
 
-[node name="StaticBody2D 2" parent="." instance=ExtResource( 3 )]
+[node name="movebg" parent="." instance=ExtResource( 4 )]
+
+editor/display_folded = true
+z/z = 0
+
+[node name="hub" type="CanvasLayer" parent="."]
+
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="TextureButton" type="TextureButton" parent="hub"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 144.0
+margin/bottom = 256.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+script/script = ExtResource( 5 )
+
+[node name="TextureFrame" type="TextureFrame" parent="hub/TextureButton"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 44.0
+margin/top = 104.0
+margin/right = 101.0
+margin/bottom = 153.0
+texture = ExtResource( 6 )
+stretch_mode = 0
+
+[node name="hbox_score" type="HBoxContainer" parent="hub"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 10.0
+margin/right = 144.0
+margin/bottom = 28.0
+alignment = 1
+script/script = ExtResource( 7 )
+
+[node name="num" type="TextureFrame" parent="hub/hbox_score"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 66.0
+margin/top = 0.0
+margin/right = 78.0
+margin/bottom = 18.0
+texture = ExtResource( 8 )
+stretch_mode = 0
+
+[node name="btn_pause" type="TextureButton" parent="hub"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 23.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 9 )
+script/script = ExtResource( 10 )
+
+[node name="game_over" type="Control" parent="hub"]
+
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 144.0
+margin/bottom = 256.0
+script/script = ExtResource( 11 )
+
+[node name="TextureFrame" type="TextureFrame" parent="hub/game_over"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 24.0
+margin/top = 50.0
+margin/right = 120.0
+margin/bottom = 71.0
+texture = ExtResource( 12 )
+stretch_mode = 0
+
+[node name="button" type="HBoxContainer" parent="hub/game_over"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 16.0
+margin/top = 160.0
+margin/right = 124.0
+margin/bottom = 189.0
+alignment = 0
+
+[node name="btn_start" type="TextureButton" parent="hub/game_over/button"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 52.0
+margin/bottom = 29.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 13 )
+textures/pressed = ExtResource( 14 )
+script/script = ExtResource( 15 )
+
+[node name="TextureButton" type="TextureButton" parent="hub/game_over/button"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 56.0
+margin/top = 0.0
+margin/right = 108.0
+margin/bottom = 29.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 16 )
+textures/pressed = ExtResource( 17 )
+
+[node name="panel" type="TextureFrame" parent="hub/game_over"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 16.0
+margin/top = 90.0
+margin/right = 129.0
+margin/bottom = 147.0
+texture = ExtResource( 18 )
+stretch_mode = 0
+
+[node name="hbox" type="HBoxContainer" parent="hub/game_over/panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 62.0
+margin/top = 17.0
+margin/right = 102.0
+margin/bottom = 27.0
+alignment = 2
+
+[node name="last_num" type="TextureFrame" parent="hub/game_over/panel/hbox"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 33.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 10.0
+texture = ExtResource( 19 )
+stretch_mode = 0
+
+[node name="hbox2" type="HBoxContainer" parent="hub/game_over/panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 62.0
+margin/top = 37.0
+margin/right = 102.0
+margin/bottom = 47.0
+alignment = 2
+
+[node name="best_num" type="TextureFrame" parent="hub/game_over/panel/hbox2"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 33.0
+margin/top = 0.0
+margin/right = 40.0
+margin/bottom = 10.0
+texture = ExtResource( 19 )
+stretch_mode = 0
+
+[node name="medal" type="TextureFrame" parent="hub/game_over/panel"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 13.0
+margin/top = 21.0
+margin/right = 35.0
+margin/bottom = 43.0
+texture = ExtResource( 20 )
+stretch_mode = 0
+
+[node name="new" type="TextureFrame" parent="hub/game_over/panel"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 67.0
+margin/top = 29.0
+margin/right = 83.0
+margin/bottom = 36.0
+texture = ExtResource( 21 )
+stretch_mode = 0
+script/script = ExtResource( 22 )
+
+[node name="ani" type="AnimationPlayer" parent="hub/game_over"]
+
+playback/process_mode = 1
+playback/default_blend_time = 0.0
+root/root = NodePath("..")
+anims/show = SubResource( 1 )
+playback/active = true
+playback/speed = 1.0
+blend_times = [  ]
+autoplay = ""
+
+[node name="pause_panel" type="Container" parent="hub"]
+
+process/pause_mode = 2
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 144.0
+margin/bottom = 256.0
+
+[node name="bg" type="TextureFrame" parent="hub/pause_panel"]
+
+visibility/opacity = 0.3
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 144.0
+margin/bottom = 256.0
+texture = ExtResource( 23 )
+expand = true
+stretch_mode = 0
+
+[node name="btn_menu" type="TextureButton" parent="hub/pause_panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 52.0
+margin/top = 121.0
+margin/right = 92.0
+margin/bottom = 135.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 24 )
+script/script = ExtResource( 25 )
+
+[node name="btn_resume" type="TextureButton" parent="hub/pause_panel"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 23.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+textures/normal = ExtResource( 26 )
+script/script = ExtResource( 27 )
 
 
+[editable path="movepipe"]
+[editable path="movebg"]

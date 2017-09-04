@@ -5,6 +5,7 @@
 [node name="movebg" type="Node2D"]
 
 transform/pos = Vector2( 0, 256 )
+z/z = 1
 script/script = ExtResource( 1 )
 
 [node name="child" type="Node" parent="."]
