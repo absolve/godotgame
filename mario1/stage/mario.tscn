@@ -5,5 +5,8 @@
 [node name="mario" type="Node2D"]
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 texture = ExtResource( 1 )
+hframes = 19
 region_enabled = true
+region_rect = Rect2( 80, 0, 304, 32 )
