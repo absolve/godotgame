@@ -1,0 +1,134 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://script/menu.gd" type="Script" id=1]
+[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=2]
+[ext_resource path="res://sprites/coin_0.png" type="Texture" id=3]
+[ext_resource path="res://sprites/mario.png" type="Texture" id=4]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 512.0
+margin_bottom = 480.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 40.0
+margin_top = 20.0
+margin_right = 120.0
+margin_bottom = 36.0
+custom_fonts/font = ExtResource( 2 )
+text = "mario"
+uppercase = true
+
+[node name="score" type="Label" parent="."]
+margin_left = 40.0
+margin_top = 38.0
+margin_right = 136.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "000000"
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 288.0
+margin_top = 20.0
+margin_right = 368.0
+margin_bottom = 36.0
+custom_fonts/font = ExtResource( 2 )
+text = "world"
+uppercase = true
+
+[node name="Label4" type="Label" parent="."]
+margin_left = 210.742
+margin_top = 40.7739
+margin_right = 250.742
+margin_bottom = 54.7739
+
+[node name="level" type="Label" parent="."]
+margin_left = 301.0
+margin_top = 38.0
+margin_right = 349.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "1-1"
+
+[node name="Label6" type="Label" parent="."]
+margin_left = 408.0
+margin_top = 20.0
+margin_right = 472.0
+margin_bottom = 36.0
+custom_fonts/font = ExtResource( 2 )
+text = "time"
+uppercase = true
+
+[node name="coin" type="Label" parent="."]
+margin_left = 216.0
+margin_top = 38.0
+margin_right = 256.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "00"
+
+[node name="Label8" type="Label" parent="."]
+margin_left = 204.0
+margin_top = 39.0
+margin_right = 212.0
+margin_bottom = 53.0
+text = "x"
+uppercase = true
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 190, 38 )
+texture = ExtResource( 3 )
+centered = false
+
+[node name="gameover" type="Label" parent="."]
+visible = false
+margin_left = 184.0
+margin_top = 240.0
+margin_right = 328.0
+margin_bottom = 256.0
+custom_fonts/font = ExtResource( 2 )
+text = "game over"
+uppercase = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 200, 230 )
+texture = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="Sprite2"]
+margin_left = 50.0
+margin_top = -8.0
+margin_right = 58.0
+margin_bottom = 6.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "x"
+uppercase = true
+
+[node name="num" type="Label" parent="Sprite2"]
+margin_left = 100.0
+margin_top = -8.0
+margin_right = 116.0
+margin_bottom = 8.0
+custom_fonts/font = ExtResource( 2 )
+text = "3"
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 170.0
+margin_top = 160.0
+margin_right = 250.0
+margin_bottom = 176.0
+custom_fonts/font = ExtResource( 2 )
+text = "world"
+uppercase = true
+
+[node name="level1" type="Label" parent="Label2"]
+margin_left = 120.0
+margin_right = 168.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "1-1"
