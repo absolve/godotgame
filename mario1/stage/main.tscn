@@ -20,7 +20,7 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 5 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 6 ), ExtResource( 5 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "default",
 "speed": 6.0
@@ -131,6 +131,7 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 script = ExtResource( 1 )
 
 [node name="bg" type="ColorRect" parent="."]
+visible = false
 margin_right = 512.0
 margin_bottom = 480.0
 rect_pivot_offset = Vector2( 240, 30 )
@@ -140,6 +141,7 @@ __meta__ = {
 }
 
 [node name="logo" type="Sprite" parent="."]
+visible = false
 position = Vector2( 105, 70 )
 scale = Vector2( 0.9, 0.9 )
 texture = ExtResource( 2 )
@@ -149,6 +151,7 @@ __meta__ = {
 }
 
 [node name="p1" type="Label" parent="."]
+visible = false
 margin_left = 170.0
 margin_top = 255.0
 margin_right = 378.0
@@ -157,6 +160,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "1 PLAYER GAME"
 
 [node name="p2" type="Label" parent="."]
+visible = false
 margin_left = 170.0
 margin_top = 285.0
 margin_right = 378.0
@@ -165,6 +169,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "2 PLAYER GAME"
 
 [node name="mane" type="Label" parent="."]
+visible = false
 margin_left = 40.0
 margin_top = 20.0
 margin_right = 120.0
@@ -174,6 +179,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "MARIO"
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = 288.0
 margin_top = 20.0
 margin_right = 368.0
@@ -182,6 +188,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "WORLD"
 
 [node name="time" type="Label" parent="."]
+visible = false
 margin_left = 408.0
 margin_top = 20.0
 margin_right = 472.0
@@ -190,6 +197,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "TIME"
 
 [node name="Label2" type="Label" parent="."]
+visible = false
 margin_left = 40.0
 margin_top = 38.0
 margin_right = 136.0
@@ -198,6 +206,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "000000"
 
 [node name="Label3" type="Label" parent="."]
+visible = false
 margin_left = 301.0
 margin_top = 38.0
 margin_right = 349.0
@@ -206,6 +215,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "1-1"
 
 [node name="Label4" type="Label" parent="."]
+visible = false
 margin_left = 190.0
 margin_top = 330.0
 margin_right = 350.0
@@ -214,17 +224,18 @@ custom_fonts/font = ExtResource( 3 )
 text = "TOP-000000"
 
 [node name="indicator" type="Sprite" parent="."]
+visible = false
 position = Vector2( 140, 263 )
 texture = ExtResource( 4 )
 
 [node name="coin" type="AnimatedSprite" parent="."]
 position = Vector2( 190, 38 )
 frames = SubResource( 1 )
-frame = 4
 playing = true
 centered = false
 
 [node name="Label5" type="Label" parent="."]
+visible = false
 margin_left = 216.0
 margin_top = 38.0
 margin_right = 249.0
@@ -233,6 +244,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "00"
 
 [node name="Label6" type="Label" parent="."]
+visible = false
 margin_left = 204.0
 margin_top = 39.0
 margin_right = 212.0
@@ -240,12 +252,14 @@ margin_bottom = 53.0
 text = "X"
 
 [node name="TileMap" type="TileMap" parent="."]
+visible = false
 tile_set = SubResource( 3 )
 cell_size = Vector2( 32, 32 )
 format = 1
 tile_data = PoolIntArray( 655362, 5, 0, 720897, 3, 0, 720898, 1, 0, 720899, 4, 0, 720910, 5, 0, 786432, 3, 0, 786433, 1, 0, 786434, 2, 0, 786435, 1, 0, 786436, 4, 0, 786440, 7, 0, 786441, 6, 0, 786442, 6, 0, 786443, 6, 0, 786444, 8, 0, 786445, 3, 0, 786446, 1, 0, 786447, 4, 0, 851968, 0, 0, 851969, 0, 0, 851970, 0, 0, 851971, 0, 0, 851972, 0, 0, 851973, 0, 0, 851974, 0, 0, 851975, 0, 0, 851976, 0, 0, 851977, 0, 0, 851978, 0, 0, 851979, 0, 0, 851980, 0, 0, 851981, 0, 0, 851982, 0, 0, 851983, 0, 0, 917504, 0, 0, 917505, 0, 0, 917506, 0, 0, 917507, 0, 0, 917508, 0, 0, 917509, 0, 0, 917510, 0, 0, 917511, 0, 0, 917512, 0, 0, 917513, 0, 0, 917514, 0, 0, 917515, 0, 0, 917516, 0, 0, 917517, 0, 0, 917518, 0, 0, 917519, 0, 0 )
 
 [node name="mario" type="Sprite" parent="."]
+visible = false
 position = Vector2( 96, 400 )
 texture = ExtResource( 17 )
 __meta__ = {
