@@ -25,9 +25,9 @@ constants="*res://script/constants.gd"
 
 [display]
 
-window/size/width=512
+window/size/width=544
 window/size/height=480
-window/size/test_width=666
+window/size/test_width=707
 window/size/test_height=624
 window/stretch/mode="2d"
 window/stretch/aspect="keep_width"
