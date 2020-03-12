@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://script/mario.gd" type="Script" id=1]
 [ext_resource path="res://sprites/mario.png" type="Texture" id=2]
@@ -7,17 +7,27 @@
 [ext_resource path="res://sprites/mario_move1.png" type="Texture" id=5]
 [ext_resource path="res://sprites/mario_move0.png" type="Texture" id=6]
 [ext_resource path="res://sprites/mario_move2.png" type="Texture" id=7]
+[ext_resource path="res://sprites/mario1.png" type="Texture" id=8]
+[ext_resource path="res://sprites/mario_s1_move2.png" type="Texture" id=9]
+[ext_resource path="res://sprites/mario_s0_move2.png" type="Texture" id=10]
+[ext_resource path="res://sprites/mario_s1_move1.png" type="Texture" id=11]
+[ext_resource path="res://sprites/mario_s1_move0.png" type="Texture" id=12]
+[ext_resource path="res://sprites/mario_s0_move1.png" type="Texture" id=13]
+[ext_resource path="res://sprites/mario_s0_move0.png" type="Texture" id=14]
+[ext_resource path="res://sprites/mario_s1.png" type="Texture" id=15]
+[ext_resource path="res://sprites/mario_s0.png" type="Texture" id=16]
+[ext_resource path="res://sprites/mario_st.png" type="Texture" id=17]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 17 ) ],
 "loop": true,
-"name": "power_up",
-"speed": 7.0
+"name": "slide_small",
+"speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 14 ), ExtResource( 13 ), ExtResource( 10 ) ],
 "loop": true,
-"name": "run_small",
+"name": "run_small_black",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ) ],
@@ -25,10 +35,35 @@ animations = [ {
 "name": "jump_small",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
+"frames": [ ExtResource( 12 ), ExtResource( 11 ), ExtResource( 9 ) ],
 "loop": true,
+"name": "run_small_red",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 15 ) ],
+"loop": false,
+"name": "idle_small_red",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
 "name": "idle_small",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 16 ) ],
+"loop": false,
+"name": "idle_small_black",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 8 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 8 ), ExtResource( 2 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "power_up",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "run_small",
+"speed": 6.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -40,7 +75,9 @@ script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "power_up"
+animation = "run_small"
+frame = 1
 
 [node name="shape" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource( 2 )

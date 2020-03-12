@@ -131,7 +131,7 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 script = ExtResource( 1 )
 
 [node name="bg" type="ColorRect" parent="."]
-margin_right = 544.0
+margin_right = 600.0
 margin_bottom = 480.0
 rect_pivot_offset = Vector2( 240, 30 )
 color = Color( 0.415686, 0.588235, 1, 1 )
@@ -225,6 +225,7 @@ texture = ExtResource( 4 )
 [node name="coin" type="AnimatedSprite" parent="."]
 position = Vector2( 190, 38 )
 frames = SubResource( 1 )
+frame = 2
 playing = true
 centered = false
 
