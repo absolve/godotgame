@@ -36,6 +36,8 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 1 )
 textures/pressed = ExtResource( 2 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
 [node name="title" type="TextureFrame" parent="hud"]
 
@@ -77,6 +79,8 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 4 )
 textures/pressed = ExtResource( 5 )
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 6 )
 
 [node name="btn_score" type="TextureButton" parent="hud/HBoxContainer"]
@@ -94,6 +98,8 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 7 )
 textures/pressed = ExtResource( 8 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
 [node name="Sprite" type="Sprite" parent="."]
 

@@ -1,0 +1,75 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://sprites/button_play_pressed.png" type="Texture" id=1]
+[ext_resource path="res://sprites/background_day.png" type="Texture" id=2]
+[ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=3]
+[ext_resource path="res://sprites/label_flappy_bird.png" type="Texture" id=4]
+[ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=5]
+[ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=6]
+[ext_resource path="res://sprites/button_rate_normal.png" type="Texture" id=7]
+[ext_resource path="res://sprites/button_rate_pressed.png" type="Texture" id=8]
+[ext_resource path="res://scripts/welcome.gd" type="Script" id=9]
+[ext_resource path="res://stages/bird.tscn" type="PackedScene" id=10]
+[ext_resource path="res://stages/ground.tscn" type="PackedScene" id=11]
+
+[node name="welcome" type="Node2D"]
+script = ExtResource( 9 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+centered = false
+
+[node name="title" type="Sprite" parent="."]
+position = Vector2( 28, 70 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 18.0
+margin_top = 160.0
+margin_right = 126.0
+margin_bottom = 189.0
+size_flags_horizontal = 15
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="startBtn" type="TextureButton" parent="HBoxContainer"]
+margin_right = 52.0
+margin_bottom = 29.0
+texture_normal = ExtResource( 3 )
+texture_pressed = ExtResource( 1 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton2" type="TextureButton" parent="HBoxContainer"]
+margin_left = 56.0
+margin_right = 108.0
+margin_bottom = 29.0
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 6 )
+stretch_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="."]
+margin_left = 57.0
+margin_top = 135.0
+margin_right = 83.0
+margin_bottom = 120.0
+texture_normal = ExtResource( 7 )
+texture_pressed = ExtResource( 8 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bird" parent="." instance=ExtResource( 10 )]
+position = Vector2( 72, 110 )
+
+[node name="ground" parent="." instance=ExtResource( 11 )]
+
+[node name="ground1" parent="." instance=ExtResource( 11 )]
+position = Vector2( 168, 256 )
+[connection signal="pressed" from="HBoxContainer/startBtn" to="." method="_on_startBtn_pressed"]

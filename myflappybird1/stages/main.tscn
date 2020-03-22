@@ -38,22 +38,42 @@ tracks/0/type = "value"
 tracks/0/path = NodePath("TextureFrame:visibility/opacity")
 tracks/0/interp = 1
 tracks/0/imported = false
-tracks/0/keys = { "times":FloatArray( 0, 0.7 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ 0.0, 1.0 ] }
+tracks/0/keys = {
+"times": FloatArray( 0, 0.7 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
 tracks/1/type = "value"
 tracks/1/path = NodePath("panel:rect/pos")
 tracks/1/interp = 2
 tracks/1/imported = false
-tracks/1/keys = { "times":FloatArray( 0, 1 ), "transitions":FloatArray( 1, 1 ), "update":0, "values":[ Vector2( 16, 270 ), Vector2( 16, 90 ) ] }
+tracks/1/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 16, 270 ), Vector2( 16, 90 ) ]
+}
 tracks/2/type = "value"
 tracks/2/path = NodePath(".:visibility/visible")
 tracks/2/interp = 1
 tracks/2/imported = false
-tracks/2/keys = { "times":FloatArray( 0 ), "transitions":FloatArray( 1 ), "update":1, "values":[ true ] }
+tracks/2/keys = {
+"times": FloatArray( 0 ),
+"transitions": FloatArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 tracks/3/type = "value"
 tracks/3/path = NodePath("button:visibility/visible")
 tracks/3/interp = 1
 tracks/3/imported = false
-tracks/3/keys = { "times":FloatArray( 0, 1 ), "transitions":FloatArray( 1, 1 ), "update":1, "values":[ false, true ] }
+tracks/3/keys = {
+"times": FloatArray( 0, 1 ),
+"transitions": FloatArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [node name="Node" type="Node"]
 
@@ -85,7 +105,6 @@ scale = Vector2( 1, 1 )
 
 [node name="TextureButton" type="TextureButton" parent="hub"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -97,6 +116,8 @@ margin/bottom = 256.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 5 )
 
 [node name="TextureFrame" type="TextureFrame" parent="hub/TextureButton"]
@@ -114,7 +135,6 @@ stretch_mode = 0
 
 [node name="hbox_score" type="HBoxContainer" parent="hub"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -153,12 +173,12 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 9 )
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 10 )
 
 [node name="game_over" type="Control" parent="hub"]
 
-editor/display_folded = true
-visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -184,6 +204,7 @@ stretch_mode = 0
 
 [node name="button" type="HBoxContainer" parent="hub/game_over"]
 
+visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -209,6 +230,8 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 13 )
 textures/pressed = ExtResource( 14 )
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 15 )
 
 [node name="TextureButton" type="TextureButton" parent="hub/game_over/button"]
@@ -226,6 +249,8 @@ enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 16 )
 textures/pressed = ExtResource( 17 )
+params/resize_mode = 0
+params/stretch_mode = 0
 
 [node name="panel" type="TextureFrame" parent="hub/game_over"]
 
@@ -234,9 +259,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 16.0
-margin/top = 90.0
+margin/top = 136.44
 margin/right = 129.0
-margin/bottom = 147.0
+margin/bottom = 193.44
 texture = ExtResource( 18 )
 stretch_mode = 0
 
@@ -371,6 +396,8 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 24 )
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 25 )
 
 [node name="btn_resume" type="TextureButton" parent="hub/pause_panel"]
@@ -387,6 +414,8 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 textures/normal = ExtResource( 26 )
+params/resize_mode = 0
+params/stretch_mode = 0
 script/script = ExtResource( 27 )
 
 

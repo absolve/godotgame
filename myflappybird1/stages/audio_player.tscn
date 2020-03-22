@@ -8,11 +8,36 @@
 
 [sub_resource type="SampleLibrary" id=1]
 
-samples/sfx_die = { "db":0.0, "pitch":1.0, "sample":ExtResource( 1 ) }
-samples/sfx_hit = { "db":0.0, "pitch":1.0, "sample":ExtResource( 2 ) }
-samples/sfx_point = { "db":0.0, "pitch":1.0, "sample":ExtResource( 3 ) }
-samples/sfx_swooshing = { "db":0.0, "pitch":1.0, "sample":ExtResource( 4 ) }
-samples/sfx_wing = { "db":0.0, "pitch":1.0, "sample":ExtResource( 5 ) }
+samples/sfx_die = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 1 )
+}
+samples/sfx_hit = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 2 )
+}
+samples/sfx_point = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 3 )
+}
+samples/sfx_swooshing = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 4 )
+}
+samples/sfx_wing = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 5 )
+}
 
 [node name="audio_player" type="SamplePlayer"]
 
