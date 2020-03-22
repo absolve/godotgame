@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="Flappybird 1"
 run/main_scene="res://stages/welcome.tscn"
-config/icon="res://icon.png"
+config/icon="res://sprites/flappy_bird_icon.png"
 
 [autoload]
 
