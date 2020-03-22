@@ -1,0 +1,262 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://sprites/background_day.png" type="Texture" id=1]
+[ext_resource path="res://stages/ground.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/main.gd" type="Script" id=3]
+[ext_resource path="res://sprites/button_menu.png" type="Texture" id=4]
+[ext_resource path="res://sprites/button_resume.png" type="Texture" id=5]
+[ext_resource path="res://sprites/button_pause.png" type="Texture" id=6]
+[ext_resource path="res://sprites/panel_score.png" type="Texture" id=7]
+[ext_resource path="res://sprites/label_game_over.png" type="Texture" id=8]
+[ext_resource path="res://sprites/number_middle_0.png" type="Texture" id=9]
+[ext_resource path="res://sprites/label_new.png" type="Texture" id=10]
+[ext_resource path="res://sprites/button_play_pressed.png" type="Texture" id=11]
+[ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=12]
+[ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=13]
+[ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=14]
+[ext_resource path="res://sprites/instructions.png" type="Texture" id=16]
+[ext_resource path="res://sprites/number_large_0.png" type="Texture" id=17]
+[ext_resource path="res://stages/pipe.tscn" type="PackedScene" id=18]
+[ext_resource path="res://stages/bird.tscn" type="PackedScene" id=19]
+
+[sub_resource type="Animation" id=1]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/path = NodePath("game_over:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0.1, 0.1 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("panel:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 16, 270 ), Vector2( 16, 90 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("btn:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="main" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="bg" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false
+
+[node name="pipe" parent="." instance=ExtResource( 18 )]
+position = Vector2( 157, 80 )
+
+[node name="pipe2" parent="." instance=ExtResource( 18 )]
+position = Vector2( 248, 80 )
+
+[node name="pipe3" parent="." instance=ExtResource( 18 )]
+position = Vector2( 339, 80 )
+
+[node name="ground" parent="." instance=ExtResource( 2 )]
+z_index = 0
+
+[node name="ground1" parent="." instance=ExtResource( 2 )]
+position = Vector2( 168, 256 )
+z_index = 0
+
+[node name="bird" parent="." instance=ExtResource( 19 )]
+z_index = 1
+
+[node name="score" type="HBoxContainer" parent="."]
+margin_top = 10.0
+margin_right = 144.0
+margin_bottom = 28.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="score"]
+margin_left = 66.0
+margin_right = 78.0
+margin_bottom = 18.0
+texture = ExtResource( 17 )
+
+[node name="btnPause" type="TextureButton" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 23.0
+margin_bottom = 24.0
+action_mode = 0
+texture_normal = ExtResource( 6 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="tipBtn" type="TextureButton" parent="."]
+margin_left = 44.0
+margin_top = 104.0
+margin_right = 101.0
+margin_bottom = 153.0
+texture_normal = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="gameOverPanel" type="Control" parent="."]
+visible = false
+margin_right = 144.0
+margin_bottom = 256.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="game_over" type="Sprite" parent="gameOverPanel"]
+position = Vector2( 24, 50 )
+scale = Vector2( 0.91, 0.91 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="panel" type="TextureRect" parent="gameOverPanel"]
+margin_left = 16.0
+margin_top = 90.0
+margin_right = 129.0
+margin_bottom = 147.0
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="scoreContainer" type="HBoxContainer" parent="gameOverPanel/panel"]
+margin_left = 62.0
+margin_top = 17.0
+margin_right = 102.0
+margin_bottom = 27.0
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="score" type="TextureRect" parent="gameOverPanel/panel/scoreContainer"]
+margin_left = 33.0
+margin_right = 40.0
+margin_bottom = 10.0
+texture = ExtResource( 9 )
+
+[node name="bestContainer" type="HBoxContainer" parent="gameOverPanel/panel"]
+margin_left = 62.0
+margin_top = 37.0
+margin_right = 102.0
+margin_bottom = 47.0
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="best" type="TextureRect" parent="gameOverPanel/panel/bestContainer"]
+margin_left = 33.0
+margin_right = 40.0
+margin_bottom = 10.0
+texture = ExtResource( 9 )
+
+[node name="newHighScore" type="TextureRect" parent="gameOverPanel/panel"]
+visible = false
+margin_left = 67.0
+margin_top = 29.0
+margin_right = 83.0
+margin_bottom = 36.0
+texture = ExtResource( 10 )
+
+[node name="medal" type="TextureRect" parent="gameOverPanel/panel"]
+margin_left = 13.0
+margin_top = 21.0
+margin_right = 35.0
+margin_bottom = 43.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btn" type="HBoxContainer" parent="gameOverPanel"]
+margin_left = 18.0
+margin_top = 160.0
+margin_right = 126.0
+margin_bottom = 189.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnRestart" type="TextureButton" parent="gameOverPanel/btn"]
+margin_right = 52.0
+margin_bottom = 29.0
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 11 )
+
+[node name="TextureButton2" type="TextureButton" parent="gameOverPanel/btn"]
+margin_left = 56.0
+margin_right = 108.0
+margin_bottom = 29.0
+texture_normal = ExtResource( 14 )
+texture_pressed = ExtResource( 12 )
+
+[node name="ani" type="AnimationPlayer" parent="gameOverPanel"]
+anims/idle = SubResource( 1 )
+
+[node name="pausePanel" type="Control" parent="."]
+pause_mode = 2
+visible = false
+margin_right = 144.0
+margin_bottom = 256.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="ColorRect" parent="pausePanel"]
+margin_right = 144.0
+margin_bottom = 256.0
+color = Color( 0, 0, 0, 0.223529 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnResume" type="TextureButton" parent="pausePanel"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 23.0
+margin_bottom = 24.0
+texture_normal = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnMenu" type="TextureButton" parent="pausePanel"]
+margin_left = 52.0
+margin_top = 121.0
+margin_right = 92.0
+margin_bottom = 135.0
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="btnPause" to="." method="_on_btnPause_pressed"]
+[connection signal="pressed" from="tipBtn" to="." method="_on_tipBtn_pressed"]
+[connection signal="pressed" from="gameOverPanel/btn/btnRestart" to="." method="_on_btnRestart_pressed"]
+[connection signal="pressed" from="pausePanel/btnResume" to="." method="_on_btnResume_pressed"]
+[connection signal="pressed" from="pausePanel/btnMenu" to="." method="_on_btnMenu_pressed"]

@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://sprites/bird_red_0.png" type="Texture" id=1]
+[ext_resource path="res://scripts/bird.gd" type="Script" id=2]
+[ext_resource path="res://sprites/bird_red_2.png" type="Texture" id=3]
+[ext_resource path="res://sprites/bird_red_1.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "fly",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ) ],
+"loop": false,
+"name": "flap",
+"speed": 11.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 6.08647
+
+[node name="bird" type="RigidBody2D"]
+position = Vector2( 36, 120 )
+gravity_scale = 0.0
+contacts_reported = 1
+contact_monitor = true
+script = ExtResource( 2 )
+
+[node name="ani" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "idle"
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+one_way_collision_margin = 2.0
+[connection signal="body_entered" from="." to="." method="_on_bird_body_entered"]

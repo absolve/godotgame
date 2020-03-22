@@ -1,0 +1,109 @@
+extends RigidBody2D
+
+
+var state = game.idle #默认状态
+
+var ypos=3	#上下飞行的距离
+var filp=true
+var flyspeed=25 #上下飞行的速度
+
+var speed=150	#向上飞的速度
+
+signal birdStateChange  #状态改变
+
+
+func _ready():
+#	setState(game.fly)
+#	print($ani.position.y)
+	#setState(game.play)
+	add_to_group(game.group_bird)
+
+
+
+func _physics_process(delta):
+	if state==game.idle:
+		idle(delta)
+	elif state==game.fly:
+		fly(delta)
+	elif state==game.play:
+		play(delta)
+	elif state==game.dead:
+		dead(delta)
+
+#设置状态
+func setState(newState:int):
+	if newState==game.idle:
+		gravity_scale=0			
+	elif newState==game.fly:
+		gravity_scale=0
+		$ani.play("fly")
+	elif newState==game.play:
+		gravity_scale=5
+		flap()
+	elif newState==game.dead:
+		angular_velocity=1.4
+		$ani.play("idle")
+	state=newState
+
+#拍动翅膀
+func flap():
+	if AudioPlayer:
+		AudioPlayer.playSfxWing()
+	$ani.play("flap",true)
+	linear_velocity.y=-speed
+	angular_velocity=-3
+		
+#默认状态
+func idle(delta):
+	pass
+	
+#上下飞行的状态
+func fly(delta):
+	if filp:
+		if $ani.position.y>ypos:
+			filp=false
+		else:
+			$ani.position.y+=flyspeed*delta
+	else:
+		if $ani.position.y<-ypos:
+			filp=true
+		else:
+			$ani.position.y-=flyspeed*delta
+
+
+#游戏开始时 飞行的状态
+func play(delta):
+	if Input.is_action_just_pressed("ui_accept"):
+		flap()	
+	
+	#计算角度避免一直旋转
+	if rotation_degrees<-30:
+		rotation_degrees=-30
+		angular_velocity=0
+	
+	if linear_velocity.y>0:
+		angular_velocity=1.5
+	
+func dead(delta):
+	#print("dead")
+	
+	pass
+
+#如果碰到水管和地面就发出信号
+func _on_bird_body_entered(body):
+	print("_on_bird_body_entered")
+	if state!=game.play:	#不是开始的状态就跳过
+		return
+	if body.is_in_group(game.group_ground):
+		if AudioPlayer:
+			AudioPlayer.playSfxHit()
+		emit_signal("birdStateChange")
+	elif body.is_in_group(game.group_pipe):
+		if AudioPlayer:
+			AudioPlayer.playSfxHit()
+			AudioPlayer.playSfxDie()
+		emit_signal("birdStateChange")
+		var other_body = get_colliding_bodies()[0]
+		add_collision_exception_with(other_body)
+
+
