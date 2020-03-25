@@ -16,14 +16,14 @@ _global_script_class_icons={
 [application]
 
 config/name="Flappybird 1"
-run/main_scene="res://stages/welcome.tscn"
+run/main_scene="res://scenes/welcome.tscn"
 config/icon="res://sprites/flappy_bird_icon.png"
 
 [autoload]
 
 game="*res://scripts/game.gd"
-splash="*res://stages/splash.tscn"
-AudioPlayer="*res://stages/audioPlayer.tscn"
+splash="*res://scenes/splash.tscn"
+AudioPlayer="*res://scenes/audioPlayer.tscn"
 
 [display]
 

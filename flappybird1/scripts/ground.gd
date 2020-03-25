@@ -4,10 +4,10 @@ extends StaticBody2D
 
 var width=168	#地面的宽度
 var state=game.slow	#状态
-var fastSpeed=50
+var fastSpeed=50	
 var slowSpeed=10
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
 	add_to_group(game.group_ground)
 	 

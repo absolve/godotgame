@@ -33,7 +33,7 @@ func _physics_process(delta):
 #设置状态
 func setState(newState:int):
 	if newState==game.idle:
-		gravity_scale=0			
+		gravity_scale=0
 	elif newState==game.fly:
 		gravity_scale=0
 		$ani.play("fly")
@@ -74,7 +74,7 @@ func fly(delta):
 #游戏开始时 飞行的状态
 func play(delta):
 	if Input.is_action_just_pressed("ui_accept"):
-		flap()	
+		flap()
 	
 	#计算角度避免一直旋转
 	if rotation_degrees<-30:

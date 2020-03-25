@@ -1,6 +1,6 @@
 extends Node2D
 
-#图片
+#分数图片
 const sprite_numbers = [
 	preload("res://sprites/number_large_0.png"),
 	preload("res://sprites/number_large_1.png"),
@@ -29,9 +29,9 @@ const sprite_mid_numbers = [
 ]
 
 #奖牌的图片
-const spr_medal_bronze   = preload("res://sprites/medal_bronze.png"  )
-const spr_medal_silver   = preload("res://sprites/medal_silver.png"  )
-const spr_medal_gold     = preload("res://sprites/medal_gold.png"    )
+const spr_medal_bronze   = preload("res://sprites/medal_bronze.png")
+const spr_medal_silver   = preload("res://sprites/medal_silver.png")
+const spr_medal_gold     = preload("res://sprites/medal_gold.png")
 const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
 
 
@@ -70,7 +70,7 @@ func gameOver()->void:
 	$ground1.setState(game.stop)
 	$bird.setState(game.dead)
 	showGameOverPanel()
-	setFinalSorce()	
+	setFinalSorce()
 
 
 #碰到地面和水管
@@ -97,7 +97,7 @@ func _on_score_changed():
 
 	
 #设置最后的分数
-func setFinalSorce():	
+func setFinalSorce():
 	for child in $gameOverPanel/panel/scoreContainer.get_children():
 		child.queue_free()
 	for i in game.get_digits(game.score):

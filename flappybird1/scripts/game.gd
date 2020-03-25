@@ -5,7 +5,7 @@ extends Node
 var mainScene="res://stages/main.tscn"
 var welcomeScene="res://stages/welcome.tscn"
 
-#分数显示奖牌
+#得分显示不同的奖牌 铜牌到白金
 const MEDAL_BRONZE   = 1
 const MEDAL_SILVER   = 20
 const MEDAL_GOLD     = 40
@@ -39,6 +39,7 @@ var group_ground="group_ground"
 var score=0
 var highScore=0
 
+#窗口大小
 var winHeight
 var winWidth
 
@@ -48,14 +49,14 @@ func _ready():
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
 	#OS.center_window()
 	print(winHeight)
-	print("                 [Screen Metrics]")
-	print("            Display size: ", OS.get_screen_size())
-	print("   Decorated Window size: ", OS.get_real_window_size())
-	print("             Window size: ", OS.get_window_size())
-	print("        Project Settings: Width=", ProjectSettings.get_setting("display/window/size/width"), " Height=", ProjectSettings.get_setting("display/window/size/height")) 
+	print("[Screen Metrics]")
+	print("Display size: ", OS.get_screen_size())
+	print("Decorated Window size: ", OS.get_real_window_size())
+	print("Window size: ", OS.get_window_size())
+	print("Project Settings: Width=", ProjectSettings.get_setting("display/window/size/width"), " Height=", ProjectSettings.get_setting("display/window/size/height")) 
 	print(OS.get_window_size().x)
 	print(OS.get_window_size().y)
-	pass # Replace with function body.
+	
 
 #更改场景
 func changeScene(stagePath):
