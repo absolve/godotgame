@@ -2,8 +2,8 @@ extends Node
 #游戏中的一些状态和功能
 
 #场景
-var mainScene="res://stages/main.tscn"
-var welcomeScene="res://stages/welcome.tscn"
+var mainScene="res://scenes/main.tscn"
+var welcomeScene="res://scenes/welcome.tscn"
 
 #得分显示不同的奖牌 铜牌到白金
 const MEDAL_BRONZE   = 1

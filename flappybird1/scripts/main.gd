@@ -34,13 +34,11 @@ const spr_medal_silver   = preload("res://sprites/medal_silver.png")
 const spr_medal_gold     = preload("res://sprites/medal_gold.png")
 const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
 
+var state=game.startGame	#默认游戏开始状态
 
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	#$pipe.position.x=game.winWidth+$pipe.PIPE_WIDTH
-	#$ground1.position.x=game.winWidth
+	
 	$pipe.connect("scoreChange",self,"_on_score_changed")
 	
 	$pipe.setRandomYpos()
@@ -49,6 +47,8 @@ func _ready():
 
 	game.score=0
 	$bird.connect("birdStateChange",self,"_on_bird_state_change")
+	$Timer.connect("timeout",self,"_on_timeout") 
+	
 
 #游戏开始
 func startGame()->void:
@@ -57,12 +57,15 @@ func startGame()->void:
 	$pipe3.state=game.move
 	$ground.state=game.fast
 	$ground1.state=game.fast
-	$bird.setState(game.play)
+#	$bird.setState(game.play)
 	
 
 #游戏结束
 func gameOver()->void:
 	#游戏结束
+	if $ready.visible:
+		$ready.hide()
+	state=game.endGame
 	$pipe.setState(game.stop)
 	$pipe2.setState(game.stop)
 	$pipe3.setState(game.stop)
@@ -128,6 +131,13 @@ func setFinalSorce():
 		texture=spr_medal_platinum
 	if texture:
 		$gameOverPanel/panel/medal.texture=texture
+		$gameOverPanel/panel/medal/spark.show()
+	
+#定时器时间到
+func _on_timeout()->void:
+	if state==game.startGame:
+		$ready/ani.play("fade_out")
+		startGame()
 	
 	
 
@@ -160,11 +170,13 @@ func showGameOverPanel():
 #重新开始
 func _on_btnRestart_pressed():
 	game.changeScene(game.mainScene)
-	pass # Replace with function body.
 
 
 #游戏开始
 func _on_tipBtn_pressed():
 	$tipBtn.hide()
-	startGame()
-	pass # Replace with function body.
+#	startGame()
+	$ready/ani.play("fade_in")
+	$bird.setState(game.play)
+	$Timer.start()
+	

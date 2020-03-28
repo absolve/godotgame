@@ -2,7 +2,6 @@ extends Node2D
 
 #播放声音
 
-# 
 func _ready():
 	pass 
 

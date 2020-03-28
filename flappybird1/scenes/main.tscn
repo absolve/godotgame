@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://sprites/background_day.png" type="Texture" id=1]
 [ext_resource path="res://scenes/ground.tscn" type="PackedScene" id=2]
@@ -14,11 +14,23 @@
 [ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=12]
 [ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=13]
 [ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=14]
+[ext_resource path="res://sprites/spark_2.png" type="Texture" id=15]
 [ext_resource path="res://sprites/instructions.png" type="Texture" id=16]
 [ext_resource path="res://sprites/number_large_0.png" type="Texture" id=17]
 [ext_resource path="res://scenes/pipe.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scenes/bird.tscn" type="PackedScene" id=19]
+[ext_resource path="res://sprites/spark_0.png" type="Texture" id=20]
+[ext_resource path="res://sprites/spark_1.png" type="Texture" id=21]
+[ext_resource path="res://scripts/spark.gd" type="Script" id=22]
+[ext_resource path="res://sprites/label_get_ready.png" type="Texture" id=23]
 
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 20 ), ExtResource( 21 ), ExtResource( 15 ), ExtResource( 21 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "default",
+"speed": 7.0
+} ]
 
 [sub_resource type="Animation" id=1]
 resource_name = "idle"
@@ -57,6 +69,62 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "fade_in"
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "fade_out"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
 }
 
 [node name="main" type="Node2D"]
@@ -195,6 +263,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="spark" type="AnimatedSprite" parent="gameOverPanel/panel/medal"]
+frames = SubResource( 2 )
+frame = 2
+script = ExtResource( 22 )
+
 [node name="btn" type="HBoxContainer" parent="gameOverPanel"]
 margin_left = 18.0
 margin_top = 160.0
@@ -256,8 +329,22 @@ texture_normal = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ready" type="Sprite" parent="."]
+visible = false
+position = Vector2( 72, 70 )
+texture = ExtResource( 23 )
+
+[node name="ani" type="AnimationPlayer" parent="ready"]
+anims/fade_in = SubResource( 3 )
+anims/fade_out = SubResource( 4 )
 [connection signal="pressed" from="btnPause" to="." method="_on_btnPause_pressed"]
 [connection signal="pressed" from="tipBtn" to="." method="_on_tipBtn_pressed"]
+[connection signal="animation_finished" from="gameOverPanel/panel/medal/spark" to="gameOverPanel/panel/medal/spark" method="_on_spark_animation_finished"]
 [connection signal="pressed" from="gameOverPanel/btn/btnRestart" to="." method="_on_btnRestart_pressed"]
 [connection signal="pressed" from="pausePanel/btnResume" to="." method="_on_btnResume_pressed"]
 [connection signal="pressed" from="pausePanel/btnMenu" to="." method="_on_btnMenu_pressed"]
