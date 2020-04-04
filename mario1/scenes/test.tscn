@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/brick .tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/mario.tscn" type="PackedScene" id=2]
+
+[node name="test" type="Node2D"]
+
+[node name="brick " parent="." instance=ExtResource( 1 )]
+position = Vector2( 16, 300 )
+
+[node name="brick 2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 208, 300 )
+
+[node name="brick 3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 176, 300 )
+
+[node name="brick 4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 144, 300 )
+
+[node name="brick 5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 112, 300 )
+
+[node name="brick 6" parent="." instance=ExtResource( 1 )]
+position = Vector2( 80, 300 )
+
+[node name="brick 7" parent="." instance=ExtResource( 1 )]
+position = Vector2( 48, 300 )
+
+[node name="brick 8" parent="." instance=ExtResource( 1 )]
+position = Vector2( 304, 300 )
+
+[node name="brick 9" parent="." instance=ExtResource( 1 )]
+position = Vector2( 272, 300 )
+
+[node name="brick 10" parent="." instance=ExtResource( 1 )]
+position = Vector2( 240, 300 )
+
+[node name="brick 11" parent="." instance=ExtResource( 1 )]
+position = Vector2( 368, 300 )
+
+[node name="brick 12" parent="." instance=ExtResource( 1 )]
+position = Vector2( 336, 300 )
+
+[node name="brick 13" parent="." instance=ExtResource( 1 )]
+position = Vector2( 400, 300 )
+
+[node name="brick 14" parent="." instance=ExtResource( 1 )]
+position = Vector2( 432, 300 )
+
+[node name="brick 15" parent="." instance=ExtResource( 1 )]
+position = Vector2( 432, 268 )
+
+[node name="mario" parent="." instance=ExtResource( 2 )]
+position = Vector2( 60, 150 )

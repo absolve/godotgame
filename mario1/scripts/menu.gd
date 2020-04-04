@@ -8,11 +8,21 @@ export var mario=0
 export var num=3
 
 func _ready():
-	pass 
+	$title.hideTime()
+	$title.stopCoinAni()
+
+	 
+func setData()->void:
+	
+	pass
+
+
+func startLevel()->void:
+	
+	pass
 
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
 	pass
