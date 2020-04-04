@@ -11,11 +11,20 @@ var speed=150	#向上飞的速度
 
 signal birdStateChange  #状态改变
 
+var ani= ["idle","fly","flap"]
+var ani2=["idle_blue","fly_blue","flap_blue"]
+var ani3=["idle_yellow","fly_yellow","flap_yellow"]
+var list=[ani,ani2,ani3]
+var index=0
 
 func _ready():
 #	setState(game.fly)
 #	print($ani.position.y)
 	#setState(game.play)
+	randomize()
+	index=randi()%3
+	print(index)
+	$ani.play(list[index][0])
 	add_to_group(game.group_bird)
 
 
@@ -36,20 +45,23 @@ func setState(newState:int):
 		gravity_scale=0
 	elif newState==game.fly:
 		gravity_scale=0
-		$ani.play("fly")
+#		$ani.play("fly")
+		$ani.play(list[index][1])
 	elif newState==game.play:
 		gravity_scale=5
 		flap()
 	elif newState==game.dead:
 		angular_velocity=1.4
-		$ani.play("idle")
+#		$ani.play("idle")
+		$ani.play(list[index][0])
 	state=newState
 
 #拍动翅膀
 func flap():
 	if AudioPlayer:
 		AudioPlayer.playSfxWing()
-	$ani.play("flap",true)
+#	$ani.play("flap",true)
+	$ani.play(list[index][2],true)
 	linear_velocity.y=-speed
 	angular_velocity=-3
 		

@@ -71,7 +71,7 @@ func changeScene(stagePath):
 		yield(ani,"animation_finished")
 	
 	get_tree().change_scene(stagePath)
-	print(splash)
+	
 	if splash:
 		var ani=splash.get_node("ani")
 		ani.play("fade_out")
