@@ -24,7 +24,7 @@
 [ext_resource path="res://scripts/spark.gd" type="Script" id=22]
 [ext_resource path="res://sprites/label_get_ready.png" type="Texture" id=23]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 20 ), ExtResource( 21 ), ExtResource( 15 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
@@ -32,8 +32,7 @@ animations = [ {
 "speed": 7.0
 } ]
 
-[sub_resource type="Animation" id=1]
-resource_name = "idle"
+[sub_resource type="Animation" id=2]
 tracks/0/type = "value"
 tracks/0/path = NodePath("game_over:scale")
 tracks/0/interp = 1
@@ -264,7 +263,8 @@ __meta__ = {
 }
 
 [node name="spark" type="AnimatedSprite" parent="gameOverPanel/panel/medal"]
-frames = SubResource( 2 )
+visible = false
+frames = SubResource( 1 )
 frame = 2
 script = ExtResource( 22 )
 
@@ -291,7 +291,7 @@ texture_normal = ExtResource( 14 )
 texture_pressed = ExtResource( 12 )
 
 [node name="ani" type="AnimationPlayer" parent="gameOverPanel"]
-anims/idle = SubResource( 1 )
+anims/idle = SubResource( 2 )
 
 [node name="pausePanel" type="Control" parent="."]
 pause_mode = 2

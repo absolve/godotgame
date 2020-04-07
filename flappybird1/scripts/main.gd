@@ -65,6 +65,8 @@ func gameOver()->void:
 	#游戏结束
 	if $ready.visible:
 		$ready.hide()
+	$score.visible=false
+	$btnPause.visible=false
 	state=game.endGame
 	$pipe.setState(game.stop)
 	$pipe2.setState(game.stop)
