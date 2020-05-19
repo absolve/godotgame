@@ -36,46 +36,60 @@ const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
 
 var state=game.startGame	#默认游戏开始状态
 
+var offsetNum=20	#摄像机偏移次数
+var magnitude = 3  #偏移
+var num=0
+
 func _ready():
 	randomize()
 	
-	$pipe.connect("scoreChange",self,"_on_score_changed")
+	$game/pipe.connect("scoreChange",self,"_on_score_changed")
 	
-	$pipe.setRandomYpos()
-	$pipe2.setRandomYpos()
-	$pipe3.setRandomYpos()
+	$game/pipe.setRandomYpos()
+	$game/pipe2.setRandomYpos()
+	$game/pipe3.setRandomYpos()
 
 	game.score=0
-	$bird.connect("birdStateChange",self,"_on_bird_state_change")
-	$Timer.connect("timeout",self,"_on_timeout") 
-	
+	$game/bird.connect("birdStateChange",self,"_on_bird_state_change")
+	$game/Timer.connect("timeout",self,"_on_timeout") 
+	$game/bird.setState(game.fly)
+
 
 #游戏开始
 func startGame()->void:
-	$pipe.state=game.move
-	$pipe2.state=game.move
-	$pipe3.state=game.move
-	$ground.state=game.fast
-	$ground1.state=game.fast
+	$game/pipe.state=game.move
+	$game/pipe2.state=game.move
+	$game/pipe3.state=game.move
+	$game/ground.state=game.fast
+	$game/ground1.state=game.fast
 #	$bird.setState(game.play)
 	
 
 #游戏结束
 func gameOver()->void:
 	#游戏结束
-	if $ready.visible:
-		$ready.hide()
-	$score.visible=false
-	$btnPause.visible=false
+	if $game/ready.visible:
+		$game/ready.hide()
+	$game/score.visible=false
+	$game/btnPause.visible=false
 	state=game.endGame
-	$pipe.setState(game.stop)
-	$pipe2.setState(game.stop)
-	$pipe3.setState(game.stop)
-	$ground.setState(game.stop)
-	$ground1.setState(game.stop)
-	$bird.setState(game.dead)
+	$game/pipe.setState(game.stop)
+	$game/pipe2.setState(game.stop)
+	$game/pipe3.setState(game.stop)
+	$game/ground.setState(game.stop)
+	$game/ground1.setState(game.stop)
+	$game/bird.setState(game.dead)
+	
+	while num<offsetNum:		
+		$game/camera.offset.x += rand_range(-magnitude,magnitude)
+		$game/camera.offset.y+=rand_range(-magnitude,magnitude)
+		num+=1
+		yield(get_tree(), "idle_frame")
+	num=0
+	$game/camera.offset.x=72
+	$game/camera.offset.y=128
 	showGameOverPanel()
-	setFinalSorce()
+	setFinalScore()
 
 
 #碰到地面和水管
@@ -92,34 +106,34 @@ func _on_score_changed():
 		AudioPlayer.playSfxPoint()
 	
 	#设置分数
-	for child in $score.get_children():
+	for child in $game/score.get_children():
 		child.queue_free()
 	
 	for i in game.get_digits(game.score):
 		var rect = TextureRect.new()
 		rect.texture=sprite_numbers[i]
-		$score.add_child(rect)
+		$game/score.add_child(rect)
 
 	
 #设置最后的分数
-func setFinalSorce():
-	for child in $gameOverPanel/panel/scoreContainer.get_children():
+func setFinalScore():
+	for child in $game/gameOverPanel/panel/scoreContainer.get_children():
 		child.queue_free()
 	for i in game.get_digits(game.score):
 		var rect = TextureRect.new()
 		rect.texture=sprite_mid_numbers[i]
-		$gameOverPanel/panel/scoreContainer.add_child(rect)
+		$game/gameOverPanel/panel/scoreContainer.add_child(rect)
 	#设置最高分
 	if game.score>game.highScore:
 		game.highScore=game.score
-		$gameOverPanel/panel/newHighScore.show()
+		$game/gameOverPanel/panel/newHighScore.show()
 	
-	for child in $gameOverPanel/panel/bestContainer.get_children():
+	for child in $game/gameOverPanel/panel/bestContainer.get_children():
 		child.queue_free()
 	for i in game.get_digits(game.highScore):
 		var rect = TextureRect.new()
 		rect.texture=sprite_mid_numbers[i]
-		$gameOverPanel/panel/bestContainer.add_child(rect)
+		$game/gameOverPanel/panel/bestContainer.add_child(rect)
 		
 	#设置奖牌
 	var texture
@@ -132,23 +146,22 @@ func setFinalSorce():
 	if game.score>=game.MEDAL_PLATINUM:
 		texture=spr_medal_platinum
 	if texture:
-		$gameOverPanel/panel/medal.texture=texture
-		$gameOverPanel/panel/medal/spark.show()
+		$game/gameOverPanel/panel/medal.texture=texture
+		$game/gameOverPanel/panel/medal/spark.show()
 	
 #定时器时间到
 func _on_timeout()->void:
 	if state==game.startGame:
-		$ready/ani.play("fade_out")
+		$game/ready/ani.play("fade_out")
 		startGame()
 	
 	
 
-
 #继续游戏
 func _on_btnResume_pressed():
 	get_tree().paused=false
-	$pausePanel.hide()
-	pass # Replace with function body.
+	$game/pausePanel.hide()
+
 
 #返回开始界面
 func _on_btnMenu_pressed():
@@ -158,16 +171,16 @@ func _on_btnMenu_pressed():
 
 #暂停按钮
 func _on_btnPause_pressed():
-	print("_on_btnPause_pressed")
+	#print("_on_btnPause_pressed")
 	get_tree().paused=true
-	$pausePanel.show()
+	$game/pausePanel.show()
 	#showGameOverPanel()
 	pass
 	
 #显示游戏结束界面
 func showGameOverPanel():
-	$gameOverPanel.show()
-	$gameOverPanel/ani.play("idle")
+	$game/gameOverPanel.show()
+	$game/gameOverPanel/ani.play("idle")
 
 #重新开始
 func _on_btnRestart_pressed():
@@ -176,9 +189,9 @@ func _on_btnRestart_pressed():
 
 #游戏开始
 func _on_tipBtn_pressed():
-	$tipBtn.hide()
+	$game/tipBtn.hide()
 #	startGame()
-	$ready/ani.play("fade_in")
-	$bird.setState(game.play)
-	$Timer.start()
+	#$ready/ani.play("fade_in")
+	$game/bird.setState(game.play)
+	$game/Timer.start()
 	
