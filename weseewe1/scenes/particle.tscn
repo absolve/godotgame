@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/particle.gd" type="Script" id=1]
+[ext_resource path="res://sprites/particle.png" type="Texture" id=2]
+
+[node name="particle" type="Sprite"]
+position = Vector2( 225.625, 507.409 )
+z_index = 1
+texture = ExtResource( 2 )
+script = ExtResource( 1 )
+rgb = Color( 1, 1, 1, 1 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+rect = Rect2( -4, -4, 8, 8 )
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

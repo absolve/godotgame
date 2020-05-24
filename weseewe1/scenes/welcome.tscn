@@ -1,0 +1,130 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://sprites/title.png" type="Texture" id=1]
+[ext_resource path="res://sprites/sound.png" type="Texture" id=2]
+[ext_resource path="res://sprites/start.png" type="Texture" id=3]
+[ext_resource path="res://sprites/score.png" type="Texture" id=4]
+[ext_resource path="res://scripts/welcome.gd" type="Script" id=5]
+[ext_resource path="res://sprites/help.png" type="Texture" id=6]
+[ext_resource path="res://scenes/cloud.tscn" type="PackedScene" id=7]
+[ext_resource path="res://sprites/soundOff.png" type="Texture" id=8]
+[ext_resource path="res://scenes/player.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/particleUtil.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/spawnblock.tscn" type="PackedScene" id=11]
+[ext_resource path="res://scenes/scoreDotutil.tscn" type="PackedScene" id=12]
+
+[node name="welcome" type="Node2D"]
+z_index = 1
+script = ExtResource( 5 )
+
+[node name="ui" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="cloud" parent="ui" instance=ExtResource( 7 )]
+position = Vector2( 92.342, 86.4005 )
+
+[node name="cloud2" parent="ui" instance=ExtResource( 7 )]
+position = Vector2( 229.427, 183.097 )
+angle = -1
+
+[node name="Sprite" type="Sprite" parent="ui"]
+position = Vector2( 30, 60 )
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 1 )
+centered = false
+
+[node name="btnStart" type="TextureButton" parent="ui"]
+visible = false
+margin_left = 69.9948
+margin_top = 242.228
+margin_right = 243.995
+margin_bottom = 342.228
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 3 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnSound" type="TextureButton" parent="ui"]
+visible = false
+margin_left = 3.5442
+margin_top = 394.992
+margin_right = 83.5442
+margin_bottom = 474.992
+toggle_mode = true
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnScore" type="TextureButton" parent="ui"]
+visible = false
+margin_left = 237.181
+margin_top = 397.272
+margin_right = 317.181
+margin_bottom = 477.272
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnHelp" type="TextureButton" parent="ui"]
+visible = false
+margin_left = 252.134
+margin_top = 229.188
+margin_right = 306.134
+margin_bottom = 283.188
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="scoreDotutil" parent="ui" instance=ExtResource( 12 )]
+
+[node name="bg" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="bg"]
+margin_right = 320.0
+margin_bottom = 480.0
+mouse_filter = 2
+color = Color( 0.627451, 0.819608, 0.807843, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="block" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="particleUtil" parent="block" instance=ExtResource( 10 )]
+z_index = 1
+
+[node name="spawnblock" parent="block" instance=ExtResource( 11 )]
+
+[node name="player" type="CanvasLayer" parent="."]
+layer = 2
+follow_viewport_enable = true
+
+[node name="player" parent="player" instance=ExtResource( 9 )]
+position = Vector2( 69.4031, 239.825 )
+z_index = 1
+
+[node name="camera" type="Camera2D" parent="."]
+offset = Vector2( 160, 240 )
+current = true
+[connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
+[connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
+[connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]
+[connection signal="button_down" from="ui/btnSound" to="." method="_on_btnSound_button_down"]
+[connection signal="button_up" from="ui/btnSound" to="." method="_on_btnSound_button_up"]
+[connection signal="pressed" from="ui/btnSound" to="." method="_on_btnSound_pressed"]
+[connection signal="button_down" from="ui/btnScore" to="." method="_on_btnScore_button_down"]
+[connection signal="button_up" from="ui/btnScore" to="." method="_on_btnScore_button_up"]
+[connection signal="pressed" from="ui/btnScore" to="." method="_on_btnScore_pressed"]
+[connection signal="button_down" from="ui/btnHelp" to="." method="_on_btnHelp_button_down"]
+[connection signal="button_up" from="ui/btnHelp" to="." method="_on_btnHelp_button_up"]
+[connection signal="pressed" from="ui/btnHelp" to="." method="_on_btnHelp_pressed"]
