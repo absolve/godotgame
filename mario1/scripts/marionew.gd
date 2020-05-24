@@ -1,9 +1,9 @@
-extends KinematicBody2D
+extends Area2D
 
 
 var speed = constants.mario_speed  #移动速度
 var jump_speed = constants.jumpSpeed #跳跃
-var gravity=constants.gravity #重力
+var _gravity=constants.gravity #重力
 var velocity = Vector2.ZERO	#速度
 var acceleration = constants.acceleration	#加速度
 var faceRight=true	#面向右边
@@ -102,17 +102,23 @@ func stand(delta):
 		beforeJump()
 		#beforeSmall2big()
 
-	velocity.y+=gravity*delta
-	velocity = move_and_slide(velocity, Vector2.UP)
+	velocity.y+=_gravity*delta
+	#velocity = move_and_slide(velocity, Vector2.UP)
+	
+	if $ray.is_colliding():
+		velocity.y=0
+		position +=velocity*delta
+	else:
+		position +=velocity*delta
 	
 
-	if not is_on_floor():	#不在地面上
-		print("stand  not is_on_floor")
-		status=constants.fall
+#	if not is_on_floor():	#不在地面上
+#		print("stand  not is_on_floor")
+#		status=constants.fall
 
 #移动
 func walk(delta):
-	velocity.y+=gravity*delta
+	velocity.y+=_gravity*delta
 	#计算动画速度
 	if round(velocity.x)==0:	#如果遇到墙壁等 速度就不变化
 		pass
@@ -204,14 +210,22 @@ func walk(delta):
 				#status=constants.stand
 		#print("speed ",velocity.x)
 
-	velocity = move_and_slide(velocity, Vector2.UP)
+	
+	position+=velocity*delta
 
-	if not is_on_floor():	#不在地面上
-		print("is_on_floor")
+	if not $ray.is_colliding():
 		$ani.stop()
 		preStatus = constants.walk
 		status=constants.fall
-		
+
+#	velocity = move_and_slide(velocity, Vector2.UP)
+#
+#	if not is_on_floor():	#不在地面上
+#		print("is_on_floor")
+#		$ani.stop()
+#		preStatus = constants.walk
+#		status=constants.fall
+#
 
 
 
@@ -224,14 +238,14 @@ func beforeJump()->void:
 	print('beforeJump')
 	velocity.y=-jump_speed
 	status=constants.jump
-	gravity = constants.gravityJump
+	_gravity = constants.gravityJump
 	#$ani.play("jump_small")
 
 
 #跳跃
 func jump(delta):
 	#gravity = constants.gravityJump
-	velocity.y+=gravity*delta
+	velocity.y+=_gravity*delta
 #	print(212121)
 #	print("-------------",velocity.y)
 	if isCrouch:
@@ -240,13 +254,13 @@ func jump(delta):
 		animation("jump")
 
 	if velocity.y>=0 :	#状态变化
-		gravity=constants.gravity
+		_gravity=constants.gravity
 		preStatus= constants.jump
 		status=constants.fall
 
 	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
 #		print("2121")
-		gravity = constants.gravity
+		_gravity = constants.gravity
 
 	if Input.is_action_pressed("ui_left"):
 		if velocity.x>-speed:
@@ -255,7 +269,10 @@ func jump(delta):
 		if velocity.x<speed:
 			velocity.x+=acceleration
 
-	velocity = move_and_slide(velocity, Vector2.UP)
+	
+	position+=velocity*delta
+	
+#	velocity = move_and_slide(velocity, Vector2.UP)
 
 
 
@@ -289,7 +306,7 @@ func fall(delta):
 		pass
 	
 	
-	velocity.y+=gravity*delta
+	velocity.y+=_gravity*delta
 
 	if Input.is_action_pressed("ui_left"):
 		if velocity.x>-speed:
@@ -297,10 +314,15 @@ func fall(delta):
 	elif Input.is_action_pressed("ui_right"):
 		if velocity.x<speed:
 			velocity.x+=acceleration
-	velocity = move_and_slide(velocity, Vector2.UP)
+	#velocity = move_and_slide(velocity, Vector2.UP)
 
-	if is_on_floor():
+	position+=velocity*delta
+
+	if $ray.is_colliding():
 		status=constants.walk
+
+#	if is_on_floor():
+#		status=constants.walk
 
 
 #进入蹲着状态之前
@@ -343,7 +365,8 @@ func crouch(delta):
 #			velocity.x=0
 #			beforeStand()
 			#status=constants.stand
-	velocity = move_and_slide(velocity, Vector2.UP)
+	position+=velocity*delta
+	#velocity = move_and_slide(velocity, Vector2.UP)
 
 
 
@@ -534,3 +557,10 @@ func animation(name:String)->void:
 			print(fire_animation[index])
 			#$ani.play("fire")
 			$ani.play(fire_animation[index])
+
+
+
+func _on_mario_body_entered(body):
+	velocity.y=0
+	print(1111111111111)
+	pass # Replace with function body.
