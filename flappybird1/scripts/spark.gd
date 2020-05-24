@@ -12,6 +12,7 @@ func _ready():
 
 #显示闪光
 func show():
+	visible=true
 	play("default")
 	pass
 
@@ -22,4 +23,3 @@ func setNewPos():
 
 func _on_spark_animation_finished():
 	setNewPos()
-	pass

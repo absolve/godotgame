@@ -13,6 +13,7 @@
 [ext_resource path="res://scenes/ground.tscn" type="PackedScene" id=11]
 
 [node name="welcome" type="Node2D"]
+z_index = 2
 script = ExtResource( 9 )
 
 [node name="Sprite" type="Sprite" parent="."]

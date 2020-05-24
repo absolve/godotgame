@@ -42,7 +42,7 @@ func setRandomYpos():
 
 #进入到水管中间就算得分
 func _on_Area2D_body_entered(body):
-	print("_on_Area2D_body_entered")
+	#print("_on_Area2D_body_entered")
 	if body.is_in_group(game.group_bird):
 		emit_signal("scoreChange")
 

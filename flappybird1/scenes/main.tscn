@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://sprites/background_day.png" type="Texture" id=1]
 [ext_resource path="res://scenes/ground.tscn" type="PackedScene" id=2]
@@ -24,7 +24,7 @@
 [ext_resource path="res://scripts/spark.gd" type="Script" id=22]
 [ext_resource path="res://sprites/label_get_ready.png" type="Texture" id=23]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 20 ), ExtResource( 21 ), ExtResource( 15 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
@@ -32,8 +32,7 @@ animations = [ {
 "speed": 7.0
 } ]
 
-[sub_resource type="Animation" id=1]
-resource_name = "idle"
+[sub_resource type="Animation" id=2]
 tracks/0/type = "value"
 tracks/0/path = NodePath("game_over:scale")
 tracks/0/interp = 1
@@ -72,34 +71,6 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id=3]
-resource_name = "fade_in"
-step = 0.2
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ true ]
-}
-
-[sub_resource type="Animation" id=4]
 resource_name = "fade_out"
 length = 0.5
 tracks/0/type = "value"
@@ -121,39 +92,47 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.5 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0.1, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false ]
+"values": [ true, false ]
 }
 
 [node name="main" type="Node2D"]
 script = ExtResource( 3 )
 
-[node name="bg" type="Sprite" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="bg" type="Sprite" parent="CanvasLayer"]
 texture = ExtResource( 1 )
 centered = false
 
-[node name="pipe" parent="." instance=ExtResource( 18 )]
+[node name="game" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="pipe" parent="game" instance=ExtResource( 18 )]
 position = Vector2( 157, 80 )
 
-[node name="pipe2" parent="." instance=ExtResource( 18 )]
+[node name="pipe2" parent="game" instance=ExtResource( 18 )]
 position = Vector2( 248, 80 )
 
-[node name="pipe3" parent="." instance=ExtResource( 18 )]
+[node name="pipe3" parent="game" instance=ExtResource( 18 )]
 position = Vector2( 339, 80 )
 
-[node name="ground" parent="." instance=ExtResource( 2 )]
+[node name="ground" parent="game" instance=ExtResource( 2 )]
 z_index = 0
 
-[node name="ground1" parent="." instance=ExtResource( 2 )]
+[node name="ground1" parent="game" instance=ExtResource( 2 )]
 position = Vector2( 168, 256 )
 z_index = 0
 
-[node name="bird" parent="." instance=ExtResource( 19 )]
+[node name="bird" parent="game" instance=ExtResource( 19 )]
 z_index = 1
 
-[node name="score" type="HBoxContainer" parent="."]
+[node name="score" type="HBoxContainer" parent="game"]
 margin_top = 10.0
 margin_right = 144.0
 margin_bottom = 28.0
@@ -162,13 +141,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="score"]
+[node name="TextureRect" type="TextureRect" parent="game/score"]
 margin_left = 66.0
 margin_right = 78.0
 margin_bottom = 18.0
 texture = ExtResource( 17 )
 
-[node name="btnPause" type="TextureButton" parent="."]
+[node name="btnPause" type="TextureButton" parent="game"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 23.0
@@ -180,7 +159,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="tipBtn" type="TextureButton" parent="."]
+[node name="tipBtn" type="TextureButton" parent="game"]
 margin_left = 44.0
 margin_top = 104.0
 margin_right = 101.0
@@ -190,7 +169,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="gameOverPanel" type="Control" parent="."]
+[node name="gameOverPanel" type="Control" parent="game"]
 visible = false
 margin_right = 144.0
 margin_bottom = 256.0
@@ -198,13 +177,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="game_over" type="Sprite" parent="gameOverPanel"]
+[node name="game_over" type="Sprite" parent="game/gameOverPanel"]
 position = Vector2( 24, 50 )
 scale = Vector2( 0.91, 0.91 )
 texture = ExtResource( 8 )
 centered = false
 
-[node name="panel" type="TextureRect" parent="gameOverPanel"]
+[node name="panel" type="TextureRect" parent="game/gameOverPanel"]
 margin_left = 16.0
 margin_top = 90.0
 margin_right = 129.0
@@ -214,7 +193,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="scoreContainer" type="HBoxContainer" parent="gameOverPanel/panel"]
+[node name="scoreContainer" type="HBoxContainer" parent="game/gameOverPanel/panel"]
 margin_left = 62.0
 margin_top = 17.0
 margin_right = 102.0
@@ -224,13 +203,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="score" type="TextureRect" parent="gameOverPanel/panel/scoreContainer"]
+[node name="score" type="TextureRect" parent="game/gameOverPanel/panel/scoreContainer"]
 margin_left = 33.0
 margin_right = 40.0
 margin_bottom = 10.0
 texture = ExtResource( 9 )
 
-[node name="bestContainer" type="HBoxContainer" parent="gameOverPanel/panel"]
+[node name="bestContainer" type="HBoxContainer" parent="game/gameOverPanel/panel"]
 margin_left = 62.0
 margin_top = 37.0
 margin_right = 102.0
@@ -240,13 +219,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="best" type="TextureRect" parent="gameOverPanel/panel/bestContainer"]
+[node name="best" type="TextureRect" parent="game/gameOverPanel/panel/bestContainer"]
 margin_left = 33.0
 margin_right = 40.0
 margin_bottom = 10.0
 texture = ExtResource( 9 )
 
-[node name="newHighScore" type="TextureRect" parent="gameOverPanel/panel"]
+[node name="newHighScore" type="TextureRect" parent="game/gameOverPanel/panel"]
 visible = false
 margin_left = 67.0
 margin_top = 29.0
@@ -254,7 +233,7 @@ margin_right = 83.0
 margin_bottom = 36.0
 texture = ExtResource( 10 )
 
-[node name="medal" type="TextureRect" parent="gameOverPanel/panel"]
+[node name="medal" type="TextureRect" parent="game/gameOverPanel/panel"]
 margin_left = 13.0
 margin_top = 21.0
 margin_right = 35.0
@@ -263,12 +242,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="spark" type="AnimatedSprite" parent="gameOverPanel/panel/medal"]
-frames = SubResource( 2 )
+[node name="spark" type="AnimatedSprite" parent="game/gameOverPanel/panel/medal"]
+visible = false
+frames = SubResource( 1 )
 frame = 2
 script = ExtResource( 22 )
 
-[node name="btn" type="HBoxContainer" parent="gameOverPanel"]
+[node name="btn" type="HBoxContainer" parent="game/gameOverPanel"]
 margin_left = 18.0
 margin_top = 160.0
 margin_right = 126.0
@@ -277,23 +257,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="btnRestart" type="TextureButton" parent="gameOverPanel/btn"]
+[node name="btnRestart" type="TextureButton" parent="game/gameOverPanel/btn"]
 margin_right = 52.0
 margin_bottom = 29.0
 texture_normal = ExtResource( 13 )
 texture_pressed = ExtResource( 11 )
 
-[node name="TextureButton2" type="TextureButton" parent="gameOverPanel/btn"]
+[node name="TextureButton2" type="TextureButton" parent="game/gameOverPanel/btn"]
 margin_left = 56.0
 margin_right = 108.0
 margin_bottom = 29.0
 texture_normal = ExtResource( 14 )
 texture_pressed = ExtResource( 12 )
 
-[node name="ani" type="AnimationPlayer" parent="gameOverPanel"]
-anims/idle = SubResource( 1 )
+[node name="ani" type="AnimationPlayer" parent="game/gameOverPanel"]
+anims/idle = SubResource( 2 )
 
-[node name="pausePanel" type="Control" parent="."]
+[node name="pausePanel" type="Control" parent="game"]
 pause_mode = 2
 visible = false
 margin_right = 144.0
@@ -302,7 +282,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="ColorRect" parent="pausePanel"]
+[node name="bg" type="ColorRect" parent="game/pausePanel"]
 margin_right = 144.0
 margin_bottom = 256.0
 color = Color( 0, 0, 0, 0.223529 )
@@ -310,7 +290,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="btnResume" type="TextureButton" parent="pausePanel"]
+[node name="btnResume" type="TextureButton" parent="game/pausePanel"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 23.0
@@ -320,7 +300,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="btnMenu" type="TextureButton" parent="pausePanel"]
+[node name="btnMenu" type="TextureButton" parent="game/pausePanel"]
 margin_left = 52.0
 margin_top = 121.0
 margin_right = 92.0
@@ -330,21 +310,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="game"]
 wait_time = 2.0
 one_shot = true
 
-[node name="ready" type="Sprite" parent="."]
-visible = false
+[node name="ready" type="Sprite" parent="game"]
 position = Vector2( 72, 70 )
 texture = ExtResource( 23 )
 
-[node name="ani" type="AnimationPlayer" parent="ready"]
-anims/fade_in = SubResource( 3 )
-anims/fade_out = SubResource( 4 )
-[connection signal="pressed" from="btnPause" to="." method="_on_btnPause_pressed"]
-[connection signal="pressed" from="tipBtn" to="." method="_on_tipBtn_pressed"]
-[connection signal="animation_finished" from="gameOverPanel/panel/medal/spark" to="gameOverPanel/panel/medal/spark" method="_on_spark_animation_finished"]
-[connection signal="pressed" from="gameOverPanel/btn/btnRestart" to="." method="_on_btnRestart_pressed"]
-[connection signal="pressed" from="pausePanel/btnResume" to="." method="_on_btnResume_pressed"]
-[connection signal="pressed" from="pausePanel/btnMenu" to="." method="_on_btnMenu_pressed"]
+[node name="ani" type="AnimationPlayer" parent="game/ready"]
+anims/fade_out = SubResource( 3 )
+
+[node name="camera" type="Camera2D" parent="game"]
+offset = Vector2( 72, 128 )
+current = true
+[connection signal="pressed" from="game/btnPause" to="." method="_on_btnPause_pressed"]
+[connection signal="pressed" from="game/tipBtn" to="." method="_on_tipBtn_pressed"]
+[connection signal="animation_finished" from="game/gameOverPanel/panel/medal/spark" to="game/gameOverPanel/panel/medal/spark" method="_on_spark_animation_finished"]
+[connection signal="pressed" from="game/gameOverPanel/btn/btnRestart" to="." method="_on_btnRestart_pressed"]
+[connection signal="pressed" from="game/pausePanel/btnResume" to="." method="_on_btnResume_pressed"]
+[connection signal="pressed" from="game/pausePanel/btnMenu" to="." method="_on_btnMenu_pressed"]

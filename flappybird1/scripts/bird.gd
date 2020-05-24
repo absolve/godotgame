@@ -103,7 +103,7 @@ func dead(delta):
 
 #如果碰到水管和地面就发出信号
 func _on_bird_body_entered(body):
-	print("_on_bird_body_entered")
+	#print("_on_bird_body_entered")
 	if state!=game.play:	#不是开始的状态就跳过
 		return
 	if body.is_in_group(game.group_ground):
