@@ -21,9 +21,11 @@ script = ExtResource( 5 )
 layer = 2
 
 [node name="cloud" parent="ui" instance=ExtResource( 7 )]
+visible = false
 position = Vector2( 92.342, 86.4005 )
 
 [node name="cloud2" parent="ui" instance=ExtResource( 7 )]
+visible = false
 position = Vector2( 229.427, 183.097 )
 angle = -1
 
@@ -89,6 +91,7 @@ __meta__ = {
 [node name="bg" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="bg"]
+visible = false
 margin_right = 320.0
 margin_bottom = 480.0
 mouse_filter = 2
