@@ -63,6 +63,7 @@ func jump(delta):
 	
 	rotateDeg+=rotateSpeed*delta
 	$sprite.rotation_degrees=round(rotateDeg)
+	$bg.rotation_degrees=round(rotateDeg)
 	if rotateDeg>360:
 		rotateDeg=0
 		
@@ -74,7 +75,7 @@ func jump(delta):
 		state=Game.playerState.STAND
 		rotateDeg=0
 		$sprite.rotation_degrees=0
-	
+		$bg.rotation_degrees=0
 	
 	
 	
