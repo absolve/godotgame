@@ -30,6 +30,7 @@ position = Vector2( 229.427, 183.097 )
 angle = -1
 
 [node name="Sprite" type="Sprite" parent="ui"]
+visible = false
 position = Vector2( 30, 60 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 1 )

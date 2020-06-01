@@ -12,7 +12,7 @@ enum blockState{FAST,SLOW,STOP}
 enum playerState{IDLE,STAND,JUMP,DEAD}
 
 
-signal blockExit 
+signal blockExit(pos)
 
 var sound=true	#声音开关
 

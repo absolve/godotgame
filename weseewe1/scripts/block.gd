@@ -18,6 +18,12 @@ func _ready():
 	if noCollision:
 		$shape.disabled=noCollision
 
+func setColor(color:String):
+	$bg.modulate=Color(color)
+
+func setState(state):
+	self.state=state
+
 func _physics_process(delta):
 	if state==Game.blockState.SLOW:
 		position.x-=speed*delta
@@ -26,9 +32,9 @@ func _physics_process(delta):
 	elif state==Game.blockState.STOP:	
 		pass
 	
-	if position.x<=offsetX and !sendExit:	#消失在左边
+	if position.x<=8 and !sendExit:	#消失在左边
 		print(position.x)
-		Game.emit_signal("blockExit")
+		Game.emit_signal("blockExit",position.x)
 		print(5665)
 		sendExit=true
 		
