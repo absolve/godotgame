@@ -7,14 +7,14 @@ var state = Game.blockState.SLOW
 
 func _ready():
 	Game.connect("blockExit",self,"_block_exit")
-	
-	pass # Replace with function body.
+	init()
+	pass 
 
 #新建
 func init():
-	for i in range(5):
+	for i in range(4):
 		var temp=block.instance()
-		temp.position.x=(temp.width+1)*i+temp.width/2
+		temp.position.x=temp.width/2+(temp.width+2)*i
 		temp.state=state
 		add_child(temp)
 		
@@ -30,11 +30,12 @@ func stop():
 
 
 func _block_exit():
-	print(121212)
 	var temp=block.instance()	
 #	temp.modulate=Color(0,0,0)
-	temp.position.x=(temp.width+1)*5+temp.width/2-30
+	temp.position.x=temp.width/2+(temp.width+2)*4
 	temp.state=state
-	print(temp.position.x)
+	print("new ",temp.position.x)
 	add_child(temp)	
+
+	pass
 	

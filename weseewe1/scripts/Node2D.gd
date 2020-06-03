@@ -14,7 +14,6 @@ var dot = preload("res://scenes/dot.tscn")
 func _ready():
 	randomize()
 	$top.add_to_group(Game.group["colorDot"])
-	
 	add3Dot()
 	print(Game.group["colorDot"])
 	pass 

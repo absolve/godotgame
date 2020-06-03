@@ -39,6 +39,11 @@ jump={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="分数点"
+2d_physics/layer_2="颜色点"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

@@ -4,12 +4,11 @@ extends Node2D
 var offsety=80 #摄像机的y偏移
 var pos=543
 var cameray=400
-
 var gravity=1000
 
 func _ready():
 	$block/spawnblock.init()
-	pass # Replace with function body.
+	pass 
 
 
 
@@ -26,6 +25,7 @@ func _physics_process(delta):
 	
 	if $camera.offset.y>240:
 		$camera.offset.y=240
+	
 
 
 func _on_btnStart_pressed():
@@ -34,8 +34,10 @@ func _on_btnStart_pressed():
 	$block/particleUtil.pos=Vector2(240,400)
 	$block/particleUtil.addParticle()
 	
-	
+
+#帮助按钮	
 func _on_btnHelp_pressed():
+	$ani.play("help")
 	pass # Replace with function body.
 
 
@@ -53,9 +55,6 @@ func _on_btnStart_button_down():
 	$ui/btnStart.rect_position.y+=5
 	$ui/btnStart.modulate=Color(0.8,0.8,0.8)
 	
-
-
-
 
 func _on_btnScore_pressed():
 	pass # Replace with function body.
@@ -108,3 +107,50 @@ func _on_btnHelp_button_down():
 	$ui/btnHelp.rect_position.x-=5
 	$ui/btnHelp.rect_position.y+=5
 	$ui/btnHelp.modulate=Color(0.8,0.8,0.8)
+
+
+func _on_btnMain_button_down():
+	$ui/btnMain.rect_position.x-=5
+	$ui/btnMain.rect_position.y+=5
+	$ui/btnMain.modulate=Color(0.8,0.8,0.8)
+
+
+
+func _on_btnMain_button_up():
+	$ui/btnMain.rect_position.x+=5
+	$ui/btnMain.rect_position.y-=5
+	$ui/btnMain.modulate=Color(1,1,1)
+
+
+func _on_btnMain_pressed():
+	$ani.play_backwards("help")
+	
+
+
+func _on_btnRank_button_down():
+	$ui/btnRank.rect_position.x-=5
+	$ui/btnRank.rect_position.y+=5
+	$ui/btnRank.modulate=Color(0.8,0.8,0.8)
+
+
+
+
+func _on_btnRank_button_up():
+	$ui/btnRank.rect_position.x+=5
+	$ui/btnRank.rect_position.y-=5
+	$ui/btnRank.modulate=Color(1,1,1)
+	pass # Replace with function body.
+
+
+func _on_btnNet_button_down():
+	$ui/btnHelp.rect_position.x-=5
+	$ui/btnHelp.rect_position.y+=5
+	$ui/btnHelp.modulate=Color(0.8,0.8,0.8)
+
+
+
+func _on_btnNet_button_up():
+	$ui/btnHelp.rect_position.x+=5
+	$ui/btnHelp.rect_position.y-=5
+	$ui/btnHelp.modulate=Color(1,1,1)
+	

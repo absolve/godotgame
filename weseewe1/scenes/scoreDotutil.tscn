@@ -1,15 +1,58 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://scripts/scoreDotutil.gd" type="Script" id=2]
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+
+var scoredot = preload(\"res://scenes/scoreDot.tscn\")
+
+
+func _ready():
+	randomize()
+	
+	for i in range(10):
+		var temp = scoredot.instance()
+		temp.position.x = 70+i*18+rand_range(-0.2,0.2)
+		temp.position.y=5
+		temp.name=str(\"scoredot\",i)
+		temp.setColor(Game.blockColor[5])
+#		var joint = GrooveJoint2D.new()	
+#		joint.position.x=70+i*18
+#		joint.position.y=10
+#		joint.node_a = NodePath(\"../top\")
+#		joint.node_b = NodePath(str(\"../\",temp.name))
+#		joint.length=100
+#		joint.initial_offset=80
+		
+		var joint= DampedSpringJoint2D.new()
+		joint.length=70
+		joint.rest_length=4
+		joint.stiffness=8
+		joint.damping=1
+		joint.position.x=70+i*18
+		joint.position.y=0
+		joint.node_a=NodePath(\"../top\")
+		joint.node_b=NodePath(str(\"../\",temp.name))
+	
+		
+		add_child(temp)
+		add_child(joint)
+		
+	pass 
+
+
+
+
+"
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 160, 10 )
+extents = Vector2( 160, 5 )
 
 [node name="scoreDotutil" type="Node2D"]
-script = ExtResource( 2 )
+script = SubResource( 2 )
 
 [node name="top" type="StaticBody2D" parent="."]
-position = Vector2( 160, 0 )
+position = Vector2( 160, -10 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="top"]
 shape = SubResource( 1 )
