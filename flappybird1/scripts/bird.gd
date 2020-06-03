@@ -21,6 +21,7 @@ func _ready():
 #	setState(game.fly)
 #	print($ani.position.y)
 	#setState(game.play)
+	friction=1
 	randomize()
 	index=randi()%3
 	print(index)
