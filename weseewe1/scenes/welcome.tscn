@@ -127,6 +127,18 @@ tracks/8/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/9/type = "value"
+tracks/9/path = NodePath("camera:offset")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
+}
 
 [node name="welcome" type="Node2D"]
 z_index = 1
@@ -153,7 +165,9 @@ margin_left = 69.9948
 margin_top = 242.228
 margin_right = 243.995
 margin_bottom = 342.228
+focus_mode = 0
 shortcut_in_tooltip = false
+enabled_focus_mode = 0
 texture_normal = ExtResource( 3 )
 stretch_mode = 2
 __meta__ = {
@@ -165,8 +179,10 @@ margin_left = 3.0
 margin_top = 394.992
 margin_right = 83.0
 margin_bottom = 474.992
+focus_mode = 0
 toggle_mode = true
 shortcut_in_tooltip = false
+enabled_focus_mode = 0
 texture_normal = ExtResource( 2 )
 texture_pressed = ExtResource( 8 )
 __meta__ = {
@@ -178,7 +194,9 @@ margin_left = 237.0
 margin_top = 397.272
 margin_right = 317.0
 margin_bottom = 477.272
+focus_mode = 0
 shortcut_in_tooltip = false
+enabled_focus_mode = 0
 texture_normal = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -189,7 +207,9 @@ margin_left = 252.0
 margin_top = 229.188
 margin_right = 306.0
 margin_bottom = 283.188
+focus_mode = 0
 shortcut_in_tooltip = false
+enabled_focus_mode = 0
 texture_normal = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -204,6 +224,8 @@ margin_left = 3.0
 margin_top = 20.0
 margin_right = 83.0
 margin_bottom = 100.002
+focus_mode = 0
+enabled_focus_mode = 0
 texture_normal = ExtResource( 14 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -217,6 +239,8 @@ anchor_bottom = 1.0
 margin_top = -80.0
 margin_right = 80.0
 margin_bottom = 3.05176e-05
+focus_mode = 0
+enabled_focus_mode = 0
 texture_normal = ExtResource( 15 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -231,6 +255,8 @@ margin_left = 80.0
 margin_top = -80.0
 margin_right = 160.0
 margin_bottom = 3.05176e-05
+focus_mode = 0
+enabled_focus_mode = 0
 texture_normal = ExtResource( 13 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -239,7 +265,6 @@ __meta__ = {
 [node name="bg" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="bg"]
-visible = false
 margin_right = 320.0
 margin_bottom = 480.0
 mouse_filter = 2

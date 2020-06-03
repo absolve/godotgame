@@ -114,13 +114,13 @@ centered = false
 follow_viewport_enable = true
 
 [node name="pipe" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 157, 80 )
+position = Vector2( 167, 80 )
 
 [node name="pipe2" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 248, 80 )
+position = Vector2( 258, 80 )
 
 [node name="pipe3" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 339, 80 )
+position = Vector2( 349, 80 )
 
 [node name="ground" parent="game" instance=ExtResource( 2 )]
 z_index = 0

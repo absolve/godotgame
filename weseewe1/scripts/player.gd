@@ -13,11 +13,15 @@ var rotateSpeed=320
 var jumpAgain=true	#再次跳跃
 
 
-var state = Game.playerState.STAND
+var state = Game.playerState.IDLE
 
 func _ready():
 	add_to_group("player")
 	pass 
+
+func setState(state):
+	self.state=state
+	
 
 
 func _physics_process(delta):
@@ -30,7 +34,6 @@ func _physics_process(delta):
 		jump(delta)
 	elif state==Game.playerState.DEAD:
 		dead(delta)
-	
 	
 	
 	animationTime+=1
@@ -77,9 +80,7 @@ func jump(delta):
 		$sprite.rotation_degrees=0
 		$bg.rotation_degrees=0
 	
-	
-	
-	#判断是否超出品墓
+	#判断是否超出
 	
 	pass
 

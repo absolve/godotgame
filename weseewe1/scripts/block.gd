@@ -3,8 +3,8 @@ extends StaticBody2D
 
 #状态
 export var state = Game.blockState.SLOW
-export var speed=30
-export var fastSpeed=140
+export var speed=50
+export var fastSpeed=160
 export var ypos=480
 export var offsetX=21
 var height=128	#高度128
@@ -18,24 +18,29 @@ func _ready():
 	if noCollision:
 		$shape.disabled=noCollision
 
+func setColor(color:String):
+	$bg.modulate=Color(color)
+
+func setState(state):
+	self.state=state
+
 func _physics_process(delta):
 	if state==Game.blockState.SLOW:
-		position.x-=round(speed*delta)
+		position.x-=speed*delta
 	elif state==Game.blockState.FAST:
-		position.x-=round(fastSpeed*delta)
+		position.x-=fastSpeed*delta
 	elif state==Game.blockState.STOP:	
 		pass
-
-	if position.x<51 and !sendExit:	#消失在左边
-		#position.x=width*4+width/2-30
+	
+	if position.x<=8 and !sendExit:	#消失在左边
 		print(position.x)
-		Game.emit_signal("blockExit")
+		Game.emit_signal("blockExit",position.x)
+		print(5665)
 		sendExit=true
 		
 		
 
 
 func _on_VisibilityNotifier2D_screen_exited():
-	#Game.emit_signal("blockExit")
 	queue_free()
-	pass
+	 

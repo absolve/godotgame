@@ -5,14 +5,14 @@ var _author="LittlePuzzle  eric zingeler"
 
 
 #游戏状态
-enum state {STATE_IDLE, STATE_START, STATE_OVER}
+enum state {STATE_IDLE, STATE_START, STATE_OVER,STATE_HELP}
 #方块状态
 enum blockState{FAST,SLOW,STOP}
 #玩家
 enum playerState{IDLE,STAND,JUMP,DEAD}
 
 
-signal blockExit 
+signal blockExit(pos)
 
 var sound=true	#声音开关
 

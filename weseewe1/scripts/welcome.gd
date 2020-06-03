@@ -6,38 +6,70 @@ var pos=543
 var cameray=400
 var gravity=1000
 
+var state=Game.state.STATE_IDLE
+
 func _ready():
 	$block/spawnblock.init()
 	pass 
 
 
 
-func _process(delta):
-	
-	pass
-
 func _physics_process(delta):
-	var velocity = $player/player.velocity
-	if velocity.y>0:
-		$camera.offset.y+=abs(velocity.y/100*0.2)
-	elif velocity.y<0:
-		$camera.offset.y-=abs(velocity.y/100*0.2)
+	if state==Game.state.STATE_IDLE:
+		
+		pass		
+	elif state==Game.state.STATE_HELP:
+		var velocity = $player/player.velocity
+		if velocity.y>0:
+			$camera.offset.y+=abs(velocity.y/100*0.2)
+		elif velocity.y<0:
+			$camera.offset.y-=abs(velocity.y/100*0.2)
+		
+		if $camera.offset.y>310:
+			$camera.offset.y=310
+		pass
+	elif state==Game.state.STATE_START:
+		var velocity = $player/player.velocity
+		if velocity.y>0:
+			$camera.offset.y+=abs(velocity.y/100*0.2)
+		elif velocity.y<0:
+			$camera.offset.y-=abs(velocity.y/100*0.2)
+		
+		if $camera.offset.y>310:
+			$camera.offset.y=310
+		pass
 	
-	if $camera.offset.y>240:
-		$camera.offset.y=240
+
+func setState(state):
+	self.state=state
+	if state==Game.state.STATE_HELP:
+		$player/player.setState(Game.playerState.STAND)
+		$block/spawnblock.setState(Game.blockState.FAST)	
+		$ani.play("help")
+#		yield($ani,"animation_finished")
+		
+	elif state==Game.state.STATE_IDLE:
+		$player/player.setState(Game.playerState.IDLE)
+		$ani.play_backwards("help")
+		yield($ani,"animation_finished")
+		$block/spawnblock.setState(Game.blockState.SLOW)
+	elif state==Game.state.STATE_START:
+		pass
+	elif state==Game.state.STATE_OVER:
+		
+		pass
+		
 	
 
 
 func _on_btnStart_pressed():
-	
-	
 	$block/particleUtil.pos=Vector2(240,400)
 	$block/particleUtil.addParticle()
 	
 
 #帮助按钮	
 func _on_btnHelp_pressed():
-	$ani.play("help")
+	setState(Game.state.STATE_HELP)
 	pass # Replace with function body.
 
 
@@ -57,6 +89,7 @@ func _on_btnStart_button_down():
 	
 
 func _on_btnScore_pressed():
+	
 	pass # Replace with function body.
 
 
@@ -123,8 +156,7 @@ func _on_btnMain_button_up():
 
 
 func _on_btnMain_pressed():
-	$ani.play_backwards("help")
-	
+	setState(Game.state.STATE_IDLE)
 
 
 func _on_btnRank_button_down():
