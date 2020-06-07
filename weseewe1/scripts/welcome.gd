@@ -8,6 +8,9 @@ var gravity=1000
 
 var state=Game.state.STATE_IDLE
 
+var helpInfo =preload("res://scenes/helpInfo.tscn")
+
+
 func _ready():
 	$block/spawnblock.init()
 	pass 
@@ -46,13 +49,16 @@ func setState(state):
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setState(Game.blockState.FAST)	
 		$ani.play("help")
+		var helpinfo=helpInfo.instance()
+		$ui.add_child(helpinfo)
 #		yield($ani,"animation_finished")
 		
 	elif state==Game.state.STATE_IDLE:
+		$ui/helpInfo.queue_free()
 		$player/player.setState(Game.playerState.IDLE)
 		$ani.play_backwards("help")
 		yield($ani,"animation_finished")
-		$block/spawnblock.setState(Game.blockState.SLOW)
+		$block/spawnblock.setState(Game.blockState.SLOW)	
 	elif state==Game.state.STATE_START:
 		pass
 	elif state==Game.state.STATE_OVER:
