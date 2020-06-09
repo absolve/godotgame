@@ -8,7 +8,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 160, 5 )
 
-[sub_resource type="CircleShape2D" id=3]
+[sub_resource type="CircleShape2D" id=2]
 
 [node name="helpInfo" type="Node2D"]
 script = ExtResource( 5 )
@@ -16,19 +16,20 @@ script = ExtResource( 5 )
 [node name="top" type="StaticBody2D" parent="."]
 
 [node name="shape" type="CollisionShape2D" parent="top"]
-position = Vector2( 160, -5 )
+position = Vector2( 160, -100 )
 shape = SubResource( 1 )
 
 [node name="tip2" type="RigidBody2D" parent="."]
-position = Vector2( 254.603, 54.0494 )
+position = Vector2( 254.603, -25 )
 mode = 2
-gravity_scale = 4.0
+mass = 1.22449
+gravity_scale = 5.0
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="shape" type="CollisionShape2D" parent="tip2"]
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 
 [node name="left" type="Sprite" parent="tip2"]
 position = Vector2( -137, 0 )
@@ -50,6 +51,7 @@ margin_top = -29.0
 margin_right = 45.0
 margin_bottom = 14.0
 custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Jump on your colors,
     earn 10 to win!"
 __meta__ = {
@@ -57,15 +59,16 @@ __meta__ = {
 }
 
 [node name="tip1" type="RigidBody2D" parent="."]
-position = Vector2( 148.107, 147.224 )
+position = Vector2( 148.107, -20 )
 mode = 2
-gravity_scale = 4.0
+mass = 1.53061
+gravity_scale = 5.0
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="shape" type="CollisionShape2D" parent="tip1"]
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 
 [node name="left" type="Sprite" parent="tip1"]
 position = Vector2( -132, 0 )
@@ -87,6 +90,7 @@ margin_top = -29.5962
 margin_right = 56.8824
 margin_bottom = 13.4038
 custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Tap to jump,agani 
   to double jump."
 __meta__ = {
@@ -94,15 +98,15 @@ __meta__ = {
 }
 
 [node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
-position = Vector2( 219.958, 9.45377 )
+position = Vector2( 219.958, -90 )
 node_a = NodePath("../top")
 node_b = NodePath("../tip2")
-length = 10.0
-stiffness = 4.5
+length = 15.0
+stiffness = 4.0
 
 [node name="DampedSpringJoint2D2" type="DampedSpringJoint2D" parent="."]
-position = Vector2( 49.0932, 3.98053 )
+position = Vector2( 49.093, -90 )
 node_a = NodePath("../top")
 node_b = NodePath("../tip1")
-length = 10.0
-stiffness = 4.0
+length = 15.0
+stiffness = 3.0

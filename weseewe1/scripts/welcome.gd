@@ -51,10 +51,12 @@ func setState(state):
 		$ani.play("help")
 		var helpinfo=helpInfo.instance()
 		$ui.add_child(helpinfo)
+		$ui/scoreDotutil.clear()
 #		yield($ani,"animation_finished")
 		
 	elif state==Game.state.STATE_IDLE:
 		$ui/helpInfo.queue_free()
+		$ui/scoreDotutil.init()
 		$player/player.setState(Game.playerState.IDLE)
 		$ani.play_backwards("help")
 		yield($ani,"animation_finished")

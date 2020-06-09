@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 
@@ -9,22 +9,20 @@ var scoredot = preload(\"res://scenes/scoreDot.tscn\")
 
 func _ready():
 	randomize()
-	
+	init()	
+	pass 
+
+
+func init():
 	for i in range(10):
 		var temp = scoredot.instance()
 		temp.position.x = 70+i*18+rand_range(-0.2,0.2)
 		temp.position.y=5
 		temp.name=str(\"scoredot\",i)
 		temp.setColor(Game.blockColor[5])
-#		var joint = GrooveJoint2D.new()	
-#		joint.position.x=70+i*18
-#		joint.position.y=10
-#		joint.node_a = NodePath(\"../top\")
-#		joint.node_b = NodePath(str(\"../\",temp.name))
-#		joint.length=100
-#		joint.initial_offset=80
-		
+
 		var joint= DampedSpringJoint2D.new()
+		joint.name=str(\"joint2D\",i)
 		joint.length=70
 		joint.rest_length=4
 		joint.stiffness=8
@@ -33,26 +31,30 @@ func _ready():
 		joint.position.y=0
 		joint.node_a=NodePath(\"../top\")
 		joint.node_b=NodePath(str(\"../\",temp.name))
-	
-		
+		#joint.node_b=NodePath(str(\"../dots/\",temp.name))
+			
 		add_child(temp)
 		add_child(joint)
-		
-	pass 
+	
+	pass
 
-
-
+func clear():
+	for i in get_children():
+		print(i.name)
+		if 'scoredot' in i.name or 'joint2D' in i.name:
+			remove_child(i)
+	
 
 "
 
-[sub_resource type="RectangleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 160, 5 )
 
 [node name="scoreDotutil" type="Node2D"]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="top" type="StaticBody2D" parent="."]
 position = Vector2( 160, -10 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="top"]
-shape = SubResource( 1 )
+[node name="shape" type="CollisionShape2D" parent="top"]
+shape = SubResource( 2 )

@@ -4,12 +4,24 @@ extends Node2D
 onready var tip1=$tip1
 onready var tip2=$tip2
 
-
+var time=0
+var change=false
 func _ready():
+	
 	pass # Replace with function body.
 
 
-func _process(delta):
+func _physics_process(delta):
+	time+=1
+	if time>120:
+		if change:
+			$tip1.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
+			$tip2.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
+		else:
+			$tip1.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
+			$tip2.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
+		change=!change
+		time=0
 	update()
 	pass
 
