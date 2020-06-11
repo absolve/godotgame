@@ -102,6 +102,13 @@ func dead(delta):
 	
 	pass
 
+func _unhandled_input(event):
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			if state==game.play:
+				flap()
+	pass
+	
 #如果碰到水管和地面就发出信号
 func _on_bird_body_entered(body):
 	#print("_on_bird_body_entered")

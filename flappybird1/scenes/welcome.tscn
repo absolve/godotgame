@@ -73,4 +73,8 @@ position = Vector2( 72, 110 )
 
 [node name="ground1" parent="." instance=ExtResource( 11 )]
 position = Vector2( 168, 256 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 72, 128 )
+current = true
 [connection signal="pressed" from="HBoxContainer/startBtn" to="." method="_on_startBtn_pressed"]
