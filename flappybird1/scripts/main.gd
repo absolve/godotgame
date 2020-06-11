@@ -36,8 +36,8 @@ const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
 
 var state=game.startGame	#默认游戏开始状态
 
-var offsetNum=20	#摄像机偏移次数
-var magnitude = 3  #偏移
+var offsetNum=14	#摄像机偏移次数
+var magnitude = 2  #偏移
 var num=0
 
 func _ready():
