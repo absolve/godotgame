@@ -43,7 +43,7 @@ var num=0
 func _ready():
 	randomize()
 	
-	$game/pipe.connect("scoreChange",self,"_on_score_changed")
+	game.connect("scoreChange",self,"_on_score_changed")
 	
 	$game/pipe.setRandomYpos()
 	$game/pipe2.setRandomYpos()

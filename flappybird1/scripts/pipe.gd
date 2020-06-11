@@ -7,7 +7,7 @@ const OFFSET_Y      = 55
 const PIPE_WIDTH    = 26 #水管长度
 const OFFSET_X      = 65 #每个水管的位置
   
-signal scoreChange	#分数变化
+#signal scoreChange	#分数变化
 
 #状态
 var state=game.stop
@@ -44,5 +44,5 @@ func setRandomYpos():
 func _on_Area2D_body_entered(body):
 	#print("_on_Area2D_body_entered")
 	if body.is_in_group(game.group_bird):
-		emit_signal("scoreChange")
+		game.emit_signal("scoreChange")
 

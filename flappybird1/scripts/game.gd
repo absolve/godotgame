@@ -43,6 +43,8 @@ var highScore=0
 var winHeight
 var winWidth
 
+signal scoreChange	#分数变化
+
 
 func _ready():
 	winWidth=ProjectSettings.get_setting("display/window/size/width")
