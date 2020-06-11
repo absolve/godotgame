@@ -48,5 +48,6 @@ ui_accept={
 
 [rendering]
 
-quality/voxel_cone_tracing/high_quality=true
+quality/driver/driver_name="GLES2"
 environment/default_environment="res://default_env.tres"
+quality/voxel_cone_tracing/high_quality=true
