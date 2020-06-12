@@ -36,7 +36,7 @@ const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
 
 var state=game.startGame	#默认游戏开始状态
 
-var offsetNum=14	#摄像机偏移次数
+var offsetNum=16	#摄像机偏移次数
 var magnitude = 2  #偏移
 var num=0
 
@@ -84,8 +84,10 @@ func gameOver()->void:
 		$game/camera.offset.x += rand_range(-magnitude,magnitude)
 		$game/camera.offset.y+=rand_range(-magnitude,magnitude)
 		num+=1
+		magnitude-=0.07
 		yield(get_tree(), "idle_frame")
 	num=0
+	magnitude=3
 	$game/camera.offset.x=72
 	$game/camera.offset.y=128
 	showGameOverPanel()
