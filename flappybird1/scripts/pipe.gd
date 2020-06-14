@@ -11,13 +11,12 @@ const OFFSET_X      = 65 #每个水管的位置
 
 #状态
 var state=game.stop
-var speed=50	#速度
+var speed=55	#速度
 
 
 func _ready():
 	randomize()
 	add_to_group(game.group_pipe)
-
 
 
 func _physics_process(delta):
