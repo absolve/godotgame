@@ -27,6 +27,7 @@ Game="*res://scripts/game.gd"
 
 window/size/width=320
 window/size/height=480
+window/per_pixel_transparency/allowed=true
 window/handheld/orientation="portrait"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
@@ -43,6 +44,9 @@ jump={
 
 2d_physics/layer_1="分数点"
 2d_physics/layer_2="颜色点"
+2d_physics/layer_3="方块"
+2d_physics/layer_4="玩家"
+2d_physics/layer_5="对话框"
 
 [rendering]
 

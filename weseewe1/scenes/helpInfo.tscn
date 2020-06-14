@@ -14,6 +14,8 @@ extents = Vector2( 160, 5 )
 script = ExtResource( 5 )
 
 [node name="top" type="StaticBody2D" parent="."]
+collision_layer = 16
+collision_mask = 16
 
 [node name="shape" type="CollisionShape2D" parent="top"]
 position = Vector2( 160, -100 )
@@ -21,8 +23,10 @@ shape = SubResource( 1 )
 
 [node name="tip2" type="RigidBody2D" parent="."]
 position = Vector2( 254.603, -25 )
+collision_layer = 16
+collision_mask = 16
 mode = 2
-mass = 1.22449
+mass = 2.04082
 gravity_scale = 5.0
 __meta__ = {
 "_edit_group_": true
@@ -60,8 +64,10 @@ __meta__ = {
 
 [node name="tip1" type="RigidBody2D" parent="."]
 position = Vector2( 148.107, -20 )
+collision_layer = 16
+collision_mask = 16
 mode = 2
-mass = 1.53061
+mass = 2.04082
 gravity_scale = 5.0
 __meta__ = {
 "_edit_group_": true
@@ -102,11 +108,11 @@ position = Vector2( 219.958, -90 )
 node_a = NodePath("../top")
 node_b = NodePath("../tip2")
 length = 15.0
-stiffness = 4.0
+stiffness = 6.0
 
 [node name="DampedSpringJoint2D2" type="DampedSpringJoint2D" parent="."]
 position = Vector2( 49.093, -90 )
 node_a = NodePath("../top")
 node_b = NodePath("../tip1")
 length = 15.0
-stiffness = 3.0
+stiffness = 4.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://sprites/title.png" type="Texture" id=1]
 [ext_resource path="res://sprites/sound.png" type="Texture" id=2]
@@ -15,6 +15,8 @@
 [ext_resource path="res://sprites/leaderboard.png" type="Texture" id=13]
 [ext_resource path="res://sprites/home.png" type="Texture" id=14]
 [ext_resource path="res://sprites/achievements.png" type="Texture" id=15]
+[ext_resource path="res://sprites/pause.png" type="Texture" id=16]
+[ext_resource path="res://scenes/colorDotutil.tscn" type="PackedScene" id=17]
 
 [sub_resource type="Animation" id=1]
 resource_name = "help"
@@ -262,6 +264,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="btnPause" type="TextureButton" parent="ui"]
+visible = false
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+texture_normal = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="colorDotUtil" parent="ui" instance=ExtResource( 17 )]
+
 [node name="bg" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="bg"]
@@ -314,3 +328,4 @@ anims/help = SubResource( 1 )
 [connection signal="button_up" from="ui/btnRank" to="." method="_on_btnRank_button_up"]
 [connection signal="button_down" from="ui/btnNet" to="." method="_on_btnNet_button_down"]
 [connection signal="button_up" from="ui/btnNet" to="." method="_on_btnNet_button_up"]
+[connection signal="pressed" from="ui/btnPause" to="." method="_on_btnPause_pressed"]

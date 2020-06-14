@@ -10,6 +10,8 @@ script = ExtResource( 2 )
 
 [node name="top" type="StaticBody2D" parent="."]
 position = Vector2( 0, -5 )
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="top"]
 position = Vector2( 160, 0 )

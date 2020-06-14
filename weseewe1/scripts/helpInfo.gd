@@ -12,16 +12,16 @@ func _ready():
 
 
 func _physics_process(delta):
-	time+=1
-	if time>120:
-		if change:
-			$tip1.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
-			$tip2.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
-		else:
-			$tip1.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
-			$tip2.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
-		change=!change
-		time=0
+#	time+=1
+#	if time>120:
+#		if change:
+#			$tip1.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
+#			$tip2.add_force(Vector2.ZERO,Vector2(rand_range(0,10),0))
+#		else:
+#			$tip1.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
+#			$tip2.add_force(Vector2.ZERO,Vector2(-rand_range(0,10),0))
+#		change=!change
+#		time=0
 	update()
 	pass
 

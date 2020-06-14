@@ -52,6 +52,7 @@ func setState(state):
 		var helpinfo=helpInfo.instance()
 		$ui.add_child(helpinfo)
 		$ui/scoreDotutil.clear()
+		$ui/colorDotUtil.add3Dot()
 #		yield($ani,"animation_finished")
 		
 	elif state==Game.state.STATE_IDLE:
@@ -61,6 +62,7 @@ func setState(state):
 		$ani.play_backwards("help")
 		yield($ani,"animation_finished")
 		$block/spawnblock.setState(Game.blockState.SLOW)	
+		$ui/colorDotUtil.clearColor()
 	elif state==Game.state.STATE_START:
 		pass
 	elif state==Game.state.STATE_OVER:
@@ -118,15 +120,14 @@ func _on_btnScore_button_down():
 func _on_btnSound_button_up():
 	$ui/btnSound.rect_position.x+=5
 	$ui/btnSound.rect_position.y-=5
-	$ui/btnSound.modulate=Color(0.8,0.8,0.8)
+	$ui/btnSound.modulate=Color(1,1,1)
 	
-
 
 
 func _on_btnSound_button_down():
 	$ui/btnSound.rect_position.x-=5
 	$ui/btnSound.rect_position.y+=5
-	$ui/btnSound.modulate=Color(1,1,1)
+	$ui/btnSound.modulate=Color(0.8,0.8,0.8)
 	
 func _on_btnSound_pressed():
 	if Game.sound:
@@ -194,3 +195,7 @@ func _on_btnNet_button_up():
 	$ui/btnHelp.rect_position.y-=5
 	$ui/btnHelp.modulate=Color(1,1,1)
 	
+
+#游戏暂停按钮
+func _on_btnPause_pressed():
+	pass # Replace with function body.

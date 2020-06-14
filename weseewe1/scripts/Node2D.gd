@@ -5,7 +5,7 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-onready var dot1 = $dot
+#onready var dot1 = $dot
 
 var joints=[]
 var dots=[]
@@ -14,8 +14,8 @@ var dot = preload("res://scenes/dot.tscn")
 func _ready():
 	randomize()
 	$top.add_to_group(Game.group["colorDot"])
-	add3Dot()
-	print(Game.group["colorDot"])
+	#add3Dot()
+	#print(Game.group["colorDot"])
 	pass 
 
 #添加三个分数球
@@ -28,9 +28,9 @@ func add3Dot():
 		temp.add_to_group(Game.group["colorDot"])
 	
 		var joint= DampedSpringJoint2D.new()
-		joint.length=40
+		joint.length=15
 		joint.rest_length=5
-		joint.stiffness=10
+		joint.stiffness=16
 		joint.damping=1
 		joint.position.x=120+i*40
 		joint.position.y=10
@@ -41,7 +41,15 @@ func add3Dot():
 		dots.append(temp)
 		joints.append(joint)
 
-
+#清空颜色
+func clearColor():
+	for i in dots:
+		remove_child(i)	
+	for i in joints:
+		remove_child(i)
+	joints.clear()
+	dots.clear()
+	pass
 
 
 func _process(delta):
