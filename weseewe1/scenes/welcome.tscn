@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://sprites/title.png" type="Texture" id=1]
 [ext_resource path="res://sprites/sound.png" type="Texture" id=2]
@@ -17,6 +17,8 @@
 [ext_resource path="res://sprites/achievements.png" type="Texture" id=15]
 [ext_resource path="res://sprites/pause.png" type="Texture" id=16]
 [ext_resource path="res://scenes/colorDotutil.tscn" type="PackedScene" id=17]
+[ext_resource path="res://sprites/pausePlay.png" type="Texture" id=18]
+[ext_resource path="res://sprites/pauseRestart.png" type="Texture" id=19]
 
 [sub_resource type="Animation" id=1]
 resource_name = "help"
@@ -106,7 +108,7 @@ tracks/6/keys = {
 "values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("ui/Sprite:visible")
+tracks/7/path = NodePath("ui/title:visible")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
@@ -142,11 +144,152 @@ tracks/9/keys = {
 "values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
 }
 
+[sub_resource type="Animation" id=3]
+resource_name = "pause"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("ui/btnPause:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ui/btnRestart:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 120, 500 ), Vector2( 120, 200 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ui/btnResume:rect_position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 320, 200 ), Vector2( 200, 200 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ui/btnMain:rect_position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "start"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("camera:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ui/btnStart:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ui/btnScore:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ui/btnSound:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("ui/btnHelp:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("ui/title:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("ui/btnPause:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
 [node name="welcome" type="Node2D"]
 z_index = 1
 script = ExtResource( 5 )
 
 [node name="ui" type="CanvasLayer" parent="."]
+pause_mode = 2
 layer = 2
 
 [node name="cloud" parent="ui" instance=ExtResource( 7 )]
@@ -156,7 +299,7 @@ position = Vector2( 92.342, 86.4005 )
 position = Vector2( 229.427, 183.097 )
 angle = -1
 
-[node name="Sprite" type="Sprite" parent="ui"]
+[node name="title" type="Sprite" parent="ui"]
 position = Vector2( 30, 60 )
 scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 1 )
@@ -276,6 +419,26 @@ __meta__ = {
 
 [node name="colorDotUtil" parent="ui" instance=ExtResource( 17 )]
 
+[node name="btnResume" type="TextureButton" parent="ui"]
+margin_left = 320.0
+margin_top = 200.0
+margin_right = 400.0
+margin_bottom = 280.0
+texture_normal = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btnRestart" type="TextureButton" parent="ui"]
+margin_left = 120.0
+margin_top = 500.0
+margin_right = 200.0
+margin_bottom = 580.0
+texture_normal = ExtResource( 19 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="bg" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="bg"]
@@ -300,7 +463,7 @@ layer = 2
 follow_viewport_enable = true
 
 [node name="player" parent="player" instance=ExtResource( 9 )]
-position = Vector2( 69.4031, 239.825 )
+position = Vector2( 69.403, 352 )
 z_index = 1
 
 [node name="camera" type="Camera2D" parent="."]
@@ -309,6 +472,8 @@ current = true
 
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/help = SubResource( 1 )
+anims/pause = SubResource( 3 )
+anims/start = SubResource( 2 )
 [connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
 [connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
 [connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]
@@ -329,3 +494,9 @@ anims/help = SubResource( 1 )
 [connection signal="button_down" from="ui/btnNet" to="." method="_on_btnNet_button_down"]
 [connection signal="button_up" from="ui/btnNet" to="." method="_on_btnNet_button_up"]
 [connection signal="pressed" from="ui/btnPause" to="." method="_on_btnPause_pressed"]
+[connection signal="button_down" from="ui/btnResume" to="." method="_on_btnResume_button_down"]
+[connection signal="button_up" from="ui/btnResume" to="." method="_on_btnResume_button_up"]
+[connection signal="pressed" from="ui/btnResume" to="." method="_on_btnResume_pressed"]
+[connection signal="button_down" from="ui/btnRestart" to="." method="_on_btnRestart_button_down"]
+[connection signal="button_up" from="ui/btnRestart" to="." method="_on_btnRestart_button_up"]
+[connection signal="pressed" from="ui/btnRestart" to="." method="_on_btnRestart_pressed"]

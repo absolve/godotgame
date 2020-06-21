@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="weseewe1"
 run/main_scene="res://scenes/welcome.tscn"
-config/icon="res://icon.png"
+config/icon="res://sprites/icon.png"
 
 [autoload]
 
@@ -47,6 +47,8 @@ jump={
 2d_physics/layer_3="方块"
 2d_physics/layer_4="玩家"
 2d_physics/layer_5="对话框"
+2d_physics/layer_6="颜色点1"
+2d_physics/layer_7="颜色点2"
 
 [rendering]
 

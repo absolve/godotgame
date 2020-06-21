@@ -5,7 +5,7 @@ extends StaticBody2D
 export var state = Game.blockState.SLOW
 export var speed=50
 export var fastSpeed=160
-export var ypos=480
+#export var ypos=480
 export var offsetX=21
 var height=128	#高度128
 var width=102
@@ -13,7 +13,7 @@ export var noCollision=false
 var sendExit=false
 
 func _ready():
-	position.y=ypos
+#	position.y=ypos
 	add_to_group("block")
 	if noCollision:
 		$shape.disabled=noCollision

@@ -44,7 +44,7 @@ func _physics_process(delta):
 
 func idle(delta):
 	velocity.y+=gravity*delta
-	move_and_slide(velocity,Vector2.UP)	
+	velocity=move_and_slide(velocity,Vector2.UP)	
 	
 
 func stand(delta):

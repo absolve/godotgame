@@ -19,13 +19,14 @@ func _ready():
 	pass 
 
 #添加三个分数球
-func add3Dot():
+func add3Dot(color:Array):
 	for i in range(3):
 		var temp = dot.instance()
 		temp.position.x=120+i*40+rand_range(-1,1)
 		temp.position.y=1
 		temp.name=str("dot",i)
 		temp.add_to_group(Game.group["colorDot"])
+		temp.setColor(color[i])#设置颜色
 	
 		var joint= DampedSpringJoint2D.new()
 		joint.length=15
@@ -40,6 +41,13 @@ func add3Dot():
 		add_child(joint)
 		dots.append(temp)
 		joints.append(joint)
+
+#添加一个新的
+func addDot(color:String):
+	
+	
+	pass
+
 
 #清空颜色
 func clearColor():
