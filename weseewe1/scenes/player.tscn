@@ -34,5 +34,4 @@ frames = SubResource( 1 )
 animation = "blink"
 
 [node name="shape" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 2 )

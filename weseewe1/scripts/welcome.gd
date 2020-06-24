@@ -1,7 +1,7 @@
 extends Node2D
 
 
-var offsety=80 #摄像机的y偏移
+var offsety=60 #摄像机的y偏移
 var pos=543
 var cameray=400
 var gravity=1000
@@ -10,11 +10,12 @@ var state=Game.state.STATE_IDLE
 
 var helpInfo =preload("res://scenes/helpInfo.tscn")
 
+var height #高度
 
 func _ready():
 	$block/spawnblock.init()
+	height=OS.get_window_size().y
 	pass 
-
 
 
 func _physics_process(delta):
@@ -28,8 +29,8 @@ func _physics_process(delta):
 		elif velocity.y<0:
 			$camera.offset.y-=abs(velocity.y/100*0.2)
 		
-		if $camera.offset.y>310:
-			$camera.offset.y=310
+		if $camera.offset.y>300:
+			$camera.offset.y=300
 		pass
 	elif state==Game.state.STATE_START:
 		var velocity = $player/player.velocity
@@ -38,11 +39,24 @@ func _physics_process(delta):
 		elif velocity.y<0:
 			$camera.offset.y-=abs(velocity.y/100*0.2)
 		
-		if $camera.offset.y>310:
-			$camera.offset.y=310
+		if $camera.offset.y>300:
+			$camera.offset.y=300
+		#如果玩家位置超出屏幕就游戏结束	
+		if $player/player.position.x<-$player/player.size/2:
+			print("x 超出")
+			setState(Game.state.STATE_OVER)
+			pass
+		if $player/player.position.y>height+offsety+$player/player.size/2:
+			print("y 超出")
+			setState(Game.state.STATE_OVER)
 		pass
-	
+	elif state==Game.state.STATE_OVER:#游戏结束
+		
+		pass
+	elif state==Game.state.STATE_PAUSE:
+		pass
 
+#设置状态	
 func setState(state):	
 	if state==Game.state.STATE_HELP:
 		$player/player.setState(Game.playerState.STAND)
@@ -76,7 +90,8 @@ func setState(state):
 		
 		pass
 	elif state==Game.state.STATE_OVER:#游戏结束
-		
+		$player/player.setState(Game.playerState.DEAD)
+		$block/spawnblock.setState(Game.blockState.STOP)
 		pass
 	elif state==Game.state.STATE_NEWSCORE:
 		

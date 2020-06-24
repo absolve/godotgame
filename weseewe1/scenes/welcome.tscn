@@ -144,7 +144,7 @@ tracks/9/keys = {
 "values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 resource_name = "pause"
 length = 0.4
 tracks/0/type = "value"
@@ -196,8 +196,7 @@ tracks/3/keys = {
 "values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "start"
+[sub_resource type="Animation" id=3]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("camera:offset")
@@ -472,8 +471,8 @@ current = true
 
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/help = SubResource( 1 )
-anims/pause = SubResource( 3 )
-anims/start = SubResource( 2 )
+anims/pause = SubResource( 2 )
+anims/start = SubResource( 3 )
 [connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
 [connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
 [connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]

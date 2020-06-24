@@ -11,7 +11,7 @@ var animationTime=0
 var rotateDeg=0
 var rotateSpeed=320
 var jumpAgain=true	#再次跳跃
-
+var size=30 #形状大小
 
 var state = Game.playerState.IDLE
 
