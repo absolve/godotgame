@@ -7,9 +7,9 @@ var mainScene="res://scenes/welcome.tscn"
 
 #游戏状态
 enum state {STATE_IDLE, STATE_START, STATE_OVER,STATE_HELP,
-			STATE_NEWSCORE,STATE_PAUSE}
+			STATE_NEWSCORE,STATE_PAUSE,STATE_RESUME}
 #方块状态
-enum blockState{FAST,SLOW,STOP}
+enum blockState{FAST,SLOW,STOP,SLOWMOVE,SHAKE}
 #玩家
 enum playerState{IDLE,STAND,JUMP,DEAD}
 

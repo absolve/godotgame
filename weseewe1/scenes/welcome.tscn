@@ -473,6 +473,14 @@ current = true
 anims/help = SubResource( 1 )
 anims/pause = SubResource( 2 )
 anims/start = SubResource( 3 )
+
+[node name="gameOverTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="colorTimer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 20.0
 [connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
 [connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
 [connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]

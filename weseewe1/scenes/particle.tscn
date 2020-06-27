@@ -4,7 +4,6 @@
 [ext_resource path="res://sprites/particle.png" type="Texture" id=2]
 
 [node name="particle" type="Sprite"]
-position = Vector2( 225.625, 507.409 )
 z_index = 1
 texture = ExtResource( 2 )
 script = ExtResource( 1 )

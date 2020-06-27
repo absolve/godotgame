@@ -69,7 +69,7 @@ func _block_exit(pos):
 		print("gameState")
 		#temp.position.y=420		#最高位置
 		temp.position.y=610		#最低位置
-		#temp.noCollision=true
+		temp.noCollision=true
 		pass
 	
 	#print(temp.position.x)

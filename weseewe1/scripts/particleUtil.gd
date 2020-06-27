@@ -14,7 +14,8 @@ func _ready():
 	
 	randomize()
 	 
-
+func setPos(pos:Vector2):
+	position=pos
 
 func addParticle():
 	for i in range(num):

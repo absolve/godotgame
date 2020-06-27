@@ -7,14 +7,18 @@ var cameray=400
 var gravity=1000
 
 var state=Game.state.STATE_IDLE
-
 var helpInfo =preload("res://scenes/helpInfo.tscn")
-
 var height #高度
+#var cameraOffset=20
+var firstStart=true	#新增颜色定时器第一次启动
+var getNewColordelay=20 #下一个新颜色的间隔
 
 func _ready():
 	$block/spawnblock.init()
 	height=OS.get_window_size().y
+	$gameOverTimer.connect("timeout",self,"_gameOver")
+	$colorTimer.connect("timeout",self,"_addNewColor")
+	$colorTimer.start(2)
 	pass 
 
 
@@ -68,6 +72,7 @@ func setState(state):
 		$ui/colorDotUtil.add3Dot($block/spawnblock.allColor.slice(0,2))
 #		yield($ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_HELP)
+		self.state=state
 	elif state==Game.state.STATE_IDLE:
 		if self.state==Game.state.STATE_PAUSE: #从游戏开始返回
 			Game.changeScene(Game.mainScene)
@@ -80,6 +85,7 @@ func setState(state):
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
 			$block/spawnblock.setState(Game.blockState.SLOW)	
+		self.state=state
 	elif state==Game.state.STATE_START:
 		#$ui/btnPause.visible=true
 		$ani.play("start")
@@ -87,21 +93,48 @@ func setState(state):
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setGameState(Game.state.STATE_START)
 		#$block/spawnblock.setState(Game.blockState.FAST)	
-		
+		self.state=state
 		pass
 	elif state==Game.state.STATE_OVER:#游戏结束
 		$player/player.setState(Game.playerState.DEAD)
-		$block/spawnblock.setState(Game.blockState.STOP)
-		pass
+		$block/spawnblock.setState(Game.blockState.SHAKE)
+		$block/particleUtil.setPos($player/player.position)
+		$block/particleUtil.addParticle()
+		$ui/btnPause.visible=false
+		$gameOverTimer.start()
+		self.state=state	
 	elif state==Game.state.STATE_NEWSCORE:
-		
-		pass
+		self.state=state
 	elif state==Game.state.STATE_PAUSE:
 		$ani.play("pause")
-		pass
-	self.state=state
+		$player/player.setState(Game.playerState.IDLE)
+		$block/spawnblock.setState(Game.blockState.STOP)
+		self.state=state
+	elif state==Game.state.STATE_RESUME:
+		$ani.play_backwards("pause")
+		$player/player.setState(Game.playerState.STAND)
+		$block/spawnblock.setState(Game.blockState.SLOW)
+		$block/spawnblock.setGameState(Game.state.STATE_START)	
+		self.state=Game.state.STATE_START
+
+#游戏结束后定时器	
+func _gameOver():
+	Game.changeScene(Game.mainScene)
+	pass	
+	
+#添加新颜色
+func _addNewColor():
+	print("_addNewColor")
+	if firstStart:
+		$colorTimer.stop()
+		$colorTimer.wait_time=getNewColordelay
+		$colorTimer.start()
+		firstStart=false
 	
 	
+	
+	pass	
+
 #游戏开始
 func _on_btnStart_pressed():
 #	$block/particleUtil.pos=Vector2(240,400)
@@ -233,7 +266,7 @@ func _on_btnPause_pressed():
 
 #游戏继续
 func _on_btnResume_pressed():
-	$ani.play_backwards("pause")
+	setState(Game.state.STATE_RESUME)
 	pass # Replace with function body.
 
 
