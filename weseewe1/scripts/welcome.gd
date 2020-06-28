@@ -11,14 +11,15 @@ var helpInfo =preload("res://scenes/helpInfo.tscn")
 var height #高度
 #var cameraOffset=20
 var firstStart=true	#新增颜色定时器第一次启动
-var getNewColordelay=20 #下一个新颜色的间隔
+var getNewColordelay=2 #下一个新颜色的间隔
 
 func _ready():
 	$block/spawnblock.init()
 	height=OS.get_window_size().y
 	$gameOverTimer.connect("timeout",self,"_gameOver")
 	$colorTimer.connect("timeout",self,"_addNewColor")
-	$colorTimer.start(2)
+#	$colorTimer.start(2)
+	$gamePassTimer.connect("timeout",self,"_gamePass")
 	pass 
 
 
@@ -50,7 +51,7 @@ func _physics_process(delta):
 			print("x 超出")
 			setState(Game.state.STATE_OVER)
 			pass
-		if $player/player.position.y>height+offsety+$player/player.size/2:
+		if $player/player.position.y>height+offsety+$player/player.size/2+50:
 			print("y 超出")
 			setState(Game.state.STATE_OVER)
 		pass
@@ -59,7 +60,9 @@ func _physics_process(delta):
 		pass
 	elif state==Game.state.STATE_PAUSE:
 		pass
-
+	elif state==Game.state.STATE_PASS:
+		pass
+	
 #设置状态	
 func setState(state):	
 	if state==Game.state.STATE_HELP:
@@ -75,6 +78,8 @@ func setState(state):
 		self.state=state
 	elif state==Game.state.STATE_IDLE:
 		if self.state==Game.state.STATE_PAUSE: #从游戏开始返回
+			Game.changeScene(Game.mainScene)
+		elif self.state==Game.state.STATE_PASS:	#已经通关
 			Game.changeScene(Game.mainScene)
 		else:	
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
@@ -93,8 +98,9 @@ func setState(state):
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setGameState(Game.state.STATE_START)
 		#$block/spawnblock.setState(Game.blockState.FAST)	
+		$ui/colorDotUtil.addAllJoint()	#添加关节
+		$colorTimer.start(2)	#游戏开始
 		self.state=state
-		pass
 	elif state==Game.state.STATE_OVER:#游戏结束
 		$player/player.setState(Game.playerState.DEAD)
 		$block/spawnblock.setState(Game.blockState.SHAKE)
@@ -116,6 +122,20 @@ func setState(state):
 		$block/spawnblock.setState(Game.blockState.SLOW)
 		$block/spawnblock.setGameState(Game.state.STATE_START)	
 		self.state=Game.state.STATE_START
+	elif state==Game.state.STATE_PASS:
+		print('STATE_PASS')
+		$ui/btnMain.set_position(Vector2(3,394))
+		$block/spawnblock.setGameState(Game.state.STATE_PASS)	
+		var delay=0
+		$block/particleUtil.setPos(Vector2(160,480))
+		while delay<300:
+			delay+=1
+			if delay%30==0:		
+				$block/particleUtil.addParticle()
+			yield(get_tree(), "idle_frame")
+			
+		self.state=state
+		pass
 
 #游戏结束后定时器	
 func _gameOver():
@@ -130,10 +150,23 @@ func _addNewColor():
 		$colorTimer.wait_time=getNewColordelay
 		$colorTimer.start()
 		firstStart=false
-	
-	
-	
-	pass	
+	var block =$block/spawnblock
+	block.addNewColor()	
+	if block.useColor.size()>=10:	#如果已经是1个
+		$gamePassTimer.start()
+		$colorTimer.stop()
+		$ui/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
+		print('block.useColor.size()>=10')
+	else:	
+		$ui/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
+
+#游戏通关		
+func _gamePass():
+	print("_gamePass")
+	setState(Game.state.STATE_PASS)
+	pass
+
+
 
 #游戏开始
 func _on_btnStart_pressed():

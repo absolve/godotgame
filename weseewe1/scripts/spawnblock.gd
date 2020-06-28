@@ -19,12 +19,12 @@ func _ready():
 	allColor.shuffle()
 	#.append(allColor[0])
 	#useColor.slice()
-	for i in range(1,10):
-		unuseColor.append(i)
+	for i in range(10):
+		unuseColor.append(allColor[i])
 
 
 
-#新建
+#新建最开始的4个
 func init():
 	for i in range(4):
 		var temp=block.instance()
@@ -49,9 +49,13 @@ func stop():
 func setGameState(state):
 	gameState=state
 
+#添加新的颜色
+func addNewColor():
+	if unuseColor.size()>0:
+		useColor.append(unuseColor.pop_front())
 
 func _block_exit(pos):
-	print("pos",pos)
+#	print("pos",pos)
 	var temp=block.instance()	
 #	temp.modulate=Color(0,0,0)
 	#temp.position.x=(temp.width+2)*3+temp.width/2
@@ -65,13 +69,43 @@ func _block_exit(pos):
 			index=0
 	elif gameState==Game.state.STATE_IDLE:
 		temp.setColor(allColor[0])
-	elif gameState==Game.state.STATE_START:
-		print("gameState")
+	elif gameState==Game.state.STATE_START:	#游戏开始的时候
+		#print("gameState")
 		#temp.position.y=420		#最高位置
 		temp.position.y=610		#最低位置
-		temp.noCollision=true
-		pass
-	
+		#temp.noCollision=true
+		#先判断是否出现连续两个连续不能站立
+		if useColor.size()>=10: #那就是获取所有的颜色
+			temp.noCollision=false
+			temp.setColor(useColor[useColor.size()-1])
+		else:	
+			var children = get_children()
+			if children[children.size()-1].noCollision and children[children.size()-2].noCollision:
+				temp.noCollision=false
+				var tempcolor=randi()%useColor.size()
+				temp.setColor(useColor[tempcolor])
+				print('====useColor')
+				pass
+			else:
+				if randi()%10>=4:
+					var tempcolor=randi()%unuseColor.size()
+					temp.noCollision=true
+					temp.setColor(unuseColor[tempcolor])
+					print('----unuseColor')
+				else:
+					var tempcolor=0
+					if useColor.size()>0:	#如果一开始没有就用第一个
+						tempcolor=randi()%useColor.size()
+						temp.setColor(useColor[tempcolor])
+					else:
+						temp.setColor(unuseColor[tempcolor])
+					temp.noCollision=false
+					print('====useColor')
+	elif gameState==Game.state.STATE_PASS:
+		temp.noCollision=false
+		temp.position.y=610
+		temp.setColor(useColor[useColor.size()-1])
+						
 	#print(temp.position.x)
 	add_child(temp)	
 	

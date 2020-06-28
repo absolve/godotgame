@@ -108,7 +108,6 @@ func addDot(color:String):
 		
 		dots.append(temp)
 	
-	
 
 
 #清空颜色

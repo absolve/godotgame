@@ -462,7 +462,7 @@ layer = 2
 follow_viewport_enable = true
 
 [node name="player" parent="player" instance=ExtResource( 9 )]
-position = Vector2( 69.403, 352 )
+position = Vector2( 100, 352 )
 z_index = 1
 
 [node name="camera" type="Camera2D" parent="."]
@@ -481,6 +481,11 @@ one_shot = true
 [node name="colorTimer" type="Timer" parent="."]
 process_mode = 0
 wait_time = 20.0
+
+[node name="gamePassTimer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 5.0
+one_shot = true
 [connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
 [connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
 [connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]

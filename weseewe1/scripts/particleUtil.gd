@@ -8,7 +8,7 @@ var particle=preload("res://scenes/particle.tscn")
 
 func _ready():
 	position=pos
-	print(52/255)
+#	print(52/255)
 	
 	print(stepify(randf(),0.1))
 	

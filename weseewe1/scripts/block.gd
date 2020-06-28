@@ -9,7 +9,7 @@ export var fastSpeed=160
 export var offsetX=21
 var height=128	#高度128
 var width=102
-export var noCollision=false
+export var noCollision=false	#能否站立
 var sendExit=false
 var offsetY=22
 
@@ -18,8 +18,9 @@ var offsetY=22
 func _ready():
 #	position.y=ypos
 	add_to_group("block")
-	if noCollision:
-		$shape.disabled=noCollision
+#	if noCollision:
+#		$shape.disabled=noCollision
+
 	#setState(Game.blockState.SHAKE)
 
 func setColor(color:String):
@@ -72,9 +73,9 @@ func _physics_process(delta):
 	
 		
 	if position.x<=8 and !sendExit:	#消失在左边
-		print(position.x)
+#		print(position.x)
 		Game.emit_signal("blockExit",position.x)
-		print(5665)
+#		print(5665)
 		sendExit=true
 		
 		
