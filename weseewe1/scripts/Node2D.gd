@@ -15,7 +15,7 @@ func _ready():
 	
 #	for i in range(3):
 #		addDot(Game.blockColor[0])
-	addAllJoint()
+	#addAllJoint()
 	pass 
 
 #添加三个分数球

@@ -1,0 +1,202 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/scoreBoard.gd" type="Script" id=1]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://sprites/speakboxM.png" type="Texture" id=3]
+[ext_resource path="res://sprites/speakboxR.png" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 160, 5 )
+
+[sub_resource type="CircleShape2D" id=2]
+
+[node name="scoreBoard" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="top" type="StaticBody2D" parent="."]
+position = Vector2( 160, -5 )
+collision_layer = 128
+collision_mask = 128
+
+[node name="shape" type="CollisionShape2D" parent="top"]
+shape = SubResource( 1 )
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2( 160, 5 )
+node_a = NodePath("../top")
+node_b = NodePath("../msg")
+length = 20.0
+stiffness = 10.0
+damping = 0.8
+
+[node name="msg" type="RigidBody2D" parent="."]
+position = Vector2( 160, 96 )
+collision_layer = 128
+collision_mask = 128
+mode = 2
+mass = 5.10204
+
+[node name="shape" type="CollisionShape2D" parent="msg"]
+position = Vector2( 1.12247, 0 )
+shape = SubResource( 2 )
+
+[node name="left" type="Sprite" parent="msg"]
+position = Vector2( -128, -24 )
+scale = Vector2( 2, 3 )
+texture = ExtResource( 4 )
+centered = false
+flip_h = true
+
+[node name="center" type="Sprite" parent="msg"]
+position = Vector2( -96, -24 )
+scale = Vector2( 50, 3 )
+texture = ExtResource( 3 )
+centered = false
+
+[node name="right" type="Sprite" parent="msg"]
+position = Vector2( 104, -24 )
+scale = Vector2( 2, 3 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="score" type="VBoxContainer" parent="msg"]
+margin_left = 48.0
+margin_top = 24.0
+margin_right = 88.0
+margin_bottom = 135.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="best_round2" type="Label" parent="msg/score"]
+margin_right = 40.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="last_round2" type="Label" parent="msg/score"]
+margin_top = 23.0
+margin_right = 40.0
+margin_bottom = 42.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="rounds_played2" type="Label" parent="msg/score"]
+margin_top = 46.0
+margin_right = 40.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="avg_per_round2" type="Label" parent="msg/score"]
+margin_top = 69.0
+margin_right = 40.0
+margin_bottom = 88.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="colors_earned2" type="Label" parent="msg/score"]
+margin_top = 92.0
+margin_right = 40.0
+margin_bottom = 111.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lable" type="VBoxContainer" parent="msg"]
+margin_left = -80.0
+margin_top = 24.0
+margin_right = 39.0
+margin_bottom = 135.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="best_round" type="Label" parent="msg/lable"]
+margin_right = 119.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "Best round"
+align = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="last_round" type="Label" parent="msg/lable"]
+margin_top = 23.0
+margin_right = 119.0
+margin_bottom = 42.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "Last round"
+align = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="rounds_played" type="Label" parent="msg/lable"]
+margin_top = 46.0
+margin_right = 119.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "Rounds played"
+align = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="avg_per_round" type="Label" parent="msg/lable"]
+margin_top = 69.0
+margin_right = 119.0
+margin_bottom = 88.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "Avg per round"
+align = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="colors_earned" type="Label" parent="msg/lable"]
+margin_top = 92.0
+margin_right = 119.0
+margin_bottom = 111.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "Colors earned"
+align = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}

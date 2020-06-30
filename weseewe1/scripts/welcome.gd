@@ -12,6 +12,8 @@ var height #高度
 #var cameraOffset=20
 var firstStart=true	#新增颜色定时器第一次启动
 var getNewColordelay=2 #下一个新颜色的间隔
+var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
+
 
 func _ready():
 	$block/spawnblock.init()
@@ -20,6 +22,7 @@ func _ready():
 	$colorTimer.connect("timeout",self,"_addNewColor")
 #	$colorTimer.start(2)
 	$gamePassTimer.connect("timeout",self,"_gamePass")
+	$block/particleUtil.startRandomParticle()
 	pass 
 
 
@@ -62,6 +65,8 @@ func _physics_process(delta):
 		pass
 	elif state==Game.state.STATE_PASS:
 		pass
+	elif state==Game.state.STATE_SCORE:
+		pass
 	
 #设置状态	
 func setState(state):	
@@ -81,6 +86,10 @@ func setState(state):
 			Game.changeScene(Game.mainScene)
 		elif self.state==Game.state.STATE_PASS:	#已经通关
 			Game.changeScene(Game.mainScene)
+		elif self.state==Game.state.STATE_SCORE:
+			$ani.play_backwards("score")
+			$ui/scoreDotutil.init()
+			$ui/scoreBoard.queue_free()
 		else:	
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$ui/helpInfo.queue_free()
@@ -93,6 +102,7 @@ func setState(state):
 		self.state=state
 	elif state==Game.state.STATE_START:
 		#$ui/btnPause.visible=true
+		$block/particleUtil.stopRandomParticle()
 		$ani.play("start")
 		$ui/scoreDotutil.clear()
 		$player/player.setState(Game.playerState.STAND)
@@ -134,6 +144,12 @@ func setState(state):
 				$block/particleUtil.addParticle()
 			yield(get_tree(), "idle_frame")
 			
+		self.state=state
+	elif state==Game.state.STATE_SCORE:	#分数显示
+		$ui/scoreDotutil.clear()
+		var scoreinfo = scoreInfo.instance()
+		$ui.add_child(scoreinfo)
+		$ani.play("score")
 		self.state=state
 		pass
 
@@ -194,10 +210,10 @@ func _on_btnStart_button_down():
 	$ui/btnStart.rect_position.y+=5
 	$ui/btnStart.modulate=Color(0.8,0.8,0.8)
 	
-
+#分数信息
 func _on_btnScore_pressed():
+	setState(Game.state.STATE_SCORE)
 	
-	pass # Replace with function body.
 
 
 func _on_btnScore_button_up():

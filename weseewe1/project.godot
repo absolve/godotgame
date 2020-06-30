@@ -49,6 +49,7 @@ jump={
 2d_physics/layer_5="对话框"
 2d_physics/layer_6="颜色点1"
 2d_physics/layer_7="颜色点2"
+2d_physics/layer_8="分数板"
 
 [rendering]
 

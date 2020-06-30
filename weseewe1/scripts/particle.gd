@@ -21,7 +21,7 @@ func _ready():
 	modulate=rgb
 	#set_modulate(rgb)
 
-func _physics_process(delta):
+func _process(delta):
 	if vec.y>0:
 		vec.y=dropSpeed
 		vec.x=dropXSpeed
