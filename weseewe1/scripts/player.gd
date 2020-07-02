@@ -21,7 +21,10 @@ func _ready():
 
 func setState(state):
 	self.state=state
+
 	
+func playAni():
+	$ani.play("show")
 
 
 func _physics_process(delta):
@@ -79,9 +82,6 @@ func jump(delta):
 		rotateDeg=0
 		$sprite.rotation_degrees=0
 		$bg.rotation_degrees=0
-	
-	#判断是否超出
-	
 	pass
 
 func dead(delta):

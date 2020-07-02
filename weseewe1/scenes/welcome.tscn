@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://sprites/title.png" type="Texture" id=1]
 [ext_resource path="res://sprites/sound.png" type="Texture" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://scenes/colorDotutil.tscn" type="PackedScene" id=17]
 [ext_resource path="res://sprites/pausePlay.png" type="Texture" id=18]
 [ext_resource path="res://sprites/pauseRestart.png" type="Texture" id=19]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=20]
 
 [sub_resource type="Animation" id=1]
 resource_name = "help"
@@ -57,7 +58,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 69, 242 ), Vector2( 320, 242 ) ]
+"values": [ Vector2( 73, 242 ), Vector2( 320, 242 ) ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ui/btnHelp:rect_position")
@@ -172,7 +173,7 @@ tracks/3/keys = {
 "values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 resource_name = "score"
 length = 0.6
 tracks/0/type = "value"
@@ -245,7 +246,7 @@ tracks/5/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 69, 242 ), Vector2( 320, 242 ) ]
+"values": [ Vector2( 73, 242 ), Vector2( 320, 242 ) ]
 }
 tracks/6/type = "value"
 tracks/6/path = NodePath("ui/btnStart:disabled")
@@ -296,7 +297,7 @@ tracks/9/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("camera:offset")
@@ -405,10 +406,14 @@ texture = ExtResource( 1 )
 centered = false
 
 [node name="btnStart" type="TextureButton" parent="ui"]
-margin_left = 69.0
-margin_top = 242.0
-margin_right = 243.0
-margin_bottom = 342.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -87.0
+margin_top = 2.00002
+margin_right = 87.0
+margin_bottom = 102.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -538,6 +543,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="author" type="Label" parent="ui"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -42.5
+margin_right = 50.0
+margin_bottom = 42.5
+custom_fonts/font = ExtResource( 20 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "The end
+
+Created by  
+eric zingeler"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="bg" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="bg"]
@@ -562,7 +588,7 @@ layer = 2
 follow_viewport_enable = true
 
 [node name="player" parent="player" instance=ExtResource( 9 )]
-position = Vector2( 100, 352 )
+position = Vector2( 120, 352 )
 z_index = 1
 
 [node name="camera" type="Camera2D" parent="."]
@@ -572,8 +598,8 @@ current = true
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/help = SubResource( 1 )
 anims/pause = SubResource( 2 )
-anims/score = SubResource( 4 )
-anims/start = SubResource( 3 )
+anims/score = SubResource( 3 )
+anims/start = SubResource( 4 )
 
 [node name="gameOverTimer" type="Timer" parent="."]
 wait_time = 2.0

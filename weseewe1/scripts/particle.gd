@@ -3,9 +3,9 @@ extends Sprite
 
 export var gravity=40
 export var speed=1400	#y轴飞行速度
-export var dropSpeed=10
 export var xSpeed=200	#x偏移
 export var rotateSpeed=40	#旋转速度	
+export var dropSpeed=10
 export var dropXSpeed=0	#下落之后的x速度
 
 #export var rgb={'r':0,'g':0,'b':0} #颜色

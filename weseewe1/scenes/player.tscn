@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://sprites/player.png" type="Texture" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
 [ext_resource path="res://sprites/playerBlink.png" type="Texture" id=3]
 [ext_resource path="res://sprites/confettiPop.png" type="Texture" id=4]
+[ext_resource path="res://sprites/speakboxR.png" type="Texture" id=5]
+[ext_resource path="res://sprites/speakboxM.png" type="Texture" id=6]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=7]
+[ext_resource path="res://sprites/speakboxL.png" type="Texture" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -21,6 +25,34 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 15, 15 )
 
+[sub_resource type="Animation" id=3]
+resource_name = "show"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("dialog:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("dialog:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 1.5, 2.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
 [node name="player" type="KinematicBody2D"]
 script = ExtResource( 2 )
 
@@ -35,3 +67,36 @@ animation = "blink"
 
 [node name="shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
+
+[node name="ani" type="AnimationPlayer" parent="."]
+anims/show = SubResource( 3 )
+
+[node name="dialog" type="Node2D" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 20, -60 )
+
+[node name="left" type="Sprite" parent="dialog"]
+position = Vector2( 4, 4 )
+texture = ExtResource( 8 )
+
+[node name="center" type="Sprite" parent="dialog"]
+position = Vector2( 76, 4 )
+scale = Vector2( 20, 1 )
+texture = ExtResource( 6 )
+
+[node name="right" type="Sprite" parent="dialog"]
+position = Vector2( 124, 4 )
+texture = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="dialog"]
+margin_left = 12.0
+margin_top = -12.0
+margin_right = 99.0
+margin_bottom = 7.0
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )
+text = "hello world"
+__meta__ = {
+"_edit_use_anchors_": false
+}

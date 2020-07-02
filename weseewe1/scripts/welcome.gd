@@ -106,10 +106,12 @@ func setState(state):
 		$ani.play("start")
 		$ui/scoreDotutil.clear()
 		$player/player.setState(Game.playerState.STAND)
+		$player/player.playAni()
+		yield($player/player/ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_START)
 		#$block/spawnblock.setState(Game.blockState.FAST)	
 		$ui/colorDotUtil.addAllJoint()	#添加关节
-		$colorTimer.start(2)	#游戏开始
+		$colorTimer.start(1)	#游戏开始
 		self.state=state
 	elif state==Game.state.STATE_OVER:#游戏结束
 		$player/player.setState(Game.playerState.DEAD)
@@ -136,12 +138,14 @@ func setState(state):
 		print('STATE_PASS')
 		$ui/btnMain.set_position(Vector2(3,394))
 		$block/spawnblock.setGameState(Game.state.STATE_PASS)	
+		$ui/btnRank.visible=false
+		$ui/author.visible=true
 		var delay=0
-		$block/particleUtil.setPos(Vector2(160,480))
+		#$block/particleUtil.setPos(Vector2(160,480))
 		while delay<300:
 			delay+=1
 			if delay%30==0:		
-				$block/particleUtil.addParticle()
+				$block/particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),false)
 			yield(get_tree(), "idle_frame")
 			
 		self.state=state
@@ -169,7 +173,7 @@ func _addNewColor():
 	var block =$block/spawnblock
 	block.addNewColor()	
 	if block.useColor.size()>=10:	#如果已经是1个
-		$gamePassTimer.start()
+		$gamePassTimer.start()#通关定时器
 		$colorTimer.stop()
 		$ui/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 		print('block.useColor.size()>=10')
