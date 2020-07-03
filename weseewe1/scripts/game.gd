@@ -13,6 +13,7 @@ enum blockState{FAST,SLOW,STOP,SLOWMOVE,SHAKE}
 #玩家
 enum playerState{IDLE,STAND,JUMP,DEAD}
 
+var nextState=state.STATE_IDLE
 
 signal blockExit(pos)
 
@@ -42,9 +43,11 @@ func _ready():
 
 #更改场景
 func changeScene(stagePath):
+	Splash.find_node("ani").play("moveIn")
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
+	Splash.find_node("ani").play("moveOut")
 
 #保存数据
 func save(data):

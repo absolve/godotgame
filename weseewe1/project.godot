@@ -22,6 +22,7 @@ config/icon="res://sprites/icon.png"
 [autoload]
 
 Game="*res://scripts/game.gd"
+Splash="*res://scenes/splash.tscn"
 
 [display]
 

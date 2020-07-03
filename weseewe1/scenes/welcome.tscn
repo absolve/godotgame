@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://sprites/title.png" type="Texture" id=1]
 [ext_resource path="res://sprites/sound.png" type="Texture" id=2]
@@ -49,7 +49,7 @@ tracks/1/keys = {
 "values": [ Vector2( 237, 397.272 ), Vector2( 320, 394 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnStart:rect_position")
+tracks/2/path = NodePath("ui/btnHelp:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -58,10 +58,10 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 73, 242 ), Vector2( 320, 242 ) ]
+"values": [ Vector2( 252, 229.188 ), Vector2( 320, 229.188 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnHelp:rect_position")
+tracks/3/path = NodePath("ui/btnMain:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -70,56 +70,62 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 252, 229.188 ), Vector2( 320, 229.188 ) ]
+"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/btnMain:rect_position")
+tracks/4/path = NodePath("ui/title:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
-}
-tracks/5/type = "value"
-tracks/5/path = NodePath("ui/title:visible")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/keys = {
 "times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ true, false ]
 }
-tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnStart:disabled")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/keys = {
+tracks/5/type = "value"
+tracks/5/path = NodePath("ui/btnStart:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
 }
-tracks/7/type = "value"
-tracks/7/path = NodePath("camera:offset")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/keys = {
+tracks/6/type = "value"
+tracks/6/path = NodePath("camera:offset")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
 "times": PoolRealArray( 0, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
 }
+tracks/7/type = "value"
+tracks/7/path = NodePath("ui/btnStart:rect_position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "idle"
+
+[sub_resource type="Animation" id=6]
+resource_name = "newScore"
 
 [sub_resource type="Animation" id=2]
 resource_name = "pause"
@@ -237,43 +243,43 @@ tracks/4/keys = {
 "values": [ Vector2( 400, 400 ), Vector2( 237, 400 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/btnStart:rect_position")
+tracks/5/path = NodePath("ui/btnStart:disabled")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 73, 242 ), Vector2( 320, 242 ) ]
-}
-tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnStart:disabled")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ true, false ]
 }
-tracks/7/type = "value"
-tracks/7/path = NodePath("ui/btnHelp:rect_position")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/keys = {
+tracks/6/type = "value"
+tracks/6/path = NodePath("ui/btnHelp:rect_position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 252, 229.188 ), Vector2( 320, 229.188 ) ]
 }
+tracks/7/type = "value"
+tracks/7/path = NodePath("player/player:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
 tracks/8/type = "value"
-tracks/8/path = NodePath("player/player:visible")
+tracks/8/path = NodePath("ui/title:visible")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/imported = false
@@ -285,16 +291,16 @@ tracks/8/keys = {
 "values": [ true, false ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("ui/title:visible")
+tracks/9/path = NodePath("ui/btnStart:rect_position")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/imported = false
 tracks/9/enabled = true
 tracks/9/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"update": 0,
+"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -392,13 +398,6 @@ script = ExtResource( 5 )
 pause_mode = 2
 layer = 2
 
-[node name="cloud" parent="ui" instance=ExtResource( 7 )]
-position = Vector2( 92.342, 86.4005 )
-
-[node name="cloud2" parent="ui" instance=ExtResource( 7 )]
-position = Vector2( 229.427, 183.097 )
-angle = -1
-
 [node name="title" type="Sprite" parent="ui"]
 position = Vector2( 30, 60 )
 scale = Vector2( 0.8, 0.8 )
@@ -411,9 +410,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -87.0
-margin_top = 2.00002
-margin_right = 87.0
-margin_bottom = 102.0
+margin_top = -50.0
+margin_right = 87.0001
+margin_bottom = 50.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -464,8 +463,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="scoreDotutil" parent="ui" instance=ExtResource( 12 )]
-
 [node name="btnMain" type="TextureButton" parent="ui"]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -486,7 +483,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -80.0
-margin_right = 80.0001
+margin_right = 80.0
 margin_bottom = 3.05176e-05
 focus_mode = 0
 enabled_focus_mode = 0
@@ -520,8 +517,6 @@ texture_normal = ExtResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="colorDotUtil" parent="ui" instance=ExtResource( 17 )]
 
 [node name="btnResume" type="TextureButton" parent="ui"]
 margin_left = 320.0
@@ -575,28 +570,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="cloud" parent="bg" instance=ExtResource( 7 )]
+position = Vector2( 92.342, 86.4005 )
+
+[node name="cloud2" parent="bg" instance=ExtResource( 7 )]
+position = Vector2( 229.427, 183.097 )
+angle = -1
+
 [node name="block" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
 
 [node name="particleUtil" parent="block" instance=ExtResource( 10 )]
+pause_mode = 2
 z_index = 1
 
 [node name="spawnblock" parent="block" instance=ExtResource( 11 )]
 
 [node name="player" type="CanvasLayer" parent="."]
-layer = 2
 follow_viewport_enable = true
 
 [node name="player" parent="player" instance=ExtResource( 9 )]
 position = Vector2( 120, 352 )
 z_index = 1
 
+[node name="dot" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="scoreDotutil" parent="dot" instance=ExtResource( 12 )]
+
+[node name="colorDotUtil" parent="dot" instance=ExtResource( 17 )]
+
 [node name="camera" type="Camera2D" parent="."]
 offset = Vector2( 160, 240 )
 current = true
 
 [node name="ani" type="AnimationPlayer" parent="."]
+pause_mode = 2
 anims/help = SubResource( 1 )
+anims/idle = SubResource( 5 )
+anims/newScore = SubResource( 6 )
 anims/pause = SubResource( 2 )
 anims/score = SubResource( 3 )
 anims/start = SubResource( 4 )

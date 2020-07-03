@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "move"
@@ -27,10 +27,45 @@ tracks/1/keys = {
 "values": [ true, false ]
 }
 
+[sub_resource type="Animation" id=2]
+resource_name = "moveIn"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("bg:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -320, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "moveOut"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("bg:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 320, 0 ) ]
+}
+
 [node name="splash" type="CanvasLayer"]
+pause_mode = 2
+layer = 10
 
 [node name="bg" type="ColorRect" parent="."]
 margin_left = -320.0
+margin_right = -6.10352e-05
 margin_bottom = 480.0
 color = Color( 0.564706, 0.564706, 0.564706, 1 )
 __meta__ = {
@@ -39,3 +74,5 @@ __meta__ = {
 
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/move = SubResource( 1 )
+anims/moveIn = SubResource( 2 )
+anims/moveOut = SubResource( 3 )

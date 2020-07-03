@@ -15,6 +15,7 @@ var getNewColordelay=2 #下一个新颜色的间隔
 var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
 
 
+
 func _ready():
 	$block/spawnblock.init()
 	height=OS.get_window_size().y
@@ -23,7 +24,16 @@ func _ready():
 #	$colorTimer.start(2)
 	$gamePassTimer.connect("timeout",self,"_gamePass")
 	$block/particleUtil.startRandomParticle()
-	pass 
+	if Game.nextState!=Game.state.STATE_IDLE:
+		if Game.nextState==Game.state.STATE_START:
+			setState(Game.state.STATE_START)
+			pass
+		elif Game.nextState==Game.state.STATE_NEWSCORE:
+			pass
+		
+		Game.nextState=Game.state.STATE_IDLE
+		pass
+	 
 
 
 func _physics_process(delta):
@@ -76,26 +86,27 @@ func setState(state):
 		$ani.play("help")
 		var helpinfo=helpInfo.instance()
 		$ui.add_child(helpinfo)
-		$ui/scoreDotutil.clear()
-		$ui/colorDotUtil.add3Dot($block/spawnblock.allColor.slice(0,2))
+		$dot/scoreDotutil.clear()
+		$dot/colorDotUtil.add3Dot($block/spawnblock.allColor.slice(0,2))
 #		yield($ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_HELP)
 		self.state=state
 	elif state==Game.state.STATE_IDLE:
 		if self.state==Game.state.STATE_PAUSE: #从游戏开始返回
+			get_tree().paused=false
 			Game.changeScene(Game.mainScene)
 		elif self.state==Game.state.STATE_PASS:	#已经通关
 			Game.changeScene(Game.mainScene)
 		elif self.state==Game.state.STATE_SCORE:
 			$ani.play_backwards("score")
-			$ui/scoreDotutil.init()
+			$dot/scoreDotutil.init()
 			$ui/scoreBoard.queue_free()
 		else:	
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$ui/helpInfo.queue_free()
-			$ui/scoreDotutil.init()
+			$dot/scoreDotutil.init()
 			$player/player.setState(Game.playerState.IDLE)
-			$ui/colorDotUtil.clearColor()
+			$dot/colorDotUtil.clearColor()
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
 			$block/spawnblock.setState(Game.blockState.SLOW)	
@@ -104,13 +115,13 @@ func setState(state):
 		#$ui/btnPause.visible=true
 		$block/particleUtil.stopRandomParticle()
 		$ani.play("start")
-		$ui/scoreDotutil.clear()
+		$dot/scoreDotutil.clear()
 		$player/player.setState(Game.playerState.STAND)
 		$player/player.playAni()
+		$block/spawnblock.setState(Game.blockState.FAST)
 		yield($player/player/ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_START)
-		#$block/spawnblock.setState(Game.blockState.FAST)	
-		$ui/colorDotUtil.addAllJoint()	#添加关节
+		$dot/colorDotUtil.addAllJoint()	#添加关节
 		$colorTimer.start(1)	#游戏开始
 		self.state=state
 	elif state==Game.state.STATE_OVER:#游戏结束
@@ -124,19 +135,23 @@ func setState(state):
 	elif state==Game.state.STATE_NEWSCORE:
 		self.state=state
 	elif state==Game.state.STATE_PAUSE:
+		get_tree().paused=true
 		$ani.play("pause")
 		$player/player.setState(Game.playerState.IDLE)
-		$block/spawnblock.setState(Game.blockState.STOP)
+		$block/spawnblock.setState(Game.blockState.STOP)	
 		self.state=state
 	elif state==Game.state.STATE_RESUME:
+		get_tree().paused=false
 		$ani.play_backwards("pause")
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setState(Game.blockState.SLOW)
 		$block/spawnblock.setGameState(Game.state.STATE_START)	
+		$colorTimer.start()	
 		self.state=Game.state.STATE_START
 	elif state==Game.state.STATE_PASS:
 		print('STATE_PASS')
 		$ui/btnMain.set_position(Vector2(3,394))
+		$block/spawnblock.setState(Game.blockState.SLOW)	
 		$block/spawnblock.setGameState(Game.state.STATE_PASS)	
 		$ui/btnRank.visible=false
 		$ui/author.visible=true
@@ -150,7 +165,7 @@ func setState(state):
 			
 		self.state=state
 	elif state==Game.state.STATE_SCORE:	#分数显示
-		$ui/scoreDotutil.clear()
+		$dot/scoreDotutil.clear()
 		var scoreinfo = scoreInfo.instance()
 		$ui.add_child(scoreinfo)
 		$ani.play("score")
@@ -175,10 +190,10 @@ func _addNewColor():
 	if block.useColor.size()>=10:	#如果已经是1个
 		$gamePassTimer.start()#通关定时器
 		$colorTimer.stop()
-		$ui/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
+		$dot/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 		print('block.useColor.size()>=10')
 	else:	
-		$ui/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
+		$dot/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 
 #游戏通关		
 func _gamePass():
@@ -198,8 +213,18 @@ func _on_btnStart_pressed():
 #帮助按钮	
 func _on_btnHelp_pressed():
 	setState(Game.state.STATE_HELP)
-	
-	pass # Replace with function body.
+
+
+#重新开始
+func _on_btnRestart_pressed():
+	get_tree().paused=false
+	Game.nextState=Game.state.STATE_START
+	Game.changeScene(Game.mainScene)
+	pass 
+
+#分数信息
+func _on_btnScore_pressed():
+	setState(Game.state.STATE_SCORE)
 
 
 func _on_btnStart_button_up():
@@ -214,9 +239,6 @@ func _on_btnStart_button_down():
 	$ui/btnStart.rect_position.y+=5
 	$ui/btnStart.modulate=Color(0.8,0.8,0.8)
 	
-#分数信息
-func _on_btnScore_pressed():
-	setState(Game.state.STATE_SCORE)
 	
 
 
@@ -337,9 +359,6 @@ func _on_btnResume_button_up():
 	$ui/btnResume.modulate=Color(1,1,1)
 	pass # Replace with function body.
 
-#重新开始
-func _on_btnRestart_pressed():
-	pass # Replace with function body.
 
 
 func _on_btnRestart_button_up():
