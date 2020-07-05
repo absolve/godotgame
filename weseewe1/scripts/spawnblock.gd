@@ -72,7 +72,8 @@ func _block_exit(pos):
 	elif gameState==Game.state.STATE_START:	#游戏开始的时候
 		#print("gameState")
 		#temp.position.y=420		#最高位置
-		temp.position.y=610		#最低位置
+		#temp.position.y=590		#最低位置
+		temp.position.y=randi()%190+400
 		#temp.noCollision=true
 		#先判断是否出现连续两个连续不能站立
 		if useColor.size()>=10: #那就是获取所有的颜色

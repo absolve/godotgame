@@ -1,8 +1,8 @@
 extends KinematicBody2D
 
 
-var speed=450	#跳跃速度
-var gravity=1000
+var speed=500	#跳跃速度
+var gravity=1300
 var velocity = Vector2.ZERO	#速度
 
 var animationInterval=240
@@ -24,7 +24,14 @@ func setState(state):
 
 	
 func playAni():
+	$dialog/Label.text=Game.words[randi()%Game.words.size()]
 	$ani.play("show")
+
+#显示新分数
+func playMewScoreAni():
+	$dialog/Label.text="you got new score"
+	$ani.play("show")
+	pass
 
 
 func _physics_process(delta):
@@ -54,6 +61,7 @@ func stand(delta):
 	velocity.y+=gravity*delta
 	
 	if Input.is_action_pressed("jump"):
+		SoundUtil.playJumpA()
 		velocity.y=-speed
 		state=Game.playerState.JUMP
 		return
@@ -64,6 +72,7 @@ func stand(delta):
 func jump(delta):
 	velocity.y+=gravity*delta
 	if Input.is_action_just_pressed("jump") and jumpAgain:
+		SoundUtil.playJumpB()
 		velocity.y=-speed
 		jumpAgain=false
 	

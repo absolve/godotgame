@@ -11,7 +11,7 @@ var helpInfo =preload("res://scenes/helpInfo.tscn")
 var height #高度
 #var cameraOffset=20
 var firstStart=true	#新增颜色定时器第一次启动
-var getNewColordelay=2 #下一个新颜色的间隔
+var getNewColordelay=18 #下一个新颜色的间隔
 var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
 
 
@@ -23,32 +23,45 @@ func _ready():
 	$colorTimer.connect("timeout",self,"_addNewColor")
 #	$colorTimer.start(2)
 	$gamePassTimer.connect("timeout",self,"_gamePass")
-	$block/particleUtil.startRandomParticle()
+	
 	if Game.nextState!=Game.state.STATE_IDLE:
 		if Game.nextState==Game.state.STATE_START:
 			setState(Game.state.STATE_START)
 			pass
 		elif Game.nextState==Game.state.STATE_NEWSCORE:
-			pass
-		
+			$ani.current_animation="newScore"
+			$dot/scoreDotutil.clear()
+			$player/player.playMewScoreAni()
+			var delay=0
+			#$block/particleUtil.setPos(Vector2(160,480))
+			while delay<300:
+				delay+=1
+				if delay%20==0&&delay<100:		
+					$block/particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),true)
+				yield(get_tree(), "idle_frame")
+			$ani.play("newScoreBack")
+			$dot/scoreDotutil.init()
+			$block/particleUtil.startRandomParticle() 
+			
 		Game.nextState=Game.state.STATE_IDLE
-		pass
-	 
+	else:
+		$block/particleUtil.startRandomParticle() 
 
 
 func _physics_process(delta):
-	if state==Game.state.STATE_IDLE:
-		
+	if state==Game.state.STATE_IDLE:	
 		pass		
 	elif state==Game.state.STATE_HELP:
 		var velocity = $player/player.velocity
 		if velocity.y>0:
 			$camera.offset.y+=abs(velocity.y/100*0.2)
 		elif velocity.y<0:
-			$camera.offset.y-=abs(velocity.y/100*0.2)
+			$camera.offset.y-=abs(velocity.y/100*0.3)
 		
 		if $camera.offset.y>300:
 			$camera.offset.y=300
+		elif $camera.offset.y<260:
+			$camera.offset.y=260
 		pass
 	elif state==Game.state.STATE_START:
 		var velocity = $player/player.velocity
@@ -59,6 +72,8 @@ func _physics_process(delta):
 		
 		if $camera.offset.y>300:
 			$camera.offset.y=300
+		elif $camera.offset.y<260:
+			$camera.offset.y=260
 		#如果玩家位置超出屏幕就游戏结束	
 		if $player/player.position.x<-$player/player.size/2:
 			print("x 超出")
@@ -68,8 +83,7 @@ func _physics_process(delta):
 			print("y 超出")
 			setState(Game.state.STATE_OVER)
 		pass
-	elif state==Game.state.STATE_OVER:#游戏结束
-		
+	elif state==Game.state.STATE_OVER:#游戏结束	
 		pass
 	elif state==Game.state.STATE_PAUSE:
 		pass
@@ -85,7 +99,7 @@ func setState(state):
 		$block/spawnblock.setState(Game.blockState.FAST)	
 		$ani.play("help")
 		var helpinfo=helpInfo.instance()
-		$ui.add_child(helpinfo)
+		$bg.add_child(helpinfo)
 		$dot/scoreDotutil.clear()
 		$dot/colorDotUtil.add3Dot($block/spawnblock.allColor.slice(0,2))
 #		yield($ani,"animation_finished")
@@ -103,7 +117,7 @@ func setState(state):
 			$ui/scoreBoard.queue_free()
 		else:	
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
-			$ui/helpInfo.queue_free()
+			$bg/helpInfo.queue_free()
 			$dot/scoreDotutil.init()
 			$player/player.setState(Game.playerState.IDLE)
 			$dot/colorDotUtil.clearColor()

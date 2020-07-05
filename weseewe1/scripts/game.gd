@@ -24,6 +24,8 @@ var blockColor=['#a5aeb3','#22bdd1','#2a6aff','#ffc827','#00b264',
 var lineColor = ["#5f6380"]
 var group={colorDot="colorDot",scoreDot="scoreDot"}
 	
+var words=['hello world','debug!!!','say no']	
+	
 const FILE_NAME = "user://game-data.json"
 
 #保存的数据
