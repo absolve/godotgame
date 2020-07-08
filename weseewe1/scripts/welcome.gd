@@ -14,9 +14,13 @@ var firstStart=true	#新增颜色定时器第一次启动
 var getNewColordelay=18 #下一个新颜色的间隔
 var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
 
+onready var playPos=$player/player.position
+onready var cameraStartPos=$player/player.position
 
 
 func _ready():
+	print('cameraStartPos===',cameraStartPos)
+	
 	$block/spawnblock.init()
 	height=OS.get_window_size().y
 	$gameOverTimer.connect("timeout",self,"_gameOver")
@@ -36,44 +40,57 @@ func _ready():
 			#$block/particleUtil.setPos(Vector2(160,480))
 			while delay<300:
 				delay+=1
-				if delay%20==0&&delay<100:		
+				if delay%20==0&&delay<100:
 					$block/particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),true)
 				yield(get_tree(), "idle_frame")
 			$ani.play("newScoreBack")
 			$dot/scoreDotutil.init()
-			$block/particleUtil.startRandomParticle() 
+			$block/particleUtil.startRandomParticle()
 			
 		Game.nextState=Game.state.STATE_IDLE
 	else:
-		$block/particleUtil.startRandomParticle() 
+		$block/particleUtil.startRandomParticle()
 
 
 func _physics_process(delta):
-	if state==Game.state.STATE_IDLE:	
-		pass		
+	if state==Game.state.STATE_IDLE:
+		pass
 	elif state==Game.state.STATE_HELP:
-		var velocity = $player/player.velocity
-		if velocity.y>0:
-			$camera.offset.y+=abs(velocity.y/100*0.2)
-		elif velocity.y<0:
-			$camera.offset.y-=abs(velocity.y/100*0.3)
-		
+#		var velocity = $player/player.velocity
+#		if velocity.y>0:
+#			$camera.offset.y+=abs(velocity.y/100*0.2)
+#		elif velocity.y<0:
+#			$camera.offset.y-=abs(velocity.y/100*0.3)
+#
+#		if $camera.offset.y>300:
+#			$camera.offset.y=300
+#		elif $camera.offset.y<260:
+#			$camera.offset.y=260
+		if  $player/player.position.y>cameraStartPos.y:
+			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.11
+			cameraStartPos=$player/player.position
+		else:
+			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.11
+			cameraStartPos=$player/player.position
+			
 		if $camera.offset.y>300:
 			$camera.offset.y=300
 		elif $camera.offset.y<260:
-			$camera.offset.y=260
+			$camera.offset.y=260	
 		pass
 	elif state==Game.state.STATE_START:
-		var velocity = $player/player.velocity
-		if velocity.y>0:
-			$camera.offset.y+=abs(velocity.y/100*0.2)
-		elif velocity.y<0:
-			$camera.offset.y-=abs(velocity.y/100*0.2)
-		
+		if  $player/player.position.y>cameraStartPos.y:
+			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.11
+			cameraStartPos=$player/player.position
+		else:
+			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.11
+			cameraStartPos=$player/player.position
+			
 		if $camera.offset.y>300:
 			$camera.offset.y=300
 		elif $camera.offset.y<260:
 			$camera.offset.y=260
+
 		#如果玩家位置超出屏幕就游戏结束	
 		if $player/player.position.x<-$player/player.size/2:
 			print("x 超出")
@@ -83,7 +100,7 @@ func _physics_process(delta):
 			print("y 超出")
 			setState(Game.state.STATE_OVER)
 		pass
-	elif state==Game.state.STATE_OVER:#游戏结束	
+	elif state==Game.state.STATE_OVER:#游戏结束
 		pass
 	elif state==Game.state.STATE_PAUSE:
 		pass
@@ -93,10 +110,10 @@ func _physics_process(delta):
 		pass
 	
 #设置状态	
-func setState(state):	
+func setState(state):
 	if state==Game.state.STATE_HELP:
 		$player/player.setState(Game.playerState.STAND)
-		$block/spawnblock.setState(Game.blockState.FAST)	
+		$block/spawnblock.setState(Game.blockState.FAST)
 		$ani.play("help")
 		var helpinfo=helpInfo.instance()
 		$bg.add_child(helpinfo)
@@ -115,7 +132,7 @@ func setState(state):
 			$ani.play_backwards("score")
 			$dot/scoreDotutil.init()
 			$ui/scoreBoard.queue_free()
-		else:	
+		else:
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$bg/helpInfo.queue_free()
 			$dot/scoreDotutil.init()
@@ -123,7 +140,7 @@ func setState(state):
 			$dot/colorDotUtil.clearColor()
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
-			$block/spawnblock.setState(Game.blockState.SLOW)	
+			$block/spawnblock.setState(Game.blockState.SLOW)
 		self.state=state
 	elif state==Game.state.STATE_START:
 		#$ui/btnPause.visible=true
@@ -145,35 +162,35 @@ func setState(state):
 		$block/particleUtil.addParticle()
 		$ui/btnPause.visible=false
 		$gameOverTimer.start()
-		self.state=state	
+		self.state=state
 	elif state==Game.state.STATE_NEWSCORE:
 		self.state=state
 	elif state==Game.state.STATE_PAUSE:
 		get_tree().paused=true
 		$ani.play("pause")
 		$player/player.setState(Game.playerState.IDLE)
-		$block/spawnblock.setState(Game.blockState.STOP)	
+		$block/spawnblock.setState(Game.blockState.STOP)
 		self.state=state
 	elif state==Game.state.STATE_RESUME:
 		get_tree().paused=false
 		$ani.play_backwards("pause")
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setState(Game.blockState.SLOW)
-		$block/spawnblock.setGameState(Game.state.STATE_START)	
-		$colorTimer.start()	
+		$block/spawnblock.setGameState(Game.state.STATE_START)
+		$colorTimer.start()
 		self.state=Game.state.STATE_START
 	elif state==Game.state.STATE_PASS:
 		print('STATE_PASS')
 		$ui/btnMain.set_position(Vector2(3,394))
-		$block/spawnblock.setState(Game.blockState.SLOW)	
-		$block/spawnblock.setGameState(Game.state.STATE_PASS)	
+		$block/spawnblock.setState(Game.blockState.SLOW)
+		$block/spawnblock.setGameState(Game.state.STATE_PASS)
 		$ui/btnRank.visible=false
 		$ui/author.visible=true
 		var delay=0
 		#$block/particleUtil.setPos(Vector2(160,480))
 		while delay<300:
 			delay+=1
-			if delay%30==0:		
+			if delay%30==0:
 				$block/particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),false)
 			yield(get_tree(), "idle_frame")
 			
@@ -189,7 +206,7 @@ func setState(state):
 #游戏结束后定时器	
 func _gameOver():
 	Game.changeScene(Game.mainScene)
-	pass	
+	pass
 	
 #添加新颜色
 func _addNewColor():
@@ -200,13 +217,13 @@ func _addNewColor():
 		$colorTimer.start()
 		firstStart=false
 	var block =$block/spawnblock
-	block.addNewColor()	
+	block.addNewColor()
 	if block.useColor.size()>=10:	#如果已经是1个
 		$gamePassTimer.start()#通关定时器
 		$colorTimer.stop()
 		$dot/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 		print('block.useColor.size()>=10')
-	else:	
+	else:
 		$dot/colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 
 #游戏通关		
@@ -234,7 +251,7 @@ func _on_btnRestart_pressed():
 	get_tree().paused=false
 	Game.nextState=Game.state.STATE_START
 	Game.changeScene(Game.mainScene)
-	pass 
+	pass
 
 #分数信息
 func _on_btnScore_pressed():

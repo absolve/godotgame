@@ -213,7 +213,7 @@ tracks/6/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=4]
 resource_name = "newScoreBack"
 length = 0.6
 tracks/0/type = "value"
@@ -301,7 +301,7 @@ tracks/6/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath("ui/btnPause:visible")
@@ -352,7 +352,7 @@ tracks/3/keys = {
 "values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("ui/btnMain:rect_position")
@@ -475,7 +475,7 @@ tracks/9/keys = {
 "values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath("camera:offset")
@@ -685,6 +685,7 @@ visible = false
 margin_left = 256.0
 margin_right = 316.0
 margin_bottom = 60.0
+button_mask = 0
 texture_normal = ExtResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -781,10 +782,10 @@ pause_mode = 2
 anims/help = SubResource( 1 )
 anims/idle = SubResource( 2 )
 anims/newScore = SubResource( 3 )
-anims/newScoreBack = SubResource( 7 )
-anims/pause = SubResource( 4 )
-anims/score = SubResource( 5 )
-anims/start = SubResource( 6 )
+anims/newScoreBack = SubResource( 4 )
+anims/pause = SubResource( 5 )
+anims/score = SubResource( 6 )
+anims/start = SubResource( 7 )
 
 [node name="gameOverTimer" type="Timer" parent="."]
 wait_time = 2.0
