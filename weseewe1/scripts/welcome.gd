@@ -2,9 +2,9 @@ extends Node2D
 
 
 var offsety=60 #摄像机的y偏移
-var pos=543
-var cameray=400
-var gravity=1000
+#var pos=543
+#var cameray=400
+#var gravity=1000
 
 var state=Game.state.STATE_IDLE
 var helpInfo =preload("res://scenes/helpInfo.tscn")
@@ -14,7 +14,7 @@ var firstStart=true	#新增颜色定时器第一次启动
 var getNewColordelay=18 #下一个新颜色的间隔
 var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
 
-onready var playPos=$player/player.position
+#onready var playPos=$player/player.position
 onready var cameraStartPos=$player/player.position
 
 
@@ -211,6 +211,7 @@ func _gameOver():
 #添加新颜色
 func _addNewColor():
 	print("_addNewColor")
+	SoundUtil.playColor()	#新颜色
 	if firstStart:
 		$colorTimer.stop()
 		$colorTimer.wait_time=getNewColordelay

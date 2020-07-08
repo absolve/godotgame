@@ -53,7 +53,7 @@ func addRandomPosParticle(pos:Vector2,simpleColor:bool):
 	var index=randi()%10
 	for i in range(num):
 		var temp=particle.instance()
-		temp.speed=1200
+		temp.ySpeed=1200
 		temp.gravity+=randi()%30
 		temp.dropSpeed+=randi()%30
 		var xspeed=randi()%180
@@ -98,7 +98,7 @@ func _randomParticle():
 	var xspeed=randi()%350+40
 	var dropXSpeed = randi()%40+40
 	var dropSpeed = randi()%40+30
-	temp.speed=0
+	temp.ySpeed=0
 	temp.xSpeed=-xspeed
 	temp.dropXSpeed=-dropXSpeed
 	var rotateSpeed = randi()%50

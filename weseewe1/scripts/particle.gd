@@ -2,7 +2,7 @@ extends Sprite
 
 
 export var gravity=40
-export var speed=1400	#y轴飞行速度
+export var ySpeed=1400	#y轴飞行速度
 export var xSpeed=200	#x偏移
 export var rotateSpeed=40	#旋转速度	
 export var dropSpeed=10
@@ -16,7 +16,7 @@ var vec=Vector2.ZERO
 
 
 func _ready():
-	vec.y=-speed
+	vec.y=-ySpeed
 	vec.x=xSpeed
 	modulate=rgb
 	#set_modulate(rgb)
