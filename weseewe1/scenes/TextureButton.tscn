@@ -5,6 +5,9 @@
 [node name="TextureButton" type="TextureButton"]
 margin_right = 40.0
 margin_bottom = 40.0
+focus_mode = 0
+button_mask = 0
+enabled_focus_mode = 0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

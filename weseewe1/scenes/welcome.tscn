@@ -788,7 +788,7 @@ anims/score = SubResource( 6 )
 anims/start = SubResource( 7 )
 
 [node name="gameOverTimer" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 3.5
 one_shot = true
 
 [node name="colorTimer" type="Timer" parent="."]

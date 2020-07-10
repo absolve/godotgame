@@ -46,6 +46,7 @@ func _ready():
 #更改场景
 func changeScene(stagePath):
 	Splash.find_node("ani").play("moveIn")
+	yield(Splash.find_node("ani"),"animation_finished")
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)

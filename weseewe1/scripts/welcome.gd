@@ -56,6 +56,17 @@ func _physics_process(delta):
 	if state==Game.state.STATE_IDLE:
 		pass
 	elif state==Game.state.STATE_HELP:
+		if  $player/player.position.y>cameraStartPos.y:
+			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.09
+		else:
+			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.09
+
+		cameraStartPos=$player/player.position	
+	
+		if $camera.offset.y<280:
+			$camera.offset.y=280
+		elif $camera.offset.y>320:
+			$camera.offset.y=320
 #		var velocity = $player/player.velocity
 #		if velocity.y>0:
 #			$camera.offset.y+=abs(velocity.y/100*0.2)
@@ -66,31 +77,34 @@ func _physics_process(delta):
 #			$camera.offset.y=300
 #		elif $camera.offset.y<260:
 #			$camera.offset.y=260
-		if  $player/player.position.y>cameraStartPos.y:
-			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.11
-			cameraStartPos=$player/player.position
-		else:
-			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.11
-			cameraStartPos=$player/player.position
-			
-		if $camera.offset.y>300:
-			$camera.offset.y=300
-		elif $camera.offset.y<260:
-			$camera.offset.y=260	
-		pass
+#		if  $player/player.position.y>cameraStartPos.y:
+#			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.1
+#			#cameraStartPos=$player/player.position
+#		else:
+#			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.1
+#			#cameraStartPos=$player/player.position
+#		cameraStartPos=$player/player.position	
+#		if $camera.offset.y>300:
+#			$camera.offset.y=300
+#		elif $camera.offset.y<260:
+#			$camera.offset.y=260
+#		if $camera.offset.y<260:
+#			$camera.offset.y=260
+#		elif $camera.offset.y>320:
+#			$camera.offset.y=320
+			pass
 	elif state==Game.state.STATE_START:
 		if  $player/player.position.y>cameraStartPos.y:
-			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.11
-			cameraStartPos=$player/player.position
+			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.09
 		else:
-			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.11
-			cameraStartPos=$player/player.position
-			
-		if $camera.offset.y>300:
-			$camera.offset.y=300
-		elif $camera.offset.y<260:
-			$camera.offset.y=260
+			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.09
 
+		cameraStartPos=$player/player.position	
+	
+		if $camera.offset.y<280:
+			$camera.offset.y=280
+		elif $camera.offset.y>320:
+			$camera.offset.y=320
 		#如果玩家位置超出屏幕就游戏结束	
 		if $player/player.position.x<-$player/player.size/2:
 			print("x 超出")
@@ -108,6 +122,8 @@ func _physics_process(delta):
 		pass
 	elif state==Game.state.STATE_SCORE:
 		pass
+	
+	
 	
 #设置状态	
 func setState(state):
@@ -143,6 +159,7 @@ func setState(state):
 			$block/spawnblock.setState(Game.blockState.SLOW)
 		self.state=state
 	elif state==Game.state.STATE_START:
+		self.state=state
 		#$ui/btnPause.visible=true
 		$block/particleUtil.stopRandomParticle()
 		$ani.play("start")
@@ -153,12 +170,14 @@ func setState(state):
 		yield($player/player/ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_START)
 		$dot/colorDotUtil.addAllJoint()	#添加关节
-		$colorTimer.start(1)	#游戏开始
-		self.state=state
+		$colorTimer.start(1)	#游戏开始	
 	elif state==Game.state.STATE_OVER:#游戏结束
 		$player/player.setState(Game.playerState.DEAD)
 		$block/spawnblock.setState(Game.blockState.SHAKE)
-		$block/particleUtil.setPos($player/player.position)
+		if $player/player.position.x<-$player/player.size/2:
+			$block/particleUtil.setPos(Vector2(0,$player/player.position.y))
+		else:
+			$block/particleUtil.setPos($player/player.position)
 		$block/particleUtil.addParticle()
 		$ui/btnPause.visible=false
 		$gameOverTimer.start()
