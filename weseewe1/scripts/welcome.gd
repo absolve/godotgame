@@ -128,9 +128,9 @@ func _physics_process(delta):
 #设置状态	
 func setState(state):
 	if state==Game.state.STATE_HELP:
-		$player/player.setState(Game.playerState.STAND)
-		$block/spawnblock.setState(Game.blockState.FAST)
 		$ani.play("help")
+		$player/player.setState(Game.playerState.STAND)
+		$block/spawnblock.setState(Game.blockState.FAST)	
 		var helpinfo=helpInfo.instance()
 		$bg.add_child(helpinfo)
 		$dot/scoreDotutil.clear()
@@ -149,10 +149,10 @@ func setState(state):
 			$dot/scoreDotutil.init()
 			$ui/scoreBoard.queue_free()
 		else:
+			$player/player.setState(Game.playerState.IDLE)
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$bg/helpInfo.queue_free()
 			$dot/scoreDotutil.init()
-			$player/player.setState(Game.playerState.IDLE)
 			$dot/colorDotUtil.clearColor()
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
@@ -175,10 +175,13 @@ func setState(state):
 		$player/player.setState(Game.playerState.DEAD)
 		$block/spawnblock.setState(Game.blockState.SHAKE)
 		if $player/player.position.x<-$player/player.size/2:
-			$block/particleUtil.setPos(Vector2(0,$player/player.position.y))
+			#$block/particleUtil.setPos(Vector2(0,$player/player.position.y))
+			$block/particleUtil.addRandomPosParticle(Vector2(0,$player/player.position.y),false)
 		else:
-			$block/particleUtil.setPos($player/player.position)
-		$block/particleUtil.addParticle()
+			#$block/particleUtil.setPos($player/player.position)
+			$block/particleUtil.addRandomPosParticle($player/player.position,false)
+		#$block/particleUtil.addParticle()
+		
 		$ui/btnPause.visible=false
 		$gameOverTimer.start()
 		self.state=state
@@ -194,7 +197,7 @@ func setState(state):
 		get_tree().paused=false
 		$ani.play_backwards("pause")
 		$player/player.setState(Game.playerState.STAND)
-		$block/spawnblock.setState(Game.blockState.SLOW)
+		$block/spawnblock.setState(Game.blockState.FAST)
 		$block/spawnblock.setGameState(Game.state.STATE_START)
 		$colorTimer.start()
 		self.state=Game.state.STATE_START
@@ -215,12 +218,12 @@ func setState(state):
 			
 		self.state=state
 	elif state==Game.state.STATE_SCORE:	#分数显示
+		self.state=state
 		$dot/scoreDotutil.clear()
 		var scoreinfo = scoreInfo.instance()
 		$ui.add_child(scoreinfo)
 		$ani.play("score")
-		self.state=state
-		pass
+			
 
 #游戏结束后定时器	
 func _gameOver():
@@ -230,7 +233,7 @@ func _gameOver():
 #添加新颜色
 func _addNewColor():
 	print("_addNewColor")
-	SoundUtil.playColor()	#新颜色
+	SoundUtil.playColor()	#新颜色声音
 	if firstStart:
 		$colorTimer.stop()
 		$colorTimer.wait_time=getNewColordelay
@@ -250,178 +253,40 @@ func _addNewColor():
 func _gamePass():
 	print("_gamePass")
 	setState(Game.state.STATE_PASS)
-	pass
 
 
-
-#游戏开始
-func _on_btnStart_pressed():
-#	$block/particleUtil.pos=Vector2(240,400)
-#	$block/particleUtil.addParticle()
-	setState(Game.state.STATE_START)
-	pass
-
-#帮助按钮	
-func _on_btnHelp_pressed():
+func _on_btnHelp2__pressed():
 	setState(Game.state.STATE_HELP)
-
-
-#重新开始
-func _on_btnRestart_pressed():
-	get_tree().paused=false
-	Game.nextState=Game.state.STATE_START
-	Game.changeScene(Game.mainScene)
-	pass
-
-#分数信息
-func _on_btnScore_pressed():
-	setState(Game.state.STATE_SCORE)
-
-
-func _on_btnStart_button_up():
-	$ui/btnStart.rect_position.x+=5
-	$ui/btnStart.rect_position.y-=5
-	$ui/btnStart.modulate=Color(1,1,1)
-	pass # Replace with function body.
-
-
-func _on_btnStart_button_down():
-	$ui/btnStart.rect_position.x-=5
-	$ui/btnStart.rect_position.y+=5
-	$ui/btnStart.modulate=Color(0.8,0.8,0.8)
-	
 	
 
-
-func _on_btnScore_button_up():
-	$ui/btnScore.rect_position.x+=5
-	$ui/btnScore.rect_position.y-=5
-	$ui/btnScore.modulate=Color(1,1,1)
-	
-
-func _on_btnScore_button_down():
-	$ui/btnScore.rect_position.x-=5
-	$ui/btnScore.rect_position.y+=5
-	$ui/btnScore.modulate=Color(0.8,0.8,0.8)
-	
-	
+func _on_btnStart2__pressed():
+	setState(Game.state.STATE_START)
 
 
-func _on_btnSound_button_up():
-	$ui/btnSound.rect_position.x+=5
-	$ui/btnSound.rect_position.y-=5
-	$ui/btnSound.modulate=Color(1,1,1)
-	
-
-
-func _on_btnSound_button_down():
-	$ui/btnSound.rect_position.x-=5
-	$ui/btnSound.rect_position.y+=5
-	$ui/btnSound.modulate=Color(0.8,0.8,0.8)
-	
-func _on_btnSound_pressed():
+func _on_btnSound2__pressed():
 	if Game.sound:
 		Game.sound=false
 	else:
 		Game.sound=true
-	
 
 
-func _on_btnHelp_button_up():
-	$ui/btnHelp.rect_position.x+=5
-	$ui/btnHelp.rect_position.y-=5
-	$ui/btnHelp.modulate=Color(1,1,1)
+func _on_btnScore2__pressed():
+	setState(Game.state.STATE_SCORE)
 
 
-
-func _on_btnHelp_button_down():
-	$ui/btnHelp.rect_position.x-=5
-	$ui/btnHelp.rect_position.y+=5
-	$ui/btnHelp.modulate=Color(0.8,0.8,0.8)
-
-
-func _on_btnMain_button_down():
-	$ui/btnMain.rect_position.x-=5
-	$ui/btnMain.rect_position.y+=5
-	$ui/btnMain.modulate=Color(0.8,0.8,0.8)
-
-
-
-func _on_btnMain_button_up():
-	$ui/btnMain.rect_position.x+=5
-	$ui/btnMain.rect_position.y-=5
-	$ui/btnMain.modulate=Color(1,1,1)
-
-
-func _on_btnMain_pressed():
+func _on_btnMain2__pressed():
 	setState(Game.state.STATE_IDLE)
 
 
-func _on_btnRank_button_down():
-	$ui/btnRank.rect_position.x-=5
-	$ui/btnRank.rect_position.y+=5
-	$ui/btnRank.modulate=Color(0.8,0.8,0.8)
-
-
-
-
-func _on_btnRank_button_up():
-	$ui/btnRank.rect_position.x+=5
-	$ui/btnRank.rect_position.y-=5
-	$ui/btnRank.modulate=Color(1,1,1)
-	pass # Replace with function body.
-
-
-func _on_btnNet_button_down():
-	$ui/btnHelp.rect_position.x-=5
-	$ui/btnHelp.rect_position.y+=5
-	$ui/btnHelp.modulate=Color(0.8,0.8,0.8)
-
-
-
-func _on_btnNet_button_up():
-	$ui/btnHelp.rect_position.x+=5
-	$ui/btnHelp.rect_position.y-=5
-	$ui/btnHelp.modulate=Color(1,1,1)
-	
-
-#游戏暂停按钮
-func _on_btnPause_pressed():
+func _on_btnPause2__pressed():
 	setState(Game.state.STATE_PAUSE)
-	pass # Replace with function body.
 
-#游戏继续
-func _on_btnResume_pressed():
+
+func _on_btnResume2__pressed():
 	setState(Game.state.STATE_RESUME)
-	pass # Replace with function body.
 
 
-func _on_btnResume_button_down():
-	$ui/btnResume.rect_position.x-=5
-	$ui/btnResume.rect_position.y+=5
-	$ui/btnResume.modulate=Color(0.8,0.8,0.8)
-
-	pass # Replace with function body.
-
-
-func _on_btnResume_button_up():
-	$ui/btnResume.rect_position.x+=5
-	$ui/btnResume.rect_position.y-=5
-	$ui/btnResume.modulate=Color(1,1,1)
-	pass # Replace with function body.
-
-
-
-func _on_btnRestart_button_up():
-	$ui/btnRestart.rect_position.x+=5
-	$ui/btnRestart.rect_position.y-=5
-	$ui/btnRestart.modulate=Color(1,1,1)
-	pass # Replace with function body.
-
-
-func _on_btnRestart_button_down():
-	$ui/btnRestart.rect_position.x-=5
-	$ui/btnRestart.rect_position.y+=5
-	$ui/btnRestart.modulate=Color(0.8,0.8,0.8)
-
-	
+func _on_btnRestart2__pressed():
+	get_tree().paused=false
+	Game.nextState=Game.state.STATE_START
+	Game.changeScene(Game.mainScene)

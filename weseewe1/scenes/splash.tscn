@@ -12,7 +12,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -320, 0 ), Vector2( 320, 0 ) ]
+"values": [ Vector2( -480, 0 ), Vector2( 320, 0 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("bg:visible")
@@ -40,7 +40,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -320, 0 ), Vector2( 0, 0 ) ]
+"values": [ Vector2( -480, 0 ), Vector2( 0, 0 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -64,8 +64,8 @@ pause_mode = 2
 layer = 10
 
 [node name="bg" type="ColorRect" parent="."]
-margin_left = -320.0
-margin_right = -6.10352e-05
+margin_left = -480.0
+margin_right = -0.00149536
 margin_bottom = 480.0
 color = Color( 0.564706, 0.564706, 0.564706, 1 )
 __meta__ = {

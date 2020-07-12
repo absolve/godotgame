@@ -40,6 +40,7 @@ var data = {
 
 	
 func _ready():
+	loadFile(data)
 	pass # Replace with function body.
 
 
@@ -52,6 +53,7 @@ func changeScene(stagePath):
 	set_process_input(true)
 	Splash.find_node("ani").play("moveOut")
 
+
 #保存数据
 func save(data):
 	var file = File.new()
@@ -60,11 +62,12 @@ func save(data):
 	file.close()
 
 #载入文件
-func load(dataFile):
+func loadFile(dataFile):
 	var file = File.new()
 	if file.file_exists(FILE_NAME):
 		file.open(FILE_NAME, File.READ)
 		var data = parse_json(file.get_as_text())
+		print("文件",data)
 		file.close()
 		if typeof(data) == TYPE_DICTIONARY:
 			dataFile = data

@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://sprites/title.png" type="Texture" id=1]
 [ext_resource path="res://sprites/sound.png" type="Texture" id=2]
@@ -20,36 +20,37 @@
 [ext_resource path="res://sprites/pausePlay.png" type="Texture" id=18]
 [ext_resource path="res://sprites/pauseRestart.png" type="Texture" id=19]
 [ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=20]
+[ext_resource path="res://scenes/TextureButton.tscn" type="PackedScene" id=21]
 
 [sub_resource type="Animation" id=1]
 resource_name = "help"
 length = 0.6
 tracks/0/type = "value"
-tracks/0/path = NodePath("ui/btnSound:rect_position")
+tracks/0/path = NodePath("ui/title:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 3, 394.992 ), Vector2( 3, 500 ) ]
+"update": 1,
+"values": [ true, false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnScore:rect_position")
+tracks/1/path = NodePath("camera:offset")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 237, 397 ), Vector2( 320, 394 ) ]
+"values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnHelp:rect_position")
+tracks/2/path = NodePath("ui/btnHelp2:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -58,10 +59,10 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 252, 229.188 ), Vector2( 320, 229.188 ) ]
+"values": [ Vector2( 252, 229 ), Vector2( 320, 229 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnMain:rect_position")
+tracks/3/path = NodePath("ui/btnStart2:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -70,55 +71,55 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
+"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/title:visible")
+tracks/4/path = NodePath("ui/btnScore2:rect_position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.25 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"update": 0,
+"values": [ Vector2( 237, 397 ), Vector2( 320, 397 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/btnStart:disabled")
+tracks/5/path = NodePath("ui/btnMain2:rect_position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
+"update": 0,
+"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("camera:offset")
+tracks/6/path = NodePath("ui/btnSound2:rect_position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
 tracks/6/enabled = true
 tracks/6/keys = {
-"times": PoolRealArray( 0, 0.6 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
+"values": [ Vector2( 3, 394 ), Vector2( 3, 500 ) ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("ui/btnStart:rect_position")
+tracks/7/path = NodePath("ui/btnStart2:disabled")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
 tracks/7/enabled = true
 tracks/7/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -141,7 +142,7 @@ tracks/0/keys = {
 "values": [ Vector2( 160, 300 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnSound:rect_position")
+tracks/1/path = NodePath("ui/title:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -149,11 +150,11 @@ tracks/1/enabled = true
 tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Vector2( 3, 500 ) ]
+"update": 1,
+"values": [ false ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnHelp:rect_position")
+tracks/2/path = NodePath("ui/btnSound2:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -162,22 +163,22 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 320, 229.188 ) ]
+"values": [ Vector2( 3, 394 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnScore:rect_position")
+tracks/3/path = NodePath("ui/btnHelp2:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 320, 397 ), Vector2( 237, 397 ) ]
+"values": [ Vector2( 252, 229 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/title:visible")
+tracks/4/path = NodePath("ui/btnScore2:rect_position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -185,11 +186,11 @@ tracks/4/enabled = true
 tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ false ]
+"update": 0,
+"values": [ Vector2( 237, 397 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/btnStart:rect_position")
+tracks/5/path = NodePath("ui/btnStart2:rect_position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -198,10 +199,10 @@ tracks/5/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 320, 190 ) ]
+"values": [ Vector2( 73, 190 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnStart:disabled")
+tracks/6/path = NodePath("ui/btnStart2:disabled")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -229,7 +230,7 @@ tracks/0/keys = {
 "values": [ Vector2( 160, 300 ), Vector2( 160, 240 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnSound:rect_position")
+tracks/1/path = NodePath("ui/title:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -237,11 +238,11 @@ tracks/1/enabled = true
 tracks/1/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
+"update": 1,
+"values": [ false, true ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnHelp:rect_position")
+tracks/2/path = NodePath("ui/btnSound2:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -250,10 +251,10 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 320, 229.188 ), Vector2( 252, 229 ) ]
+"values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnScore:rect_position")
+tracks/3/path = NodePath("ui/btnHelp2:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -262,10 +263,10 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 320, 397 ), Vector2( 237, 397 ) ]
+"values": [ Vector2( 320, 229 ), Vector2( 252, 229 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/title:visible")
+tracks/4/path = NodePath("ui/btnScore2:rect_position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -273,11 +274,11 @@ tracks/4/enabled = true
 tracks/4/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
+"update": 0,
+"values": [ Vector2( 320, 397 ), Vector2( 237, 397 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/btnStart:rect_position")
+tracks/5/path = NodePath("ui/btnStart2:rect_position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -289,7 +290,7 @@ tracks/5/keys = {
 "values": [ Vector2( 320, 190 ), Vector2( 73, 190 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnStart:disabled")
+tracks/6/path = NodePath("ui/btnStart2:disabled")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -298,13 +299,64 @@ tracks/6/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, false ]
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=5]
 length = 0.4
 tracks/0/type = "value"
-tracks/0/path = NodePath("ui/btnPause:visible")
+tracks/0/path = NodePath("ui/btnRestart2:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 120, 500 ), Vector2( 120, 200 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ui/btnResume2:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 320, 200 ), Vector2( 200, 200 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ui/btnMain2:rect_position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("ui/btnPause2:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath("player/player:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -316,82 +368,31 @@ tracks/0/keys = {
 "values": [ true, false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnRestart:rect_position")
+tracks/1/path = NodePath("ui/title:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.3 ),
+"times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 120, 500 ), Vector2( 120, 200 ) ]
+"update": 1,
+"values": [ true, false ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnResume:rect_position")
+tracks/2/path = NodePath("ui/btnMain2:rect_position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.3 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 320, 200 ), Vector2( 200, 200 ) ]
-}
-tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnMain:rect_position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/keys = {
-"times": PoolRealArray( 0, 0.3 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 3, 500 ), Vector2( 40, 200 ) ]
-}
-
-[sub_resource type="Animation" id=6]
-length = 0.6
-tracks/0/type = "value"
-tracks/0/path = NodePath("ui/btnMain:rect_position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 3, 500 ), Vector2( 3, 394 ) ]
 }
-tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnScore:rect_position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 237, 397.272 ), Vector2( 237, 500 ) ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnSound:rect_position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 3, 394 ), Vector2( 3, 500 ) ]
-}
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnRank:rect_position")
+tracks/3/path = NodePath("ui/btnScore2:rect_position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -400,10 +401,10 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 320, 400 ), Vector2( 157, 400 ) ]
+"values": [ Vector2( 237, 397 ), Vector2( 237, 500 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/btnNet:rect_position")
+tracks/4/path = NodePath("ui/btnSound2:rect_position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -412,22 +413,22 @@ tracks/4/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 400, 400 ), Vector2( 237, 400 ) ]
+"values": [ Vector2( 3, 394 ), Vector2( 3, 500 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/btnStart:disabled")
+tracks/5/path = NodePath("ui/btnRank2:rect_position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"update": 0,
+"values": [ Vector2( 320, 400 ), Vector2( 237, 400 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnHelp:rect_position")
+tracks/6/path = NodePath("ui/btnNet2:rect_position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -436,22 +437,22 @@ tracks/6/keys = {
 "times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 252, 229.188 ), Vector2( 320, 229.188 ) ]
+"values": [ Vector2( 400, 400 ), Vector2( 157, 400 ) ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("player/player:visible")
+tracks/7/path = NodePath("ui/btnStart2:rect_position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
 tracks/7/enabled = true
 tracks/7/keys = {
-"times": PoolRealArray( 0, 0.1 ),
+"times": PoolRealArray( 0, 0.5 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
+"update": 0,
+"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
 }
 tracks/8/type = "value"
-tracks/8/path = NodePath("ui/title:visible")
+tracks/8/path = NodePath("ui/btnStart2:disabled")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/imported = false
@@ -463,16 +464,16 @@ tracks/8/keys = {
 "values": [ true, false ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("ui/btnStart:rect_position")
+tracks/9/path = NodePath("ui/btnHelp2:rect_position")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/imported = false
 tracks/9/enabled = true
 tracks/9/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 73, 190 ), Vector2( 320, 190 ) ]
+"values": [ Vector2( 252, 229 ), Vector2( 320, 229 ), Vector2( 320, 229 ) ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -490,7 +491,7 @@ tracks/0/keys = {
 "values": [ Vector2( 160, 240 ), Vector2( 160, 300 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("ui/btnStart:visible")
+tracks/1/path = NodePath("ui/title:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -502,7 +503,7 @@ tracks/1/keys = {
 "values": [ true, false ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("ui/btnScore:visible")
+tracks/2/path = NodePath("ui/btnStart2:visible")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -514,7 +515,7 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("ui/btnSound:visible")
+tracks/3/path = NodePath("ui/btnScore2:visible")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -526,7 +527,7 @@ tracks/3/keys = {
 "values": [ true, false ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("ui/btnHelp:visible")
+tracks/4/path = NodePath("ui/btnSound2:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -538,7 +539,7 @@ tracks/4/keys = {
 "values": [ true, false ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("ui/title:visible")
+tracks/5/path = NodePath("ui/btnHelp2:visible")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -550,7 +551,7 @@ tracks/5/keys = {
 "values": [ true, false ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("ui/btnPause:visible")
+tracks/6/path = NodePath("ui/btnPause2:visible")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -576,141 +577,6 @@ scale = Vector2( 0.8, 0.8 )
 texture = ExtResource( 1 )
 centered = false
 
-[node name="btnStart" type="TextureButton" parent="ui"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -87.0
-margin_top = -50.0
-margin_right = 87.0002
-margin_bottom = 50.0
-focus_mode = 0
-shortcut_in_tooltip = false
-enabled_focus_mode = 0
-texture_normal = ExtResource( 3 )
-stretch_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnSound" type="TextureButton" parent="ui"]
-margin_left = 3.0
-margin_top = 394.992
-margin_right = 83.0
-margin_bottom = 474.992
-focus_mode = 0
-toggle_mode = true
-shortcut_in_tooltip = false
-enabled_focus_mode = 0
-texture_normal = ExtResource( 2 )
-texture_pressed = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnScore" type="TextureButton" parent="ui"]
-margin_left = 237.0
-margin_top = 397.0
-margin_right = 317.0
-margin_bottom = 477.001
-focus_mode = 0
-shortcut_in_tooltip = false
-enabled_focus_mode = 0
-texture_normal = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnHelp" type="TextureButton" parent="ui"]
-margin_left = 252.0
-margin_top = 229.188
-margin_right = 306.0
-margin_bottom = 283.188
-focus_mode = 0
-shortcut_in_tooltip = false
-enabled_focus_mode = 0
-texture_normal = ExtResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnMain" type="TextureButton" parent="ui"]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_left = 3.0
-margin_top = 20.0
-margin_right = 83.0
-margin_bottom = 100.002
-focus_mode = 0
-enabled_focus_mode = 0
-texture_normal = ExtResource( 14 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnRank" type="TextureButton" parent="ui"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = -80.0
-margin_right = 80.0
-margin_bottom = 3.05176e-05
-focus_mode = 0
-enabled_focus_mode = 0
-texture_normal = ExtResource( 15 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnNet" type="TextureButton" parent="ui"]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 80.0
-margin_top = -80.0
-margin_right = 160.0
-margin_bottom = 3.05176e-05
-focus_mode = 0
-enabled_focus_mode = 0
-texture_normal = ExtResource( 13 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnPause" type="TextureButton" parent="ui"]
-visible = false
-margin_left = 256.0
-margin_right = 316.0
-margin_bottom = 60.0
-button_mask = 0
-texture_normal = ExtResource( 16 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnResume" type="TextureButton" parent="ui"]
-margin_left = 320.0
-margin_top = 200.0
-margin_right = 400.0
-margin_bottom = 280.0
-texture_normal = ExtResource( 18 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="btnRestart" type="TextureButton" parent="ui"]
-margin_left = 120.0
-margin_top = 500.0
-margin_right = 200.0
-margin_bottom = 580.0
-texture_normal = ExtResource( 19 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="author" type="Label" parent="ui"]
 visible = false
 anchor_left = 0.5
@@ -731,6 +597,79 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="btnHelp2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 252.0
+margin_top = 229.0
+margin_right = 306.0
+margin_bottom = 283.0
+texture_normal = ExtResource( 6 )
+
+[node name="btnStart2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 73.0
+margin_top = 190.0
+margin_right = 247.0
+margin_bottom = 290.0
+texture_normal = ExtResource( 3 )
+
+[node name="btnSound2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 3.0
+margin_top = 394.0
+margin_right = 83.0
+margin_bottom = 474.001
+toggle_mode = true
+texture_normal = ExtResource( 2 )
+texture_pressed = ExtResource( 8 )
+
+[node name="btnScore2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 237.0
+margin_top = 397.0
+margin_right = 317.0
+margin_bottom = 477.0
+texture_normal = ExtResource( 4 )
+
+[node name="btnRank2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 320.0
+margin_top = 400.0
+margin_right = 400.0
+margin_bottom = 480.0
+texture_normal = ExtResource( 15 )
+
+[node name="btnMain2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 3.0
+margin_top = 500.0
+margin_right = 83.0
+margin_bottom = 580.0
+shortcut_in_tooltip = false
+texture_normal = ExtResource( 14 )
+
+[node name="btnNet2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 400.0
+margin_top = 400.0
+margin_right = 480.0
+margin_bottom = 480.0
+texture_normal = ExtResource( 13 )
+
+[node name="btnPause2" parent="ui" instance=ExtResource( 21 )]
+visible = false
+margin_left = 256.0
+margin_right = 316.0
+margin_bottom = 60.0
+texture_normal = ExtResource( 16 )
+
+[node name="btnResume2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 320.0
+margin_top = 200.0
+margin_right = 400.0
+margin_bottom = 280.0
+texture_normal = ExtResource( 18 )
+
+[node name="btnRestart2" parent="ui" instance=ExtResource( 21 )]
+margin_left = 120.0
+margin_top = 500.0
+margin_right = 200.0
+margin_bottom = 580.0
+texture_normal = ExtResource( 19 )
 
 [node name="bg" type="CanvasLayer" parent="."]
 
@@ -799,29 +738,11 @@ wait_time = 20.0
 process_mode = 0
 wait_time = 5.0
 one_shot = true
-[connection signal="button_down" from="ui/btnStart" to="." method="_on_btnStart_button_down"]
-[connection signal="button_up" from="ui/btnStart" to="." method="_on_btnStart_button_up"]
-[connection signal="pressed" from="ui/btnStart" to="." method="_on_btnStart_pressed"]
-[connection signal="button_down" from="ui/btnSound" to="." method="_on_btnSound_button_down"]
-[connection signal="button_up" from="ui/btnSound" to="." method="_on_btnSound_button_up"]
-[connection signal="pressed" from="ui/btnSound" to="." method="_on_btnSound_pressed"]
-[connection signal="button_down" from="ui/btnScore" to="." method="_on_btnScore_button_down"]
-[connection signal="button_up" from="ui/btnScore" to="." method="_on_btnScore_button_up"]
-[connection signal="pressed" from="ui/btnScore" to="." method="_on_btnScore_pressed"]
-[connection signal="button_down" from="ui/btnHelp" to="." method="_on_btnHelp_button_down"]
-[connection signal="button_up" from="ui/btnHelp" to="." method="_on_btnHelp_button_up"]
-[connection signal="pressed" from="ui/btnHelp" to="." method="_on_btnHelp_pressed"]
-[connection signal="button_down" from="ui/btnMain" to="." method="_on_btnMain_button_down"]
-[connection signal="button_up" from="ui/btnMain" to="." method="_on_btnMain_button_up"]
-[connection signal="pressed" from="ui/btnMain" to="." method="_on_btnMain_pressed"]
-[connection signal="button_down" from="ui/btnRank" to="." method="_on_btnRank_button_down"]
-[connection signal="button_up" from="ui/btnRank" to="." method="_on_btnRank_button_up"]
-[connection signal="button_down" from="ui/btnNet" to="." method="_on_btnNet_button_down"]
-[connection signal="button_up" from="ui/btnNet" to="." method="_on_btnNet_button_up"]
-[connection signal="pressed" from="ui/btnPause" to="." method="_on_btnPause_pressed"]
-[connection signal="button_down" from="ui/btnResume" to="." method="_on_btnResume_button_down"]
-[connection signal="button_up" from="ui/btnResume" to="." method="_on_btnResume_button_up"]
-[connection signal="pressed" from="ui/btnResume" to="." method="_on_btnResume_pressed"]
-[connection signal="button_down" from="ui/btnRestart" to="." method="_on_btnRestart_button_down"]
-[connection signal="button_up" from="ui/btnRestart" to="." method="_on_btnRestart_button_up"]
-[connection signal="pressed" from="ui/btnRestart" to="." method="_on_btnRestart_pressed"]
+[connection signal="_pressed" from="ui/btnHelp2" to="." method="_on_btnHelp2__pressed"]
+[connection signal="_pressed" from="ui/btnStart2" to="." method="_on_btnStart2__pressed"]
+[connection signal="_pressed" from="ui/btnSound2" to="." method="_on_btnSound2__pressed"]
+[connection signal="_pressed" from="ui/btnScore2" to="." method="_on_btnScore2__pressed"]
+[connection signal="_pressed" from="ui/btnMain2" to="." method="_on_btnMain2__pressed"]
+[connection signal="_pressed" from="ui/btnPause2" to="." method="_on_btnPause2__pressed"]
+[connection signal="_pressed" from="ui/btnResume2" to="." method="_on_btnResume2__pressed"]
+[connection signal="_pressed" from="ui/btnRestart2" to="." method="_on_btnRestart2__pressed"]

@@ -85,7 +85,6 @@ func jump(delta):
 	velocity=move_and_slide(velocity,Vector2.UP)	
 	
 	if is_on_floor():
-		print(222)
 		jumpAgain=true
 		state=Game.playerState.STAND
 		rotateDeg=0
@@ -97,4 +96,17 @@ func dead(delta):
 	
 	pass
 
-	
+func _unhandled_input(event):
+	if event is InputEventScreenTouch or event is InputEventMouseButton:
+		if event.pressed or (event is InputEventMouseButton and 
+							event.button_index == BUTTON_LEFT and event.pressed):
+			if state==Game.playerState.STAND:
+				SoundUtil.playJumpA()
+				velocity.y=-speed
+				state=Game.playerState.JUMP
+			elif state==Game.playerState.JUMP and jumpAgain:
+				SoundUtil.playJumpB()
+				velocity.y=-speed
+				jumpAgain=false
+				
+	pass	

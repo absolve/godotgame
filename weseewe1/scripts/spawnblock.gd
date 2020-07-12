@@ -83,8 +83,11 @@ func _block_exit(pos):
 			var children = get_children()
 			if children[children.size()-1].noCollision and children[children.size()-2].noCollision:
 				temp.noCollision=false
-				var tempcolor=randi()%useColor.size()
-				temp.setColor(useColor[tempcolor])
+				if useColor.size()==0:
+					temp.setColor(unuseColor[0])
+				else:		
+					var tempcolor=randi()%useColor.size()
+					temp.setColor(useColor[tempcolor])
 				print('====useColor')
 				pass
 			else:
