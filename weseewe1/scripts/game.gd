@@ -40,8 +40,10 @@ var data = {
 
 	
 func _ready():
-	loadFile(data)
-	pass # Replace with function body.
+	data=loadFile()
+	print(data)
+	#print(float(1)/2)
+	
 
 
 #更改场景
@@ -60,19 +62,35 @@ func save(data):
 	file.open(FILE_NAME, File.WRITE)
 	file.store_string(to_json(data))
 	file.close()
+	
 
 #载入文件
-func loadFile(dataFile):
+func loadFile():
 	var file = File.new()
 	if file.file_exists(FILE_NAME):
 		file.open(FILE_NAME, File.READ)
 		var data = parse_json(file.get_as_text())
 		print("文件",data)
 		file.close()
-		if typeof(data) == TYPE_DICTIONARY:
-			dataFile = data
-		else:
-			printerr("Corrupted data!")
+		return data
 	else:
 		save(data)  #保存数据
+		return data
 		printerr("No saved data!")
+
+func addGamePlayNum():
+	data['rounds_played']+=1
+	save(data)
+	pass
+
+func recordGameData(colors_earned):
+	print(colors_earned)
+	data['rounds_played']+=1
+	data['last_round']=colors_earned
+	if data['best_round']<colors_earned:
+		data['best_round']=colors_earned
+	data['colors_earned']+=colors_earned
+	var avg = float(data['colors_earned'])/data['rounds_played']
+	data['avg_per_round']=avg
+	save(data)
+	pass

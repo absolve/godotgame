@@ -18,8 +18,8 @@ var offsetY=22
 func _ready():
 #	position.y=ypos
 	add_to_group("block")
-#	if noCollision:
-#		$shape.disabled=noCollision
+	if noCollision:
+		$shape.disabled=noCollision
 
 	#setState(Game.blockState.SHAKE)
 

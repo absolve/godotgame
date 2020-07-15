@@ -19,7 +19,12 @@ onready var cameraStartPos=$player/player.position
 
 
 func _ready():
-	print('cameraStartPos===',cameraStartPos)
+	#print('cameraStartPos===',cameraStartPos)
+	print(Game.data['sound'])
+	if  Game.data['sound']:
+		$ui/btnSound2.pressed=false
+	else:
+		$ui/btnSound2.pressed=true
 	
 	$block/spawnblock.init()
 	height=OS.get_window_size().y
@@ -44,11 +49,12 @@ func _ready():
 					$block/particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),true)
 				yield(get_tree(), "idle_frame")
 			$ani.play("newScoreBack")
-			$dot/scoreDotutil.init()
+			$dot/scoreDotutil.init(Game.data['best_round'])
 			$block/particleUtil.startRandomParticle()
 			
 		Game.nextState=Game.state.STATE_IDLE
 	else:
+		$dot/scoreDotutil.init(Game.data['best_round'])
 		$block/particleUtil.startRandomParticle()
 
 
@@ -146,13 +152,13 @@ func setState(state):
 			Game.changeScene(Game.mainScene)
 		elif self.state==Game.state.STATE_SCORE:
 			$ani.play_backwards("score")
-			$dot/scoreDotutil.init()
+			$dot/scoreDotutil.init(Game.data['best_round'])
 			$ui/scoreBoard.queue_free()
 		else:
 			$player/player.setState(Game.playerState.IDLE)
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$bg/helpInfo.queue_free()
-			$dot/scoreDotutil.init()
+			$dot/scoreDotutil.init(Game.data['best_round'])
 			$dot/colorDotUtil.clearColor()
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
@@ -179,10 +185,11 @@ func setState(state):
 			$block/particleUtil.addRandomPosParticle(Vector2(0,$player/player.position.y),false)
 		else:
 			#$block/particleUtil.setPos($player/player.position)
-			$block/particleUtil.addRandomPosParticle($player/player.position,false)
-		#$block/particleUtil.addParticle()
+			$block/particleUtil.addRandomPosParticle(Vector2($player/player.position.x,400),false)
+	
+		saveData()	#保存数据
 		
-		$ui/btnPause.visible=false
+		$ui/btnPause2.visible=false
 		$gameOverTimer.start()
 		self.state=state
 	elif state==Game.state.STATE_NEWSCORE:
@@ -208,6 +215,7 @@ func setState(state):
 		$block/spawnblock.setGameState(Game.state.STATE_PASS)
 		$ui/btnRank.visible=false
 		$ui/author.visible=true
+		saveData()	#保存数据
 		var delay=0
 		#$block/particleUtil.setPos(Vector2(160,480))
 		while delay<300:
@@ -254,6 +262,13 @@ func _gamePass():
 	print("_gamePass")
 	setState(Game.state.STATE_PASS)
 
+#保存数据
+func saveData():
+	var colorsNum=$block/spawnblock.useColor.size()
+	if colorsNum>Game.data['best_round']:
+		Game.nextState=Game.state.STATE_NEWSCORE
+	Game.recordGameData(colorsNum)#记录数据
+
 
 func _on_btnHelp2__pressed():
 	setState(Game.state.STATE_HELP)
@@ -264,11 +279,13 @@ func _on_btnStart2__pressed():
 
 
 func _on_btnSound2__pressed():
-	if Game.sound:
-		Game.sound=false
+	print( Game.data['sound'])
+	if Game.data['sound']:
+		Game.data['sound']=false
 	else:
-		Game.sound=true
-
+		Game.data['sound']=true
+	print(Game.data)
+	Game.save(Game.data)
 
 func _on_btnScore2__pressed():
 	setState(Game.state.STATE_SCORE)

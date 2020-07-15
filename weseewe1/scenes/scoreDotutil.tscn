@@ -9,18 +9,21 @@ var scoredot = preload(\"res://scenes/scoreDot.tscn\")
 
 func _ready():
 	randomize()
-	init()	
 	pass 
 
 
-func init():
+func init(num):
 	for i in range(10):
 		var temp = scoredot.instance()
 		temp.position.x = 70+i*18+rand_range(-0.2,0.2)
 		temp.position.y=5
 		temp.name=str(\"scoredot\",i)
-		temp.setColor(Game.blockColor[5])
-
+	#	temp.setColor(Game.blockColor[5])
+		if i<num:
+			temp.setColor(\"#fdfbc8\")
+		else:
+			temp.setColor(\"#ffa195\")
+			
 		var joint= DampedSpringJoint2D.new()
 		joint.name=str(\"joint2D\",i)
 		joint.length=70
@@ -36,8 +39,7 @@ func init():
 		add_child(temp)
 		add_child(joint)
 	
-	pass
-
+	
 func clear():
 	for i in get_children():
 		print(i.name)

@@ -163,7 +163,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 3, 394 ) ]
+"values": [ Vector2( 3, 500 ) ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("ui/btnHelp2:rect_position")
@@ -175,7 +175,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 252, 229 ) ]
+"values": [ Vector2( 320, 229 ) ]
 }
 tracks/4/type = "value"
 tracks/4/path = NodePath("ui/btnScore2:rect_position")
@@ -187,7 +187,7 @@ tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 237, 397 ) ]
+"values": [ Vector2( 397, 397 ) ]
 }
 tracks/5/type = "value"
 tracks/5/path = NodePath("ui/btnStart2:rect_position")
@@ -199,7 +199,7 @@ tracks/5/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 73, 190 ) ]
+"values": [ Vector2( 320, 190 ) ]
 }
 tracks/6/type = "value"
 tracks/6/path = NodePath("ui/btnStart2:disabled")
