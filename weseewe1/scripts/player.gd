@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 
-var speed=500	#跳跃速度
+var speed=550	#跳跃速度
 var gravity=1300
 var velocity = Vector2.ZERO	#速度
 

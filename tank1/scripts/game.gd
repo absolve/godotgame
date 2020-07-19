@@ -5,15 +5,23 @@ extends Node
 
 signal baseDestroyed
 
-var groups=['player','base']
+var groups={'player':'player','base':'base',
+			'enemy':'enemy','bullet':'bullet'}
 
 var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
 
 enum tank_state{IDLE,DEAD,STOP,START}
 
+enum bulletType{player,enemy}
+
+
+var explode=preload("res://scenes/explode.tscn")
+
+var mainRoot
 
 func _ready():
 	pass 
+
 
 #更改场景
 func changeScene(stagePath):

@@ -21,7 +21,7 @@ var sound=true	#声音开关
 
 var blockColor=['#a5aeb3','#22bdd1','#2a6aff','#ffc827','#00b264',
 				'#5f6380','#ff702a','#fdfbc8','#ff4352','#ffa195']
-var lineColor = ["#5f6380"]
+var lineColor = ["#a5aeb3"]
 var group={colorDot="colorDot",scoreDot="scoreDot"}
 	
 var words=['hello world','debug!!!','say no']	

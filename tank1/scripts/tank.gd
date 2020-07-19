@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+class_name player
 
 var power=0	# 0 普通级别
 var armor=1 #护甲  为0死亡
@@ -13,7 +14,9 @@ var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var bullets=[]
 
 func _ready():
+	name='player'
 	setKeyMap(1)
+	add_to_group(Game.groups['player'])
 	pass
 	
 func _physics_process(delta):
@@ -96,3 +99,7 @@ func setKeyMap(playerId:int):
 		keymap["fire"]=Game.player1["fire"]
 		
 	pass
+	
+	
+func get_class():
+	return 'player'

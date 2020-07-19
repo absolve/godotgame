@@ -1,0 +1,31 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://sprites/bullet_explosion_2.png" type="Texture" id=1]
+[ext_resource path="res://sprites/big_explosion_1.png" type="Texture" id=2]
+[ext_resource path="res://sprites/big_explosion_2.png" type="Texture" id=3]
+[ext_resource path="res://sprites/bullet_explosion_1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/big_explosion_3.png" type="Texture" id=5]
+[ext_resource path="res://sprites/bullet_explosion_3.png" type="Texture" id=6]
+[ext_resource path="res://sprites/big_explosion_4.png" type="Texture" id=7]
+[ext_resource path="res://sprites/big_explosion_5.png" type="Texture" id=8]
+[ext_resource path="res://scripts/explode.gd" type="Script" id=9]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "explode_big",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 1 ), ExtResource( 6 ) ],
+"loop": false,
+"name": "explode_small",
+"speed": 8.0
+} ]
+
+[node name="explode" type="AnimatedSprite"]
+frames = SubResource( 1 )
+animation = "explode_big"
+frame = 4
+script = ExtResource( 9 )
+[connection signal="animation_finished" from="." to="." method="_on_explode_animation_finished"]

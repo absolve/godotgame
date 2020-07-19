@@ -23,6 +23,7 @@ func _ready():
 	print(Game.data['sound'])
 	if  Game.data['sound']:
 		$ui/btnSound2.pressed=false
+		SoundUtil.playWelcomMusic()
 	else:
 		$ui/btnSound2.pressed=true
 	
@@ -73,32 +74,6 @@ func _physics_process(delta):
 			$camera.offset.y=280
 		elif $camera.offset.y>320:
 			$camera.offset.y=320
-#		var velocity = $player/player.velocity
-#		if velocity.y>0:
-#			$camera.offset.y+=abs(velocity.y/100*0.2)
-#		elif velocity.y<0:
-#			$camera.offset.y-=abs(velocity.y/100*0.3)
-#
-#		if $camera.offset.y>300:
-#			$camera.offset.y=300
-#		elif $camera.offset.y<260:
-#			$camera.offset.y=260
-#		if  $player/player.position.y>cameraStartPos.y:
-#			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.1
-#			#cameraStartPos=$player/player.position
-#		else:
-#			$camera.offset.y+=(cameraStartPos.y-$player/player.position.y)*0.1
-#			#cameraStartPos=$player/player.position
-#		cameraStartPos=$player/player.position	
-#		if $camera.offset.y>300:
-#			$camera.offset.y=300
-#		elif $camera.offset.y<260:
-#			$camera.offset.y=260
-#		if $camera.offset.y<260:
-#			$camera.offset.y=260
-#		elif $camera.offset.y>320:
-#			$camera.offset.y=320
-			pass
 	elif state==Game.state.STATE_START:
 		if  $player/player.position.y>cameraStartPos.y:
 			$camera.offset.y-=($player/player.position.y-cameraStartPos.y)*0.09
@@ -166,6 +141,8 @@ func setState(state):
 		self.state=state
 	elif state==Game.state.STATE_START:
 		self.state=state
+		if Game.data['sound']:
+			SoundUtil.playGameStartMusic()
 		#$ui/btnPause.visible=true
 		$block/particleUtil.stopRandomParticle()
 		$ani.play("start")
@@ -186,7 +163,9 @@ func setState(state):
 		else:
 			#$block/particleUtil.setPos($player/player.position)
 			$block/particleUtil.addRandomPosParticle(Vector2($player/player.position.x,400),false)
-	
+		
+		SoundUtil.playPop()
+		SoundUtil.stopTrack()
 		saveData()	#保存数据
 		
 		$ui/btnPause2.visible=false
@@ -196,12 +175,16 @@ func setState(state):
 		self.state=state
 	elif state==Game.state.STATE_PAUSE:
 		get_tree().paused=true
+		if Game.data['sound']:
+			SoundUtil.stopTrack()
 		$ani.play("pause")
 		$player/player.setState(Game.playerState.IDLE)
 		$block/spawnblock.setState(Game.blockState.STOP)
 		self.state=state
 	elif state==Game.state.STATE_RESUME:
 		get_tree().paused=false
+		if Game.data['sound']:
+			SoundUtil.playWelcomMusic()
 		$ani.play_backwards("pause")
 		$player/player.setState(Game.playerState.STAND)
 		$block/spawnblock.setState(Game.blockState.FAST)
@@ -282,8 +265,10 @@ func _on_btnSound2__pressed():
 	print( Game.data['sound'])
 	if Game.data['sound']:
 		Game.data['sound']=false
+		SoundUtil.stopTrack()
 	else:
 		Game.data['sound']=true
+		SoundUtil.playWelcomMusic()
 	print(Game.data)
 	Game.save(Game.data)
 

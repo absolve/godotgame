@@ -6,11 +6,16 @@ script/source = "extends Node2D
 
 var scoredot = preload(\"res://scenes/scoreDot.tscn\")
 
+var colorList=[]
 
 func _ready():
 	randomize()
-	pass 
+	 
 
+
+func _process(delta):
+	update()
+	
 
 func init(num):
 	for i in range(10):
@@ -37,6 +42,7 @@ func init(num):
 		#joint.node_b=NodePath(str(\"../dots/\",temp.name))
 			
 		add_child(temp)
+		colorList.append(temp)
 		add_child(joint)
 	
 	
@@ -45,8 +51,19 @@ func clear():
 		print(i.name)
 		if 'scoredot' in i.name or 'joint2D' in i.name:
 			remove_child(i)
+	colorList.clear()
 	
-
+	
+func _draw():
+#	for color in colorList:
+#		draw_line(Vector2(color.position.x,0),color.position,Game.lineColor[0],0.5,true)
+#		pass
+	for i in range(len(colorList)):
+		draw_line(Vector2(70+i*18,0),colorList[i].position,Game.lineColor[0],0.5,true)
+		
+		pass
+		
+	pass
 "
 
 [sub_resource type="RectangleShape2D" id=2]

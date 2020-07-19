@@ -22,7 +22,9 @@ func playColor():
 		$color.play()
 	pass
 
-func startPop():
+func playPop():
+	if not Game.data['sound']:
+		return
 	$pop.autoplay=true
 	$pop.play()
 	pass
@@ -32,10 +34,16 @@ func stopPop():
 	$pop.stop()
 	pass
 
-func startTrack():
+func playWelcomMusic():
 	$track.autoplay=true
+	$track.pitch_scale=0.5
 	$track.play()
-	pass
+
+func playGameStartMusic():
+	$track.autoplay=true
+	$track.pitch_scale=1
+	$track.play()
+
 
 func stopTrack():
 	$track.autoplay=false

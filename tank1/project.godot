@@ -8,19 +8,32 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "player",
+"language": "GDScript",
+"path": "res://scripts/tank.gd"
+} ]
 _global_script_class_icons={
-
+"player": ""
 }
 
 [application]
 
 config/name="tank1"
+run/main_scene="res://scenes/main.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 Game="*res://scripts/game.gd"
+
+[layer_names]
+
+2d_physics/layer_1="player"
+2d_physics/layer_2="enemy"
+2d_physics/layer_3="bullet"
+2d_physics/layer_4="wall"
 
 [rendering]
 
