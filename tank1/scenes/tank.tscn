@@ -7,13 +7,11 @@
 [ext_resource path="res://sprites/tank_player1_up_c0_t1_s3.png" type="Texture" id=5]
 [ext_resource path="res://sprites/tank_player1_up_c0_t2.png" type="Texture" id=6]
 
-[sub_resource type="RectangleShape2D" id=1]
-
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 4 ) ],
+"frames": [ ExtResource( 2 ) ],
 "loop": false,
-"name": "middle",
+"name": "small",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ), ExtResource( 6 ) ],
@@ -26,9 +24,9 @@ animations = [ {
 "name": "super",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
+"frames": [ ExtResource( 4 ) ],
 "loop": false,
-"name": "small",
+"name": "middle",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 3 ) ],
@@ -37,12 +35,15 @@ animations = [ {
 "speed": 5.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 14, 14 )
+
 [node name="tank" type="KinematicBody2D"]
 script = ExtResource( 1 )
-
-[node name="shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "small"
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )

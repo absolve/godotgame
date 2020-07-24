@@ -8,6 +8,8 @@ extents = Vector2( 2.9494, 3.83183 )
 
 [node name="bullet" type="KinematicBody2D"]
 position = Vector2( 496.488, 265.652 )
+collision_layer = 4
+collision_mask = 2147483655
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true

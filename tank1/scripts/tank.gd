@@ -13,6 +13,8 @@ var state=Game.tank_state.START
 var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var bullets=[]
 
+var size=28
+
 func _ready():
 	name='player'
 	setKeyMap(1)
@@ -20,15 +22,15 @@ func _ready():
 	pass
 	
 func _physics_process(delta):
-	
+	#print("player _physics_process")
 	if state==Game.tank_state.STOP:
 		return
 	
 	if Input.is_key_pressed(keymap["up"]):
-		print("up")
+#		print("up")
 		vec.y=-speed
 		vec.x=0
-		vec = move_and_slide(vec,Vector2.UP)
+		#vec = move_and_slide(vec,Vector2.UP)
 		$ani.flip_v=false
 		$ani.rotation_degrees=0
 		dir=0
@@ -36,8 +38,8 @@ func _physics_process(delta):
 	elif Input.is_key_pressed(keymap["down"]):
 		vec.x=0
 		vec.y=speed
-		vec = move_and_slide(vec,Vector2.UP)
-		print("down")
+		#vec = move_and_slide(vec,Vector2.UP)
+#		print("down")
 		$ani.flip_v=true
 		$ani.rotation_degrees=0
 		dir=1
@@ -45,7 +47,8 @@ func _physics_process(delta):
 	elif Input.is_key_pressed(keymap["left"]):
 		vec.x=-speed
 		vec.y=0
-		vec = move_and_slide(vec,Vector2.UP)
+		print("left")
+		#vec = move_and_slide(vec,Vector2.UP)
 		$ani.flip_v=false
 		if $ani.rotation_degrees!=-90:
 			$ani.rotation_degrees=-90
@@ -54,7 +57,7 @@ func _physics_process(delta):
 	elif Input.is_key_pressed(keymap["right"]):	
 		vec.y=0
 		vec.x=speed
-		vec = move_and_slide(vec,Vector2.UP)
+		#vec = move_and_slide(vec,Vector2.UP)
 		$ani.flip_v=false
 		if $ani.rotation_degrees!=90:
 			$ani.rotation_degrees=90
@@ -64,8 +67,9 @@ func _physics_process(delta):
 		vec=Vector2.ZERO
 		
 		$ani.play("small")
-		
 	
+	if vec!=Vector2.ZERO:
+		vec = move_and_slide(vec,Vector2.UP)
 		
 	if Input.is_key_pressed(keymap["fire"]):
 		print("fire")
@@ -87,6 +91,7 @@ func animation(dir):
 
 
 func fire():
+	
 	pass
 
 

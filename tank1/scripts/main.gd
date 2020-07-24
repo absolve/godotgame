@@ -1,17 +1,29 @@
 extends Node2D
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 
-
+var list=[]
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Game.mainRoot=self
+#	Game.mainRoot=self
+	Game.mainScene=self
+#	list.append($bullet)
+#	list.append($bullet2)
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+
+
+func _on_Button_pressed():
+	print(list)
+#	for i in range(len(list)):
+#		print(is_instance_valid(list[i]))
+#		list.remove(i)
+	var del=[]
+	for i in list:
+		print(is_instance_valid(i))
+		del.append(i)
+	for i in del:
+		list.remove(list.find(i))
+		
+	pass # Replace with function body.
