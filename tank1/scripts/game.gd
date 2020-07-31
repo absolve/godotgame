@@ -2,8 +2,9 @@ extends Node
 
 
 
-
 signal baseDestroyed
+signal hitEnemy(enemyType,players)
+signal tankDestroy(id)
 
 var groups={'player':'player','base':'base',
 			'enemy':'enemy','bullet':'bullet'}
@@ -11,12 +12,10 @@ var groups={'player':'player','base':'base',
 var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
 
 enum tank_state{IDLE,DEAD,STOP,START}
-
 enum bulletType{players,enemy}
-
 enum brickType{brickWall,stoneWall,bush,water,ice}
-
 var explode=preload("res://scenes/explode.tscn")
+
 var grenade =preload("res://sprites/bonus_grenade.png")
 var helmet=preload("res://sprites/bonus_helmet.png")
 var clock=preload("res://sprites/bonus_clock.png")
@@ -34,10 +33,18 @@ var water=preload("res://sprites/water.png")
 
 var mainRoot
 var mainScene #主场景
+var winSize=Vector2(480,416)	#屏幕大小
+
+var mapDir="res://levels"	#内置地图路径
+
+var mapNum	#地图数量
+var mapNameList=[]  #地图文件名字
 
 
 func _ready():
-	
+	mapNum = getBuiltInMapNum(mapDir,mapNameList)
+	#mapDir.split()
+	print(mapNameList)
 	pass 
 
 
@@ -53,3 +60,42 @@ func changeScene(stagePath):
 func loadMap(level):
 	pass
 
+#获取内置的地图文件数量
+func getBuiltInMapNum(mapDir,fileList:Array):
+	var num=0
+	var dir = Directory.new()
+	if dir.open(mapDir) == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if !dir.current_is_dir():
+				num+=1
+				fileList.append(file_name)
+				print("Found file: " + file_name)
+			file_name = dir.get_next()
+	else:
+		print("An error occurred when trying to access the path.")
+	return num
+
+
+#获取扩展的地图	
+func getExtensionMapNum():
+	var num=0
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var mapPath=baseDir+"/levels"
+	var dir = Directory.new()
+	if dir.dir_exists(mapPath):
+		print("1212")
+		if dir.open(mapPath) == OK:
+			dir.list_dir_begin()
+			var file_name = dir.get_next()
+			while file_name != "":
+				if !dir.current_is_dir():
+					num+=1
+					print("Found file: " + file_name)
+				file_name = dir.get_next()
+		else:
+			print("An error occurred when trying to access the path.")
+	else:
+		print("Directory not exist")
+	return num

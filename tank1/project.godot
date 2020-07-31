@@ -8,32 +8,28 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "KinematicBody2D",
-"class": "player",
-"language": "GDScript",
-"path": "res://scripts/tank.gd"
-} ]
+_global_script_classes=[  ]
 _global_script_class_icons={
-"player": ""
+
 }
 
 [application]
 
 config/name="tank1"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/welcome.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 Game="*res://scripts/game.gd"
+Splash="*res://scenes/splash.tscn"
 
 [display]
 
-window/size/width=480
-window/size/height=416
-window/size/test_width=720
-window/size/test_height=624
+window/size/width=512
+window/size/height=448
+window/size/test_width=768
+window/size/test_height=672
 window/dpi/allow_hidpi=true
 window/stretch/mode="2d"
 window/stretch/aspect="keep"

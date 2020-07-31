@@ -32,9 +32,9 @@ func _ready():
 	#获取可执行文件基本路径
 	print(OS.get_executable_path().get_base_dir())
 	loadMap()
-	#print(getBuiltInMapNum())
 	
-	getExtensionMapNum()
+	Game.mainScene=self
+	
 	print(getBrick(0,0))
 	print(getBrick(1,1))
 
@@ -102,7 +102,6 @@ func delPlayerPosBrick():
 			if brick:
 				brick.queue_free()
 	
-	
 
 #获取固定位置的方块  x [0-25] y[0-25]
 func getBrick(x:int,y:int):
@@ -127,50 +126,13 @@ func setBrickType(list:Array,type:int):
 	pass
 
 
-#获取内置的地图文件数量
-func getBuiltInMapNum(fileList:Array):
-	var num=0
-	var dir = Directory.new()
-	if dir.open(mapDir) == OK:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if !dir.current_is_dir():
-				num+=1
-				fileList.append(file_name)
-				print("Found file: " + file_name)
-			file_name = dir.get_next()
-	else:
-		print("An error occurred when trying to access the path.")
-	return num
 
-
-#获取扩展的地图	
-func getExtensionMapNum():
-	var num=0
-	var baseDir=OS.get_executable_path().get_base_dir()
-	var mapPath=baseDir+"/levels"
-	var dir = Directory.new()
-	if dir.dir_exists(mapPath):
-		print("1212")
-		if dir.open(mapPath) == OK:
-			dir.list_dir_begin()
-			var file_name = dir.get_next()
-			while file_name != "":
-				if !dir.current_is_dir():
-					num+=1
-					print("Found file: " + file_name)
-				file_name = dir.get_next()
-		else:
-			print("An error occurred when trying to access the path.")
-	else:
-		print("Directory not exist")
-	return num
 
 
 
 func _process(delta):
 	update()
+	
 	pass
 	
 	
@@ -185,5 +147,5 @@ func _draw():
 	
 	
 	
-	pass
+	
 	

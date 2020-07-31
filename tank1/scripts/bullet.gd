@@ -4,9 +4,12 @@ extends KinematicBody2D
 export var dir=0 # 0上 1下 2左 3右
 var speed=80
 var type=Game.bulletType.players
+var playerID  #玩家id
 var power=1  #1是基本火力 2是最强火力
-
+#var winSize=Vector2(480,416)	#屏幕大小
+var size=Vector2(6,8)	#图片大小
 var vec= Vector2.ZERO
+
 
 func _ready():
 	add_to_group(Game.groups['bullet'])
@@ -29,10 +32,12 @@ func _ready():
 		vec.y=0
 	if type==Game.bulletType.players:
 		#layers = 2+4+8
-		pass
+		collision_mask=2+4+32
+		
 	elif type==Game.bulletType.enemy:
 		#layers = 1+4+8
-		pass
+		collision_mask=1+4+32
+		
 	print(collision_mask)	
 
 func setFastSpeed():
@@ -40,19 +45,25 @@ func setFastSpeed():
 	pass
 
 func _physics_process(delta):
-	
 	var collisions= move_and_collide(vec*delta)
 	if collisions:
-	#	print(collisions)
-		print(collisions.get_class())
-		print(collisions.collider.get_class())
-		if collisions.collider.get_class()=='player':
-			queue_free()
-			var ex =Game.explode.instance()
-			ex.position=position
-			Game.mainScene.add_child(ex)
-			pass
+#		print(collisions.get_class())
+#		print(collisions.collider.get_class())
+		if collisions.collider.get_class()=='player':		
+#			var ex =Game.explode.instance()
+#			ex.position=position
+#			Game.mainScene.add_child(ex)
+			if type==Game.bulletType.enemy:
+				pass
+			elif type==	Game.bulletType.players:
+				queue_free()
+				pass
 		elif collisions.collider.get_class()=='enemy':
+			if type==Game.bulletType.enemy:
+				add_collision_exception_with(collisions.collider)
+			elif type==Game.bulletType.players:
+				
+				pass
 			pass
 		elif collisions.collider.get_class()=='bullet':
 			if collisions.collider.has_method("getType"):
@@ -64,8 +75,24 @@ func _physics_process(delta):
 			else:
 				add_collision_exception_with(collisions.collider)
 			pass
+	if dir==0:
+		if position.y-size.y/2<=0:
+			addExplode(false)
+			destroy()
+	elif dir ==1:
+		if position.y-size.y/2>=Game.winSize.y:
+			addExplode(false)
+			destroy()
+	elif dir==2:
+		if position.x-size.x/2<=0:
+			addExplode(false)
+			destroy()
+	elif dir==3:
+		if position.x-size.x/2>=Game.winSize.y:
+			addExplode(false)
+			destroy()
 		
-	pass
+	
 
 func get_class():
 	return 'bullet'
@@ -73,12 +100,25 @@ func get_class():
 func getType():
 	return type
 
+func setType(type:String):
+	if type=="player":
+		self.type=Game.bulletType.players
+	elif type=="enemy":
+		self.type=Game.bulletType.enemy
+
+func setDir(dir):
+	self.dir=dir
+
 func destroy():
 	queue_free()
 
-func addExplode():
-	pass
+func addExplode(big):
+	var temp=Game.explode.instance()
+	if big:
+		temp.big=true
+	temp.position=position
+	Game.mainScene.add_child(temp)
+	
+	
 
-func _on_VisibilityNotifier2D_screen_exited():
-	queue_free()
-	pass # Replace with function body.
+

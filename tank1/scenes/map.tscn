@@ -9,8 +9,8 @@ script = ExtResource( 1 )
 [node name="bg" type="ColorRect" parent="."]
 visible = false
 show_behind_parent = true
-margin_right = 480.0
-margin_bottom = 416.0
+margin_right = 512.0
+margin_bottom = 448.0
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
