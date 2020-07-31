@@ -124,7 +124,7 @@ func powerUp(isAddArmor:bool=false):
 	if isAddArmor:
 		if armor<=2:
 			armor+=1
-	pass
+	
 			
 #被击中	
 func hit():
