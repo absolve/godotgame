@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
 [ext_resource path="res://sprites/battle_city.png" type="Texture" id=2]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=3]
 [ext_resource path="res://sprites/tank_player1_up_c0_t1.png" type="Texture" id=4]
 [ext_resource path="res://sprites/tank_player1_up_c0_t2.png" type="Texture" id=5]
+[ext_resource path="res://sprites/panel.png" type="Texture" id=6]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -13,6 +14,10 @@ animations = [ {
 "name": "idle",
 "speed": 7.0
 } ]
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 6 )
+region_rect = Rect2( 0, 0, 512, 512 )
 
 [node name="welcome" type="Node2D"]
 script = ExtResource( 1 )
@@ -112,12 +117,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="PanelContainer" type="PanelContainer" parent="."]
+margin_right = 24.0
+margin_bottom = 16.0
+custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NinePatchRect" type="NinePatchRect" parent="HBoxContainer"]
-margin_bottom = 40.0
+[node name="Label" type="Label" parent="PanelContainer"]
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 15.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}

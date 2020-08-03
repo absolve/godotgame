@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://sprites/speakboxR.png" type="Texture" id=2]
-[ext_resource path="res://sprites/speakboxM.png" type="Texture" id=3]
+[ext_resource path="res://sprites/panel.png" type="Texture" id=1]
 [ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=4]
 [ext_resource path="res://scripts/helpInfo.gd" type="Script" id=5]
 
@@ -9,6 +8,22 @@
 extents = Vector2( 160, 5 )
 
 [sub_resource type="CircleShape2D" id=2]
+
+[sub_resource type="StyleBoxTexture" id=3]
+texture = ExtResource( 1 )
+region_rect = Rect2( 0, 0, 512, 512 )
+margin_left = 15.0
+margin_right = 15.0
+margin_top = 15.0
+margin_bottom = 15.0
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 1 )
+region_rect = Rect2( 0, 0, 512, 512 )
+margin_left = 15.0
+margin_right = 15.0
+margin_top = 15.0
+margin_bottom = 15.0
 
 [node name="helpInfo" type="Node2D"]
 script = ExtResource( 5 )
@@ -22,7 +37,7 @@ position = Vector2( 160, -100 )
 shape = SubResource( 1 )
 
 [node name="tip2" type="RigidBody2D" parent="."]
-position = Vector2( 254.603, -25 )
+position = Vector2( 229.177, -38.6693 )
 collision_layer = 16
 collision_mask = 16
 mode = 2
@@ -35,25 +50,21 @@ __meta__ = {
 [node name="shape" type="CollisionShape2D" parent="tip2"]
 shape = SubResource( 2 )
 
-[node name="left" type="Sprite" parent="tip2"]
-position = Vector2( -137, 0 )
-texture = ExtResource( 2 )
-flip_h = true
+[node name="panel" type="PanelContainer" parent="tip2"]
+margin_left = -110.0
+margin_top = -30.0
+margin_right = 91.0
+margin_bottom = 41.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="right" type="Sprite" parent="tip2"]
-position = Vector2( 49, 0 )
-texture = ExtResource( 2 )
-
-[node name="centre" type="Sprite" parent="tip2"]
-position = Vector2( -44, 0 )
-scale = Vector2( 43, 1 )
-texture = ExtResource( 3 )
-
-[node name="Label" type="Label" parent="tip2"]
-margin_left = -128.0
-margin_top = -29.0
-margin_right = 45.0
-margin_bottom = 14.0
+[node name="Label" type="Label" parent="tip2/panel"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 186.0
+margin_bottom = 56.0
 custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Jump on your colors,
@@ -63,7 +74,7 @@ __meta__ = {
 }
 
 [node name="tip1" type="RigidBody2D" parent="."]
-position = Vector2( 148.107, -20 )
+position = Vector2( 99.3213, -8.65375 )
 collision_layer = 16
 collision_mask = 16
 mode = 2
@@ -76,25 +87,21 @@ __meta__ = {
 [node name="shape" type="CollisionShape2D" parent="tip1"]
 shape = SubResource( 2 )
 
-[node name="left" type="Sprite" parent="tip1"]
-position = Vector2( -132, 0 )
-texture = ExtResource( 2 )
-flip_h = true
+[node name="panel" type="PanelContainer" parent="tip1"]
+margin_left = -90.0
+margin_top = -60.0
+margin_right = 90.0
+margin_bottom = 11.0
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="right" type="Sprite" parent="tip1"]
-position = Vector2( 46, 0 )
-texture = ExtResource( 2 )
-
-[node name="centre" type="Sprite" parent="tip1"]
-position = Vector2( -43, 0 )
-scale = Vector2( 41, 1 )
-texture = ExtResource( 3 )
-
-[node name="Label" type="Label" parent="tip1"]
-margin_left = -116.118
-margin_top = -29.5962
-margin_right = 56.8824
-margin_bottom = 13.4038
+[node name="Label" type="Label" parent="tip1/panel"]
+margin_left = 15.0
+margin_top = 15.0
+margin_right = 165.0
+margin_bottom = 56.0
 custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Tap to jump,agani 
