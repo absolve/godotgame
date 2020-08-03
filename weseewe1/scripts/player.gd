@@ -24,14 +24,15 @@ func setState(state):
 
 	
 func playAni():
-	$dialog/Label.text=Game.words[randi()%Game.words.size()]
+	$dialog/panel/node/Label.text=Game.words[randi()%Game.words.size()]
 	$ani.play("show")
 
 #显示新分数
 func playMewScoreAni():
-	$dialog/Label.text="you got new score"
+	$dialog/panel/node/Label.text="you got new score"
 	$ani.play("show")
 	pass
+
 
 
 func _physics_process(delta):

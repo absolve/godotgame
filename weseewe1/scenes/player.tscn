@@ -78,7 +78,7 @@ position = Vector2( 20, -60 )
 [node name="panel" type="PanelContainer" parent="dialog"]
 margin_left = -20.0
 margin_top = -4.0
-margin_right = 80.0
+margin_right = 87.0
 margin_bottom = 44.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 4 )
@@ -87,8 +87,8 @@ __meta__ = {
 }
 
 [node name="NinePatchRect" type="NinePatchRect" parent="dialog/panel"]
-margin_right = 100.0
-margin_bottom = 48.0
+margin_right = 127.0
+margin_bottom = 49.0
 texture = ExtResource( 5 )
 patch_margin_left = 90
 patch_margin_top = 10
@@ -98,10 +98,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="dialog/panel"]
-margin_top = 14.0
-margin_right = 100.0
-margin_bottom = 33.0
+[node name="node" type="MarginContainer" parent="dialog/panel"]
+margin_right = 127.0
+margin_bottom = 49.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 10
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+
+[node name="Label" type="Label" parent="dialog/panel/node"]
+margin_left = 20.0
+margin_top = 10.0
+margin_right = 107.0
+margin_bottom = 29.0
 grow_horizontal = 0
 custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 0.372549, 0.388235, 0.501961, 1 )

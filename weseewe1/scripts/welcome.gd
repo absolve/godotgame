@@ -90,11 +90,9 @@ func _physics_process(delta):
 		if $player/player.position.x<-$player/player.size/2:
 			print("x 超出")
 			setState(Game.state.STATE_OVER)
-			pass
 		if $player/player.position.y>height+offsety+$player/player.size/2+50:
 			print("y 超出")
 			setState(Game.state.STATE_OVER)
-		pass
 	elif state==Game.state.STATE_OVER:#游戏结束
 		pass
 	elif state==Game.state.STATE_PAUSE:
