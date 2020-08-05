@@ -2,13 +2,20 @@
 
 [ext_resource path="res://scripts/scoreBoard.gd" type="Script" id=1]
 [ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=2]
-[ext_resource path="res://sprites/speakboxM.png" type="Texture" id=3]
-[ext_resource path="res://sprites/speakboxR.png" type="Texture" id=4]
+[ext_resource path="res://sprites/panel.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 160, 5 )
 
 [sub_resource type="CircleShape2D" id=2]
+
+[sub_resource type="StyleBoxTexture" id=3]
+content_margin_left = 20.0
+content_margin_right = 20.0
+content_margin_top = 10.0
+content_margin_bottom = 10.0
+texture = ExtResource( 5 )
+region_rect = Rect2( 0, 0, 512, 512 )
 
 [node name="scoreBoard" type="Node2D"]
 script = ExtResource( 1 )
@@ -40,104 +47,32 @@ mass = 5.10204
 position = Vector2( 1.12247, 0 )
 shape = SubResource( 2 )
 
-[node name="left" type="Sprite" parent="msg"]
-position = Vector2( -128, -24 )
-scale = Vector2( 2, 3 )
-texture = ExtResource( 4 )
-centered = false
-flip_h = true
-
-[node name="center" type="Sprite" parent="msg"]
-position = Vector2( -96, -24 )
-scale = Vector2( 50, 3 )
-texture = ExtResource( 3 )
-centered = false
-
-[node name="right" type="Sprite" parent="msg"]
-position = Vector2( 104, -24 )
-scale = Vector2( 2, 3 )
-texture = ExtResource( 4 )
-centered = false
-
-[node name="score" type="VBoxContainer" parent="msg"]
-margin_left = 48.0
-margin_top = 24.0
-margin_right = 88.0
-margin_bottom = 135.0
+[node name="panel" type="PanelContainer" parent="msg"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -87.0
+margin_right = 87.0
+margin_bottom = 131.0
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="best_round2" type="Label" parent="msg/score"]
-margin_right = 40.0
-margin_bottom = 19.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
-text = "0"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="hbox" type="HBoxContainer" parent="msg/panel"]
+margin_left = 20.0
+margin_top = 10.0
+margin_right = 154.0
+margin_bottom = 121.0
 
-[node name="last_round2" type="Label" parent="msg/score"]
-margin_top = 23.0
-margin_right = 40.0
-margin_bottom = 42.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
-text = "0"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="rounds_played2" type="Label" parent="msg/score"]
-margin_top = 46.0
-margin_right = 40.0
-margin_bottom = 65.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
-text = "0"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="avg_per_round2" type="Label" parent="msg/score"]
-margin_top = 69.0
-margin_right = 40.0
-margin_bottom = 88.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
-text = "0"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="colors_earned2" type="Label" parent="msg/score"]
-margin_top = 92.0
-margin_right = 40.0
+[node name="lable" type="VBoxContainer" parent="msg/panel/hbox"]
+margin_right = 119.0
 margin_bottom = 111.0
-custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
-text = "0"
-align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lable" type="VBoxContainer" parent="msg"]
-margin_left = -80.0
-margin_top = 24.0
-margin_right = 39.0
-margin_bottom = 135.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="best_round" type="Label" parent="msg/lable"]
+[node name="best_round" type="Label" parent="msg/panel/hbox/lable"]
 margin_right = 119.0
 margin_bottom = 19.0
 custom_fonts/font = ExtResource( 2 )
@@ -149,7 +84,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="last_round" type="Label" parent="msg/lable"]
+[node name="last_round" type="Label" parent="msg/panel/hbox/lable"]
 margin_top = 23.0
 margin_right = 119.0
 margin_bottom = 42.0
@@ -162,7 +97,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="rounds_played" type="Label" parent="msg/lable"]
+[node name="rounds_played" type="Label" parent="msg/panel/hbox/lable"]
 margin_top = 46.0
 margin_right = 119.0
 margin_bottom = 65.0
@@ -175,7 +110,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="avg_per_round" type="Label" parent="msg/lable"]
+[node name="avg_per_round" type="Label" parent="msg/panel/hbox/lable"]
 margin_top = 69.0
 margin_right = 119.0
 margin_bottom = 88.0
@@ -188,7 +123,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="colors_earned" type="Label" parent="msg/lable"]
+[node name="colors_earned" type="Label" parent="msg/panel/hbox/lable"]
 margin_top = 92.0
 margin_right = 119.0
 margin_bottom = 111.0
@@ -198,5 +133,73 @@ text = "Colors earned"
 align = 2
 __meta__ = {
 "_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="score" type="VBoxContainer" parent="msg/panel/hbox"]
+margin_left = 123.0
+margin_right = 134.0
+margin_bottom = 111.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="best_round2" type="Label" parent="msg/panel/hbox/score"]
+margin_right = 11.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="last_round2" type="Label" parent="msg/panel/hbox/score"]
+margin_top = 23.0
+margin_right = 11.0
+margin_bottom = 42.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="rounds_played2" type="Label" parent="msg/panel/hbox/score"]
+margin_top = 46.0
+margin_right = 11.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="avg_per_round2" type="Label" parent="msg/panel/hbox/score"]
+margin_top = 69.0
+margin_right = 11.0
+margin_bottom = 88.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="colors_earned2" type="Label" parent="msg/panel/hbox/score"]
+margin_top = 92.0
+margin_right = 11.0
+margin_bottom = 111.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.262745, 0.321569, 1 )
+text = "0"
+align = 1
+__meta__ = {
 "_edit_use_anchors_": false
 }

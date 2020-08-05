@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 
-var speed=550	#跳跃速度
+var speed=510	#跳跃速度
 var gravity=1300
 var velocity = Vector2.ZERO	#速度
 
@@ -34,9 +34,7 @@ func playMewScoreAni():
 	pass
 
 
-
 func _physics_process(delta):
-	
 	if state==Game.playerState.IDLE:
 		idle(delta)
 	elif state==Game.playerState.STAND:
@@ -57,6 +55,12 @@ func idle(delta):
 	velocity.y+=gravity*delta
 	velocity=move_and_slide(velocity,Vector2.UP)	
 	
+	if is_on_floor():
+		jumpAgain=true
+		state=Game.playerState.STAND
+		rotateDeg=0
+		$sprite.rotation_degrees=0
+		$bg.rotation_degrees=0
 
 func stand(delta):
 	velocity.y+=gravity*delta
@@ -67,13 +71,20 @@ func stand(delta):
 		state=Game.playerState.JUMP
 		return
 	velocity=move_and_slide(velocity,Vector2.UP)	
-
+	
+	if is_on_floor():
+		jumpAgain=true
+		state=Game.playerState.STAND
+		rotateDeg=0
+		$sprite.rotation_degrees=0
+		$bg.rotation_degrees=0
 
 
 func jump(delta):
 	velocity.y+=gravity*delta
 	if Input.is_action_just_pressed("jump") and jumpAgain:
 		SoundUtil.playJumpB()
+		print('playJumpB')
 		velocity.y=-speed
 		jumpAgain=false
 	

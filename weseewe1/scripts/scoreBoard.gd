@@ -9,9 +9,9 @@ func _ready():
 
 #设置分数
 func setScore():
-	$msg/score/best_round2.text=str(Game.data['best_round'])
-	$msg/score/last_round2.text=str(Game.data['last_round'])
-	$msg/score/rounds_played2.text=str(Game.data['rounds_played'])
-	$msg/score/avg_per_round2.text=str(Game.data['avg_per_round'])
-	$msg/score/colors_earned2.text=str(Game.data['colors_earned'])
+	$msg/panel/hbox/score/best_round2.text=str(Game.data['best_round'])
+	$msg/panel/hbox/score/last_round2.text=str(Game.data['last_round'])
+	$msg/panel/hbox/score/rounds_played2.text=str(Game.data['rounds_played'])
+	$msg/panel/hbox/score/avg_per_round2.text=str(Game.data['avg_per_round'])
+	$msg/panel/hbox/score/colors_earned2.text=str(Game.data['colors_earned'])
 	pass
