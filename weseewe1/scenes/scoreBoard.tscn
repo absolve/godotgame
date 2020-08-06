@@ -16,32 +16,33 @@ content_margin_top = 10.0
 content_margin_bottom = 10.0
 texture = ExtResource( 5 )
 region_rect = Rect2( 0, 0, 512, 512 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
 
 [node name="scoreBoard" type="Node2D"]
 script = ExtResource( 1 )
 
 [node name="top" type="StaticBody2D" parent="."]
-position = Vector2( 160, -5 )
+position = Vector2( 160, -200 )
 collision_layer = 128
 collision_mask = 128
 
 [node name="shape" type="CollisionShape2D" parent="top"]
 shape = SubResource( 1 )
 
-[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
-position = Vector2( 160, 5 )
-node_a = NodePath("../top")
-node_b = NodePath("../msg")
-length = 20.0
-stiffness = 10.0
-damping = 0.8
-
 [node name="msg" type="RigidBody2D" parent="."]
-position = Vector2( 160, 96 )
+position = Vector2( 160, -32 )
 collision_layer = 128
 collision_mask = 128
 mode = 2
 mass = 5.10204
+gravity_scale = 5.0
+linear_velocity = Vector2( 0, 10 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="shape" type="CollisionShape2D" parent="msg"]
 position = Vector2( 1.12247, 0 )
@@ -49,10 +50,12 @@ shape = SubResource( 2 )
 
 [node name="panel" type="PanelContainer" parent="msg"]
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
+anchor_bottom = 1.0
 margin_left = -87.0
+margin_top = -131.0
 margin_right = 87.0
-margin_bottom = 131.0
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_group_": true,
@@ -203,3 +206,10 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="DampedSpringJoint2D" type="DampedSpringJoint2D" parent="."]
+position = Vector2( 60, -180 )
+node_a = NodePath("../top")
+node_b = NodePath("../msg")
+length = 10.0
+stiffness = 10.0

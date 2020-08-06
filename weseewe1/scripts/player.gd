@@ -17,6 +17,7 @@ var state = Game.playerState.IDLE
 
 func _ready():
 	add_to_group("player")
+	#print('Game.playerState.IDLE',Game.playerState.IDLE)
 	pass 
 
 func setState(state):
@@ -57,7 +58,6 @@ func idle(delta):
 	
 	if is_on_floor():
 		jumpAgain=true
-		state=Game.playerState.STAND
 		rotateDeg=0
 		$sprite.rotation_degrees=0
 		$bg.rotation_degrees=0
@@ -74,7 +74,6 @@ func stand(delta):
 	
 	if is_on_floor():
 		jumpAgain=true
-		state=Game.playerState.STAND
 		rotateDeg=0
 		$sprite.rotation_degrees=0
 		$bg.rotation_degrees=0
@@ -84,7 +83,7 @@ func jump(delta):
 	velocity.y+=gravity*delta
 	if Input.is_action_just_pressed("jump") and jumpAgain:
 		SoundUtil.playJumpB()
-		print('playJumpB')
+#		print('playJumpB')
 		velocity.y=-speed
 		jumpAgain=false
 	
@@ -113,6 +112,7 @@ func _unhandled_input(event):
 		if event.pressed or (event is InputEventMouseButton and 
 							event.button_index == BUTTON_LEFT and event.pressed):
 			if state==Game.playerState.STAND:
+				print('Game.playerState.STAND',Game.playerState.STAND)
 				SoundUtil.playJumpA()
 				velocity.y=-speed
 				state=Game.playerState.JUMP
@@ -121,4 +121,4 @@ func _unhandled_input(event):
 				velocity.y=-speed
 				jumpAgain=false
 				
-	pass	
+pass	
