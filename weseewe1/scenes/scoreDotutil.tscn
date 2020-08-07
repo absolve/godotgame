@@ -10,7 +10,6 @@ var colorList=[]
 
 func _ready():
 	randomize()
-	 
 
 
 func _process(delta):
@@ -20,15 +19,16 @@ func _process(delta):
 func init(num):
 	for i in range(10):
 		var temp = scoredot.instance()
-		temp.position.x = 70+i*18+rand_range(-0.2,0.2)
-		temp.position.y=5
+		temp.position.x = 70+i*18+rand_range(-0.1,0.1)
+		#temp.position.x = 70+i*18
+		temp.position.y=-5
 		temp.name=str(\"scoredot\",i)
 	#	temp.setColor(Game.blockColor[5])
 		if i<num:
 			temp.setColor(\"#fdfbc8\")
 		else:
 			temp.setColor(\"#ffa195\")
-			
+		add_child(temp)	
 		var joint= DampedSpringJoint2D.new()
 		joint.name=str(\"joint2D\",i)
 		joint.length=70
@@ -37,11 +37,13 @@ func init(num):
 		joint.damping=1
 		joint.position.x=70+i*18
 		joint.position.y=0
-		joint.node_a=NodePath(\"../top\")
-		joint.node_b=NodePath(str(\"../\",temp.name))
+		#joint.node_a=NodePath(\"../top\")
+		joint.node_a=$top.get_path()
+		joint.node_b=temp.get_path()
+		#joint.node_b=NodePath(str(\"../\",temp.name))
 		#joint.node_b=NodePath(str(\"../dots/\",temp.name))
 			
-		add_child(temp)
+		
 		colorList.append(temp)
 		add_child(joint)
 	

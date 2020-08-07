@@ -11,7 +11,7 @@ func _ready():
 	$top.add_to_group(Game.group["colorDot"])
 	#add3Dot(Game.blockColor)
 	#print(Game.group["colorDot"])
-	print(1%5)
+	#print(1%5)
 	
 #	for i in range(3):
 #		addDot(Game.blockColor[0])

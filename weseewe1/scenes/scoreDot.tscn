@@ -23,6 +23,7 @@ radius = 5.20209
 
 [node name="scoreDot" type="RigidBody2D"]
 gravity_scale = 5.0
+linear_velocity = Vector2( 0, 50 )
 script = SubResource( 1 )
 
 [node name="ball" type="Sprite" parent="."]
