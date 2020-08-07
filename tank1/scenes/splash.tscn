@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/splash.gd" type="Script" id=1]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "in"
@@ -28,6 +29,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 0, 449 ), Vector2( 0, 224 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("name:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
 [node name="splash" type="Node2D"]
 z_index = 10
@@ -37,7 +50,7 @@ script = ExtResource( 1 )
 margin_top = -223.0
 margin_right = 512.0
 margin_bottom = 1.0
-color = Color( 0, 0, 0, 1 )
+color = Color( 0.392157, 0.392157, 0.392157, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -46,7 +59,21 @@ __meta__ = {
 margin_top = 449.0
 margin_right = 512.0
 margin_bottom = 673.0
-color = Color( 0, 0, 0, 1 )
+color = Color( 0.392157, 0.392157, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="name" type="Label" parent="."]
+visible = false
+margin_left = 216.0
+margin_top = 214.0
+margin_right = 284.0
+margin_bottom = 235.0
+grow_horizontal = 2
+custom_fonts/font = ExtResource( 2 )
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

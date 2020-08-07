@@ -18,7 +18,7 @@ var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var bullets=[]
 var size=28  	#大小
 var bullet=preload("res://scenes/bullet.tscn")
-
+var invincible=false #无敌
 
 func _ready():
 	name='player'

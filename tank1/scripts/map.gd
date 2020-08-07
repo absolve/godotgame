@@ -7,11 +7,11 @@ var currentLevel
 var builtInMapNum  #内置地图数
 var builtInMapFileList  #内置地图数量
 
-export var offset=Vector2.ZERO
+export var offset=Vector2(32,16)
 
 var brick=preload("res://scenes/brick.tscn")
 var cellSize=16	#每个格子的大小是16px
-var mapDir="res://levels"
+#var mapDir="res://levels"
 export var debug=true
 var mode= 0  #0是游戏开始 1是编辑模式
 export var playerNum=1	# 默认1个人
@@ -30,22 +30,21 @@ var basePos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
 
 func _ready():
 	#获取可执行文件基本路径
-	print(OS.get_executable_path().get_base_dir())
-	loadMap()
+	#print(OS.get_executable_path().get_base_dir())
+	#loadMap()
 	
-	Game.mainScene=self
+	Game.mainScene=$bullets
 	
-	print(getBrick(0,0))
-	print(getBrick(1,1))
-
-	#$FileDialog.show()
+	$mapbg.rect_position=offset
+	
+	
 	pass
 
 #载入地图
-func loadMap():
+func loadMap(filename:String):
 	var file = File.new()
-	if file.file_exists("res://levels/1.json"):
-		file.open("res://levels/1.json", File.READ)
+	if file.file_exists(filename):
+		file.open(filename, File.READ)
 		currentLevel = parse_json(file.get_as_text())
 		print("文件",currentLevel)
 		file.close()
@@ -72,9 +71,23 @@ func loadMap():
 				temp.type=i['type']
 				$brick.add_child(temp)
 	
-	#delPlayerPosBrick()
-			
-	pass
+	delPlayerPosBrick()
+	delEnemyPosBrick()	
+	
+
+
+#清空地图
+func clearMap():
+	for i in $brick.get_children():
+		$brick.remove_child(i)
+	for i in $bonus.get_children():
+		$bonus.remove_child(i)	
+	for i in $tanks.get_children():
+		$tanks.remove_child(i)
+	for i in $bullets.get_children():
+		$bullets.remove_child(i)
+		
+
 
 #获取基地旁边的砖块
 func getBaseBrick():
@@ -126,24 +139,22 @@ func setBrickType(list:Array,type:int):
 	pass
 
 
-
-
-
-
 func _process(delta):
 	update()
 	
-	pass
+	
+	
+	
 	
 	
 func _draw():
 	if not debug:
 		return
 	for i in range(27):
-		draw_line(Vector2(i*cellSize,0),Vector2(i*cellSize,cellSize*26),Color.gray,0.5,true)
+		draw_line(Vector2(i*cellSize,0)+offset,Vector2(i*cellSize,cellSize*26)+offset,Color.gray,0.5,true)
 		pass
 	for i in range(27):
-		draw_line(Vector2(0,i*cellSize),Vector2(cellSize*26,i*cellSize),Color.gray,0.5,true)
+		draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
 	
 	
 	

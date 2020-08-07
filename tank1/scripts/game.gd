@@ -11,6 +11,7 @@ var groups={'player':'player','base':'base',
 
 var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
 
+enum game_state{LOAD,START,PAUSE,OVER,NEXT_LEVEL}
 enum tank_state{IDLE,DEAD,STOP,START}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
@@ -31,6 +32,8 @@ var ice=preload("res://sprites/ice.png")
 var bush=preload("res://sprites/bush.png")
 var water=preload("res://sprites/water.png")
 
+var _mainScene="res://scenes/main.tscn"
+
 var mainRoot
 var mainScene #主场景
 var winSize=Vector2(480,416)	#屏幕大小
@@ -39,7 +42,9 @@ var mapDir="res://levels"	#内置地图路径
 
 var mapNum	#地图数量
 var mapNameList=[]  #地图文件名字
+var level=0  #默认关卡1
 
+var mode=1	#游戏单人 双人
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
@@ -52,12 +57,15 @@ func _ready():
 func changeScene(stagePath):
 #	Splash.find_node("ani").play("moveIn")
 #	yield(Splash.find_node("ani"),"animation_finished")
+	Splash.playIn()
+	yield(Splash.find_node("ani"),"animation_finished")
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
 #	Splash.find_node("ani").play("moveOut")
 
 func loadMap(level):
+	
 	pass
 
 #获取内置的地图文件数量

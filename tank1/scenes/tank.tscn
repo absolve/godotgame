@@ -12,24 +12,14 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 3 ) ],
-"loop": false,
-"name": "big",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": false,
 "name": "small",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
-"loop": true,
-"name": "super_run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
-"loop": true,
-"name": "middle_run",
+"frames": [ ExtResource( 3 ) ],
+"loop": false,
+"name": "big",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 3 ), ExtResource( 9 ) ],
@@ -37,10 +27,10 @@ animations = [ {
 "name": "big_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ), ExtResource( 6 ) ],
+"frames": [  ],
 "loop": true,
-"name": "small_run",
-"speed": 8.0
+"name": "small_green",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 5 ) ],
 "loop": true,
@@ -52,9 +42,19 @@ animations = [ {
 "name": "middle",
 "speed": 5.0
 }, {
-"frames": [  ],
+"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
 "loop": true,
-"name": "small_green",
+"name": "super_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "small_run",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "middle_run",
 "speed": 5.0
 } ]
 

@@ -1,29 +1,40 @@
 extends Node2D
 
 
+var state=Game.game_state.LOAD
 
-var list=[]
-# Called when the node enters the scene tree for the first time.
 func _ready():
-#	Game.mainRoot=self
-	Game.mainScene=self
-#	list.append($bullet)
-#	list.append($bullet2)
-	pass # Replace with function body.
 
+	pass 
 
-
-
-func _on_Button_pressed():
-	print(list)
-#	for i in range(len(list)):
-#		print(is_instance_valid(list[i]))
-#		list.remove(i)
-	var del=[]
-	for i in list:
-		print(is_instance_valid(i))
-		del.append(i)
-	for i in del:
-		list.remove(list.find(i))
+func _process(delta):
+	if state==Game.game_state.LOAD:
+		if Input.is_action_just_pressed("ui_accept"):
+			Splash.playOut()
+			#state = Game.game_state.START
+			setState(Game.game_state.START)
+			pass
+		pass
+	elif state==Game.game_state.START:
 		
-	pass # Replace with function body.
+		pass
+	elif state==Game.game_state.NEXT_LEVEL:
+		
+		pass
+	
+	pass
+
+#设置状态
+func setState(state):
+	if state==Game.game_state.START:
+		print('loadMap')
+		$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
+		pass
+	elif state==Game.game_state.NEXT_LEVEL:
+		
+		pass	
+	self.state=state
+
+func _input(event):
+	
+	pass

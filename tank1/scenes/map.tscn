@@ -11,6 +11,16 @@ visible = false
 show_behind_parent = true
 margin_right = 512.0
 margin_bottom = 448.0
+color = Color( 0.392157, 0.392157, 0.392157, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mapbg" type="ColorRect" parent="."]
+visible = false
+show_behind_parent = true
+margin_right = 416.0
+margin_bottom = 416.0
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -26,3 +36,5 @@ __meta__ = {
 position = Vector2( 172.233, 134.135 )
 
 [node name="tools" type="Node2D" parent="."]
+
+[node name="bullets" type="Node2D" parent="."]

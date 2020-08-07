@@ -8,3 +8,6 @@ func playIn():
 	
 func playOut():
 	$ani.play_backwards("in")
+
+func setLevelName(name):
+	$name.text=name
