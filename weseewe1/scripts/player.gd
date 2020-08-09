@@ -112,7 +112,7 @@ func _unhandled_input(event):
 		if event.pressed or (event is InputEventMouseButton and 
 							event.button_index == BUTTON_LEFT and event.pressed):
 			if state==Game.playerState.STAND:
-				print('Game.playerState.STAND',Game.playerState.STAND)
+#				print('Game.playerState.STAND',Game.playerState.STAND)
 				SoundUtil.playJumpA()
 				velocity.y=-speed
 				state=Game.playerState.JUMP
