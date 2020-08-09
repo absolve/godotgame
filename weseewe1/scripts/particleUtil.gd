@@ -9,13 +9,8 @@ var particle=preload("res://scenes/particle.tscn")
 func _ready():
 	randomize()
 	position=pos
-#	print(52/255)
 	$Timer.connect("timeout",self,"_randomParticle")
-	
-	#print(stepify(randf(),0.1))
-	
-	#startRandomParticle()
-	#addRandomPosParticle(Vector2(160,480),false)
+
 	 
 func setPos(pos:Vector2):
 	position=pos
@@ -80,6 +75,34 @@ func addRandomPosParticle(pos:Vector2,simpleColor:bool):
 	pass
 
 
+func addEdgeParticle(pos:Vector2,simpleColor:bool):
+	var index=randi()%10
+	for i in range(num):
+		var temp=particle.instance()
+		temp.ySpeed=1200
+		temp.gravity+=randi()%30
+		temp.dropSpeed+=randi()%30
+		var xspeed=randi()%80
+		var rotateSpeed = randi()%50
+		var dropXSpeed = randi()%40
+		if randi()%10>=5:
+			temp.rotateSpeed=rotateSpeed
+		else:
+			temp.rotateSpeed=-rotateSpeed
+		
+		if randi()%10>=5:
+			temp.dropXSpeed=dropXSpeed
+		else:
+			temp.dropXSpeed=-dropXSpeed
+			
+		if simpleColor:
+			temp.rgb=Color(Game.blockColor[index])
+		else:
+			temp.rgb=Color(Game.blockColor[randi()%10])
+		temp.position=pos
+		add_child(temp)
+
+
 #添加随机粒子	
 func startRandomParticle():
 	$Timer.start()
@@ -89,7 +112,7 @@ func stopRandomParticle():
 	$Timer.stop()
 	
 	
-
+#随机产生的粒子
 func _randomParticle():
 	#print(12313)
 	var temp=particle.instance()

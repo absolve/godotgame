@@ -13,7 +13,7 @@ func setScore():
 	$msg/panel/hbox/score/best_round2.text=str(Game.data['best_round'])
 	$msg/panel/hbox/score/last_round2.text=str(Game.data['last_round'])
 	$msg/panel/hbox/score/rounds_played2.text=str(Game.data['rounds_played'])
-	$msg/panel/hbox/score/avg_per_round2.text=str(Game.data['avg_per_round'])
+	$msg/panel/hbox/score/avg_per_round2.text=str(stepify(Game.data['avg_per_round'],0.01))
 	$msg/panel/hbox/score/colors_earned2.text=str(Game.data['colors_earned'])
 	pass
 

@@ -2,14 +2,9 @@ extends Node2D
 
 
 var offsety=60 #摄像机的y偏移
-#var pos=543
-#var cameray=400
-#var gravity=1000
-
 var state=Game.state.STATE_IDLE
 var helpInfo =preload("res://scenes/helpInfo.tscn")
 var height #高度
-#var cameraOffset=20
 var firstStart=true	#新增颜色定时器第一次启动
 var getNewColordelay=18 #下一个新颜色的间隔
 var scoreInfo = preload("res://scenes/scoreBoard.tscn")	#分数信息
@@ -41,6 +36,7 @@ func _ready():
 		elif Game.nextState==Game.state.STATE_NEWSCORE:
 			$ani.current_animation="newScore"
 			$dot/scoreDotutil.clear()
+			$ui/word.clear()
 			$player/player.playMewScoreAni()
 			var delay=0
 			#$block/particleUtil.setPos(Vector2(160,480))
@@ -52,12 +48,13 @@ func _ready():
 			$ani.play("newScoreBack")
 			$dot/scoreDotutil.init(Game.data['best_round'])
 			$block/particleUtil.startRandomParticle()
+			$ui/word.init()
 			
 		Game.nextState=Game.state.STATE_IDLE
 	else:
 		$dot/scoreDotutil.init(Game.data['best_round'])
 		$block/particleUtil.startRandomParticle()
-
+		$ui/word.init()
 
 func _physics_process(delta):
 	if state==Game.state.STATE_IDLE:
@@ -88,10 +85,8 @@ func _physics_process(delta):
 			$camera.offset.y=320
 		#如果玩家位置超出屏幕就游戏结束	
 		if $player/player.position.x<-$player/player.size/2:
-			print("x 超出")
 			setState(Game.state.STATE_OVER)
-		if $player/player.position.y>height+offsety+$player/player.size/2+50:
-			print("y 超出")
+		if $player/player.position.y>height+offsety+$player/player.size/2+30:
 			setState(Game.state.STATE_OVER)
 	elif state==Game.state.STATE_OVER:#游戏结束
 		pass
@@ -113,6 +108,7 @@ func setState(state):
 		var helpinfo=helpInfo.instance()
 		$bg.add_child(helpinfo)
 		$dot/scoreDotutil.clear()
+		$ui/word.clear()
 		$dot/colorDotUtil.add3Dot($block/spawnblock.allColor.slice(0,2))
 #		yield($ani,"animation_finished")
 		$block/spawnblock.setGameState(Game.state.STATE_HELP)
@@ -123,15 +119,17 @@ func setState(state):
 			Game.changeScene(Game.mainScene)
 		elif self.state==Game.state.STATE_PASS:	#已经通关
 			Game.changeScene(Game.mainScene)
-		elif self.state==Game.state.STATE_SCORE:
+		elif self.state==Game.state.STATE_SCORE:	#分数
 			$ani.play_backwards("score")
 			$dot/scoreDotutil.init(Game.data['best_round'])
+			$ui/word.init()
 			$ui/scoreBoard.queue_free()
 		else:
 			$player/player.setState(Game.playerState.IDLE)
 			$block/spawnblock.setGameState(Game.state.STATE_IDLE)
 			$bg/helpInfo.queue_free()
 			$dot/scoreDotutil.init(Game.data['best_round'])
+			$ui/word.init()
 			$dot/colorDotUtil.clearColor()
 			$ani.play_backwards("help")
 			yield($ani,"animation_finished")
@@ -145,6 +143,7 @@ func setState(state):
 		$block/particleUtil.stopRandomParticle()
 		$ani.play("start")
 		$dot/scoreDotutil.clear()
+		$ui/word.clear()
 		$player/player.setState(Game.playerState.STAND)
 		$player/player.playAni()
 		$block/spawnblock.setState(Game.blockState.FAST)
@@ -157,7 +156,7 @@ func setState(state):
 		$block/spawnblock.setState(Game.blockState.SHAKE)
 		if $player/player.position.x<-$player/player.size/2:
 			#$block/particleUtil.setPos(Vector2(0,$player/player.position.y))
-			$block/particleUtil.addRandomPosParticle(Vector2(0,$player/player.position.y),false)
+			$block/particleUtil.addEdgeParticle(Vector2(0,$player/player.position.y),false)
 		else:
 			#$block/particleUtil.setPos($player/player.position)
 			$block/particleUtil.addRandomPosParticle(Vector2($player/player.position.x,400),false)
@@ -209,6 +208,7 @@ func setState(state):
 	elif state==Game.state.STATE_SCORE:	#分数显示
 		self.state=state
 		$dot/scoreDotutil.clear()
+		$ui/word.clear()
 		var scoreinfo = scoreInfo.instance()
 		$ui.add_child(scoreinfo)
 		$ani.play("score")
