@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
 [ext_resource path="res://scenes/tank.tscn" type="PackedScene" id=2]
+[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=3]
+[ext_resource path="res://sprites/flag.png" type="Texture" id=4]
+[ext_resource path="res://sprites/lives.png" type="Texture" id=5]
+[ext_resource path="res://scenes/enemyImg.tscn" type="PackedScene" id=6]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -17,7 +21,6 @@ __meta__ = {
 }
 
 [node name="mapbg" type="ColorRect" parent="."]
-visible = false
 show_behind_parent = true
 margin_right = 416.0
 margin_bottom = 416.0
@@ -35,6 +38,217 @@ __meta__ = {
 [node name="tank" parent="tanks" instance=ExtResource( 2 )]
 position = Vector2( 172.233, 134.135 )
 
+[node name="bullets" type="Node2D" parent="."]
+
 [node name="tools" type="Node2D" parent="."]
 
-[node name="bullets" type="Node2D" parent="."]
+[node name="level" type="VBoxContainer" parent="tools"]
+margin_left = 460.0
+margin_top = 360.0
+margin_right = 500.0
+margin_bottom = 412.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="tools/level"]
+margin_right = 40.0
+margin_bottom = 32.0
+texture = ExtResource( 4 )
+
+[node name="number" type="Label" parent="tools/level"]
+margin_top = 36.0
+margin_right = 40.0
+margin_bottom = 52.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "1"
+align = 2
+
+[node name="p1live" type="VBoxContainer" parent="tools"]
+margin_left = 460.0
+margin_top = 240.0
+margin_right = 496.0
+margin_bottom = 280.0
+alignment = 1
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="tools/p1live"]
+margin_top = 1.0
+margin_right = 36.0
+margin_bottom = 17.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "1p"
+align = 1
+uppercase = true
+
+[node name="box" type="HBoxContainer" parent="tools/p1live"]
+margin_top = 21.0
+margin_right = 36.0
+margin_bottom = 37.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="tools/p1live/box"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 5 )
+
+[node name="num" type="Label" parent="tools/p1live/box"]
+margin_left = 20.0
+margin_right = 36.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "2"
+
+[node name="p2live" type="VBoxContainer" parent="tools"]
+margin_left = 460.0
+margin_top = 290.0
+margin_right = 496.0
+margin_bottom = 330.0
+alignment = 1
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="tools/p2live"]
+margin_top = 2.0
+margin_right = 36.0
+margin_bottom = 18.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "2p"
+align = 1
+uppercase = true
+
+[node name="box" type="HBoxContainer" parent="tools/p2live"]
+margin_top = 22.0
+margin_right = 36.0
+margin_bottom = 38.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="tools/p2live/box"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 5 )
+
+[node name="num" type="Label" parent="tools/p2live/box"]
+margin_left = 20.0
+margin_right = 36.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "2"
+
+[node name="enemyList" type="GridContainer" parent="tools"]
+margin_left = 460.0
+margin_top = 18.0
+margin_right = 500.0
+margin_bottom = 214.0
+columns = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" parent="tools/enemyList" instance=ExtResource( 6 )]
+
+[node name="TextureRect2" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_right = 36.0
+
+[node name="TextureRect3" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 20.0
+margin_bottom = 36.0
+
+[node name="TextureRect4" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 36.0
+margin_bottom = 36.0
+
+[node name="TextureRect5" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 40.0
+margin_bottom = 56.0
+
+[node name="TextureRect7" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 40.0
+margin_right = 36.0
+margin_bottom = 56.0
+
+[node name="TextureRect6" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 60.0
+margin_bottom = 76.0
+
+[node name="TextureRect8" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 60.0
+margin_right = 36.0
+margin_bottom = 76.0
+
+[node name="TextureRect9" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 80.0
+margin_bottom = 96.0
+
+[node name="TextureRect10" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 80.0
+margin_right = 36.0
+margin_bottom = 96.0
+
+[node name="TextureRect11" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 100.0
+margin_bottom = 116.0
+
+[node name="TextureRect12" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 100.0
+margin_right = 36.0
+margin_bottom = 116.0
+
+[node name="TextureRect13" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 120.0
+margin_bottom = 136.0
+
+[node name="TextureRect14" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 120.0
+margin_right = 36.0
+margin_bottom = 136.0
+
+[node name="TextureRect15" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 140.0
+margin_bottom = 156.0
+
+[node name="TextureRect16" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 140.0
+margin_right = 36.0
+margin_bottom = 156.0
+
+[node name="TextureRect17" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 160.0
+margin_bottom = 176.0
+
+[node name="TextureRect18" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 160.0
+margin_right = 36.0
+margin_bottom = 176.0
+
+[node name="TextureRect19" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_top = 180.0
+margin_bottom = 196.0
+
+[node name="TextureRect20" parent="tools/enemyList" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_top = 180.0
+margin_right = 36.0
+margin_bottom = 196.0

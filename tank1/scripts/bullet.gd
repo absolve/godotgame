@@ -47,12 +47,7 @@ func setFastSpeed():
 func _physics_process(delta):
 	var collisions= move_and_collide(vec*delta)
 	if collisions:
-#		print(collisions.get_class())
-#		print(collisions.collider.get_class())
 		if collisions.collider.get_class()=='player':		
-#			var ex =Game.explode.instance()
-#			ex.position=position
-#			Game.mainScene.add_child(ex)
 			if type==Game.bulletType.enemy:
 				pass
 			elif type==	Game.bulletType.players:

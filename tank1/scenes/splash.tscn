@@ -72,6 +72,7 @@ margin_right = 284.0
 margin_bottom = 235.0
 grow_horizontal = 2
 custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 align = 1
 valign = 1
 __meta__ = {

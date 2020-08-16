@@ -60,7 +60,7 @@ func _physics_process(delta):
 		animation(dir,vec)	
 	else:
 		vec=Vector2.ZERO	
-		dir=-1
+		#dir=-1
 		animation(dir,vec)	
 	
 	
@@ -76,19 +76,23 @@ func _physics_process(delta):
 func animation(dir,vec):
 	if dir==0:
 		$ani.flip_v=false
+		$ani.flip_h=false
 		$ani.rotation_degrees=0
 		pass
 	elif dir==1:
 		$ani.flip_v=true
+		$ani.flip_h=false
 		$ani.rotation_degrees=0
 		pass
 	elif dir==2:
 		$ani.flip_v=false
+		$ani.flip_h=true
 		if $ani.rotation_degrees!=-90:
 			$ani.rotation_degrees=-90
 		pass
 	elif dir==3:
 		$ani.flip_v=false
+		$ani.flip_h=false
 		if $ani.rotation_degrees!=90:
 			$ani.rotation_degrees=90
 		pass	

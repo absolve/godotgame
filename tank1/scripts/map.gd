@@ -17,6 +17,7 @@ var mode= 0  #0是游戏开始 1是编辑模式
 export var playerNum=1	# 默认1个人
 
 var player1 = [Vector2(8,25),Vector2(9,25),Vector2(8,24),Vector2(9,24)]
+#var player1 = [Vector2(0,25),Vector2(1,25),Vector2(0,24),Vector2(1,24)]
 var player2 =[Vector2(16,25),Vector2(17,25),Vector2(16,24),Vector2(17,24)]
 
 var enemyPos=[Vector2(0,0),Vector2(0,1),Vector2(1,0),Vector2(1,1),
@@ -27,6 +28,16 @@ var enemyPos=[Vector2(0,0),Vector2(0,1),Vector2(1,0),Vector2(1,1),
 var basePos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
 			Vector2(11,23),Vector2(12,23),Vector2(13,23),
 			Vector2(13,25),Vector2(13,24),Vector2(13,23)]
+
+onready var _1pLive=$tools/p1live
+onready var _1pLiveNum=$tools/p1live/box/num
+onready var _2pLive=$tools/p2live
+onready var _2pLiveNum=$tools/p2live/box/num
+onready var _enemyList=$tools/enemyList
+
+
+
+
 
 func _ready():
 	#获取可执行文件基本路径
@@ -118,7 +129,7 @@ func delPlayerPosBrick():
 
 #获取固定位置的方块  x [0-25] y[0-25]
 func getBrick(x:int,y:int):
-	var rect = Rect2(Vector2(x*cellSize,y*cellSize),Vector2(cellSize,cellSize))
+	var rect = Rect2(Vector2(x*cellSize,y*cellSize)+offset,Vector2(cellSize,cellSize))
 	
 	var child=$brick.get_children()
 	var brick=null
@@ -156,7 +167,8 @@ func _draw():
 	for i in range(27):
 		draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
 	
-	
+#	for i in player1:
+#		draw_rect(Rect2(Vector2(i.x*cellSize,i.y*cellSize)+offset,Vector2(cellSize,cellSize)),Color.gray,0.5,true)
 	
 	
 	
