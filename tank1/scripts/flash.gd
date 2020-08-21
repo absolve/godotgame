@@ -4,9 +4,11 @@ extends AnimatedSprite
 var addNode:Node2D 	#添加的节点
 var parentNode:Node2D	#节点添加的父节点
 var loopNum=3	#循环次数
+var size=32	#图片大小
 
 func _ready():
 	playing=true
+	
 	pass
 
 

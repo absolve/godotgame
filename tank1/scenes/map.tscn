@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
-[ext_resource path="res://scenes/tank.tscn" type="PackedScene" id=2]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=3]
 [ext_resource path="res://sprites/flag.png" type="Texture" id=4]
 [ext_resource path="res://sprites/lives.png" type="Texture" id=5]
@@ -21,6 +20,7 @@ __meta__ = {
 }
 
 [node name="mapbg" type="ColorRect" parent="."]
+visible = false
 show_behind_parent = true
 margin_right = 416.0
 margin_bottom = 416.0
@@ -35,12 +35,10 @@ __meta__ = {
 
 [node name="tanks" type="Node2D" parent="."]
 
-[node name="tank" parent="tanks" instance=ExtResource( 2 )]
-position = Vector2( 172.233, 134.135 )
-
 [node name="bullets" type="Node2D" parent="."]
 
 [node name="tools" type="Node2D" parent="."]
+visible = false
 
 [node name="level" type="VBoxContainer" parent="tools"]
 margin_left = 460.0
@@ -78,9 +76,9 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="tools/p1live"]
-margin_top = 1.0
+margin_top = 2.0
 margin_right = 36.0
-margin_bottom = 17.0
+margin_bottom = 18.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "1p"
@@ -88,9 +86,9 @@ align = 1
 uppercase = true
 
 [node name="box" type="HBoxContainer" parent="tools/p1live"]
-margin_top = 21.0
+margin_top = 22.0
 margin_right = 36.0
-margin_bottom = 37.0
+margin_bottom = 38.0
 alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="tools/p1live/box"]

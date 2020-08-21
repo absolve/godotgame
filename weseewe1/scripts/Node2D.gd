@@ -75,7 +75,7 @@ func addDot(color:String):
 	var size = dots.size()
 	if size>=10:
 		return
-	print(size)
+#	print(size)
 	if size>=5:
 		var temp = dot.instance()
 		temp.position.x=60+size%5*50+rand_range(-1,1)
@@ -89,9 +89,7 @@ func addDot(color:String):
 		add_child(temp)
 		joints[size].node_b=NodePath(str("../",temp.name))		
 		dots.append(temp)		
-	else: 
-		print(1111111)
-				
+	else: 	
 		var temp = dot.instance()
 		
 		temp.position.y=-16
@@ -118,7 +116,6 @@ func clearColor():
 		remove_child(i)
 	joints.clear()
 	dots.clear()
-	pass
 
 
 func _process(delta):
@@ -132,8 +129,3 @@ func _draw():
 	#draw_line(Vector2.ZERO,dot1.position,Color.blue,1)
 	pass
 
-
-
-func _on_Button_pressed():
-	addDot(Game.blockColor[0])
-	pass # Replace with function body.

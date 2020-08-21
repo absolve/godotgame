@@ -25,16 +25,22 @@ var enemyPos=[Vector2(0,0),Vector2(0,1),Vector2(1,0),Vector2(1,1),
 	Vector2(12,0),Vector2(13,0),Vector2(12,1),Vector2(13,1)]
 
 #基地旁的方块
-var basePos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
+var baseBrickPos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
 			Vector2(11,23),Vector2(12,23),Vector2(13,23),
 			Vector2(13,25),Vector2(13,24),Vector2(13,23)]
+#基地位置
+var basePos=Vector2(12,24)
+
+var player = preload("res://scenes/tank.tscn")
+var base=preload("res://scenes/base.tscn")
+
 
 onready var _1pLive=$tools/p1live
 onready var _1pLiveNum=$tools/p1live/box/num
 onready var _2pLive=$tools/p2live
 onready var _2pLiveNum=$tools/p2live/box/num
 onready var _enemyList=$tools/enemyList
-
+onready var _tank=$tanks
 
 
 
@@ -48,7 +54,8 @@ func _ready():
 	
 	$mapbg.rect_position=offset
 	
-	
+	#loadMap("res://levels/1.json")
+	#Game.connect("baseDestroyed",self,"baseDestroy")
 	pass
 
 #载入地图
@@ -57,7 +64,7 @@ func loadMap(filename:String):
 	if file.file_exists(filename):
 		file.open(filename, File.READ)
 		currentLevel = parse_json(file.get_as_text())
-		print("文件",currentLevel)
+#		print("文件",currentLevel)
 		file.close()
 		#return currentLevel
 		print(currentLevel['name'])
@@ -73,7 +80,7 @@ func loadMap(filename:String):
 				$brick.add_child(temp)
 			
 		for i in currentLevel['data']:
-			print(i['type'] in [0,1,2,3,4])
+	#		print(i['type'] in [0,1,2,3,4])
 			if i['type'] in [0,1,2,3,4]:
 				var temp=brick.instance()
 				temp.position.x=i['x']*cellSize+temp.size/2
@@ -84,7 +91,7 @@ func loadMap(filename:String):
 	
 	delPlayerPosBrick()
 	delEnemyPosBrick()	
-	
+	createBase()
 
 
 #清空地图
@@ -100,10 +107,6 @@ func clearMap():
 		
 
 
-#获取基地旁边的砖块
-func getBaseBrick():
-	
-	pass
 
 #删除敌人出生点方块
 func delEnemyPosBrick():
@@ -125,7 +128,16 @@ func delPlayerPosBrick():
 			var brick=getBrick(i.x,i.y)
 			if brick:
 				brick.queue_free()
+
+#创建基地	
+func createBase():
+	var temp=base.instance()
+	temp.position=Vector2(basePos.x*cellSize+temp.size/2,basePos.y*cellSize+temp.size/2)
+	temp.position+=offset
+	$brick.add_child(temp)
+	pass
 	
+
 
 #获取固定位置的方块  x [0-25] y[0-25]
 func getBrick(x:int,y:int):
@@ -149,14 +161,39 @@ func setBrickType(list:Array,type:int):
 				brick.setType(type)
 	pass
 
+#设置玩家生命数
+func setPlayerLive(playNo:int,lives:int):
+	if playNo==1:
+		_1pLive.visible=true
+		_1pLiveNum.text=lives
+	elif playNo==2:
+		_2pLive.visible=true
+		_2pLiveNum.text=lives
+
+
+func addNewPlayer(playNo:int):
+	if playNo==1:
+		var temp=Game.flash.instance()
+		temp.position = Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
+		temp.parentNode = _tank
+		var tank1 =player.instance()
+		tank1.position=Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
+		temp.addNode = tank1
+		_tank.add_child(temp)
+		pass
+	elif playNo==2:
+		
+		pass
+	
+#基地毁灭	
+func baseDestroy():
+	print('baseDestroy')
+	pass
 
 func _process(delta):
 	update()
 	
-	
-	
-	
-	
+
 	
 func _draw():
 	if not debug:

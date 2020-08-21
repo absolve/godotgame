@@ -16,6 +16,7 @@ enum tank_state{IDLE,DEAD,STOP,START}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
 var explode=preload("res://scenes/explode.tscn")
+var flash=preload("res://scenes/flash.tscn")
 
 var grenade =preload("res://sprites/bonus_grenade.png")
 var helmet=preload("res://sprites/bonus_helmet.png")
@@ -32,7 +33,9 @@ var ice=preload("res://sprites/ice.png")
 var bush=preload("res://sprites/bush.png")
 var water=preload("res://sprites/water.png")
 
-var _mainScene="res://scenes/main.tscn"
+
+
+var _mainScene="res://scenes/main.tscn"	#主界面
 
 var mainRoot
 var mainScene #主场景
@@ -45,6 +48,9 @@ var mapNameList=[]  #地图文件名字
 var level=0  #默认关卡1
 
 var mode=1	#游戏单人 双人
+var playerLive=[2,2]	#玩家生命数
+
+
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)

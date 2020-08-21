@@ -47,7 +47,7 @@
 animations = [ {
 "frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
 "loop": true,
-"name": "fire_red",
+"name": "fire",
 "speed": 7.0
 }, {
 "frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
@@ -190,15 +190,15 @@ animations = [ {
 "name": "slide_small",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
+"loop": true,
+"name": "fire_red",
+"speed": 7.0
+}, {
 "frames": [ ExtResource( 28 ) ],
 "loop": true,
 "name": "crouch",
 "speed": 5.0
-}, {
-"frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
-"loop": true,
-"name": "fire",
-"speed": 7.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -210,7 +210,7 @@ script = ExtResource( 41 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "idle_small"
+animation = "New Anim"
 
 [node name="shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )

@@ -25,7 +25,7 @@ func _process(delta):
 		Game.mode=mode
 		if Game.mapNameList.size()>0:
 			var name = Game.mapNameList[0].split('.')
-			Splash.setLevelName("level "+name[0])
+			Splash.setLevelName("stage "+name[0])
 		Game.changeScene(Game._mainScene)
 		pass
 	pass
