@@ -27,6 +27,7 @@ var star=preload("res://sprites/bonus_star.png")
 var gun=preload("res://sprites/bonus_gun.png")
 var boat=preload("res://sprites/bonus_boat.png")
 
+#方块图片
 var brick=preload("res://sprites/brick.png")
 var stone=preload("res://sprites/stone.png")
 var ice=preload("res://sprites/ice.png")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/brick .tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/mario.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/test.gd" type="Script" id=3]
-[ext_resource path="res://scenes/marionew.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/box.tscn" type="PackedScene" id=4]
 
 [node name="test" type="Node2D"]
 script = ExtResource( 3 )
@@ -82,20 +83,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="brick 17" parent="." instance=ExtResource( 1 )]
-position = Vector2( 112, 180 )
+[node name="mario" parent="." instance=ExtResource( 2 )]
 
-[node name="brick 16" parent="." instance=ExtResource( 1 )]
-position = Vector2( 144, 180 )
+[node name="box" parent="." instance=ExtResource( 4 )]
+position = Vector2( 108, 220 )
 
-[node name="brick 19" parent="." instance=ExtResource( 1 )]
-position = Vector2( 176, 180 )
+[node name="box2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 179, 220 )
 
-[node name="brick 18" parent="." instance=ExtResource( 1 )]
-position = Vector2( 206, 180 )
+[node name="box3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 147, 220 )
 
-[node name="mario2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 188.896, 75.7216 )
+[node name="box4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 213, 220 )
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
 [connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]

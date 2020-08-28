@@ -3,7 +3,6 @@
 [ext_resource path="res://scripts/box.gd" type="Script" id=1]
 [ext_resource path="res://sprites/blockq_0.png" type="Texture" id=2]
 
-
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 16 )
 

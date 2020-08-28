@@ -72,9 +72,10 @@ func _physics_process(delta):
 			pass
 		elif collisions.collider.get_class()=='base':
 			if collisions.collider.has_method('setBaseDestroyed'):
-				collisions.collider.setBaseDestroyed()
+				addExplode(false)
 				destroy()
-			pass
+				collisions.collider.setBaseDestroyed()
+				
 			
 	if dir==0:
 		if position.y-size.y/2<=0:

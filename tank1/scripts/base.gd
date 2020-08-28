@@ -15,6 +15,10 @@ func _physics_process(delta):
 func setBaseDestroyed():
 	$Sprite.texture=destroyImg
 	$shape.disabled=true
+	var temp=Game.explode.instance()
+	temp.big=true
+	temp.position=position
+	Game.mainScene.add_child(temp)
 	Game.emit_signal("baseDestroyed")
 	pass
 	

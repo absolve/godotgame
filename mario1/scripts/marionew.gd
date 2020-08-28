@@ -1,5 +1,6 @@
 extends Area2D
 
+#参考资料 https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
 
 var speed = constants.mario_speed  #移动速度
 var jump_speed = constants.jumpSpeed #跳跃
@@ -105,11 +106,47 @@ func stand(delta):
 	velocity.y+=_gravity*delta
 	#velocity = move_and_slide(velocity, Vector2.UP)
 	
-	if $ray.is_colliding():
-		velocity.y=0
-		position +=velocity*delta
-	else:
-		position +=velocity*delta
+#	if $ray.is_colliding():
+#		velocity.y=0
+#		position +=velocity*delta
+#	else:
+#		position +=velocity*delta
+	
+	var list=$Area2D.get_overlapping_bodies()
+	for body in list:
+		var dx 
+		var dy
+#		if big:	
+#			dx=(position.x-body.position.x)/(bigShape.x/2)
+#			dy=(position.y-body.position.y)/(bigShape.y/2)
+#		else:
+#			dx=(position.x-body.position.x)/(smallShape.x/2)
+#			dy=(position.y-body.position.y)/(smallShape.y/2)
+#
+#		var absDX = abs(dx)
+#		var absDY = abs(dy)
+#
+#		if abs(absDX - absDY) < .1:
+#			if dx<0:
+#				body.position.x=position.x+size/2+body.size/2				
+#			else:
+#				body.position.x=position.x-size/2-body.size/2
+#
+#			if dy<0:
+#				body.position.y=position.y+size/2+body.size/2			
+#			else:
+#				body.position.y=position.y-size/2-body.size/2						
+#		elif absDX > absDY:
+#			if dx<0:
+#				body.position.x=position.x+size/2+body.size/2				
+#			else:
+#				body.position.x=position.x-size/2-body.size/2	
+#		else:
+#			if dy<0:
+#				body.position.y=position.y+size/2+body.size/2
+#			else:
+#				body.position.y=position.y-size/2-body.size/2
+
 	
 
 #	if not is_on_floor():	#不在地面上

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=51 format=2]
 
 [ext_resource path="res://sprites/mario.png" type="Texture" id=1]
 [ext_resource path="res://sprites/mario1.png" type="Texture" id=2]
@@ -42,14 +42,27 @@
 [ext_resource path="res://sprites/mario2_st.png" type="Texture" id=40]
 [ext_resource path="res://scripts/marionew.gd" type="Script" id=41]
 [ext_resource path="res://sprites/mario1_fire.png" type="Texture" id=42]
+[ext_resource path="res://sprites/player.png" type="Texture" id=43]
+[ext_resource path="res://sprites/BigToSmallMarioAnim.png" type="Texture" id=44]
+[ext_resource path="res://sprites/BigPlayer.png" type="Texture" id=45]
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 45 )
+region = Rect2( 64, 0, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 44 )
+region = Rect2( 32, 0, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 43 )
+region = Rect2( 0, 128, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
-"frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
-"loop": true,
-"name": "fire",
-"speed": 7.0
-}, {
 "frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
 "loop": true,
 "name": "fire_black",
@@ -195,13 +208,23 @@ animations = [ {
 "name": "fire_red",
 "speed": 7.0
 }, {
+"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ) ],
+"loop": true,
+"name": "big2small",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 28 ) ],
 "loop": true,
 "name": "crouch",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 42 ), ExtResource( 42 ) ],
+"loop": true,
+"name": "fire",
+"speed": 7.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 12, 16 )
 
 [node name="mario" type="Area2D"]
@@ -209,11 +232,12 @@ position = Vector2( 50, 50 )
 script = ExtResource( 41 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
-frames = SubResource( 1 )
-animation = "New Anim"
+frames = SubResource( 4 )
+animation = "big2small"
+frame = 2
 
 [node name="shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+shape = SubResource( 5 )
 
 [node name="ray" type="RayCast2D" parent="."]
 position = Vector2( 0, 16 )
