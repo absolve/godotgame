@@ -17,8 +17,7 @@ func _ready():
 	randomize()
 	Game.connect("blockExit",self,"_block_exit")
 	allColor.shuffle()
-	#.append(allColor[0])
-	#useColor.slice()
+
 	for i in range(10):
 		unuseColor.append(allColor[i])
 
@@ -55,7 +54,6 @@ func addNewColor():
 		useColor.append(unuseColor.pop_front())
 
 func _block_exit(pos):
-#	print("pos",pos)
 	var temp=block.instance()	
 #	temp.modulate=Color(0,0,0)
 	#temp.position.x=(temp.width+2)*3+temp.width/2
@@ -73,7 +71,7 @@ func _block_exit(pos):
 		#print("gameState")
 		#temp.position.y=420		#最高位置
 		#temp.position.y=590		#最低位置
-		temp.position.y=randi()%180+430
+		temp.position.y=randi()%180+420
 		#temp.noCollision=true
 		#先判断是否出现连续两个连续不能站立
 		if useColor.size()>=10: #那就是获取所有的颜色
@@ -110,6 +108,5 @@ func _block_exit(pos):
 		temp.position.y=610
 		temp.setColor(useColor[useColor.size()-1])
 						
-	#print(temp.position.x)
 	add_child(temp)	
 	

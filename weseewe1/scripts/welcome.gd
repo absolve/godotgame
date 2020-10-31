@@ -164,7 +164,7 @@ func setState(state):
 		_player.setState(Game.playerState.STAND)
 		_player.playAni()
 		_spawnblock.setState(Game.blockState.FAST)
-		yield(_player.ani,"animation_finished")
+		yield(_player.get_node("ani"),"animation_finished")
 		_spawnblock.setGameState(Game.state.STATE_START)
 		_colorDotUtil.addAllJoint()	#添加关节
 		_colorTimer.start(1)	#游戏开始	

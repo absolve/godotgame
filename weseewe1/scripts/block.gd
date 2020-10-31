@@ -4,7 +4,7 @@ extends StaticBody2D
 #状态
 export var state = Game.blockState.SLOW
 export var speed=50
-export var fastSpeed=160
+export var fastSpeed=172
 #export var ypos=480
 export var offsetX=21
 var height=128	#高度128
