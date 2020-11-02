@@ -1,16 +1,10 @@
 extends Node2D
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-#export var dir = 0 #0是上 1是下
 export var angle=0 # 0是左转 1是右转
 export var speed=20
 export var xSpeed=-10
 var width=64
-
 var deg=0
 
 func _ready():

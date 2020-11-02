@@ -17,7 +17,6 @@ func setChar(word:String):
 		$bg.region_rect=Rect2(55,0,42,78)
 		$bg.flip_v=true
 		$bg.flip_h=true
-	pass
 	
 	
 

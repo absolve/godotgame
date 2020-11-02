@@ -14,14 +14,10 @@ var sendExit=false
 var offsetY=22
 
 
-
 func _ready():
-#	position.y=ypos
 	add_to_group("block")
 	if noCollision:
 		$shape.disabled=noCollision
-
-	#setState(Game.blockState.SHAKE)
 
 func setColor(color:String):
 	$bg.modulate=Color(color)
@@ -32,8 +28,6 @@ func setState(state):
 		var speedY=1
 		var	flap=true
 		var startY=position.y
-#		print('当前位置',startY)
-#		print('最大的位置',startY+offsetY)
 		var index=0
 		while true:
 			speedY+=0.3
@@ -41,20 +35,16 @@ func setState(state):
 				position.y+=speedY
 			else:
 				position.y-=speedY
-#			print('----',position.y)
 			yield(get_tree(), "idle_frame")
 			if flap&& position.y>=startY+offsetY:
-#				print(startY+offsetY)
 				flap=false
 				speedY=1
 				index+=1
 			if !flap && position.y<=startY-offsetY+5:
-#				print('<=',startY+offsetY)
 				flap=true
 				speedY=1
 				index+=1
 			if index>=2 && position.y>=startY:
-#				print("end")
 				self.state=Game.blockState.SLOWMOVE
 				break
 
@@ -73,12 +63,8 @@ func _physics_process(delta):
 	
 		
 	if position.x<=8 and !sendExit:	#消失在左边
-#		print(position.x)
 		Game.emit_signal("blockExit",position.x)
-#		print(5665)
 		sendExit=true
-		
-		
 
 
 func _on_VisibilityNotifier2D_screen_exited():

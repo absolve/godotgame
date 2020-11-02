@@ -2,15 +2,11 @@ extends Node2D
 
 
 var block=preload("res://scenes/block.tscn")
-
 var blockstate = Game.blockState.SLOW
-
 var useColor = []	#第一个使用的颜色
 var unuseColor=[]	#其它没有使用的颜色
 var allColor=Game.blockColor
-
 var gameState=Game.state.STATE_IDLE
-
 var index=0	
 
 func _ready():
@@ -38,7 +34,6 @@ func setState(state):
 	for i in get_children():
 		i.setState(state)
 	
-
 #设置停止
 func stop():
 	for i in get_children():
@@ -55,8 +50,6 @@ func addNewColor():
 
 func _block_exit(pos):
 	var temp=block.instance()	
-#	temp.modulate=Color(0,0,0)
-	#temp.position.x=(temp.width+2)*3+temp.width/2
 	temp.position.x=pos+(temp.width+2)*4
 	temp.state=blockstate
 	
@@ -68,11 +61,7 @@ func _block_exit(pos):
 	elif gameState==Game.state.STATE_IDLE:
 		temp.setColor(allColor[0])
 	elif gameState==Game.state.STATE_START:	#游戏开始的时候
-		#print("gameState")
-		#temp.position.y=420		#最高位置
-		#temp.position.y=590		#最低位置
 		temp.position.y=randi()%180+420
-		#temp.noCollision=true
 		#先判断是否出现连续两个连续不能站立
 		if useColor.size()>=10: #那就是获取所有的颜色
 			temp.noCollision=false
@@ -86,14 +75,11 @@ func _block_exit(pos):
 				else:		
 					var tempcolor=randi()%useColor.size()
 					temp.setColor(useColor[tempcolor])
-				print('====useColor')
-				pass
 			else:
 				if randi()%10>=4:
 					var tempcolor=randi()%unuseColor.size()
 					temp.noCollision=true
 					temp.setColor(unuseColor[tempcolor])
-					print('----unuseColor')
 				else:
 					var tempcolor=0
 					if useColor.size()>0:	#如果一开始没有就用第一个
@@ -102,11 +88,8 @@ func _block_exit(pos):
 					else:
 						temp.setColor(unuseColor[tempcolor])
 					temp.noCollision=false
-					print('====useColor')
 	elif gameState==Game.state.STATE_PASS:
 		temp.noCollision=false
 		temp.position.y=610
 		temp.setColor(useColor[useColor.size()-1])
-						
 	add_child(temp)	
-	
