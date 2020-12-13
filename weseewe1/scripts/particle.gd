@@ -8,7 +8,6 @@ export var rotateSpeed=40	#旋转速度
 export var dropSpeed=10
 export var dropXSpeed=0	#下落之后的x速度
 
-#export var rgb={'r':0,'g':0,'b':0} #颜色
 export var rgb= Color(0,0,0)
 
 var angle = 0 #角度
@@ -19,7 +18,7 @@ func _ready():
 	vec.y=-ySpeed
 	vec.x=xSpeed
 	modulate=rgb
-	#set_modulate(rgb)
+
 
 func _process(delta):
 	if vec.y>0:
@@ -29,11 +28,9 @@ func _process(delta):
 		vec.y+=gravity
 	
 	angle+=rotateSpeed*delta
-	rotation_degrees=round(angle)
-	
+	rotation_degrees=round(angle)	
 	if angle>360 or angle<-360:
 		angle=0
-	
 	position+=vec*delta
 
 	

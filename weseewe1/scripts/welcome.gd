@@ -28,10 +28,12 @@ var _scoreBoard
 var _helpInfo
 onready var _bg= $bg
 onready var _btnPause=$ui/btnPause2
+onready var _btnMain=$ui/btnMain
+onready var _btnRank=$ui/btnRank
+onready var _author=$ui/author
 
 
 func _ready():
-	#print('cameraStartPos===',cameraStartPos)
 	print(Game.data['sound'])
 	if  Game.data['sound']:
 		_btnSound.pressed=false
@@ -43,20 +45,17 @@ func _ready():
 	height=OS.get_window_size().y
 	_gameOverTimer.connect("timeout",self,"_gameOver")
 	_colorTimer.connect("timeout",self,"_addNewColor")
-#	$colorTimer.start(2)
 	_gamePassTimer.connect("timeout",self,"_gamePass")
 	
 	if Game.nextState!=Game.state.STATE_IDLE:
 		if Game.nextState==Game.state.STATE_START:
 			setState(Game.state.STATE_START)
-			pass
 		elif Game.nextState==Game.state.STATE_NEWSCORE:
 			_ani.current_animation="newScore"
 			_scoreDotutil.clear()
 			_word.clear()
 			_player.playMewScoreAni()
 			var delay=0
-			#_particleUtil.setPos(Vector2(160,480))
 			while delay<300:
 				delay+=1
 				if delay%20==0&&delay<100:
@@ -65,8 +64,7 @@ func _ready():
 			_ani.play("newScoreBack")
 			_scoreDotutil.init(Game.data['best_round'])
 			_particleUtil.startRandomParticle()
-			_word.init()
-			
+			_word.init()		
 		Game.nextState=Game.state.STATE_IDLE
 	else:
 		_scoreDotutil.init(Game.data['best_round'])
@@ -83,7 +81,6 @@ func _physics_process(delta):
 			_camera.offset.y+=(cameraStartPos.y-_player.position.y)*0.09
 
 		cameraStartPos=_player.position	
-	
 		if _camera.offset.y<280:
 			_camera.offset.y=280
 		elif _camera.offset.y>320:
@@ -127,7 +124,6 @@ func setState(state):
 		_scoreDotutil.clear()
 		_word.clear()
 		_colorDotUtil.add3Dot(_spawnblock.allColor.slice(0,2))
-#		yield(_ani,"animation_finished")
 		_spawnblock.setGameState(Game.state.STATE_HELP)
 		self.state=state
 	elif state==Game.state.STATE_IDLE:
@@ -156,7 +152,6 @@ func setState(state):
 		self.state=state
 		if Game.data['sound']:
 			SoundUtil.playGameStartMusic()
-		#$ui/btnPause.visible=true
 		_particleUtil.stopRandomParticle()
 		_ani.play("start")
 		_scoreDotutil.clear()
@@ -172,10 +167,8 @@ func setState(state):
 		_player.setState(Game.playerState.DEAD)
 		_spawnblock.setState(Game.blockState.SHAKE)
 		if _player.position.x<-_player.size/2:
-			#_particleUtil.setPos(Vector2(0,_player.position.y))
 			_particleUtil.addEdgeParticle(Vector2(0,_player.position.y),false)
 		else:
-			#_particleUtil.setPos(_player.position)
 			_particleUtil.addRandomPosParticle(Vector2(_player.position.x,400),false)
 		
 		SoundUtil.playPop()
@@ -206,21 +199,18 @@ func setState(state):
 		_colorTimer.start()
 		self.state=Game.state.STATE_START
 	elif state==Game.state.STATE_PASS:
-		print('STATE_PASS')
-		$ui/btnMain.set_position(Vector2(3,394))
+		_btnMain.set_position(Vector2(3,394))
 		_spawnblock.setState(Game.blockState.SLOW)
 		_spawnblock.setGameState(Game.state.STATE_PASS)
-		$ui/btnRank.visible=false
-		$ui/author.visible=true
+		_btnRank.visible=false
+		_author.visible=true
 		saveData()	#保存数据
 		var delay=0
-		#_particleUtil.setPos(Vector2(160,480))
 		while delay<300:
 			delay+=1
 			if delay%30==0:
 				_particleUtil.addRandomPosParticle(Vector2(randi()%80+120,460),false)
-			yield(get_tree(), "idle_frame")
-			
+			yield(get_tree(), "idle_frame")	
 		self.state=state
 	elif state==Game.state.STATE_SCORE:	#分数显示
 		self.state=state
@@ -234,11 +224,9 @@ func setState(state):
 #游戏结束后定时器	
 func _gameOver():
 	Game.changeScene(Game.mainScene)
-	pass
 	
 #添加新颜色
 func _addNewColor():
-	print("_addNewColor")
 	SoundUtil.playColor()	#新颜色声音
 	if firstStart:
 		_colorTimer.stop()
@@ -251,13 +239,11 @@ func _addNewColor():
 		_gamePassTimer.start()#通关定时器
 		_colorTimer.stop()
 		_colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
-		print('block.useColor.size()>=10')
 	else:
 		_colorDotUtil.addDot(block.useColor[block.useColor.size()-1])
 
 #游戏通关		
 func _gamePass():
-	print("_gamePass")
 	setState(Game.state.STATE_PASS)
 
 #保存数据
@@ -277,14 +263,12 @@ func _on_btnStart2__pressed():
 
 
 func _on_btnSound2__pressed():
-	print( Game.data['sound'])
 	if Game.data['sound']:
 		Game.data['sound']=false
 		SoundUtil.stopTrack()
 	else:
 		Game.data['sound']=true
 		SoundUtil.playWelcomMusic()
-	print(Game.data)
 	Game.save(Game.data)
 
 func _on_btnScore2__pressed():

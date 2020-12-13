@@ -34,13 +34,8 @@ func addParticle():
 			temp.dropXSpeed=dropXSpeed
 		else:
 			temp.dropXSpeed=-dropXSpeed
-			
-#		var r=stepify(randf(),0.1)
-#		var g=stepify(randf(),0.1)
-#		var b=stepify(randf(),0.1)	
-#		temp.rgb=Color(r,g,b)
+
 		temp.rgb=Color(Game.blockColor[randi()%10])
-		#print(stepify(randf(),0.1))
 		add_child(temp)
 
 
@@ -72,7 +67,7 @@ func addRandomPosParticle(pos:Vector2,simpleColor:bool):
 			temp.rgb=Color(Game.blockColor[randi()%10])
 		temp.position=pos
 		add_child(temp)
-	pass
+
 
 
 func addEdgeParticle(pos:Vector2,simpleColor:bool):
@@ -106,7 +101,6 @@ func addEdgeParticle(pos:Vector2,simpleColor:bool):
 #添加随机粒子	
 func startRandomParticle():
 	$Timer.start()
-	pass
 
 func stopRandomParticle():
 	$Timer.stop()
@@ -114,9 +108,7 @@ func stopRandomParticle():
 	
 #随机产生的粒子
 func _randomParticle():
-	#print(12313)
 	var temp=particle.instance()
-	#temp.gravity=randi()%20+20
 	temp.position=Vector2(330,30+randi()%300)
 	var xspeed=randi()%350+40
 	var dropXSpeed = randi()%40+40
@@ -134,12 +126,7 @@ func _randomParticle():
 		temp.dropSpeed=dropSpeed
 	else:
 		temp.dropSpeed=-dropSpeed
-#	var r=stepify(randf(),0.1)
-#	var g=stepify(randf(),0.1)
-#	var b=stepify(randf(),0.1)
-	
 	temp.rgb=Color(Game.blockColor[randi()%10])
 	add_child(temp)
-	pass
 
 

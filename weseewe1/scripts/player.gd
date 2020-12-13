@@ -17,8 +17,6 @@ var state = Game.playerState.IDLE
 
 func _ready():
 	add_to_group("player")
-	#print('Game.playerState.IDLE',Game.playerState.IDLE)
-	pass 
 
 func setState(state):
 	self.state=state
@@ -32,7 +30,6 @@ func playAni():
 func playMewScoreAni():
 	$dialog/panel/node/Label.text="you got new score"
 	$ani.play("show")
-	pass
 
 
 func _physics_process(delta):
@@ -44,7 +41,6 @@ func _physics_process(delta):
 		jump(delta)
 	elif state==Game.playerState.DEAD:
 		dead(delta)
-	
 	
 	animationTime+=1
 	if animationTime>animationInterval:
@@ -64,7 +60,6 @@ func idle(delta):
 
 func stand(delta):
 	velocity.y+=gravity*delta
-	
 	if Input.is_action_pressed("jump"):
 		SoundUtil.playJumpA()
 		velocity.y=-speed
@@ -83,7 +78,6 @@ func jump(delta):
 	velocity.y+=gravity*delta
 	if Input.is_action_just_pressed("jump") and jumpAgain:
 		SoundUtil.playJumpB()
-#		print('playJumpB')
 		velocity.y=-speed
 		jumpAgain=false
 	
@@ -91,20 +85,16 @@ func jump(delta):
 	$sprite.rotation_degrees=round(rotateDeg)
 	$bg.rotation_degrees=round(rotateDeg)
 	if rotateDeg>360:
-		rotateDeg=0
-		
+		rotateDeg=0	
 	velocity=move_and_slide(velocity,Vector2.UP)	
-	
 	if is_on_floor():
 		jumpAgain=true
 		state=Game.playerState.STAND
 		rotateDeg=0
 		$sprite.rotation_degrees=0
 		$bg.rotation_degrees=0
-	pass
 
 func dead(delta):
-	
 	pass
 
 func _unhandled_input(event):
@@ -112,7 +102,6 @@ func _unhandled_input(event):
 		if event.pressed or (event is InputEventMouseButton and 
 							event.button_index == BUTTON_LEFT and event.pressed):
 			if state==Game.playerState.STAND:
-#				print('Game.playerState.STAND',Game.playerState.STAND)
 				SoundUtil.playJumpA()
 				velocity.y=-speed
 				state=Game.playerState.JUMP
@@ -120,5 +109,4 @@ func _unhandled_input(event):
 				SoundUtil.playJumpB()
 				velocity.y=-speed
 				jumpAgain=false
-				
-pass	
+

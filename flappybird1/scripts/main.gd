@@ -42,13 +42,10 @@ var num=0
 
 func _ready():
 	randomize()
-	
 	game.connect("scoreChange",self,"_on_score_changed")
-	
 	$game/pipe.setRandomYpos()
 	$game/pipe2.setRandomYpos()
 	$game/pipe3.setRandomYpos()
-
 	game.score=0
 	$game/bird.connect("birdStateChange",self,"_on_bird_state_change")
 	$game/Timer.connect("timeout",self,"_on_timeout") 
@@ -62,7 +59,6 @@ func startGame()->void:
 	$game/pipe3.state=game.move
 	$game/ground.state=game.fast
 	$game/ground1.state=game.fast
-#	$bird.setState(game.play)
 	
 
 #游戏结束
@@ -96,9 +92,7 @@ func gameOver()->void:
 
 #碰到地面和水管
 func _on_bird_state_change()->void:
-	print('_on_bird_state_change')
 	gameOver()
-	
 
 #分数变化
 func _on_score_changed():
@@ -156,8 +150,7 @@ func _on_timeout()->void:
 	if state==game.startGame:
 		$game/ready/ani.play("fade_out")
 		startGame()
-	
-	
+
 
 #继续游戏
 func _on_btnResume_pressed():
@@ -173,11 +166,9 @@ func _on_btnMenu_pressed():
 
 #暂停按钮
 func _on_btnPause_pressed():
-	#print("_on_btnPause_pressed")
 	get_tree().paused=true
 	$game/pausePanel.show()
-	#showGameOverPanel()
-	pass
+
 	
 #显示游戏结束界面
 func showGameOverPanel():
@@ -192,8 +183,5 @@ func _on_btnRestart_pressed():
 #游戏开始
 func _on_tipBtn_pressed():
 	$game/tipBtn.hide()
-#	startGame()
-	#$ready/ani.play("fade_in")
 	$game/bird.setState(game.play)
 	$game/Timer.start()
-	

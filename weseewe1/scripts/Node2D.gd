@@ -9,14 +9,7 @@ var dot = preload("res://scenes/dot.tscn")
 func _ready():
 	randomize()
 	$top.add_to_group(Game.group["colorDot"])
-	#add3Dot(Game.blockColor)
-	#print(Game.group["colorDot"])
-	#print(1%5)
-	
-#	for i in range(3):
-#		addDot(Game.blockColor[0])
-	#addAllJoint()
-	pass 
+
 
 #添加三个分数球
 func add3Dot(color:Array):
@@ -53,29 +46,23 @@ func addAllJoint():
 		
 		joint.node_a=NodePath("../top")
 		joint.name=str("joint",i)
-		#joint.node_b=NodePath(str("../",temp.name))
 		add_child(joint)
-	
 		joints.append(joint)
 		if i>=5:
 			joint.position.x=60+(i-5)%5*50
 			joint.position.y=-20
 			joint.stiffness=5.5
-			pass
 		else:
 			joint.position.x=60+i%5*50
 			joint.position.y=-5	
 			joint.stiffness=8
-			pass
-	pass
-	
+
 
 #添加一个新的
 func addDot(color:String):
 	var size = dots.size()
 	if size>=10:
 		return
-#	print(size)
 	if size>=5:
 		var temp = dot.instance()
 		temp.position.x=60+size%5*50+rand_range(-1,1)
@@ -91,7 +78,6 @@ func addDot(color:String):
 		dots.append(temp)		
 	else: 	
 		var temp = dot.instance()
-		
 		temp.position.y=-16
 		temp.name=str("dot",size+1)
 		temp.add_to_group(Game.group["colorDot"])
@@ -103,9 +89,7 @@ func addDot(color:String):
 		add_child(temp)	
 		joints[size].node_b=NodePath(str("../",temp.name))		
 		temp.linear_velocity.y=500
-		
 		dots.append(temp)
-	
 
 
 #清空颜色
@@ -120,12 +104,8 @@ func clearColor():
 
 func _process(delta):
 	update()
-	pass
 
 func _draw():
 	for i in range(len(dots)):
 		draw_line(joints[i].position,dots[i].position,Game.lineColor[0],0.5,true)
-	
-	#draw_line(Vector2.ZERO,dot1.position,Color.blue,1)
-	pass
 

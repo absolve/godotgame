@@ -23,15 +23,15 @@ animations = [ {
 "name": "fly",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ) ],
-"loop": false,
-"name": "flap",
-"speed": 11.0
-}, {
 "frames": [ ExtResource( 5 ) ],
 "loop": true,
 "name": "idle_yellow",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ) ],
+"loop": false,
+"name": "flap",
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
 "loop": false,

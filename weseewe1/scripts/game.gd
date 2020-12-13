@@ -41,8 +41,6 @@ var data = {
 	
 func _ready():
 	data=loadFile()
-	print(data)
-	#print(float(1)/2)
 	
 
 
@@ -70,7 +68,6 @@ func loadFile():
 	if file.file_exists(FILE_NAME):
 		file.open(FILE_NAME, File.READ)
 		var data = parse_json(file.get_as_text())
-		print("文件",data)
 		file.close()
 		return data
 	else:
@@ -81,10 +78,8 @@ func loadFile():
 func addGamePlayNum():
 	data['rounds_played']+=1
 	save(data)
-	pass
 
 func recordGameData(colors_earned):
-	print(colors_earned)
 	data['rounds_played']+=1
 	data['last_round']=colors_earned
 	if data['best_round']<colors_earned:
@@ -93,4 +88,4 @@ func recordGameData(colors_earned):
 	var avg = float(data['colors_earned'])/data['rounds_played']
 	data['avg_per_round']=avg
 	save(data)
-	pass
+
