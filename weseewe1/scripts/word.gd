@@ -16,7 +16,7 @@ func init():
 	for i in range(7):
 		var temp = _chars.instance()
 		temp.position.x = 40+i*40+rand_range(-0.2,0.2)
-		temp.position.y=-25
+		temp.position.y=-30
 		temp.name=str("char",i)
 		temp.setChar(chars[i])
 		

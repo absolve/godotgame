@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
 [ext_resource path="res://sprites/brick.png" type="Texture" id=2]
@@ -8,8 +8,9 @@
 [ext_resource path="res://scenes/enemyImg.tscn" type="PackedScene" id=6]
 [ext_resource path="res://sprites/stone.png" type="Texture" id=7]
 [ext_resource path="res://sprites/bush.png" type="Texture" id=8]
-[ext_resource path="res://sprites/enemy.png" type="Texture" id=9]
+[ext_resource path="res://sprites/del.png" type="Texture" id=9]
 [ext_resource path="res://sprites/water.png" type="Texture" id=10]
+[ext_resource path="res://sprites/ice.png" type="Texture" id=11]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -45,7 +46,6 @@ __meta__ = {
 [node name="tools" type="Node2D" parent="."]
 
 [node name="level" type="VBoxContainer" parent="tools"]
-visible = false
 margin_left = 460.0
 margin_top = 360.0
 margin_right = 500.0
@@ -70,7 +70,6 @@ text = "1"
 align = 2
 
 [node name="p1live" type="VBoxContainer" parent="tools"]
-visible = false
 margin_left = 460.0
 margin_top = 240.0
 margin_right = 496.0
@@ -111,7 +110,6 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2"
 
 [node name="p2live" type="VBoxContainer" parent="tools"]
-visible = false
 margin_left = 460.0
 margin_top = 290.0
 margin_right = 496.0
@@ -152,7 +150,6 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2"
 
 [node name="enemyList" type="GridContainer" parent="tools"]
-visible = false
 margin_left = 460.0
 margin_top = 18.0
 margin_right = 500.0
@@ -260,9 +257,19 @@ margin_right = 36.0
 margin_bottom = 196.0
 
 [node name="bricks" type="Node2D" parent="tools"]
+visible = false
 position = Vector2( 450, 0 )
 
-[node name="TextureButton" type="TextureButton" parent="tools/bricks"]
+[node name="GridContainer" type="GridContainer" parent="tools/bricks"]
+margin_top = 10.0
+margin_right = 40.0
+margin_bottom = 40.0
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton" type="TextureButton" parent="tools/bricks/GridContainer"]
 margin_right = 16.0
 margin_bottom = 16.0
 focus_mode = 0
@@ -273,11 +280,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton2" type="TextureButton" parent="tools/bricks"]
-margin_left = 0.793701
-margin_top = 26.9858
-margin_right = 16.7937
-margin_bottom = 42.9858
+[node name="TextureButton2" type="TextureButton" parent="tools/bricks/GridContainer"]
+margin_left = 20.0
+margin_right = 36.0
+margin_bottom = 16.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -286,11 +292,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton3" type="TextureButton" parent="tools/bricks"]
-margin_left = 2.47549
-margin_top = 58.099
-margin_right = 18.4755
-margin_bottom = 74.099
+[node name="TextureButton3" type="TextureButton" parent="tools/bricks/GridContainer"]
+margin_left = 40.0
+margin_right = 56.0
+margin_bottom = 16.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -299,11 +304,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton4" type="TextureButton" parent="tools/bricks"]
-margin_left = 39.7976
-margin_top = 81.881
-margin_right = 55.7976
-margin_bottom = 97.881
+[node name="TextureButton5" type="TextureButton" parent="tools/bricks/GridContainer"]
+margin_top = 20.0
+margin_right = 16.0
+margin_bottom = 36.0
+focus_mode = 0
+texture_normal = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureButton6" type="TextureButton" parent="tools/bricks/GridContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 36.0
+margin_bottom = 36.0
+texture_normal = ExtResource( 11 )
+
+[node name="TextureButton4" type="TextureButton" parent="tools/bricks/GridContainer"]
+margin_left = 40.0
+margin_top = 20.0
+margin_right = 56.0
+margin_bottom = 36.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -312,52 +334,46 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureButton5" type="TextureButton" parent="tools/bricks"]
-margin_left = 3.77979
-margin_top = 87.5645
-margin_right = 19.7798
-margin_bottom = 103.565
-focus_mode = 0
-texture_normal = ExtResource( 8 )
+[node name="VBoxContainer" type="VBoxContainer" parent="tools/bricks"]
+anchor_bottom = 10.0
+margin_top = 100.0
+margin_right = 43.0
+margin_bottom = 234.0
+grow_vertical = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="tools/bricks"]
-margin_left = 2.3811
-margin_top = 138.898
-margin_right = 43.3811
-margin_bottom = 158.898
+[node name="Button" type="Button" parent="tools/bricks/VBoxContainer"]
+margin_right = 43.0
+margin_bottom = 20.0
 text = "save"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button2" type="Button" parent="tools/bricks"]
-margin_left = 2.82843
-margin_top = 174.655
-margin_right = 41.8284
-margin_bottom = 194.655
+[node name="Button2" type="Button" parent="tools/bricks/VBoxContainer"]
+margin_top = 24.0
+margin_right = 43.0
+margin_bottom = 44.0
 text = "load"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button3" type="Button" parent="tools/bricks"]
-margin_left = 4.24265
-margin_top = 212.132
-margin_right = 47.2426
-margin_bottom = 232.132
+[node name="Button3" type="Button" parent="tools/bricks/VBoxContainer"]
+margin_top = 48.0
+margin_right = 43.0
+margin_bottom = 68.0
 text = "clear"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button4" type="Button" parent="tools/bricks"]
-margin_left = 0.890808
-margin_top = 247.67
-margin_right = 38.8908
-margin_bottom = 267.67
+[node name="Button4" type="Button" parent="tools/bricks/VBoxContainer"]
+margin_top = 72.0
+margin_right = 43.0
+margin_bottom = 92.0
 text = "lock"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -385,13 +401,15 @@ mode = 0
 access = 2
 current_dir = "/godotgame/tank1"
 current_path = "/godotgame/tank1/"
-[connection signal="pressed" from="tools/bricks/TextureButton" to="." method="_on_TextureButton_pressed"]
-[connection signal="pressed" from="tools/bricks/TextureButton2" to="." method="_on_TextureButton2_pressed"]
-[connection signal="pressed" from="tools/bricks/TextureButton3" to="." method="_on_TextureButton3_pressed"]
-[connection signal="pressed" from="tools/bricks/TextureButton4" to="." method="_on_TextureButton4_pressed"]
-[connection signal="pressed" from="tools/bricks/TextureButton5" to="." method="_on_TextureButton5_pressed"]
-[connection signal="pressed" from="tools/bricks/Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="tools/bricks/Button2" to="." method="_on_Button2_pressed"]
-[connection signal="pressed" from="tools/bricks/Button3" to="." method="_on_Button3_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton" to="." method="_on_TextureButton_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton2" to="." method="_on_TextureButton2_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton3" to="." method="_on_TextureButton3_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton5" to="." method="_on_TextureButton5_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton6" to="." method="_on_TextureButton6_pressed"]
+[connection signal="pressed" from="tools/bricks/GridContainer/TextureButton4" to="." method="_on_TextureButton4_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/Button2" to="." method="_on_Button2_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/Button3" to="." method="_on_Button3_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/Button4" to="." method="_on_Button4_pressed"]
 [connection signal="confirmed" from="tools/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="tools/loadDialog" to="." method="_on_loadDialog_confirmed"]

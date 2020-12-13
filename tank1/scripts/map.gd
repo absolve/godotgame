@@ -43,7 +43,8 @@ var player = preload("res://scenes/tank.tscn")
 var base=preload("res://scenes/base.tscn")
 
 
-
+onready var _level=$tools/level
+onready var _levelNum=$tools/level/number
 onready var _1pLive=$tools/p1live
 onready var _1pLiveNum=$tools/p1live/box/num
 onready var _2pLive=$tools/p2live
@@ -52,6 +53,7 @@ onready var _enemyList=$tools/enemyList
 onready var _tank=$tanks
 onready var _fileDiaglog=$tools/FileDialog
 onready var _loadDiaglog=$tools/loadDialog
+onready var _bricks = $tools/bricks
 
 
 func _ready():
@@ -63,8 +65,33 @@ func _ready():
 	$mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	#loadMap("res://levels/2.json")
-	mode=1
+	#mode=1
+	if mode==1:
+		_level.hide()
+		_1pLive.hide()
+		_2pLive.hide()
+		_enemyList.hide()
+		_bricks.show()
+	elif mode==0:
+		_level.show()
+		_1pLive.show()
+		_2pLive.show()
+		_enemyList.show()
+		_bricks.hide()
 	
+	
+#添加随机的敌人
+func addEnemy():
+	pass
+
+#设置玩家状态
+func setPlayerState():
+	pass
+
+#设置敌人的状态
+func setEnemyState():
+	pass
+
 
 #载入地图
 func loadMap(filename:String):
@@ -264,30 +291,38 @@ func save2File(fileName):
 	file.store_string(to_json(data))
 	file.close()
 	
-	pass
+
 
 func _process(delta):
 	update()
 
+
+var isPress=false
 		
 func _input(event):
 	if _fileDiaglog.visible or _loadDiaglog.visible or lock or mode!=1:
 		return
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and  event.pressed:
+			isPress=true
 			if currentItem!=-1:	
 				if !mapRect.has_point(get_global_mouse_position()):
 					return
 				if! checkItem(get_global_mouse_position()):
-					addItem(get_global_mouse_position())
-				
+					addItem(get_global_mouse_position())	
+			elif currentItem==-1:
+				clearItem(get_global_mouse_position())		
+		elif !event.pressed:
+			isPress=false
+	elif event is InputEventMouseMotion:	#移动
+		if isPress:
+			if currentItem!=-1:	
+				if !mapRect.has_point(get_global_mouse_position()):
+					return
+				if! checkItem(get_global_mouse_position()):
+					addItem(get_global_mouse_position())	
 			elif currentItem==-1:
 				clearItem(get_global_mouse_position())
-				pass
-			
-			pass
-	elif event is InputEventMouseMotion:	#移动
-	#	print(2121)
 		pass
 	
 func _draw():
@@ -339,6 +374,11 @@ func _on_TextureButton5_pressed():
 	currentItem=3
 	pass # Replace with function body.
 
+func _on_TextureButton6_pressed():
+	currentItem=4
+	pass # Replace with function body.
+
+
 func _on_Button_pressed():
 	var baseDir=OS.get_executable_path().get_base_dir()
 	_fileDiaglog.current_dir=baseDir
@@ -356,9 +396,6 @@ func _on_FileDialog_confirmed():
 	if _fileDiaglog.current_file:
 		save2File(_fileDiaglog.current_path)
 	
-	
-	pass # Replace with function body.
-
 
 
 func _on_Button2_pressed():
@@ -377,4 +414,9 @@ func _on_loadDialog_confirmed():
 
 func _on_Button3_pressed():
 	clearAllItem()
+	pass # Replace with function body.
+
+
+func _on_Button4_pressed():
+	
 	pass # Replace with function body.

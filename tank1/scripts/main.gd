@@ -2,10 +2,14 @@ extends Node2D
 
 
 var state=Game.game_state.LOAD
+var level
+
+
 
 func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	pass 
+
 
 func _process(delta):
 	if state==Game.game_state.LOAD:
@@ -41,6 +45,7 @@ func setState(state):
 		
 		pass
 	self.state=state
+
 
 #基地毁灭	
 func baseDestroy():

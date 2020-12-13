@@ -22,10 +22,10 @@ func _process(delta):
 	elif Input.is_key_pressed(KEY_ENTER):
 		print('start')
 		print('mode',mode)
-		Game.mode=mode
-		if Game.mapNameList.size()>0:
-			var name = Game.mapNameList[0].split('.')
-			Splash.setLevelName("stage "+name[0])
-		Game.changeScene(Game._mainScene)
+#		Game.mode=mode
+#		if Game.mapNameList.size()>0:
+#			var name = Game.mapNameList[0].split('.')
+#			Splash.setLevelName("stage "+name[0])
+#		Game.changeScene(Game._mainScene)
 		pass
 	pass

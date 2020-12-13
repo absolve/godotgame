@@ -450,7 +450,7 @@ tracks/7/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, false ]
+"values": [ false, true ]
 }
 tracks/8/type = "value"
 tracks/8/path = NodePath("ui/btnHelp2:rect_position")

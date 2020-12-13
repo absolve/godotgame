@@ -39,7 +39,7 @@ var water=preload("res://sprites/water.png")
 var _mainScene="res://scenes/main.tscn"	#主界面
 
 var mainRoot
-var mainScene #主场景
+var mainScene #主场景 用来添加子弹数据
 var winSize=Vector2(480,416)	#屏幕大小
 
 var mapDir="res://levels"	#内置地图路径
