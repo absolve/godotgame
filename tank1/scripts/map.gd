@@ -42,6 +42,7 @@ var lock=false 	#锁定地图不在修改
 var player = preload("res://scenes/tank.tscn")
 var base=preload("res://scenes/base.tscn")
 
+var tankNew= preload("res://scenes/tankNew.tscn")
 
 onready var _level=$tools/level
 onready var _levelNum=$tools/level/number
@@ -220,13 +221,17 @@ func setPlayerLive(playNo:int,lives:int):
 
 func addNewPlayer(playNo:int):
 	if playNo==1:
-		var temp=Game.flash.instance()
-		temp.position = Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
-		temp.parentNode = _tank
-		var tank1 =player.instance()
-		tank1.position=Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
-		temp.addNode = tank1
-		_tank.add_child(temp)
+#		var temp=Game.flash.instance()
+#		temp.position = Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
+#		temp.parentNode = _tank
+#
+#		var tank1 =player.instance()
+#		tank1.position=Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
+#		temp.addNode = tank1
+#		_tank.add_child(temp)
+		var tank1=tankNew.instance()
+		tank1.position=Vector2(9*cellSize,25*cellSize)+offset
+		_tank.add_child(tank1)
 		pass
 	elif playNo==2:
 		
@@ -294,7 +299,8 @@ func save2File(fileName):
 
 
 func _process(delta):
-	update()
+	#update()
+	pass
 
 
 var isPress=false
@@ -326,13 +332,13 @@ func _input(event):
 		pass
 	
 func _draw():
-	if not debug:
-		return
-	for i in range(27):
-		draw_line(Vector2(i*cellSize,0)+offset,Vector2(i*cellSize,cellSize*26)+offset,Color.gray,0.5,true)
-		pass
-	for i in range(27):
-		draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
+#	if not debug:
+#		return
+#	for i in range(27):
+#		draw_line(Vector2(i*cellSize,0)+offset,Vector2(i*cellSize,cellSize*26)+offset,Color.gray,0.5,true)
+#		pass
+#	for i in range(27):
+#		draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
 	
 	if mode==1:
 		for i in brickList:

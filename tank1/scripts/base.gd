@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends Node2D
 
 var destroy=false
 var destroyImg=preload("res://sprites/base_destroyed.png")
