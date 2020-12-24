@@ -1,5 +1,5 @@
 extends Node2D
-
+#参考资料 https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
 
 var state=Game.game_state.START
 var level
@@ -10,8 +10,11 @@ onready var _bullet=$map/bullets
 
 func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
+	Game.otherObj=$map/obj
+	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	$map.addNewPlayer(1)
+	
 	pass 
 
 
@@ -26,7 +29,7 @@ func _process(delta):
 	elif state==Game.game_state.START:
 		#return
 
-		for i in _tank.get_children():
+		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
@@ -62,18 +65,43 @@ func _process(delta):
 						
 						
 						pass
-			
-			
 			pass
 		
+		for i in _bullet.get_children():	#子弹跟方块
+			if i.get_class()=="bullet":
+				var rect=i.getRect()
+				for y in _brick.get_children():
+					if y.get_class()=="brick":
+						var rect1=y.getRect()
+						if rect.intersects(rect1,false):  #碰撞
+							i.addExplode(false)
+							y.hit(i.getDir())
+				
+		for i in _bullet.get_children():	#同一个子弹
+			if i.get_class()=="bullet":
+				var typeA = i.getType()
+				for y in _bullet.get_children():
+					if i!=y && y.get_class()=="bullet": #排除同一个
+						print(222222222)
+						var typeB=y.getType()
+						if typeA==Game.bulletType.players and typeB==Game.bulletType.enemy:
+							i.destroy()
+							y.destroy()
+						elif typeA==Game.bulletType.enemy and typeB==Game.bulletType.players:
+							i.destroy()
+							y.destroy()
+					pass
 		
+				
 		for i in _bullet.get_children():
 			if i.position.x<0 or i.position.x>Game.winSize.x:
 				i.destroy()
 			if	i.position.y<0 or i.position.y>Game.winSize.y:
 				i.destroy()
 			pass
-
+		
+		
+		
 		
 		pass
 	elif state==Game.game_state.NEXT_LEVEL:

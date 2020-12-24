@@ -2,7 +2,7 @@ extends Node2D
 
 
 export var dir=2 # 0上 1下 2左 3右
-var speed=80
+var speed=80  
 var type=Game.bulletType.players
 var playerID  #玩家id
 var power=1  #1是基本火力 2是最强火力
@@ -66,6 +66,9 @@ func setType(type:String):
 func setDir(dir):
 	self.dir=dir
 
+func getDir():
+	return self.dir
+
 func destroy():
 	queue_free()
 
@@ -74,8 +77,8 @@ func addExplode(big):
 	if big:
 		temp.big=true
 	temp.position=position
-	Game.mainScene.add_child(temp)
-	
+	Game.otherObj.add_child(temp)
+	destroy()
 	
 func _draw():
 	draw_rect(rect,Color.white,false,1,true)

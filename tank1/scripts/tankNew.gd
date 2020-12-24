@@ -129,7 +129,7 @@ func fire():
 		return
 	else:
 		shootTime=OS.get_unix_time()
-		
+	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
 		print(is_instance_valid(i))

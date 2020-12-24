@@ -43,6 +43,8 @@ __meta__ = {
 
 [node name="bullets" type="Node2D" parent="."]
 
+[node name="obj" type="Node2D" parent="."]
+
 [node name="tools" type="Node2D" parent="."]
 
 [node name="level" type="VBoxContainer" parent="tools"]
