@@ -1,12 +1,11 @@
-extends Area2D
+extends Node2D
 
-var type=0	#0是五角星
+var type=0	#0是手雷 1帽子 2时钟 3 铲子 4坦克 5星星 6手枪 7船
 
-
+var rect=Rect2(-16,-16,32,32)
 
 
 func _ready():
-	
 	if type==0:
 		$Sprite.texture=Game.grenade
 		pass
@@ -33,14 +32,19 @@ func _ready():
 		pass	
 	pass
 
+func getRect()->Vector2:
+	var temp =rect
+	temp.position+=position
+	return temp
+
+func getSize():
+	return rect.size.x
+
 func destroy():
 	queue_free()
 	
 
-
-func _on_bonus_body_entered(body):
-	if body.is_in_group(Game.groups['player']):
-		print(body)
-	else:
-		pass	
-	pass # Replace with function body.
+func _draw():
+#	if debug:
+	draw_rect(rect,Color.white,false,1,true)
+	pass	

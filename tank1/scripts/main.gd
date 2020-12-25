@@ -4,9 +4,13 @@ extends Node2D
 var state=Game.game_state.START
 var level
 
+
+
 onready var _tank = $map/tanks
 onready var _brick=$map/brick
 onready var _bullet=$map/bullets
+onready var _bonus=$map/bonus
+
 
 func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
@@ -28,7 +32,6 @@ func _process(delta):
 		pass
 	elif state==Game.game_state.START:
 		#return
-
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
 			for y in _brick.get_children():
@@ -61,9 +64,6 @@ func _process(delta):
 								i.position.y=y.position.y+y.getSize()/2+i.getSize()/2	
 							else:
 								i.position.y=y.position.y-y.getSize()/2-i.getSize()/2	
-							
-						
-						
 						pass
 			pass
 		
@@ -100,7 +100,14 @@ func _process(delta):
 				i.destroy()
 			pass
 		
-		
+		for i in _bonus.get_children():
+			var rect=i.getRect()
+			for y in _tank.get_children():
+				if y.get_class()=="player":
+					var rect1=y.getRect()
+					if rect.intersects(rect1,false):
+						pass
+					pass
 		
 		
 		pass

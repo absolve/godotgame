@@ -1,10 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/bonus.gd" type="Script" id=1]
 [ext_resource path="res://sprites/bonus_clock.png" type="Texture" id=2]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 16, 16 )
 
 [sub_resource type="Animation" id=2]
 resource_name = "blink"
@@ -23,9 +20,7 @@ tracks/0/keys = {
 "values": [ true, false, true, false, true ]
 }
 
-[node name="bonus" type="Area2D"]
-collision_layer = 16
-collision_mask = 3
+[node name="bonus" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
@@ -34,10 +29,6 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 
-[node name="shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
-
 [node name="ani" type="AnimationPlayer" parent="."]
 autoplay = "blink"
 anims/blink = SubResource( 2 )
-[connection signal="body_entered" from="." to="." method="_on_bonus_body_entered"]

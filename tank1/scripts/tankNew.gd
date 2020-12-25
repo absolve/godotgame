@@ -21,7 +21,7 @@ func _ready():
 	setKeyMap(1)
 	pass
 
-#获取举行	
+#获取矩形
 func getRect()->Vector2:
 	var temp =rect
 	temp.position+=position
@@ -147,7 +147,8 @@ func fire():
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)
 
-
+func get_class():
+	return 'player'
 	
 func _draw():
 #	if debug:
