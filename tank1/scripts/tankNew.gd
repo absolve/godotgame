@@ -6,14 +6,14 @@ var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var debug=true
 var vec=Vector2.ZERO
 var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
-var speed = 50
+var speed = 70
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
 var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=0.5
+var shootDelay=0.1
 var bullets=[]
 var bulletMax=1	#发射最大子弹数
-var bullet=preload("res://scenes/bullet.tscn")
+var bullet=Game.bullet
 
 
 func _ready():

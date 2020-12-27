@@ -12,20 +12,19 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 8 ) ],
-"loop": false,
-"name": "explode_big",
-"speed": 10.0
-}, {
 "frames": [ ExtResource( 4 ), ExtResource( 1 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "explode_small",
 "speed": 8.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 3 ) ],
+"loop": false,
+"name": "explode_big",
+"speed": 10.0
 } ]
 
 [node name="explode" type="AnimatedSprite"]
 frames = SubResource( 1 )
 animation = "explode_big"
-frame = 4
 script = ExtResource( 9 )
 [connection signal="animation_finished" from="." to="." method="_on_explode_animation_finished"]

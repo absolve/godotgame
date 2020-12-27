@@ -182,9 +182,9 @@ func createBase():
 	var temp=base.instance()
 	temp.position=Vector2(basePos.x*cellSize+temp.size/2,basePos.y*cellSize+temp.size/2)
 	temp.position+=offset
-	$brick.add_child(temp)
+	$base.add_child(temp)
 	pass
-	
+
 
 
 #获取固定位置的方块  x [0-25] y[0-25]
@@ -299,7 +299,8 @@ func save2File(fileName):
 
 
 func _process(delta):
-	#update()
+	if mode==1:
+		update()
 	pass
 
 
@@ -413,8 +414,10 @@ func _on_Button2_pressed():
 
 func _on_loadDialog_confirmed():
 	var path=_loadDiaglog.current_file
+	print(path)
 	if path:
 		loadMap(path)
+
 	pass # Replace with function body.
 
 

@@ -26,6 +26,7 @@ var tank=preload("res://sprites/bonus_tank.png")
 var star=preload("res://sprites/bonus_star.png")
 var gun=preload("res://sprites/bonus_gun.png")
 var boat=preload("res://sprites/bonus_boat.png")
+var bullet=preload("res://scenes/bullet.tscn")
 
 #方块图片
 var brick=preload("res://sprites/brick.png")

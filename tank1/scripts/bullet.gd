@@ -2,7 +2,7 @@ extends Node2D
 
 
 export var dir=2 # 0上 1下 2左 3右
-var speed=80  
+var speed=160  
 var type=Game.bulletType.players
 var playerID  #玩家id
 var power=1  #1是基本火力 2是最强火力

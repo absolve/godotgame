@@ -10,16 +10,6 @@ func _ready():
 	else:
 		play("explode_small")	
 	
-#	if position.x<size.x/2:
-#		position.x=size.x/2
-#	elif position.x>Game.winSize.x-size.x/2:
-#		position.x=Game.winSize.x-size.x/2
-#	if position.y<	size.y/2:
-#		position.y=size.y/2
-#	elif position.y>Game.winSize.y-size.y/2:
-#		position.y=Game.winSize.y-size.y/2
-#	pass 
-
 
 
 

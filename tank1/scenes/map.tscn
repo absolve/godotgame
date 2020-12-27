@@ -16,7 +16,6 @@
 script = ExtResource( 1 )
 
 [node name="bg" type="ColorRect" parent="."]
-visible = false
 show_behind_parent = true
 margin_right = 512.0
 margin_bottom = 448.0
@@ -26,7 +25,6 @@ __meta__ = {
 }
 
 [node name="mapbg" type="ColorRect" parent="."]
-visible = false
 show_behind_parent = true
 margin_right = 416.0
 margin_bottom = 416.0
@@ -42,6 +40,8 @@ __meta__ = {
 [node name="tanks" type="Node2D" parent="."]
 
 [node name="bullets" type="Node2D" parent="."]
+
+[node name="base" type="Node2D" parent="."]
 
 [node name="obj" type="Node2D" parent="."]
 

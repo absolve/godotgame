@@ -10,7 +10,9 @@ onready var _tank = $map/tanks
 onready var _brick=$map/brick
 onready var _bullet=$map/bullets
 onready var _bonus=$map/bonus
-
+onready var _map=$map
+onready var _base=$map/base
+onready var _ani=$ani
 
 func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
@@ -80,25 +82,42 @@ func _process(delta):
 		for i in _bullet.get_children():	#同一个子弹
 			if i.get_class()=="bullet":
 				var typeA = i.getType()
+				var rect=i.getRect()
 				for y in _bullet.get_children():
 					if i!=y && y.get_class()=="bullet": #排除同一个
-						print(222222222)
-						var typeB=y.getType()
-						if typeA==Game.bulletType.players and typeB==Game.bulletType.enemy:
-							i.destroy()
-							y.destroy()
-						elif typeA==Game.bulletType.enemy and typeB==Game.bulletType.players:
-							i.destroy()
-							y.destroy()
-					pass
+						var rect1=y.getRect()
+						if rect.intersects(rect1,false):
+							var typeB=y.getType()
+							if typeA==Game.bulletType.players and typeB==Game.bulletType.enemy:
+								i.destroy()
+								y.destroy()
+							elif typeA==Game.bulletType.enemy and typeB==Game.bulletType.players:
+								i.destroy()
+								y.destroy()
+					
 		
 				
 		for i in _bullet.get_children():
-			if i.position.x<0 or i.position.x>Game.winSize.x:
-				i.destroy()
-			if	i.position.y<0 or i.position.y>Game.winSize.y:
-				i.destroy()
+			if i.position.x<_map.offset.x or i.position.x>Game.winSize.x+_map.offset.x:
+				i.addExplode(false)
+			if	i.position.y<_map.offset.y or i.position.y>Game.winSize.y+_map.offset.y:
+				i.addExplode(false)
 			pass
+		
+		for i in _tank.get_children():
+			var type=i.get_class()
+			var rect=i.getRect()
+			if i.position.x-i.getSize()/2 <_map.offset.x:
+				i.position.x = _map.offset.x+i.getSize()/2
+			if i.position.x+i.getSize()/2>Game.winSize.x+_map.offset.x:
+				i.position.x = Game.winSize.x+_map.offset.x-i.getSize()/2
+			if i.position.y-i.getSize()/2<_map.offset.y:
+				i.position.y= _map.offset.y+i.getSize()/2
+			if i.position.y+i.getSize()/2>Game.winSize.y+_map.offset.y:
+				i.position.y = Game.winSize.y+_map.offset.y-i.getSize()/2
+			
+			pass
+		
 		
 		for i in _bonus.get_children():
 			var rect=i.getRect()
@@ -109,6 +128,14 @@ func _process(delta):
 						pass
 					pass
 		
+		for i in _base.get_children():
+			if !i.destroy:
+				var rect=i.getRect()
+				for y in _bullet.get_children():
+					var rect1=y.getRect()
+					if rect.intersects(rect1,false):
+						i.setBaseDestroyed()
+						y.destroy()
 		
 		pass
 	elif state==Game.game_state.NEXT_LEVEL:
@@ -138,5 +165,6 @@ func setState(state):
 #基地毁灭	
 func baseDestroy():
 	print('baseDestroy')
-	setState(Game.game_state.OVER)
+	$ani.play("gameover")
+	#setState(Game.game_state.OVER)
 	pass
