@@ -61,8 +61,6 @@ func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
 	#loadMap()
-	
-	
 	$mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	#loadMap("res://levels/2.json")

@@ -11,6 +11,11 @@ var bulletMax=1	#发射最大子弹数
 var armour=0  #护甲等级  不同等级护甲不同
 var bullet=Game.bullet
 var vec=Vector2.ZERO
+var isStop=false#是否停止
+var keepDirectionTime=0 #保持方向的时间 ms
+var directionTime=0
+var targetPos=Vector2(0,0)	#目标位置
+
 
 func _ready():
 	randomize()
@@ -22,6 +27,7 @@ func _ready():
 		$ani.play("typeC")
 	elif type==3:
 		$ani.play("typeD")
+	keepDirectionTime = 1000
 	pass
 
 
@@ -51,6 +57,15 @@ func _process(delta):
 		vec=Vector2.ZERO	
 	animation(dir,vec)	
 	position+=vec*delta		
+	
+	directionTime+=delta*1000
+	print(directionTime)
+	if directionTime>keepDirectionTime:
+		print("change")
+		keepDirectionTime=randi()%1200+300	
+		directionTime=0
+		dir=randi()%4
+		
 	pass
 
 func animation(dir,vec):
@@ -78,9 +93,11 @@ func animation(dir,vec):
 
 #改变方向
 func turnDirection():
-	dir = randi()%4
-
+	
 	pass
+
+func setStop(isStop):
+	self.isStop=isStop
 
 func setPos(pos:Vector2):
 	position=pos

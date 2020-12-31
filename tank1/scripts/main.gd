@@ -68,7 +68,7 @@ func _process(delta):
 								i.position.y=y.position.y-y.getSize()/2-i.getSize()/2	
 						var type=i.get_class()
 						if type=="enemy":
-							i.turnDirection()
+							i.setStop(true)		
 						pass
 			
 		
@@ -118,22 +118,22 @@ func _process(delta):
 		for i in _tank.get_children():
 			var type=i.get_class()
 			var rect=i.getRect()
-			if i.position.x-i.getSize()/2 <_map.offset.x:
-				i.position.x = _map.offset.x+i.getSize()/2
+			if i.position.x-i.getSize()/2 <_map.mapRect.position.x:
+				i.position.x = _map.mapRect.position.x+i.getSize()/2
 				if type=="enemy":
-					i.turnDirection()
-			if i.position.x+i.getSize()/2>Game.winSize.x+_map.offset.x:
-				i.position.x = Game.winSize.x+_map.offset.x-i.getSize()/2
+					i.setStop(true)		
+			if i.position.x+i.getSize()/2>_map.mapRect.size.x:
+				i.position.x = _map.mapRect.size.x-i.getSize()/2
 				if type=="enemy":
-					i.turnDirection()
-			if i.position.y-i.getSize()/2<_map.offset.y:
-				i.position.y= _map.offset.y+i.getSize()/2
+					i.setStop(true)		
+			if i.position.y-i.getSize()/2<_map.mapRect.position.y:
+				i.position.y= _map.offset.y_map.mapRect.position.y+i.getSize()/2
 				if type=="enemy":
-					i.turnDirection()
-			if i.position.y+i.getSize()/2>Game.winSize.y+_map.offset.y:
-				i.position.y = Game.winSize.y+_map.offset.y-i.getSize()/2
+					i.setStop(true)		
+			if i.position.y+i.getSize()/2>_map.mapRect.size.y:
+				i.position.y = _map.mapRect.size.y-i.getSize()/2
 				if type=="enemy":
-					i.turnDirection()			
+					i.setStop(true)			
 			pass
 		
 		
