@@ -3,8 +3,8 @@ extends Node2D
 #class_name enemy
 
 var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
-var speed=150  
-var dir=0 # 0上 1下 2左 3右
+var speed=40 
+var dir=1 # 0上 1下 2左 3右
 var bullets=[]
 var type=0  # 0 typeA  1 typeB 2 typeC 3 typeD
 var bulletMax=1	#发射最大子弹数
@@ -55,34 +55,35 @@ func _process(delta):
 
 func animation(dir,vec):
 	if dir==0:
-		$ani.flip_v=false
-		$ani.flip_h=false
+		$ani.flip_v=true
+		$ani.flip_h=true
 		$ani.rotation_degrees=0
 		pass
 	elif dir==1:
-		$ani.flip_v=true
+		$ani.flip_v=false
 		$ani.flip_h=false
 		$ani.rotation_degrees=0
 		pass
 	elif dir==2:
 		$ani.flip_v=false
-		$ani.flip_h=true
-		if $ani.rotation_degrees!=-90:
-			$ani.rotation_degrees=-90
+		$ani.flip_h=false
+		if $ani.rotation_degrees!=90:
+			$ani.rotation_degrees=90
 		pass
 	elif dir==3:
 		$ani.flip_v=false
 		$ani.flip_h=false
-		if $ani.rotation_degrees!=90:
-			$ani.rotation_degrees=90
+		if $ani.rotation_degrees!=-90:
+			$ani.rotation_degrees=-90
 
-
+#改变方向
 func turnDirection():
 	dir = randi()%4
-	
-	
-	
+
 	pass
+
+func setPos(pos:Vector2):
+	position=pos
 
 func hit():
 	pass

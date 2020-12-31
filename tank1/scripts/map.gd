@@ -83,6 +83,11 @@ func _ready():
 	
 #添加随机的敌人
 func addEnemy():
+	var enemy=Game.enemy.instance()
+	var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
+	pos+=offset
+	enemy.setPos(pos)
+	_tank.add_child(enemy)
 	pass
 
 #设置玩家状态
@@ -105,17 +110,17 @@ func loadMap(filename:String):
 		#return currentLevel
 		print(currentLevel['name'])
 		
-		for i in currentLevel['base']:
-			if i['type'] in [0,1,2,3,4]:
-				if mode==0:
-					var temp=brick.instance()
-					temp.position.x=i['x']*cellSize+temp.size/2
-					temp.position.y=i['y']*cellSize+temp.size/2
-					temp.position+=offset
-					temp.type=i['type']
-					$brick.add_child(temp)
-				elif mode==1:
-					brickList.append(i)
+#		for i in currentLevel['base']:
+#			if i['type'] in [0,1,2,3,4]:
+#				if mode==0:
+#					var temp=brick.instance()
+#					temp.position.x=i['x']*cellSize+temp.size/2
+#					temp.position.y=i['y']*cellSize+temp.size/2
+#					temp.position+=offset
+#					temp.type=i['type']
+#					$brick.add_child(temp)
+#				elif mode==1:
+#					brickList.append(i)
 			
 		for i in currentLevel['data']:
 			if i['type'] in [0,1,2,3,4]:

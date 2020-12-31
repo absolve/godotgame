@@ -20,7 +20,7 @@ func _ready():
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	$map.addNewPlayer(1)
-	
+	$map.addEnemy()	#添加敌人
 	pass 
 
 
@@ -66,8 +66,11 @@ func _process(delta):
 								i.position.y=y.position.y+y.getSize()/2+i.getSize()/2	
 							else:
 								i.position.y=y.position.y-y.getSize()/2-i.getSize()/2	
+						var type=i.get_class()
+						if type=="enemy":
+							i.turnDirection()
 						pass
-			pass
+			
 		
 		for i in _bullet.get_children():	#子弹跟方块
 			if i.get_class()=="bullet":
@@ -95,6 +98,14 @@ func _process(delta):
 								i.destroy()
 								y.destroy()
 					
+		for i in _tank.get_children():	#坦克与坦克的碰撞
+			for y in _tank.get_children():
+				if i!=y:
+					var rect=i.getRect()
+					var rect1=y.getRect()
+					
+					pass
+				pass
 		
 				
 		for i in _bullet.get_children():
@@ -109,13 +120,20 @@ func _process(delta):
 			var rect=i.getRect()
 			if i.position.x-i.getSize()/2 <_map.offset.x:
 				i.position.x = _map.offset.x+i.getSize()/2
+				if type=="enemy":
+					i.turnDirection()
 			if i.position.x+i.getSize()/2>Game.winSize.x+_map.offset.x:
 				i.position.x = Game.winSize.x+_map.offset.x-i.getSize()/2
+				if type=="enemy":
+					i.turnDirection()
 			if i.position.y-i.getSize()/2<_map.offset.y:
 				i.position.y= _map.offset.y+i.getSize()/2
+				if type=="enemy":
+					i.turnDirection()
 			if i.position.y+i.getSize()/2>Game.winSize.y+_map.offset.y:
 				i.position.y = Game.winSize.y+_map.offset.y-i.getSize()/2
-			
+				if type=="enemy":
+					i.turnDirection()			
 			pass
 		
 		
@@ -125,6 +143,7 @@ func _process(delta):
 				if y.get_class()=="player":
 					var rect1=y.getRect()
 					if rect.intersects(rect1,false):
+						print("_bonus")
 						pass
 					pass
 		

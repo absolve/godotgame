@@ -35,7 +35,7 @@ var ice=preload("res://sprites/ice.png")
 var bush=preload("res://sprites/bush.png")
 var water=preload("res://sprites/water.png")
 
-
+var enemy=preload("res://scenes/enemy.tscn")
 
 var _mainScene="res://scenes/main.tscn"	#主界面
 
