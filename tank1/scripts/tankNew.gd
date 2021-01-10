@@ -10,15 +10,27 @@ var speed = 70
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
 var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=0.1
+var shootDelay=0.05
 var bullets=[]
 var bulletMax=1	#发射最大子弹数
 var bullet=Game.bullet
+var isInit=false
+var state=Game.tank_state.IDLE
+var initStartTime=0
+var initTime=1200  #ms
+var isInvincible=false
+var invincibleStartTime=0
+var invincibleTime=8000
+
+onready var _invincible=$invincible
 
 
 func _ready():
 	#getRect()
 	setKeyMap(1)
+	$ani.play("flash")
+	$ani.playing=true
+	setIsInvincible()
 	pass
 
 #获取矩形
@@ -44,38 +56,54 @@ func setKeyMap(playerId:int):
 func _process(delta):
 #	update()
 	#print(rect.position)
-	if Input.is_key_pressed(keymap["up"]):
-#		print("up")
-		vec.y=-speed
-		vec.x=0
-		dir=0
-	elif Input.is_key_pressed(keymap["down"]):
-		vec.x=0
-		vec.y=speed
-		#vec = move_and_slide(vec,Vector2.UP)
-		dir=1
-	elif Input.is_key_pressed(keymap["left"]):
-		vec.x=-speed
-		vec.y=0
-		#print("left")
-		#vec = move_and_slide(vec,Vector2.UP)
-		dir=2	
-	elif Input.is_key_pressed(keymap["right"]):	
-		vec.y=0
-		vec.x=speed
-		dir=3
-		#vec = move_and_slide(vec,Vector2.UP)
-	else:
-		vec=Vector2.ZERO	
+	if state==Game.tank_state.IDLE:
+		initStartTime+=delta*1000
+		if initStartTime>=initTime:
+			initStartTime=0
+			$ani.playing=false
+			setState(Game.tank_state.START)
+		pass
+	elif state==Game.tank_state.START:
+		if Input.is_key_pressed(keymap["up"]):
+	#		print("up")
+			vec.y=-speed
+			vec.x=0
+			dir=0
+		elif Input.is_key_pressed(keymap["down"]):
+			vec.x=0
+			vec.y=speed
+			#vec = move_and_slide(vec,Vector2.UP)
+			dir=1
+		elif Input.is_key_pressed(keymap["left"]):
+			vec.x=-speed
+			vec.y=0
+			#print("left")
+			#vec = move_and_slide(vec,Vector2.UP)
+			dir=2	
+		elif Input.is_key_pressed(keymap["right"]):	
+			vec.y=0
+			vec.x=speed
+			dir=3
+			#vec = move_and_slide(vec,Vector2.UP)
+		else:
+			vec=Vector2.ZERO	
+			
+		if Input.is_key_pressed(keymap["fire"]):
+			print("fire")
+			fire()	
+			
+		animation(dir,vec)	
 		
-	if Input.is_key_pressed(keymap["fire"]):
-		print("fire")
-		fire()	
+		position+=vec*delta
 		
-	animation(dir,vec)	
-	
-	position+=vec*delta
-	
+		if isInvincible:
+			invincibleStartTime+=delta*1000
+			if invincibleStartTime>=invincibleTime:
+				invincibleStartTime=0
+				isInvincible=false
+				_invincible.visible=false
+				_invincible.playing=false
+		
 	pass
 	
 	
@@ -123,6 +151,17 @@ func animation(dir,vec):
 		else:
 			$ani.play("super")	
 
+func setState(state):
+	if state==Game.tank_state.START:
+		isInit=true
+		self.state=state
+		pass
+
+func setIsInvincible():
+	isInvincible=true
+	_invincible.visible=true
+	_invincible.playing=true
+
 #开火
 func fire():
 	if OS.get_unix_time()-shootTime<shootDelay:
@@ -137,7 +176,6 @@ func fire():
 			del.append(i)
 	for i in del:
 		bullets.remove(bullets.find(i))
-	#print("-----",bullets)
 	if bullets.size()<bulletMax:
 		var temp=bullet.instance()
 		temp.setType("player")
@@ -151,8 +189,8 @@ func get_class():
 	return 'player'
 	
 func _draw():
-#	if debug:
-#		draw_rect(rect,Color.white,false,1,true)
+	if debug:
+		draw_rect(rect,Color.white,false,1,true)
 	pass	
 
 

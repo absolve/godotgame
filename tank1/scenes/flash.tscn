@@ -8,14 +8,15 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 5 ), ExtResource( 4 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 5 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 2 ) ],
 "loop": true,
 "name": "flash",
-"speed": 7.0
+"speed": 8.0
 } ]
 
 [node name="flash" type="AnimatedSprite"]
 frames = SubResource( 1 )
 animation = "flash"
+frame = 4
 script = ExtResource( 1 )
 [connection signal="animation_finished" from="." to="." method="_on_flash_animation_finished"]

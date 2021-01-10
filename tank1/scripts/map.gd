@@ -63,6 +63,7 @@ func _ready():
 	#loadMap()
 	$mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
+	print(mapRect)
 	#loadMap("res://levels/2.json")
 	#mode=1
 	if mode==1:
@@ -80,13 +81,15 @@ func _ready():
 	
 	
 #添加随机的敌人
-func addEnemy():
+func addEnemy(basePos:Vector2):
 	var enemy=Game.enemy.instance()
 	var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
 	pos+=offset
 	enemy.setPos(pos)
+	enemy.targetPos=basePos
 	_tank.add_child(enemy)
 	pass
+
 
 #设置玩家状态
 func setPlayerState():
@@ -148,9 +151,9 @@ func clearMap():
 	for i in $tanks.get_children():
 		$tanks.remove_child(i)
 	for i in $bullets.get_children():
-		$bullets.remove_child(i)
-		
-
+		$bullets.remove_child(i)		
+	for i in $base.get_children():
+		$base.remove_child(i)
 
 
 #删除敌人出生点方块

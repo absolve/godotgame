@@ -5,16 +5,19 @@ extends Node2D
 var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var speed=40 
 var dir=1 # 0上 1下 2左 3右
-var bullets=[]
+
 var type=0  # 0 typeA  1 typeB 2 typeC 3 typeD
 var bulletMax=1	#发射最大子弹数
 var armour=0  #护甲等级  不同等级护甲不同
-var bullet=Game.bullet
 var vec=Vector2.ZERO
 var isStop=false#是否停止
 var keepDirectionTime=0 #保持方向的时间 ms
 var directionTime=0
 var targetPos=Vector2(0,0)	#目标位置
+var bullet=Game.bullet
+var bullets=[]
+var fireTime=0
+var reloadTime=800
 
 
 func _ready():
@@ -59,13 +62,30 @@ func _process(delta):
 	position+=vec*delta		
 	
 	directionTime+=delta*1000
-	print(directionTime)
+	fireTime+=delta*1000
+	#print(directionTime)
 	if directionTime>keepDirectionTime:
 		print("change")
 		keepDirectionTime=randi()%1200+300	
 		directionTime=0
+		var dx=targetPos.x-position.x
+		var dy=targetPos.y-position.y
+		if abs(dx)>abs(dy):
+			if dx<0:
+				dir=2
+			else:
+				dir=3
+		else:
+			if dy<0:
+				dir=0
+			else:
+				dir=1	
+			
 		dir=randi()%4
-		
+	if fireTime>reloadTime:
+		fireTime=0
+		reloadTime=randi()%1000
+		fire()
 	pass
 
 func animation(dir,vec):
@@ -104,6 +124,25 @@ func setPos(pos:Vector2):
 
 func hit():
 	pass
+
+#开火
+func fire():
+	print("dir",dir)	
+	var del=[]
+	for i in bullets: #清理无效对象
+		print(is_instance_valid(i))
+		if not is_instance_valid(i):
+			del.append(i)
+	for i in del:
+		bullets.remove(bullets.find(i))
+	if bullets.size()<bulletMax:
+		var temp=bullet.instance()
+		temp.setType("player")
+		temp.position=position
+		#temp.power=2
+		temp.setDir(dir)
+		bullets.append(temp)
+		Game.mainScene.add_child(temp)
 
 func get_class():
 	return 'enemy'

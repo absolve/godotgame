@@ -20,7 +20,8 @@ func _ready():
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	$map.addNewPlayer(1)
-	$map.addEnemy()	#添加敌人
+	var basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
+	#$map.addEnemy(basePos)	#添加敌人
 	pass 
 
 
@@ -40,32 +41,33 @@ func _process(delta):
 				if y.get_class()=="brick":
 					var rect1=y.getRect()
 					if rect.intersects(rect1,false):  #碰撞
-						print(11)
-						var dx=(y.position.x-i.position.x)/(y.getSize()/2)
-						var dy=(y.position.y-i.position.y)/(y.getSize()/2)
+					
+						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
+						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
 						var absDX = abs(dx)
 						var absDY = abs(dy)
 
 						if abs(absDX - absDY) < .1:
 							if dx<0:
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2			
+								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2			
 							else:
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2	
+								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2	
 
 							if dy<0:
-								i.position.y=y.position.y+y.getSize()/2+i.getSize()/2			
+								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2			
 							else:
-								i.position.y=y.position.y-y.getSize()/2-i.getSize()/2						
+								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
 						elif absDX > absDY:
+							print("absDX > absDY")
 							if dx<0:
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2					
+								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
 							else:
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2		
+								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2		
 						else:
 							if dy<0:
-								i.position.y=y.position.y+y.getSize()/2+i.getSize()/2	
+								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
 							else:
-								i.position.y=y.position.y-y.getSize()/2-i.getSize()/2	
+								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
 						var type=i.get_class()
 						if type=="enemy":
 							i.setStop(true)		
@@ -109,9 +111,9 @@ func _process(delta):
 		
 				
 		for i in _bullet.get_children():
-			if i.position.x<_map.offset.x or i.position.x>Game.winSize.x+_map.offset.x:
+			if i.position.x<_map.offset.x or i.position.x>_map.mapRect.size.x+_map.mapRect.position.x:
 				i.addExplode(false)
-			if	i.position.y<_map.offset.y or i.position.y>Game.winSize.y+_map.offset.y:
+			if	i.position.y<_map.offset.y or i.position.y>_map.mapRect.size.y+_map.mapRect.position.y:
 				i.addExplode(false)
 			pass
 		
@@ -122,16 +124,17 @@ func _process(delta):
 				i.position.x = _map.mapRect.position.x+i.getSize()/2
 				if type=="enemy":
 					i.setStop(true)		
-			if i.position.x+i.getSize()/2>_map.mapRect.size.x:
-				i.position.x = _map.mapRect.size.x-i.getSize()/2
+			if i.position.x+i.getSize()/2>_map.mapRect.size.x+_map.mapRect.position.x:
+				i.position.x = _map.mapRect.size.x+_map.mapRect.position.x-i.getSize()/2
+			
 				if type=="enemy":
 					i.setStop(true)		
 			if i.position.y-i.getSize()/2<_map.mapRect.position.y:
-				i.position.y= _map.offset.y_map.mapRect.position.y+i.getSize()/2
+				i.position.y= _map.mapRect.position.y+i.getSize()/2
 				if type=="enemy":
 					i.setStop(true)		
-			if i.position.y+i.getSize()/2>_map.mapRect.size.y:
-				i.position.y = _map.mapRect.size.y-i.getSize()/2
+			if i.position.y+i.getSize()/2>_map.mapRect.size.y+_map.mapRect.position.y:
+				i.position.y = _map.mapRect.size.y+_map.mapRect.position.y-i.getSize()/2
 				if type=="enemy":
 					i.setStop(true)			
 			pass

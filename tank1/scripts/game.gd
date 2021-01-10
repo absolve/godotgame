@@ -12,7 +12,7 @@ var groups={'player':'player','base':'base',
 var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
 
 enum game_state{LOAD,START,PAUSE,OVER,NEXT_LEVEL}
-enum tank_state{IDLE,DEAD,STOP,START}
+enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
 var explode=preload("res://scenes/explode.tscn")
