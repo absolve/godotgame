@@ -155,7 +155,6 @@ func setState(state):
 	if state==Game.tank_state.START:
 		isInit=true
 		self.state=state
-		pass
 
 func setIsInvincible():
 	isInvincible=true

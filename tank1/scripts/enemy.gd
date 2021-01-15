@@ -19,17 +19,24 @@ var bullets=[]
 var fireTime=0
 var reloadTime=800
 
+var isInit=false
+var state=Game.tank_state.IDLE
+var initStartTime=0
+var initTime=1200  #ms
+
 
 func _ready():
 	randomize()
-	if type==0:
-		$ani.play("typeA")
-	elif type==1:
-		$ani.play("typeB")
-	elif type==2:
-		$ani.play("typeC")
-	elif type==3:
-		$ani.play("typeD")
+	$ani.play("flash")
+	$ani.playing=true
+#	if type==0:
+#		$ani.play("typeA")
+#	elif type==1:
+#		$ani.play("typeB")
+#	elif type==2:
+#		$ani.play("typeC")
+#	elif type==3:
+#		$ani.play("typeD")
 	keepDirectionTime = 1000
 	pass
 
@@ -44,49 +51,70 @@ func getSize():
 	return rect.size.x
 	
 func _process(delta):
-	if dir==0:
-		vec.y=-speed
-		vec.x=0
-	elif dir==1:
-		vec.x=0
-		vec.y=speed
-	elif dir==2:
-		vec.x=-speed
-		vec.y=0
-	elif dir==3:
-		vec.y=0
-		vec.x=speed		
-	else:
-		vec=Vector2.ZERO	
-	animation(dir,vec)	
-	position+=vec*delta		
-	
-	directionTime+=delta*1000
-	fireTime+=delta*1000
-	#print(directionTime)
-	if directionTime>keepDirectionTime:
-		print("change")
-		keepDirectionTime=randi()%1200+300	
-		directionTime=0
-		var dx=targetPos.x-position.x
-		var dy=targetPos.y-position.y
-		if abs(dx)>abs(dy):
-			if dx<0:
-				dir=2
-			else:
-				dir=3
+	if state==Game.tank_state.IDLE:
+		initStartTime+=delta*1000
+		if initStartTime>=initTime:
+			initStartTime=0
+			$ani.playing=false
+			setState(Game.tank_state.START)
+	elif state==Game.tank_state.START:
+		if dir==0:
+			vec.y=-speed
+			vec.x=0
+		elif dir==1:
+			vec.x=0
+			vec.y=speed
+		elif dir==2:
+			vec.x=-speed
+			vec.y=0
+		elif dir==3:
+			vec.y=0
+			vec.x=speed		
 		else:
-			if dy<0:
-				dir=0
+			vec=Vector2.ZERO	
+		animation(dir,vec)	
+		position+=vec*delta		
+		
+		directionTime+=delta*1000
+		fireTime+=delta*1000
+		#print(directionTime)
+		if directionTime>keepDirectionTime:
+			print("change")
+			keepDirectionTime=randi()%1800+300	
+			directionTime=0
+			var p=randf()   #随机概率值
+				
+			var dx=targetPos.x-position.x
+			var dy=targetPos.y-position.y
+			if abs(dx)>abs(dy):
+				if p<0.7:
+					if dx<0:
+						dir=2
+					else:
+						dir=3
+				else:
+					if dy<0:
+						dir=0
+					else:
+						dir=1			
 			else:
-				dir=1	
+				if p<0.7:
+					if dy<0:
+						dir=0
+					else:
+						dir=1	
+				else:
+					if dx<0:
+						dir=2
+					else:
+						dir=3			
+			#dir=randi()%4
 			
-		dir=randi()%4
-	if fireTime>reloadTime:
-		fireTime=0
-		reloadTime=randi()%1000
-		fire()
-	pass
+		if fireTime>reloadTime:
+			fireTime=0
+			reloadTime=randi()%1000
+			fire()
+
 
 func animation(dir,vec):
 	if dir==0:
@@ -110,7 +138,15 @@ func animation(dir,vec):
 		$ani.flip_h=false
 		if $ani.rotation_degrees!=-90:
 			$ani.rotation_degrees=-90
-
+	if type==0:
+		$ani.play("typeA")
+	elif type==1:
+		$ani.play("typeB")
+	elif type==2:
+		$ani.play("typeC")
+	elif type==3:
+		$ani.play("typeD")
+	
 #改变方向
 func turnDirection():
 	
@@ -125,6 +161,11 @@ func setPos(pos:Vector2):
 func hit():
 	pass
 
+func setState(state):
+	if state==Game.tank_state.START:
+		isInit=true
+		self.state=state
+
 #开火
 func fire():
 	print("dir",dir)	
@@ -137,9 +178,8 @@ func fire():
 		bullets.remove(bullets.find(i))
 	if bullets.size()<bulletMax:
 		var temp=bullet.instance()
-		temp.setType("player")
+		temp.setType("enemy")
 		temp.position=position
-		#temp.power=2
 		temp.setDir(dir)
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)

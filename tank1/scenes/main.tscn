@@ -45,3 +45,11 @@ __meta__ = {
 
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/gameover = SubResource( 1 )
+
+[node name="addEnemy" type="Timer" parent="."]
+wait_time = 1.2
+one_shot = true
+
+[node name="nextLevel" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true

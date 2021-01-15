@@ -24,6 +24,8 @@ var enemyPos=[Vector2(0,0),Vector2(0,1),Vector2(1,0),Vector2(1,1),
 	Vector2(24,0),Vector2(25,0),Vector2(24,1),Vector2(24,2),
 	Vector2(12,0),Vector2(13,0),Vector2(12,1),Vector2(13,1)]
 
+var enemyBirthPos=[Vector2(1,0),Vector2(12,0),Vector2(24,0)]
+
 #基地旁的方块
 var baseBrickPos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
 			Vector2(11,23),Vector2(12,23),Vector2(13,23),
@@ -61,6 +63,7 @@ func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
 	#loadMap()
+
 	$mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	print(mapRect)
@@ -83,13 +86,23 @@ func _ready():
 #添加随机的敌人
 func addEnemy(basePos:Vector2):
 	var enemy=Game.enemy.instance()
-	var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
+	
+	#var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
+	var pos = Vector2(cellSize*enemyBirthPos[2].x+enemy.getSize()/2,
+					cellSize*enemyBirthPos[2].y+enemy.getSize()/2)
+	
 	pos+=offset
 	enemy.setPos(pos)
 	enemy.targetPos=basePos
 	_tank.add_child(enemy)
+	delEnemyNum()
 	pass
 
+#删除敌人数量
+func delEnemyNum():
+	var node=_enemyList.get_child(_enemyList.get_child_count()-1)
+	_enemyList.remove_child(node)
+	pass
 
 #设置玩家状态
 func setPlayerState():

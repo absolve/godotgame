@@ -4,7 +4,9 @@ extends Node2D
 var state=Game.game_state.START
 var level
 
-
+var enemyCount=20  #数量
+var basePos
+var new=false
 
 onready var _tank = $map/tanks
 onready var _brick=$map/brick
@@ -13,15 +15,20 @@ onready var _bonus=$map/bonus
 onready var _map=$map
 onready var _base=$map/base
 onready var _ani=$ani
+onready var _addEnemy=$addEnemy
+onready var _nextLevel=$nextLevel
 
 func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
-	$map.addNewPlayer(1)
-	var basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
-	#$map.addEnemy(basePos)	#添加敌人
+#	$map.addNewPlayer(1)
+	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
+	$map.addEnemy(basePos)	#添加敌人
+	#_map.delEnemyNum()
+	_addEnemy.connect("timeout",self,"addEnemyDelay")
+	_nextLevel.connect("timeout",self,"nextLevel")
 	pass 
 
 
@@ -34,13 +41,12 @@ func _process(delta):
 			pass
 		pass
 	elif state==Game.game_state.START:
-		#return
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
 					var rect1=y.getRect()
-					if rect.intersects(rect1,false):  #碰撞
+					if rect.intersects(rect1,false):  #碰撞  判断是否被包围住
 					
 						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
 						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
@@ -117,7 +123,7 @@ func _process(delta):
 				i.addExplode(false)
 			pass
 		
-		for i in _tank.get_children():
+		for i in _tank.get_children():		#边界
 			var type=i.get_class()
 			var rect=i.getRect()
 			if i.position.x-i.getSize()/2 <_map.mapRect.position.x:
@@ -168,6 +174,39 @@ func _process(delta):
 	pass
 
 
+func addScore():
+	pass
+
+func addEnemyDelay():
+	if _addEnemy.is_stopped():
+		_addEnemy.start()
+		pass
+	else:
+		new=true
+		pass
+	pass
+
+func addEnemy():
+	if enemyCount>0:
+		if getEnemyCount()<4:
+			_map.addEnemy(basePos)
+			if new:
+				new=false
+				_addEnemy.start()
+	else:  #下一关
+		pass	
+	pass
+
+func getEnemyCount():
+	var num=0
+	for i in _tank.get_children():
+		if i.get_class()=="enemy":
+			num+=1
+	return num
+
+#下一关
+func nextLevel():
+	pass
 
 #设置状态
 func setState(state):

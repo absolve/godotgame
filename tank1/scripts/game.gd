@@ -33,7 +33,8 @@ var brick=preload("res://sprites/brick.png")
 var stone=preload("res://sprites/stone.png")
 var ice=preload("res://sprites/ice.png")
 var bush=preload("res://sprites/bush.png")
-var water=preload("res://sprites/water.png")
+var water=preload("res://sprites/water1.png")
+var water1=preload("res://sprites/water2.png")
 
 var enemy=preload("res://scenes/enemy.tscn")
 
@@ -52,7 +53,7 @@ var level=0  #默认关卡1
 
 var mode=1	#游戏单人 双人
 var playerLive=[2,2]	#玩家生命数
-
+var playerScore={"player1":0,"player2":0}  #玩家分数
 
 
 func _ready():

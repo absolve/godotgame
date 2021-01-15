@@ -1,6 +1,6 @@
 extends Node2D
 
-#参考资料 https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
+
 #根据类型来判断是那种方块
 
 var type=0
@@ -12,22 +12,23 @@ var lastDir=0 #上一次子弹的方向
 var rect= Rect2(Vector2(-8,-8),Vector2(16,16))
 var debug=true
 onready var _sprite=$Sprite
-var offset=Vector2.ZERO
+var offset=Vector2.ZERO  #图片原点的坐标  每次被击中的话中心点会发生变化
+
+var aniStartTime=0	#动画时间
+var aniFps=50
 
 func _ready():
 	if type==0:
-		$Sprite.texture=Game.brick	
+		_sprite.texture=Game.brick	
 	elif type==1:
-		$Sprite.texture=Game.stone
+		_sprite.texture=Game.stone
 	elif type==2:
-		$Sprite.texture=Game.water
-		$Area2D.collision_mask=1+2	
+		_sprite.texture=Game.water
 	elif type==3:
-		$Sprite.texture=Game.bush
-		$Area2D.collision_mask=4
-		$Sprite.z_index=2	
+		_sprite.texture=Game.bush
+		_sprite.z_index=2	
 	elif type==4:
-		$Sprite.texture=Game.ice	
+		_sprite.texture=Game.ice	
 	
 
 func setPos(pos:Vector2):
@@ -56,13 +57,20 @@ func _draw():
 
 	
 func _process(delta):
-	update()
+	#update()
+	if type==2:
+		aniStartTime+=delta*60
+		if aniStartTime>aniFps:
+			aniStartTime=0
+			if _sprite.texture==Game.water:
+				_sprite.texture=Game.water1
+			else:
+				_sprite.texture=Game.water	
 	
-	pass
 
 #被击中的方向	
 func hit(dir):
-	if type==0:
+	if type==0:	#砖块
 		if hitCount==0:
 			if dir==0:	#上
 				_sprite.region_rect = Rect2(0,0,size,size/2)
