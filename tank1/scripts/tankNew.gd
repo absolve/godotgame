@@ -163,10 +163,10 @@ func setIsInvincible():
 
 #开火
 func fire():
-	if OS.get_unix_time()-shootTime<shootDelay:
-		return
-	else:
-		shootTime=OS.get_unix_time()
+#	if OS.get_unix_time()-shootTime<shootDelay:
+#		return
+#	else:
+#		shootTime=OS.get_unix_time()
 	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象

@@ -77,9 +77,11 @@ func _process(delta):
 		
 		directionTime+=delta*1000
 		fireTime+=delta*1000
+		if isStop:
+			keepDirectionTime-=50
 		#print(directionTime)
 		if directionTime>keepDirectionTime:
-			print("change")
+	#		print("change")
 			keepDirectionTime=randi()%1800+300	
 			directionTime=0
 			var p=randf()   #随机概率值
@@ -114,7 +116,7 @@ func _process(delta):
 			fireTime=0
 			reloadTime=randi()%1000
 			fire()
-
+		isStop=false
 
 func animation(dir,vec):
 	if dir==0:
@@ -159,7 +161,19 @@ func setPos(pos:Vector2):
 	position=pos
 
 func hit():
+	addExplode(false)
 	pass
+
+func addExplode(big):
+	var temp=Game.explode.instance()
+	if big:
+		temp.big=true
+	temp.position=position
+	Game.otherObj.add_child(temp)
+	destroy()
+
+func destroy():
+	queue_free()
 
 func setState(state):
 	if state==Game.tank_state.START:
@@ -168,7 +182,7 @@ func setState(state):
 
 #开火
 func fire():
-	print("dir",dir)	
+#	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
 		print(is_instance_valid(i))

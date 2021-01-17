@@ -63,7 +63,7 @@ func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
 	#loadMap()
-
+	randomize()
 	$mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	print(mapRect)
@@ -86,10 +86,10 @@ func _ready():
 #添加随机的敌人
 func addEnemy(basePos:Vector2):
 	var enemy=Game.enemy.instance()
-	
+	var index =randi()%3
 	#var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
-	var pos = Vector2(cellSize*enemyBirthPos[2].x+enemy.getSize()/2,
-					cellSize*enemyBirthPos[2].y+enemy.getSize()/2)
+	var pos = Vector2(cellSize*enemyBirthPos[index].x+enemy.getSize()/2,
+					cellSize*enemyBirthPos[index].y+enemy.getSize()/2)
 	
 	pos+=offset
 	enemy.setPos(pos)

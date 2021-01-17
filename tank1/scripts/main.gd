@@ -23,11 +23,12 @@ func _ready():
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
-#	$map.addNewPlayer(1)
+	$map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
-	$map.addEnemy(basePos)	#添加敌人
+	#$map.addEnemy(basePos)	#添加敌人
 	#_map.delEnemyNum()
 	_addEnemy.connect("timeout",self,"addEnemyDelay")
+	_addEnemy.start()
 	_nextLevel.connect("timeout",self,"nextLevel")
 	pass 
 
@@ -64,7 +65,7 @@ func _process(delta):
 							else:
 								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
 						elif absDX > absDY:
-							print("absDX > absDY")
+						#	print("absDX > absDY")
 							if dx<0:
 								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
 							else:
@@ -115,6 +116,20 @@ func _process(delta):
 					pass
 				pass
 		
+		for i in _tank.get_children():
+			for y in _bullet.get_children():
+				var rect=i.getRect()
+				var rect1=y.getRect()
+				if rect.intersects(rect1,false):
+					var typeA = i.get_class()
+					var typeB=y.getType()
+					if typeA=="player" and typeB==Game.bulletType.enemy:
+						pass
+					elif typeA=="enemy" and typeB==Game.bulletType.players:
+						i.hit()
+						enemyCount-=1
+						y.destroy()
+				
 				
 		for i in _bullet.get_children():
 			if i.position.x<_map.offset.x or i.position.x>_map.mapRect.size.x+_map.mapRect.position.x:
@@ -178,8 +193,11 @@ func addScore():
 	pass
 
 func addEnemyDelay():
+	print("addEnemyDelay")
 	if _addEnemy.is_stopped():
-		_addEnemy.start()
+		print(_addEnemy.is_stopped())
+		addEnemy()
+	#	_addEnemy.start()
 		pass
 	else:
 		new=true
@@ -187,13 +205,17 @@ func addEnemyDelay():
 	pass
 
 func addEnemy():
+	print("addEnemy",enemyCount)
 	if enemyCount>0:
 		if getEnemyCount()<4:
 			_map.addEnemy(basePos)
 			if new:
 				new=false
-				_addEnemy.start()
+				
+			_addEnemy.start()
+					
 	else:  #下一关
+		print("next")
 		pass	
 	pass
 

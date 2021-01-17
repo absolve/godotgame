@@ -9,7 +9,7 @@ var power=1  #1是基本火力 2是最强火力
 #var winSize=Vector2(480,416)	#屏幕大小
 var size=Vector2(6,8)	#图片大小
 var vec= Vector2.ZERO
-
+var isValid=false
 var rect=Rect2(Vector2(-3,-4),Vector2(6,8))
 
 func _ready():

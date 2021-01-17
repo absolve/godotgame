@@ -101,7 +101,7 @@ func hit(dir):
 			lastDir=dir	
 			hitCount+=1
 			update()
-		elif hitCount==1:
+		elif hitCount==1:#第二次
 			rect.size=Vector2(size/2,size/2)
 			if dir==0:#上
 				offset.y=-size/4
@@ -122,14 +122,14 @@ func hit(dir):
 				if lastDir==0 or lastDir==1:
 					queue_free()	
 				elif lastDir==2:
-					print("lastDir==2")
+				#	print("lastDir==2")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-					_sprite.position.x-=size/4
+					_sprite.position.y-=size/4
 					rect.position.y=0
 					pass
 				elif lastDir==3:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-					_sprite.position.x+=size/4
+					_sprite.position.y+=size/4
 					rect.position.y=0
 					pass	
 			elif dir==2:#左
@@ -146,7 +146,7 @@ func hit(dir):
 					_sprite.position.x-=size/4
 					pass
 			elif dir==3:#右
-				offset.x=-size/4
+				offset.x=size/4
 				if lastDir==2 or lastDir==3:
 					queue_free()	
 				elif lastDir==0:
@@ -156,9 +156,9 @@ func hit(dir):
 					rect.position.y=0
 					pass
 				elif lastDir==1:
-					print("lastDir==1")
+	#				print("lastDir==1")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-					_sprite.position.x-=size/4
+					_sprite.position.x+=size/4
 					rect.position.x=0
 				#	rect.position=Vector2(0,-size/2)
 					pass						
