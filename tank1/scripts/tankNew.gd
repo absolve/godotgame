@@ -10,7 +10,7 @@ var speed = 70
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
 var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=0.05
+var shootDelay=0.01
 var bullets=[]
 var bulletMax=1	#发射最大子弹数
 var bullet=Game.bullet
@@ -21,6 +21,7 @@ var initTime=1200  #ms
 var isInvincible=false
 var invincibleStartTime=0
 var invincibleTime=8000
+var isStop=false#是否停止
 
 onready var _invincible=$invincible
 
@@ -41,6 +42,12 @@ func getRect()->Vector2:
 
 func getSize():
 	return rect.size.x
+
+func getPos():
+	return position
+	
+func setStop(isSto,dir):
+	self.isStop=isStop	
 	 
 func setKeyMap(playerId:int):
 	if playerId==1:
@@ -56,10 +63,62 @@ func setKeyMap(playerId:int):
 func _process(delta):
 #	update()
 	#print(rect.position)
+#	if state==Game.tank_state.IDLE:
+#		initStartTime+=delta*1000
+#		if initStartTime>=initTime:
+#			initStartTime=0
+#			isInit=true
+#			$ani.playing=false
+#			setState(Game.tank_state.START)
+#		pass
+#	elif state==Game.tank_state.START:
+#		if Input.is_key_pressed(keymap["up"]):
+#			vec.y=-speed
+#			vec.x=0
+#			dir=0
+#			isStop=false
+#		elif Input.is_key_pressed(keymap["down"]):
+#			vec.x=0
+#			vec.y=speed
+#			dir=1
+#			isStop=false
+#		elif Input.is_key_pressed(keymap["left"]):
+#			vec.x=-speed
+#			vec.y=0
+#			isStop=false
+#			dir=2	
+#		elif Input.is_key_pressed(keymap["right"]):	
+#			vec.y=0
+#			vec.x=speed
+#			dir=3
+#			isStop=false
+#		else:
+#			vec=Vector2.ZERO	
+#
+#		if Input.is_key_pressed(keymap["fire"]):
+#			print("fire")
+#			fire()	
+#
+#		animation(dir,vec)	
+#		if !isStop:
+#			position+=vec*delta
+#
+#		if isInvincible:
+#			invincibleStartTime+=delta*1000
+#			if invincibleStartTime>=invincibleTime:
+#				invincibleStartTime=0
+#				isInvincible=false
+#				_invincible.visible=false
+#				_invincible.playing=false
+		
+	pass
+
+func _update(delta):
 	if state==Game.tank_state.IDLE:
 		initStartTime+=delta*1000
 		if initStartTime>=initTime:
 			initStartTime=0
+			isInit=true
 			$ani.playing=false
 			setState(Game.tank_state.START)
 		pass
@@ -69,22 +128,22 @@ func _process(delta):
 			vec.y=-speed
 			vec.x=0
 			dir=0
+			isStop=false
 		elif Input.is_key_pressed(keymap["down"]):
 			vec.x=0
 			vec.y=speed
-			#vec = move_and_slide(vec,Vector2.UP)
 			dir=1
+			isStop=false
 		elif Input.is_key_pressed(keymap["left"]):
 			vec.x=-speed
 			vec.y=0
-			#print("left")
-			#vec = move_and_slide(vec,Vector2.UP)
+			isStop=false
 			dir=2	
 		elif Input.is_key_pressed(keymap["right"]):	
 			vec.y=0
 			vec.x=speed
 			dir=3
-			#vec = move_and_slide(vec,Vector2.UP)
+			isStop=false
 		else:
 			vec=Vector2.ZERO	
 			
@@ -93,8 +152,8 @@ func _process(delta):
 			fire()	
 			
 		animation(dir,vec)	
-		
-		position+=vec*delta
+		if !isStop:
+			position+=vec*delta
 		
 		if isInvincible:
 			invincibleStartTime+=delta*1000
@@ -103,7 +162,6 @@ func _process(delta):
 				isInvincible=false
 				_invincible.visible=false
 				_invincible.playing=false
-		
 	pass
 	
 	
@@ -163,10 +221,10 @@ func setIsInvincible():
 
 #开火
 func fire():
-#	if OS.get_unix_time()-shootTime<shootDelay:
-#		return
-#	else:
-#		shootTime=OS.get_unix_time()
+	if OS.get_unix_time()-shootTime<shootDelay:
+		return
+	else:
+		shootTime=OS.get_unix_time()
 	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象

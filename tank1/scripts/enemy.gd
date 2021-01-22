@@ -18,6 +18,7 @@ var bullet=Game.bullet
 var bullets=[]
 var fireTime=0
 var reloadTime=800
+var newDir=0
 
 var isInit=false
 var state=Game.tank_state.IDLE
@@ -37,7 +38,7 @@ func _ready():
 #		$ani.play("typeC")
 #	elif type==3:
 #		$ani.play("typeD")
-	keepDirectionTime = 1000
+	keepDirectionTime = randi()%1800+300	
 	pass
 
 
@@ -51,10 +52,92 @@ func getSize():
 	return rect.size.x
 	
 func _process(delta):
+#	if state==Game.tank_state.IDLE:
+#		initStartTime+=delta*1000
+#		if initStartTime>=initTime:
+#			initStartTime=0
+#			isInit=true
+#			$ani.playing=false
+#			setState(Game.tank_state.START)
+#	elif state==Game.tank_state.START:
+#		if dir==0:
+#			vec.y=-speed
+#			vec.x=0
+#		elif dir==1:
+#			vec.x=0
+#			vec.y=speed
+#		elif dir==2:
+#			vec.x=-speed
+#			vec.y=0
+#		elif dir==3:
+#			vec.y=0
+#			vec.x=speed		
+#		else:
+#			vec=Vector2.ZERO	
+#
+#		directionTime+=delta*1000
+#		fireTime+=delta*1000
+#		if isStop:
+#			keepDirectionTime-=50
+#		#print(directionTime)
+#		if directionTime>keepDirectionTime:
+#	#		print("change")
+#			keepDirectionTime=randi()%1800+300	
+#			directionTime=0
+#			var p=randf()   #随机概率值
+#
+#			var dx=targetPos.x-position.x
+#			var dy=targetPos.y-position.y
+#			if p<0.5:
+#				if abs(dx)>abs(dy):
+#					if p<0.7:
+#						if dx<0:
+#							newDir=2
+#						else:
+#							newDir=3
+#					else:
+#						if dy<0:
+#							newDir=0
+#						else:
+#							newDir=1			
+#				else:
+#					if p<0.7:
+#						if dy<0:
+#							newDir=0
+#						else:
+#							newDir=1	
+#					else:
+#						if dx<0:
+#							newDir=2
+#						else:
+#							newDir=3	
+#			else:
+#				newDir=randi()%4				
+#			#isStop=false					
+#			#dir=randi()%4
+#
+#		if fireTime>reloadTime:
+#			fireTime=0
+#			reloadTime=randi()%1000
+#			fire()
+#
+#		if dir!=newDir:
+#			if isStop:
+#				isStop=false	
+#			dir=newDir
+#		animation(dir,vec)		
+#		if !isStop:
+#			position+=vec*delta	
+	
+	pass		
+	#	isStop=false
+
+func _update(delta):
 	if state==Game.tank_state.IDLE:
 		initStartTime+=delta*1000
 		if initStartTime>=initTime:
 			initStartTime=0
+			isInit=true
 			$ani.playing=false
 			setState(Game.tank_state.START)
 	elif state==Game.tank_state.START:
@@ -72,51 +155,69 @@ func _process(delta):
 			vec.x=speed		
 		else:
 			vec=Vector2.ZERO	
-		animation(dir,vec)	
-		position+=vec*delta		
 		
 		directionTime+=delta*1000
 		fireTime+=delta*1000
 		if isStop:
-			keepDirectionTime-=50
+			keepDirectionTime-=10
+			#vec=Vector2.ZERO
 		#print(directionTime)
 		if directionTime>keepDirectionTime:
 	#		print("change")
-			keepDirectionTime=randi()%1800+300	
+			keepDirectionTime=randi()%2000+300	
 			directionTime=0
 			var p=randf()   #随机概率值
 				
 			var dx=targetPos.x-position.x
 			var dy=targetPos.y-position.y
-			if abs(dx)>abs(dy):
-				if p<0.7:
-					if dx<0:
-						dir=2
+			if p<0.5:
+				if abs(dx)>abs(dy):
+					if p<0.7:
+						if dx<0:
+							newDir=3
+						else:
+							newDir=2
 					else:
-						dir=3
+						newDir=randi()%4	
+#						if dy<0:
+#							newDir=0
+#						else:
+#							newDir=1			
 				else:
-					if dy<0:
-						dir=0
+					if p<0.7:
+						if dy<0:
+							newDir=0
+						else:
+							newDir=1	
 					else:
-						dir=1			
+						newDir=randi()%4	
+#						if dx<0:
+#							newDir=3
+#						else:
+#							newDir=2	
 			else:
-				if p<0.7:
-					if dy<0:
-						dir=0
-					else:
-						dir=1	
-				else:
-					if dx<0:
-						dir=2
-					else:
-						dir=3			
+				newDir=randi()%4				
+			#newDir=randi()%4	
+			
+			#isStop=false					
 			#dir=randi()%4
 			
 		if fireTime>reloadTime:
 			fireTime=0
 			reloadTime=randi()%1000
 			fire()
-		isStop=false
+			
+		if dir!=newDir:
+			if isStop:
+				isStop=false	
+			dir=newDir
+		else:
+			dir=newDir	
+			
+		animation(dir,vec)		
+		if !isStop:
+			position+=vec*delta		
+	pass
 
 func animation(dir,vec):
 	if dir==0:
@@ -151,17 +252,22 @@ func animation(dir,vec):
 	
 #改变方向
 func turnDirection():
-	
+	newDir=randi()%4	
 	pass
 
-func setStop(isStop):
+func setStop(isStop,dir):
 	self.isStop=isStop
-
+	vec=Vector2.ZERO
+	
+		
 func setPos(pos:Vector2):
 	position=pos
 
+func getPos():
+	return position
+
 func hit():
-	addExplode(false)
+	addExplode(true)
 	pass
 
 func addExplode(big):
@@ -182,10 +288,9 @@ func setState(state):
 
 #开火
 func fire():
-#	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
-		print(is_instance_valid(i))
+		#print(is_instance_valid(i))
 		if not is_instance_valid(i):
 			del.append(i)
 	for i in del:

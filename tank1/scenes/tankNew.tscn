@@ -28,9 +28,14 @@ animations = [ {
 "name": "flash",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 8 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 6 ) ],
 "loop": true,
-"name": "middle",
+"name": "middle_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "big_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 5 ) ],
@@ -38,14 +43,14 @@ animations = [ {
 "name": "super",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 8 ) ],
+"loop": true,
+"name": "middle",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "small",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
-"loop": true,
-"name": "big_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
@@ -56,11 +61,6 @@ animations = [ {
 "frames": [ ExtResource( 5 ), ExtResource( 9 ) ],
 "loop": true,
 "name": "super_run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ) ],
-"loop": true,
-"name": "middle_run",
 "speed": 5.0
 } ]
 

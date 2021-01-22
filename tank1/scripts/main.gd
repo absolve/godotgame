@@ -7,6 +7,10 @@ var level
 var enemyCount=20  #数量
 var basePos
 var new=false
+#每个人击中的数量
+var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+
 
 onready var _tank = $map/tanks
 onready var _brick=$map/brick
@@ -19,6 +23,7 @@ onready var _addEnemy=$addEnemy
 onready var _nextLevel=$nextLevel
 
 func _ready():
+	randomize()
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
@@ -42,6 +47,10 @@ func _process(delta):
 			pass
 		pass
 	elif state==Game.game_state.START:
+		for i in _tank.get_children():  #更新
+			i._update(delta)
+		
+		
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
 			for y in _brick.get_children():
@@ -75,9 +84,9 @@ func _process(delta):
 								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
 							else:
 								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
-						var type=i.get_class()
-						if type=="enemy":
-							i.setStop(true)		
+#						var type=i.get_class()
+#						if type=="enemy":
+#							i.setStop(true)		
 						pass
 			
 		
@@ -110,17 +119,64 @@ func _process(delta):
 		for i in _tank.get_children():	#坦克与坦克的碰撞
 			for y in _tank.get_children():
 				if i!=y:
-					var rect=i.getRect()
-					var rect1=y.getRect()
-					
+					if i.isInit && y.isInit:
+						var rect=i.getRect()
+						var rect1=y.getRect()
+						if rect1.intersects(rect,false):
+							if rect1.encloses(rect):
+								continue
+#							if rect1.encloses(rect): #完全包围的情况
+#								print('encloses')
+#								i.setStop(false)		
+#								y.setStop(false)		
+#							else:
+							var dx=(y.getPos().x-i.position.x)/(y.getSize()/2)
+							var dy=(y.getPos().y-i.position.y)/(y.getSize()/2)
+							var absDX = abs(dx)
+							var absDY = abs(dy)
+
+							if abs(absDX - absDY) < .1:
+#									if absDX<y.getSize()*1.9 or absDY>y.getSize()*1.9:
+#										i.setStop(false)		
+#										y.setStop(false)
+#										continue
+								if dx<0:
+									i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2			
+								else:
+									i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2	
+
+								if dy<0:
+									i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2			
+								else:
+									i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2						
+							elif absDX > absDY:
+								
+								if dx<0:
+									i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2					
+								else:
+									i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2		
+							else:
+								
+								if dy<0:
+									i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2
+								else:
+									i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2
+#								var typeA=i.get_class()
+#								var typeB=y.get_class()
+#								if typeA=="enemy":
+						#	i.setStop(true,y.dir)		
+							y.setStop(true,i.dir)		
+							pass
+							
+							pass			
 					pass
 				pass
 		
-		for i in _tank.get_children():
+		for i in _tank.get_children():	#子弹与坦克
 			for y in _bullet.get_children():
 				var rect=i.getRect()
 				var rect1=y.getRect()
-				if rect.intersects(rect1,false):
+				if i.isInit  && rect.intersects(rect1,false):
 					var typeA = i.get_class()
 					var typeB=y.getType()
 					if typeA=="player" and typeB==Game.bulletType.enemy:
@@ -143,21 +199,12 @@ func _process(delta):
 			var rect=i.getRect()
 			if i.position.x-i.getSize()/2 <_map.mapRect.position.x:
 				i.position.x = _map.mapRect.position.x+i.getSize()/2
-				if type=="enemy":
-					i.setStop(true)		
 			if i.position.x+i.getSize()/2>_map.mapRect.size.x+_map.mapRect.position.x:
 				i.position.x = _map.mapRect.size.x+_map.mapRect.position.x-i.getSize()/2
-			
-				if type=="enemy":
-					i.setStop(true)		
 			if i.position.y-i.getSize()/2<_map.mapRect.position.y:
-				i.position.y= _map.mapRect.position.y+i.getSize()/2
-				if type=="enemy":
-					i.setStop(true)		
+				i.position.y= _map.mapRect.position.y+i.getSize()/2	
 			if i.position.y+i.getSize()/2>_map.mapRect.size.y+_map.mapRect.position.y:
-				i.position.y = _map.mapRect.size.y+_map.mapRect.position.y-i.getSize()/2
-				if type=="enemy":
-					i.setStop(true)			
+				i.position.y = _map.mapRect.size.y+_map.mapRect.position.y-i.getSize()/2	
 			pass
 		
 		
@@ -180,7 +227,9 @@ func _process(delta):
 						i.setBaseDestroyed()
 						y.destroy()
 		
-		pass
+		
+#		for i in _tank.get_children():  #更新
+#			i._update(delta)
 	elif state==Game.game_state.NEXT_LEVEL:
 		
 		pass
