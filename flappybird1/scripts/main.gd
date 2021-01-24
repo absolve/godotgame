@@ -86,7 +86,7 @@ func gameOver()->void:
 	magnitude=3
 	$game/camera.offset.x=72
 	$game/camera.offset.y=128
-	showGameOverPanel()
+	#showGameOverPanel()
 	setFinalScore()
 
 
@@ -113,24 +113,12 @@ func _on_score_changed():
 	
 #设置最后的分数
 func setFinalScore():
-	for child in $game/gameOverPanel/panel/scoreContainer.get_children():
-		child.queue_free()
-	for i in game.get_digits(game.score):
-		var rect = TextureRect.new()
-		rect.texture=sprite_mid_numbers[i]
-		$game/gameOverPanel/panel/scoreContainer.add_child(rect)
-	#设置最高分
-	if game.score>game.highScore:
-		game.highScore=game.score
-		$game/gameOverPanel/panel/newHighScore.show()
+	$game/gameOverPanel.show()
+	$game/gameOverPanel/ani.play("idle")
+	yield($game/gameOverPanel/ani, "animation_finished")	
+#	for child in $game/gameOverPanel/panel/scoreContainer.get_children():
+#		child.queue_free()
 	
-	for child in $game/gameOverPanel/panel/bestContainer.get_children():
-		child.queue_free()
-	for i in game.get_digits(game.highScore):
-		var rect = TextureRect.new()
-		rect.texture=sprite_mid_numbers[i]
-		$game/gameOverPanel/panel/bestContainer.add_child(rect)
-		
 	#设置奖牌
 	var texture
 	if game.score>=game.MEDAL_BRONZE:
@@ -144,6 +132,40 @@ func setFinalScore():
 	if texture:
 		$game/gameOverPanel/panel/medal.texture=texture
 		$game/gameOverPanel/panel/medal/spark.show()
+	
+	var num = 0
+	var lerp_time     = 0
+	var lerp_duration = 0.8
+	while lerp_time < lerp_duration:	
+		lerp_time += get_process_delta_time()
+		lerp_time = min(lerp_time, lerp_duration)
+		
+		var percent = lerp_time / lerp_duration
+		for child in $game/gameOverPanel/panel/scoreContainer.get_children():
+			child.queue_free()	
+		for i in game.get_digits(int(lerp(0,game.score,percent))):
+			var rect = TextureRect.new()
+			rect.texture=sprite_mid_numbers[i]
+			$game/gameOverPanel/panel/scoreContainer.add_child(rect)
+		yield(get_tree(), "idle_frame")		
+	
+		
+		
+	#设置最高分
+	if game.score>game.highScore:
+		game.highScore=game.score
+		$game/gameOverPanel/panel/newHighScore.show()
+	
+	for child in $game/gameOverPanel/panel/bestContainer.get_children():
+		child.queue_free()
+	for i in game.get_digits(game.highScore):
+		var rect = TextureRect.new()
+		rect.texture=sprite_mid_numbers[i]
+		$game/gameOverPanel/panel/bestContainer.add_child(rect)
+	
+	$game/gameOverPanel/btn.visible=true
+		
+	
 	
 #定时器时间到
 func _on_timeout()->void:

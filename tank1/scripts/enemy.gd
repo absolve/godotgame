@@ -161,7 +161,7 @@ func _update(delta):
 		if isStop:
 			keepDirectionTime-=10
 			#vec=Vector2.ZERO
-		#print(directionTime)
+	
 		if directionTime>keepDirectionTime:
 	#		print("change")
 			keepDirectionTime=randi()%2000+300	
@@ -172,35 +172,26 @@ func _update(delta):
 			var dy=targetPos.y-position.y
 			if p<0.5:
 				if abs(dx)>abs(dy):
-					if p<0.7:
-						if dx<0:
-							newDir=3
-						else:
-							newDir=2
-					else:
-						newDir=randi()%4	
-#						if dy<0:
-#							newDir=0
-#						else:
-#							newDir=1			
-				else:
-					if p<0.7:
-						if dy<0:
-							newDir=0
-						else:
-							newDir=1	
-					else:
-						newDir=randi()%4	
+#					if p<0.7:
 #						if dx<0:
 #							newDir=3
 #						else:
-#							newDir=2	
+#							newDir=2
+#					else:
+					var temp = getNewDir(dir)
+					newDir=temp[randi()%temp.size()]		
+				else:
+#					if p<0.7:
+#						if dy<0:
+#							newDir=0
+#						else:
+#							newDir=1	
+#					else:
+					var temp = getNewDir(dir)
+					newDir=temp[randi()%temp.size()]			
 			else:
-				newDir=randi()%4				
-			#newDir=randi()%4	
-			
-			#isStop=false					
-			#dir=randi()%4
+				var temp = getNewDir(dir)
+				newDir=temp[randi()%temp.size()]				
 			
 		if fireTime>reloadTime:
 			fireTime=0
@@ -258,7 +249,13 @@ func turnDirection():
 func setStop(isStop,dir):
 	self.isStop=isStop
 	vec=Vector2.ZERO
-	
+
+func getNewDir(dir):
+	var temp=[]
+	for i in range(4):
+		if dir!=i:
+			temp.append(i)
+	return temp
 		
 func setPos(pos:Vector2):
 	position=pos

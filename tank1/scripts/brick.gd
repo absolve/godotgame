@@ -136,10 +136,10 @@ func hit(dir):
 				offset.x=size/4
 				if lastDir==2 or lastDir==3:
 					queue_free()	
-				elif lastDir==0:
+				elif lastDir==0:	
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-					_sprite.position.x+=size/4
-					rect.position=Vector2(0,-size/2)
+					_sprite.position.x-=size/4
+			#		rect.position.y=0
 					pass
 				elif lastDir==1:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
@@ -155,7 +155,7 @@ func hit(dir):
 					#rect.position=Vector2(0,-size/2)
 					rect.position.y=0
 					pass
-				elif lastDir==1:
+				elif lastDir==1:  #下
 	#				print("lastDir==1")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x+=size/4

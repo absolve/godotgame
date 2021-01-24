@@ -57,18 +57,6 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 16, 270 ), Vector2( 16, 90 ) ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("btn:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.8 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
 
 [sub_resource type="Animation" id=3]
 resource_name = "fade_out"
@@ -179,15 +167,15 @@ __meta__ = {
 
 [node name="game_over" type="Sprite" parent="game/gameOverPanel"]
 position = Vector2( 24, 50 )
-scale = Vector2( 0.91, 0.91 )
+scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 8 )
 centered = false
 
 [node name="panel" type="TextureRect" parent="game/gameOverPanel"]
 margin_left = 16.0
-margin_top = 90.0
+margin_top = 270.0
 margin_right = 129.0
-margin_bottom = 147.0
+margin_bottom = 327.0
 texture = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -198,6 +186,7 @@ margin_left = 62.0
 margin_top = 17.0
 margin_right = 102.0
 margin_bottom = 27.0
+grow_horizontal = 0
 alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -249,6 +238,7 @@ frame = 2
 script = ExtResource( 22 )
 
 [node name="btn" type="HBoxContainer" parent="game/gameOverPanel"]
+visible = false
 margin_left = 18.0
 margin_top = 160.0
 margin_right = 126.0

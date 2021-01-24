@@ -1,14 +1,14 @@
 [gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/enemy.gd" type="Script" id=1]
-[ext_resource path="res://sprites/tank_fast_down_c0_t2.png" type="Texture" id=2]
-[ext_resource path="res://sprites/tank_fast_down_c0_t1.png" type="Texture" id=3]
-[ext_resource path="res://sprites/tank_power_down_c0_t2.png" type="Texture" id=4]
-[ext_resource path="res://sprites/tank_armor_down_c0_t2.png" type="Texture" id=5]
-[ext_resource path="res://sprites/tank_basic_down_c0_t1.png" type="Texture" id=6]
-[ext_resource path="res://sprites/tank_basic_down_c0_t2.png" type="Texture" id=7]
-[ext_resource path="res://sprites/tank_armor_down_c0_t1.png" type="Texture" id=8]
-[ext_resource path="res://sprites/tank_power_down_c0_t1.png" type="Texture" id=9]
+[ext_resource path="res://sprites/tank_white_1-1.png" type="Texture" id=2]
+[ext_resource path="res://sprites/tank_white_2.png" type="Texture" id=3]
+[ext_resource path="res://sprites/tank_white_3-1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/tank_white_4-1.png" type="Texture" id=5]
+[ext_resource path="res://sprites/tank_white_1.png" type="Texture" id=6]
+[ext_resource path="res://sprites/tank_white_2-1.png" type="Texture" id=7]
+[ext_resource path="res://sprites/tank_white_41.png" type="Texture" id=8]
+[ext_resource path="res://sprites/tank_white_3.png" type="Texture" id=9]
 [ext_resource path="res://sprites/appear_1.png" type="Texture" id=10]
 [ext_resource path="res://sprites/appear_4.png" type="Texture" id=11]
 [ext_resource path="res://sprites/appear_3.png" type="Texture" id=12]
@@ -21,22 +21,22 @@ animations = [ {
 "name": "flash",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 6 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "typeA",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 9 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "typeC",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
 "loop": true,
 "name": "typeD",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 2 ) ],
+"frames": [ ExtResource( 4 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "typeC",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "typeB",
 "speed": 5.0

@@ -36,7 +36,7 @@ var group_pipe="group_pipe"
 var group_ground="group_ground"
 
 #分数
-var score=0
+var score=20
 var highScore=0
 
 #窗口大小

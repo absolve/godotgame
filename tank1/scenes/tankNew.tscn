@@ -1,14 +1,14 @@
 [gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scripts/tankNew.gd" type="Script" id=1]
-[ext_resource path="res://sprites/tank_player1_up_c0_t1.png" type="Texture" id=2]
-[ext_resource path="res://sprites/tank_player1_up_c0_t2.png" type="Texture" id=3]
-[ext_resource path="res://sprites/tank_player1_up_c0_t1_s2.png" type="Texture" id=4]
-[ext_resource path="res://sprites/tank_player1_up_c0_t1_s3.png" type="Texture" id=5]
-[ext_resource path="res://sprites/tank_player1_up_c0_t2_s1.png" type="Texture" id=6]
-[ext_resource path="res://sprites/tank_player1_up_c0_t2_s2.png" type="Texture" id=7]
-[ext_resource path="res://sprites/tank_player1_up_c0_t1_s1.png" type="Texture" id=8]
-[ext_resource path="res://sprites/tank_player1_up_c0_t2_s3.png" type="Texture" id=9]
+[ext_resource path="res://sprites/tank_main1.png" type="Texture" id=2]
+[ext_resource path="res://sprites/tank_main2.png" type="Texture" id=3]
+[ext_resource path="res://sprites/tank_main7.png" type="Texture" id=4]
+[ext_resource path="res://sprites/tank_main4.png" type="Texture" id=5]
+[ext_resource path="res://sprites/tank_main8.png" type="Texture" id=6]
+[ext_resource path="res://sprites/tank_main3.png" type="Texture" id=7]
+[ext_resource path="res://sprites/tank_main5.png" type="Texture" id=8]
+[ext_resource path="res://sprites/tank_main6.png" type="Texture" id=9]
 [ext_resource path="res://sprites/appear_3.png" type="Texture" id=10]
 [ext_resource path="res://sprites/appear_1.png" type="Texture" id=11]
 [ext_resource path="res://sprites/appear_2.png" type="Texture" id=12]
@@ -18,7 +18,7 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 4 ) ],
+"frames": [ ExtResource( 8 ) ],
 "loop": true,
 "name": "big",
 "speed": 5.0
@@ -28,24 +28,14 @@ animations = [ {
 "name": "flash",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ) ],
-"loop": true,
-"name": "middle_run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
-"loop": true,
-"name": "big_run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ) ],
-"loop": true,
-"name": "super",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ) ],
+"frames": [ ExtResource( 7 ) ],
 "loop": true,
 "name": "middle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "super",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ) ],
@@ -53,12 +43,22 @@ animations = [ {
 "name": "small",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "middle_run",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "small_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 9 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "big_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "super_run",
 "speed": 5.0

@@ -28,6 +28,7 @@ func _ready():
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
+	#$map.loadMap(Game.mapDir+"/test.json")
 	$map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
 	#$map.addEnemy(basePos)	#添加敌人
@@ -226,7 +227,45 @@ func _process(delta):
 					if rect.intersects(rect1,false):
 						i.setBaseDestroyed()
 						y.destroy()
-		
+						
+		for y in _base.get_children():  # 基地和坦克的碰撞
+			if !y.destroy:
+				for i in _tank.get_children():
+					var rect=y.getRect()
+					var rect1=i.getRect()
+					if rect1.intersects(rect,false):
+						if rect1.encloses(rect):
+							continue
+
+						var dx=(y.getPos().x-i.position.x)/(y.getSize()/2)
+						var dy=(y.getPos().y-i.position.y)/(y.getSize()/2)
+						var absDX = abs(dx)
+						var absDY = abs(dy)
+
+						if abs(absDX - absDY) < .1:
+							if dx<0:
+								i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2			
+							else:
+								i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2	
+
+							if dy<0:
+								i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2			
+							else:
+								i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2						
+						elif absDX > absDY:
+							
+							if dx<0:
+								i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2					
+							else:
+								i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2		
+						else:
+							
+							if dy<0:
+								i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2
+							else:
+								i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2
+
+						i.setStop(true,0)	
 		
 #		for i in _tank.get_children():  #更新
 #			i._update(delta)

@@ -16,7 +16,12 @@ func getRect()->Rect2:
 	var temp =rect
 	temp.position+=position
 	return temp
+	
+func getSize():
+	return rect.size.x
 
+func getPos():
+	return position
 
 func _draw():
 	draw_rect(rect,Color.white,false,1,true)
