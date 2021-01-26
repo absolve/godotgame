@@ -1,7 +1,7 @@
 extends Node2D
 
 var destroy=false
-var destroyImg=preload("res://sprites/base_destroyed.png")
+var destroyImg=preload("res://sprites/base2.png")
 var size=32
 
 var rect=Rect2(Vector2(-14,-14),Vector2(28,28))

@@ -28,14 +28,14 @@ func _ready():
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
-	#$map.loadMap(Game.mapDir+"/test.json")
+#	$map.loadMap(Game.mapDir+"/1992.json")
 	$map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
-	#$map.addEnemy(basePos)	#添加敌人
+	$map.addEnemy(basePos)	#添加敌人
 	#_map.delEnemyNum()
-	_addEnemy.connect("timeout",self,"addEnemyDelay")
-	_addEnemy.start()
-	_nextLevel.connect("timeout",self,"nextLevel")
+#	_addEnemy.connect("timeout",self,"addEnemyDelay")
+#	_addEnemy.start()
+#	_nextLevel.connect("timeout",self,"nextLevel")
 	pass 
 
 
@@ -50,7 +50,6 @@ func _process(delta):
 	elif state==Game.game_state.START:
 		for i in _tank.get_children():  #更新
 			i._update(delta)
-		
 		
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
@@ -75,7 +74,6 @@ func _process(delta):
 							else:
 								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
 						elif absDX > absDY:
-						#	print("absDX > absDY")
 							if dx<0:
 								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
 							else:
@@ -126,21 +124,21 @@ func _process(delta):
 						if rect1.intersects(rect,false):
 							if rect1.encloses(rect):
 								continue
-#							if rect1.encloses(rect): #完全包围的情况
-#								print('encloses')
-#								i.setStop(false)		
-#								y.setStop(false)		
-#							else:
+
+							
+								
 							var dx=(y.getPos().x-i.position.x)/(y.getSize()/2)
 							var dy=(y.getPos().y-i.position.y)/(y.getSize()/2)
 							var absDX = abs(dx)
 							var absDY = abs(dy)
 
 							if abs(absDX - absDY) < .1:
-#									if absDX<y.getSize()*1.9 or absDY>y.getSize()*1.9:
-#										i.setStop(false)		
-#										y.setStop(false)
-#										continue
+								if abs((y.getPos().x-i.getPos().x))/(y.getSize()/2+i.getSize()/2)<=0.9:
+									continue
+								
+								if abs((y.getPos().y-i.getPos().y))/(y.getSize()/2+i.getSize()/2)<=0.9:
+									continue
+									
 								if dx<0:
 									i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2			
 								else:
@@ -151,13 +149,15 @@ func _process(delta):
 								else:
 									i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2						
 							elif absDX > absDY:
-								
+								if abs((y.getPos().x-i.getPos().x))/(y.getSize()/2+i.getSize()/2)<=0.9:
+									continue
 								if dx<0:
 									i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2					
 								else:
 									i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2		
 							else:
-								
+								if abs((y.getPos().y-i.getPos().y))/(y.getSize()/2+i.getSize()/2)<=0.9:
+									continue			
 								if dy<0:
 									i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2
 								else:

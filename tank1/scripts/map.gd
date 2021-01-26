@@ -41,7 +41,7 @@ var brickList=[] #方块的数组
 var currentItem=0 #选中的方块
 var lock=false 	#锁定地图不在修改
 
-var player = preload("res://scenes/tank.tscn")
+#var player = preload("res://scenes/tank.tscn")
 var base=preload("res://scenes/base.tscn")
 
 var tankNew= preload("res://scenes/tankNew.tscn")

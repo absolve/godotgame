@@ -3,8 +3,8 @@
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
 [ext_resource path="res://sprites/battle_city.png" type="Texture" id=2]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=3]
-[ext_resource path="res://sprites/tank_player1_up_c0_t1.png" type="Texture" id=4]
-[ext_resource path="res://sprites/tank_player1_up_c0_t2.png" type="Texture" id=5]
+[ext_resource path="res://sprites/tank_main1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/tank_main2.png" type="Texture" id=5]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -85,6 +85,7 @@ position = Vector2( 180, 295 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"
+frame = 1
 playing = true
 
 [node name="copyright" type="Label" parent="."]

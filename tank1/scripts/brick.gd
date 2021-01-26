@@ -133,7 +133,7 @@ func hit(dir):
 					rect.position.y=0
 					pass	
 			elif dir==2:#左
-				offset.x=size/4
+				offset.x=-size/4
 				if lastDir==2 or lastDir==3:
 					queue_free()	
 				elif lastDir==0:	

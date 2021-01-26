@@ -159,52 +159,67 @@ func _update(delta):
 		directionTime+=delta*1000
 		fireTime+=delta*1000
 		if isStop:
-			keepDirectionTime-=10
+			keepDirectionTime-=20
 			#vec=Vector2.ZERO
 	
 		if directionTime>keepDirectionTime:
 	#		print("change")
-			keepDirectionTime=randi()%2000+300	
+			keepDirectionTime=randi()%1800+300	
 			directionTime=0
 			var p=randf()   #随机概率值
 				
-			var dx=targetPos.x-position.x
-			var dy=targetPos.y-position.y
-			if p<0.5:
+			var dx=position.x-targetPos.x
+			var dy=position.y-targetPos.y 
+			if p>0.4:
 				if abs(dx)>abs(dy):
+					if dx<0:
+						newDir=2
+					else:
+						newDir=3
+					if p>0.7:
+						var temp = getNewDir(dir)
+						newDir=temp[randi()%temp.size()]	
 #					if p<0.7:
 #						if dx<0:
-#							newDir=3
-#						else:
 #							newDir=2
+#						else:
+#							newDir=3	
 #					else:
-					var temp = getNewDir(dir)
-					newDir=temp[randi()%temp.size()]		
+#						var temp = getNewDir(dir)
+#						newDir=temp[randi()%temp.size()]			
 				else:
+					if dy<0:
+						newDir=1
+					else:
+						newDir=0
+					if p>0.7:
+						var temp = getNewDir(dir)
+						newDir=temp[randi()%temp.size()]		
 #					if p<0.7:
 #						if dy<0:
-#							newDir=0
+#							newDir=1
 #						else:
-#							newDir=1	
+#							newDir=0
 #					else:
-					var temp = getNewDir(dir)
-					newDir=temp[randi()%temp.size()]			
+#						var temp = getNewDir(dir)
+#						newDir=temp[randi()%temp.size()]						
 			else:
 				var temp = getNewDir(dir)
 				newDir=temp[randi()%temp.size()]				
 			
+			if dir!=newDir:
+				if isStop:
+					isStop=false	
+				dir=newDir
+			else:
+				dir=newDir	
+			
+			
 		if fireTime>reloadTime:
 			fireTime=0
-			reloadTime=randi()%1000
+			reloadTime=randi()%1000+200
 			fire()
-			
-		if dir!=newDir:
-			if isStop:
-				isStop=false	
-			dir=newDir
-		else:
-			dir=newDir	
-			
+				
 		animation(dir,vec)		
 		if !isStop:
 			position+=vec*delta		
