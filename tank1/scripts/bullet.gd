@@ -5,7 +5,7 @@ export var dir=2 # 0上 1下 2左 3右
 var speed=160  
 var type=Game.bulletType.players
 var playerID  #玩家id
-var power=1  #1是基本火力 2是最强火力
+var power=Game.bulletPower.normal  #1是基本火力 2是最强火力
 #var winSize=Vector2(480,416)	#屏幕大小
 var size=Vector2(6,8)	#图片大小
 var vec= Vector2.ZERO
@@ -47,8 +47,7 @@ func setFastSpeed():
 	pass
 
 func _process(delta):
-	position+=vec*delta
-	
+	position+=vec*delta	
 	pass		
 	
 func get_class():
@@ -68,6 +67,18 @@ func setDir(dir):
 
 func getDir():
 	return self.dir
+
+func setPower(power):
+	if power==Game.bulletPower.normal:
+		speed=160
+	elif power==Game.bulletPower.fast:
+		speed=200
+	elif power==Game.bulletPower.super:
+		pass
+	self.power=	power
+		
+func getPower():
+	return power
 
 func destroy():
 	queue_free()

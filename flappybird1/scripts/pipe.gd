@@ -23,11 +23,13 @@ func _physics_process(delta):
 	if state==game.stop:
 		pass
 	elif state==game.move:
+	#	constant_linear_velocity = Vector2(-10,0)
 		position.x-=speed*delta
 		if position.x<-PIPE_WIDTH:
 			#当最后一个水管坐标-PIPE_WIDTH时在屏幕外 放到最一根的后面 每个水管的距离是PIPE_WIDTH+OFFSET_X
 			position.x=(PIPE_WIDTH+OFFSET_X)*3-PIPE_WIDTH
 			setRandomYpos()
+	pass	
 
 #设置状态
 func setState(newState):

@@ -18,24 +18,9 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ) ],
-"loop": true,
-"name": "fly",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ) ],
-"loop": true,
-"name": "idle_yellow",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ) ],
 "loop": false,
 "name": "flap",
-"speed": 11.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
-"loop": false,
-"name": "flap_blue",
 "speed": 11.0
 }, {
 "frames": [ ExtResource( 5 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 5 ) ],
@@ -43,19 +28,34 @@ animations = [ {
 "name": "flap_yellow",
 "speed": 11.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ) ],
-"loop": true,
-"name": "fly_blue",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 5 ), ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "fly_yellow",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "flap_blue",
+"speed": 11.0
+}, {
 "frames": [ ExtResource( 8 ) ],
 "loop": true,
 "name": "idle_blue",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "fly_blue",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": true,
+"name": "idle_yellow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "fly",
 "speed": 5.0
 } ]
 

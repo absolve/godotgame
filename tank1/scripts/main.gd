@@ -46,7 +46,6 @@ func _process(delta):
 			#state = Game.game_state.START
 			setState(Game.game_state.START)
 			pass
-		pass
 	elif state==Game.game_state.START:
 		for i in _tank.get_children():  #更新
 			i._update(delta)
@@ -55,9 +54,15 @@ func _process(delta):
 			var rect=i.getRect()
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
-					var rect1=y.getRect()
-					if rect.intersects(rect1,false):  #碰撞  判断是否被包围住
+					var type=y.getType() #装快的类型
+					if type==Game.brickType.bush or type==Game.brickType.ice:	#草丛
+						continue
 					
+					var rect1=y.getRect()	
+					if rect.intersects(rect1,false):  #碰撞  判断是否被包围住
+						if rect1.encloses(rect):#完全叠一起
+							continue
+							
 						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
 						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
 						var absDX = abs(dx)
@@ -95,9 +100,13 @@ func _process(delta):
 				for y in _brick.get_children():
 					if y.get_class()=="brick":
 						var rect1=y.getRect()
+						var type=y.getType()
+						if type==Game.brickType.bush or type==Game.brickType.ice or \
+							type==Game.brickType.water:
+								continue	
 						if rect.intersects(rect1,false):  #碰撞
 							i.addExplode(false)
-							y.hit(i.getDir())
+							y.hit(i.getDir(),i.getPower())
 				
 		for i in _bullet.get_children():	#同一个子弹
 			if i.get_class()=="bullet":
@@ -264,7 +273,6 @@ func _process(delta):
 								i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2
 							else:
 								i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2
-
 						i.setStop(true,0)	
 		
 #		for i in _tank.get_children():  #更新

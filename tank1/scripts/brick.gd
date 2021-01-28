@@ -18,6 +18,8 @@ var aniStartTime=0	#动画时间
 var aniFps=50
 
 func _ready():
+	print(Game.brickType.brickWall)
+	
 	if type==0:
 		_sprite.texture=Game.brick	
 	elif type==1:
@@ -69,8 +71,10 @@ func _process(delta):
 	
 
 #被击中的方向	
-func hit(dir):
+func hit(dir,power):
 	if type==0:	#砖块
+		if power==Game.bulletPower.super:
+			queue_free()
 		if hitCount==0:
 			if dir==0:	#上
 				_sprite.region_rect = Rect2(0,0,size,size/2)
@@ -169,92 +173,22 @@ func hit(dir):
 			queue_free()
 			pass
 		pass
+	elif type==1:#石头
+		if power==Game.bulletPower.super:
+			queue_free()		
+		pass
 	pass
 
 
-#第二次击中砖块
-#func brickHitSecond(dir):
-#	if lastDir==dir:
-#		queue_free()
-#	else:
-#		if dir==0:
-#			if lastDir==0:
-#				queue_free()
-#			elif lastDir==1:
-#				queue_free()
-#
-#			elif lastDir==2:	#左
-#				$Sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-#				$Sprite.position.y-=size/4
-#				$Area2D/shape.scale.y=0.5
-#				$Area2D.position.y-=size/4
-#				pass
-#			elif lastDir==3:	#右
-#				$Sprite.region_rect = Rect2(0,0,size/2,size/2)
-#				$Sprite.position.y-=size/4
-#				$Area2D/shape.scale.y=0.5
-#				$Area2D.position.y-=size/4
-#				pass
-#		elif dir==1:	
-#			if lastDir==0:
-#				queue_free()
-#			elif lastDir==1:
-#				queue_free()
-#
-#			elif lastDir==2:
-#				$Sprite.region_rect = Rect2(0,0,size/2,size/2)
-#				$Sprite.position.y+=size/4
-#				$Area2D/shape.scale.y=0.5
-#				$Area2D.position.y+=size/4
-#				pass
-#			elif lastDir==3:
-#				$Sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-#				$Sprite.position.y+=size/4
-#				$Area2D/shape.scale.y=0.5
-#				$Area2D.position.y+=size/4
-#				pass
-#			pass
-#		elif dir==2:	#左
-#			if lastDir==0:
-#				$Sprite.region_rect = Rect2(0,size/2,size/2,size/2)
-#				$Sprite.position.x-=size/4
-#				$Area2D/shape.scale.x=0.5
-#				$Area2D.position.x-=size/4
-#
-#			elif lastDir==1:
-#				$Sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-#				$Sprite.position.x-=size/4
-#				$Area2D/shape.scale.x=0.5
-#				$Area2D.position.x-=size/4
-#			elif lastDir==2:
-#				queue_free()
-#
-#			elif lastDir==3:
-#				queue_free()
-#
-#		elif dir==3:	#右
-#			if lastDir==0:
-#				$Sprite.region_rect = Rect2(0,0,size/2,size/2)
-#				$Sprite.position.x+=size/4
-#				$Area2D/shape.scale.x=0.5
-#				$Area2D.position.x+=size/4
-#			elif lastDir==1:
-#				$Sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-#				$Sprite.position.x+=size/4
-#				$Area2D/shape.scale.x=0.5
-#				$Area2D.position.x+=size/4
-#
-#			elif lastDir==2:
-#				queue_free()
-#
-#			elif lastDir==3:
-#				queue_free()
 				
-
 
 #设置类型
 func setType(type:int):
 	
+	pass
+
+func getType():
+	return type
 	pass
 
 func get_class():

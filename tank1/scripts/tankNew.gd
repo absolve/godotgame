@@ -22,16 +22,18 @@ var isInvincible=false
 var invincibleStartTime=0
 var invincibleTime=8000
 var isStop=false#是否停止
+var playId=1  #1=1p 2=2p
 
 onready var _invincible=$invincible
-
+onready var _ship=$ship
 
 func _ready():
-	#getRect()
-	setKeyMap(1)
 	$ani.play("flash")
 	$ani.playing=true
 	setIsInvincible()
+	if playId==2:
+		_ship.texture=Game.ship2
+	setKeyMap(playId)
 	pass
 
 #获取矩形
@@ -56,7 +58,12 @@ func setKeyMap(playerId:int):
 		keymap["left"]=Game.player1["left"]
 		keymap["right"]=Game.player1["right"]
 		keymap["fire"]=Game.player1["fire"]
-		
+	elif playerId==2:
+		keymap["up"]=Game.player2["up"]
+		keymap["down"]=Game.player2["down"]
+		keymap["left"]=Game.player2["left"]
+		keymap["right"]=Game.player2["right"]
+		keymap["fire"]=Game.player2["fire"]	
 	pass	
 	
 	

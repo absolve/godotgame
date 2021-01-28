@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scripts/tankNew.gd" type="Script" id=1]
 [ext_resource path="res://sprites/tank_main1.png" type="Texture" id=2]
@@ -15,12 +15,23 @@
 [ext_resource path="res://sprites/appear_4.png" type="Texture" id=13]
 [ext_resource path="res://sprites/invincible2.png" type="Texture" id=14]
 [ext_resource path="res://sprites/invincible1.png" type="Texture" id=15]
+[ext_resource path="res://sprites/ship1.png" type="Texture" id=16]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 8 ) ],
 "loop": true,
-"name": "middle_run",
+"name": "big",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 11 ), ExtResource( 12 ), ExtResource( 10 ), ExtResource( 13 ), ExtResource( 10 ), ExtResource( 12 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "flash",
+"speed": 9.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "middle",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ) ],
@@ -33,9 +44,9 @@ animations = [ {
 "name": "small_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
+"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
 "loop": true,
-"name": "big_run",
+"name": "super_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ) ],
@@ -43,25 +54,15 @@ animations = [ {
 "name": "small",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
 "loop": true,
-"name": "super_run",
+"name": "big_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
 "loop": true,
-"name": "middle",
+"name": "middle_run",
 "speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ) ],
-"loop": true,
-"name": "big",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 11 ), ExtResource( 12 ), ExtResource( 10 ), ExtResource( 13 ), ExtResource( 10 ), ExtResource( 12 ), ExtResource( 11 ) ],
-"loop": true,
-"name": "flash",
-"speed": 9.0
 } ]
 
 [sub_resource type="SpriteFrames" id=2]
@@ -83,3 +84,7 @@ animation = "small"
 visible = false
 frames = SubResource( 2 )
 animation = "invincible"
+
+[node name="ship" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 16 )

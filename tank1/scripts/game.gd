@@ -10,11 +10,13 @@ var groups={'player':'player','base':'base',
 			'enemy':'enemy','bullet':'bullet'}
 
 var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
+var player2={"up":KEY_UP,"down":KEY_DOWN,"left":KEY_LEFT,"right":KEY_RIGHT,'fire':KEY_KP_0 }
 
 enum game_state{LOAD,START,PAUSE,OVER,NEXT_LEVEL}
 enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
+enum bulletPower{normal,fast,super}
 var explode=preload("res://scenes/explode.tscn")
 var flash=preload("res://scenes/flash.tscn")
 
@@ -27,6 +29,8 @@ var star=preload("res://sprites/bonus_star.png")
 var gun=preload("res://sprites/bonus_gun.png")
 var boat=preload("res://sprites/bonus_boat.png")
 var bullet=preload("res://scenes/bullet.tscn")
+var ship1 = preload("res://sprites/ship1.png")
+var ship2 = preload("res://sprites/ship2.png")
 
 #方块图片
 var brick=preload("res://sprites/brick.png")
@@ -39,6 +43,7 @@ var water1=preload("res://sprites/water2.png")
 var enemy=preload("res://scenes/enemy.tscn")
 
 var _mainScene="res://scenes/main.tscn"	#主界面
+var _menuScene="res://scenes/menu.tscn" #记分界面
 
 var mainRoot
 var mainScene #主场景 用来添加子弹数据

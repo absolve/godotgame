@@ -54,6 +54,7 @@ pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
+quality/driver/fallback_to_gles2=true
 vram_compression/import_etc=true
 quality/voxel_cone_tracing/high_quality=true
 environment/default_environment="res://default_env.tres"
