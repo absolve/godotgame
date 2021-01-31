@@ -246,6 +246,7 @@ func fire():
 		temp.position=position
 		#temp.power=2
 		temp.setDir(dir)
+		temp.setPlayerId(playId)
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)
 

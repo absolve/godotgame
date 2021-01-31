@@ -62,6 +62,10 @@ func setType(type:String):
 	elif type=="enemy":
 		self.type=Game.bulletType.enemy
 
+func setPlayerId(playerId):
+	self.playerID=playerId
+	pass
+
 func setDir(dir):
 	self.dir=dir
 

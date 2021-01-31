@@ -278,8 +278,9 @@ func setPos(pos:Vector2):
 func getPos():
 	return position
 
-func hit():
+func hit(playerId):
 	addExplode(true)
+	Game.emit_signal("hitEnemy",type,playerId)
 	pass
 
 func addExplode(big):

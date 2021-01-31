@@ -26,9 +26,9 @@ animations = [ {
 "name": "typeA",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 3 ) ],
 "loop": true,
-"name": "typeD",
+"name": "typeB",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 9 ) ],
@@ -36,9 +36,9 @@ animations = [ {
 "name": "typeC",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
 "loop": true,
-"name": "typeB",
+"name": "typeD",
 "speed": 5.0
 } ]
 

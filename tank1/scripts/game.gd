@@ -17,6 +17,8 @@ enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
 enum bulletPower{normal,fast,super}
+enum enemyType{TYPEA,TYPEB,TYPEC,TYPED}
+
 var explode=preload("res://scenes/explode.tscn")
 var flash=preload("res://scenes/flash.tscn")
 

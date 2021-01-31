@@ -36,6 +36,8 @@ func _ready():
 #	_addEnemy.connect("timeout",self,"addEnemyDelay")
 #	_addEnemy.start()
 #	_nextLevel.connect("timeout",self,"nextLevel")
+
+	Game.connect("hitEnemy",self,"hitEnemy")
 	pass 
 
 
@@ -134,8 +136,6 @@ func _process(delta):
 							if rect1.encloses(rect):
 								continue
 
-							
-								
 							var dx=(y.getPos().x-i.position.x)/(y.getSize()/2)
 							var dy=(y.getPos().y-i.position.y)/(y.getSize()/2)
 							var absDX = abs(dx)
@@ -192,7 +192,7 @@ func _process(delta):
 					if typeA=="player" and typeB==Game.bulletType.enemy:
 						pass
 					elif typeA=="enemy" and typeB==Game.bulletType.players:
-						i.hit()
+						i.hit(y.playerID)
 						enemyCount-=1
 						y.destroy()
 				
@@ -340,6 +340,31 @@ func setState(state):
 		pass
 	self.state=state
 
+#击中敌人
+func hitEnemy(enemyType,players):
+	if enemyType==Game.enemyType.TYPEA:
+		if players==1:
+			p1Score["typeA"]+=1
+		elif players==2:
+			p2Score["typeA"]+=1
+	elif enemyType==Game.enemyType.TYPEB:	
+		if players==1:
+			p1Score["typeB"]+=1
+		elif players==2:
+			p2Score["typeB"]+=1
+	elif enemyType==Game.enemyType.TYPEC:		
+		if players==1:
+			p1Score["typeC"]+=1
+		elif players==2:
+			p2Score["typeC"]+=1	
+	elif enemyType==Game.enemyType.TYPED:	
+		if players==1:
+			p1Score["typeD"]+=1
+		elif players==2:
+			p2Score["typeD"]+=1			
+	print(p1Score)
+	print(p2Score)
+	pass
 
 #基地毁灭	
 func baseDestroy():
