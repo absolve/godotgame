@@ -23,6 +23,7 @@ config/icon="res://icon.png"
 
 Game="*res://scripts/game.gd"
 Splash="*res://scenes/splash.tscn"
+SoundsUtil="*res://scenes/soundsUtil.tscn"
 
 [display]
 

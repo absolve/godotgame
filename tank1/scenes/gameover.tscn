@@ -12,9 +12,14 @@ margin_right = 512.0
 margin_bottom = 447.0
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 256, 224 )
 texture = ExtResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 1.2
+one_shot = true

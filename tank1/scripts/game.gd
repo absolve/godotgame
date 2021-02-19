@@ -3,7 +3,7 @@ extends Node
 
 
 signal baseDestroyed
-signal hitEnemy(enemyType,players)
+signal hitEnemy(enemyType,players,pos)
 signal tankDestroy(id)
 
 var groups={'player':'player','base':'base',
@@ -44,6 +44,7 @@ var water1=preload("res://sprites/water2.png")
 
 var enemy=preload("res://scenes/enemy.tscn")
 
+var _welcomeScene="res://scenes/welcome.tscn"
 var _mainScene="res://scenes/main.tscn"	#主界面
 var _menuScene="res://scenes/menu.tscn" #记分界面
 
@@ -58,10 +59,12 @@ var mapNum	#地图数量
 var mapNameList=[]  #地图文件名字
 var level=0  #默认关卡1
 
-var mode=1	#游戏单人 双人
-var playerLive=[2,2]	#玩家生命数
+var mode=2	#游戏单人1 双人2
+var playerLive=[21,21]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
-
+var p1Score={'typeA':10,'typeB':11,'typeC':12,'typeD':13}
+var p2Score={'typeA':10,'typeB':20,'typeC':30,'typeD':40}
+var isGameOver=false#游戏是否结束
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
@@ -71,15 +74,21 @@ func _ready():
 
 
 #更改场景
-func changeScene(stagePath):
-#	Splash.find_node("ani").play("moveIn")
-#	yield(Splash.find_node("ani"),"animation_finished")
+func changeSceneAni(stagePath):
+	Splash.setLevel(str(level+1)) #关卡从0开始
 	Splash.playIn()
 	yield(Splash.find_node("ani"),"animation_finished")
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
-#	Splash.find_node("ani").play("moveOut")
+	Splash.playOut()
+	yield(Splash.find_node("ani"),"animation_finished")
+	SoundsUtil.playMusic()
+
+func changeScene(stagePath):
+	set_process_input(false)
+	get_tree().change_scene(stagePath)
+	set_process_input(true)
 
 func loadMap(level):
 	

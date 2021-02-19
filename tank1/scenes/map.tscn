@@ -72,31 +72,27 @@ text = "1"
 align = 2
 
 [node name="p1live" type="VBoxContainer" parent="tools"]
-margin_left = 460.0
+margin_left = 454.0
 margin_top = 240.0
-margin_right = 496.0
+margin_right = 506.0
 margin_bottom = 280.0
-alignment = 1
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="tools/p1live"]
-margin_top = 2.0
-margin_right = 36.0
-margin_bottom = 18.0
+margin_right = 52.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "1p"
-align = 1
 uppercase = true
 
 [node name="box" type="HBoxContainer" parent="tools/p1live"]
-margin_top = 22.0
-margin_right = 36.0
-margin_bottom = 38.0
-alignment = 1
+margin_top = 20.0
+margin_right = 52.0
+margin_bottom = 36.0
 
 [node name="TextureRect" type="TextureRect" parent="tools/p1live/box"]
 margin_right = 16.0
@@ -112,31 +108,27 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2"
 
 [node name="p2live" type="VBoxContainer" parent="tools"]
-margin_left = 460.0
-margin_top = 290.0
-margin_right = 496.0
-margin_bottom = 330.0
-alignment = 1
+margin_left = 454.0
+margin_top = 292.0
+margin_right = 506.0
+margin_bottom = 332.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="tools/p2live"]
-margin_top = 2.0
-margin_right = 36.0
-margin_bottom = 18.0
+margin_right = 52.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2p"
-align = 1
 uppercase = true
 
 [node name="box" type="HBoxContainer" parent="tools/p2live"]
-margin_top = 22.0
-margin_right = 36.0
-margin_bottom = 38.0
-alignment = 1
+margin_top = 20.0
+margin_right = 52.0
+margin_bottom = 36.0
 
 [node name="TextureRect" type="TextureRect" parent="tools/p2live/box"]
 margin_right = 16.0

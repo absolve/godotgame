@@ -280,7 +280,7 @@ func getPos():
 
 func hit(playerId):
 	addExplode(true)
-	Game.emit_signal("hitEnemy",type,playerId)
+	Game.emit_signal("hitEnemy",type,playerId,position)
 	pass
 
 func addExplode(big):

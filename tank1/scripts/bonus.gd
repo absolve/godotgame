@@ -40,11 +40,16 @@ func getRect()->Vector2:
 func getSize():
 	return rect.size.x
 
+func setPos(pos:Vector2,type:int):
+	self.position=pos
+	self.type=type
+	pass
+
 func destroy():
 	queue_free()
 	
 
 func _draw():
 #	if debug:
-	draw_rect(rect,Color.white,false,1,true)
+	#draw_rect(rect,Color.white,false,1,true)
 	pass	

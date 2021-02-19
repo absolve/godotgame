@@ -128,7 +128,7 @@ func hit(dir,power):
 				elif lastDir==2:
 				#	print("lastDir==2")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
-					_sprite.position.y-=size/4
+					_sprite.position.y+=size/4
 					rect.position.y=0
 					pass
 				elif lastDir==3:

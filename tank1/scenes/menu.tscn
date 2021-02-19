@@ -15,22 +15,21 @@ __meta__ = {
 }
 
 [node name="bg" type="ColorRect" parent="."]
-visible = false
 margin_right = 512.0
 margin_bottom = 448.0
 color = Color( 0, 0, 0, 1 )
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = 142.0
-margin_top = 50.0
-margin_right = 370.0
-margin_bottom = 66.0
-alignment = 1
+margin_left = 141.0
+margin_top = 48.0
+margin_right = 369.0
+margin_bottom = 64.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -43,21 +42,21 @@ custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
 text = "hi-score "
 uppercase = true
 
-[node name="Label2" type="Label" parent="HBoxContainer"]
+[node name="hiscore" type="Label" parent="HBoxContainer"]
 margin_left = 148.0
-margin_right = 308.0
+margin_right = 164.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.572549, 0.360784, 1 )
-text = "0000000000"
+text = "0"
 
-[node name="Label" type="Label" parent="."]
+[node name="stage" type="Label" parent="."]
 margin_left = 192.0
 margin_top = 80.0
 margin_right = 320.0
 margin_bottom = 96.0
 custom_fonts/font = ExtResource( 2 )
-text = "stage 10"
+text = "stage 1"
 uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -89,7 +88,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label4" type="Label" parent="."]
+[node name="p1Score" type="Label" parent="."]
 margin_left = 24.0
 margin_top = 150.0
 margin_right = 184.0
@@ -103,7 +102,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label5" type="Label" parent="."]
+[node name="p2Score" type="Label" parent="."]
 margin_left = 264.0
 margin_top = 150.0
 margin_right = 454.0
@@ -116,42 +115,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="p1TypeA" type="HBoxContainer" parent="."]
 visible = false
-margin_left = 240.0
-margin_top = 200.0
-margin_right = 272.0
-margin_bottom = 368.0
-grow_vertical = 0
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer"]
-margin_right = 32.0
-margin_bottom = 32.0
-texture = ExtResource( 3 )
-
-[node name="TextureRect2" type="TextureRect" parent="VBoxContainer"]
-margin_top = 36.0
-margin_right = 32.0
-margin_bottom = 68.0
-texture = ExtResource( 4 )
-
-[node name="TextureRect3" type="TextureRect" parent="VBoxContainer"]
-margin_top = 72.0
-margin_right = 32.0
-margin_bottom = 104.0
-texture = ExtResource( 5 )
-
-[node name="TextureRect4" type="TextureRect" parent="VBoxContainer"]
-margin_top = 108.0
-margin_right = 32.0
-margin_bottom = 140.0
-texture = ExtResource( 6 )
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
 margin_left = 48.0
 margin_top = 208.0
 margin_right = 176.0
@@ -161,13 +126,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="HBoxContainer2"]
+[node name="num" type="Label" parent="p1TypeA"]
+margin_left = 60.0
+margin_right = 76.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
-text = "200"
+text = "0"
 align = 2
 
-[node name="Label2" type="Label" parent="HBoxContainer2"]
+[node name="Label2" type="Label" parent="p1TypeA"]
 margin_left = 80.0
 margin_right = 128.0
 margin_bottom = 16.0
@@ -175,42 +142,444 @@ custom_fonts/font = ExtResource( 2 )
 text = "pts"
 uppercase = true
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="."]
-margin_left = 200.0
+[node name="p1TypeB" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 48.0
+margin_top = 248.0
+margin_right = 176.0
+margin_bottom = 264.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeB"]
+margin_left = 60.0
+margin_right = 76.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p1TypeB"]
+margin_left = 80.0
+margin_right = 128.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p1TypeC" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 48.0
+margin_top = 289.0
+margin_right = 176.0
+margin_bottom = 305.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeC"]
+margin_left = 60.0
+margin_right = 76.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p1TypeC"]
+margin_left = 80.0
+margin_right = 128.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p1TypeD" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 48.0
+margin_top = 335.0
+margin_right = 176.0
+margin_bottom = 351.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeD"]
+margin_left = 60.0
+margin_right = 76.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p1TypeD"]
+margin_left = 80.0
+margin_right = 128.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p1TypeANum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 184.0
 margin_top = 208.0
 margin_right = 231.0
+margin_bottom = 224.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeANum"]
+margin_left = 16.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="TextureRect" type="TextureRect" parent="p1TypeANum"]
+margin_left = 36.0
+margin_right = 47.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+
+[node name="p1TypeBNum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 184.0
+margin_top = 248.0
+margin_right = 231.0
+margin_bottom = 264.0
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeBNum"]
+margin_left = 16.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="TextureRect" type="TextureRect" parent="p1TypeBNum"]
+margin_left = 36.0
+margin_right = 47.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+
+[node name="p1TypeCNum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 184.0
+margin_top = 289.0
+margin_right = 231.0
+margin_bottom = 305.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeCNum"]
+margin_left = 16.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="TextureRect" type="TextureRect" parent="p1TypeCNum"]
+margin_left = 36.0
+margin_right = 47.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+
+[node name="p1TypeDNum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 184.0
+margin_top = 335.0
+margin_right = 231.0
+margin_bottom = 351.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p1TypeDNum"]
+margin_left = 16.0
+margin_right = 32.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="TextureRect" type="TextureRect" parent="p1TypeDNum"]
+margin_left = 36.0
+margin_right = 47.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+
+[node name="p2TypeA" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 332.0
+margin_top = 208.0
+margin_right = 452.0
+margin_bottom = 224.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p2TypeA"]
+margin_left = 52.0
+margin_right = 68.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p2TypeA"]
+margin_left = 72.0
+margin_right = 120.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p2TypeB" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 332.0
+margin_top = 248.0
+margin_right = 452.0
+margin_bottom = 264.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p2TypeB"]
+margin_left = 52.0
+margin_right = 68.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p2TypeB"]
+margin_left = 72.0
+margin_right = 120.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p2TypeC" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 332.0
+margin_top = 289.0
+margin_right = 452.0
+margin_bottom = 305.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p2TypeC"]
+margin_left = 52.0
+margin_right = 68.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p2TypeC"]
+margin_left = 72.0
+margin_right = 120.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p2TypeD" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 330.0
+margin_top = 335.0
+margin_right = 450.0
+margin_bottom = 351.0
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="num" type="Label" parent="p2TypeD"]
+margin_left = 52.0
+margin_right = 68.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Label2" type="Label" parent="p2TypeD"]
+margin_left = 72.0
+margin_right = 120.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "pts"
+uppercase = true
+
+[node name="p2TypeANum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 283.0
+margin_top = 208.0
+margin_right = 330.0
 margin_bottom = 224.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="HBoxContainer3"]
-margin_right = 16.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
-text = "3"
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer3"]
-margin_left = 20.0
-margin_right = 31.0
+[node name="TextureRect" type="TextureRect" parent="p2TypeANum"]
+margin_right = 11.0
 margin_bottom = 16.0
 texture = ExtResource( 7 )
 stretch_mode = 4
+flip_h = true
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="num" type="Label" parent="p2TypeANum"]
+margin_left = 15.0
+margin_right = 31.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="p2TypeBNum" type="HBoxContainer" parent="."]
 visible = false
-margin_left = 206.0
-margin_top = 377.0
-margin_right = 306.0
-margin_bottom = 380.0
+margin_left = 284.0
+margin_top = 248.0
+margin_right = 331.0
+margin_bottom = 264.0
 __meta__ = {
-"_edit_lock_": true,
+"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Label6" type="Label" parent="."]
+[node name="TextureRect" type="TextureRect" parent="p2TypeBNum"]
+margin_right = 11.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+flip_h = true
+
+[node name="num" type="Label" parent="p2TypeBNum"]
+margin_left = 15.0
+margin_right = 31.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="p2TypeCNum" type="HBoxContainer" parent="."]
 visible = false
+margin_left = 284.0
+margin_top = 289.0
+margin_right = 331.0
+margin_bottom = 305.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="p2TypeCNum"]
+margin_right = 11.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+flip_h = true
+
+[node name="num" type="Label" parent="p2TypeCNum"]
+margin_left = 15.0
+margin_right = 31.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="p2TypeDNum" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 284.0
+margin_top = 335.0
+margin_right = 331.0
+margin_bottom = 351.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="p2TypeDNum"]
+margin_right = 11.0
+margin_bottom = 16.0
+texture = ExtResource( 7 )
+stretch_mode = 4
+flip_h = true
+
+[node name="num" type="Label" parent="p2TypeDNum"]
+margin_left = 15.0
+margin_right = 31.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = 197.0
+margin_top = 372.0
+margin_right = 317.0
+margin_bottom = 375.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="typeAImg" type="TextureRect" parent="."]
+margin_left = 240.0
+margin_top = 200.0
+margin_right = 272.0
+margin_bottom = 232.0
+texture = ExtResource( 3 )
+
+[node name="typeBImg" type="TextureRect" parent="."]
+margin_left = 240.0
+margin_top = 240.0
+margin_right = 272.0
+margin_bottom = 272.0
+texture = ExtResource( 4 )
+
+[node name="typeCImg" type="TextureRect" parent="."]
+margin_left = 240.0
+margin_top = 280.0
+margin_right = 272.0
+margin_bottom = 312.0
+texture = ExtResource( 5 )
+
+[node name="typeDImg" type="TextureRect" parent="."]
+margin_left = 240.0
+margin_top = 325.0
+margin_right = 272.0
+margin_bottom = 357.0
+texture = ExtResource( 6 )
+
+[node name="Label6" type="Label" parent="."]
 margin_left = 104.0
 margin_top = 384.0
 margin_right = 184.0
@@ -221,3 +590,63 @@ uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="p1Total" type="Label" parent="."]
+visible = false
+margin_left = 200.0
+margin_top = 384.0
+margin_right = 240.0
+margin_bottom = 400.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="p2Total" type="Label" parent="."]
+visible = false
+margin_left = 272.0
+margin_top = 384.0
+margin_right = 312.0
+margin_bottom = 400.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 2
+
+[node name="Button" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "start"
+
+[node name="reward" type="VBoxContainer" parent="."]
+visible = false
+margin_left = 392.0
+margin_top = 400.0
+margin_right = 504.0
+margin_bottom = 440.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="reward"]
+margin_right = 112.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+text = "bouns"
+align = 1
+uppercase = true
+
+[node name="Label2" type="Label" parent="reward"]
+margin_top = 20.0
+margin_right = 112.0
+margin_bottom = 36.0
+custom_fonts/font = ExtResource( 2 )
+text = "1000pts"
+uppercase = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

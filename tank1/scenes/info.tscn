@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scripts/info.gd" type="Script" id=2]
+
+[node name="info" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 512.0
+margin_bottom = 448.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 232.0
+margin_top = 120.0
+margin_right = 280.0
+margin_bottom = 136.0
+custom_fonts/font = ExtResource( 1 )
+text = "end"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="."]

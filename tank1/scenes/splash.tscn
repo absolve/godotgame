@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/splash.gd" type="Script" id=1]
-[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "in"
@@ -36,10 +36,10 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0.5 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true ]
+"values": [ false, true ]
 }
 
 [node name="splash" type="Node2D"]
@@ -67,14 +67,15 @@ __meta__ = {
 [node name="name" type="Label" parent="."]
 visible = false
 margin_left = 216.0
-margin_top = 214.0
-margin_right = 284.0
-margin_bottom = 235.0
+margin_top = 208.0
+margin_right = 301.0
+margin_bottom = 229.0
 grow_horizontal = 2
 custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "stage 1"
 align = 1
 valign = 1
+uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

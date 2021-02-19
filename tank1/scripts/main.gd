@@ -11,6 +11,8 @@ var new=false
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 
+var bonus=preload("res://scenes/bonus.tscn")
+var scoreScene=preload("res://scenes/score.tscn")
 
 onready var _tank = $map/tanks
 onready var _brick=$map/brick
@@ -27,16 +29,18 @@ func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
-	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
-#	$map.loadMap(Game.mapDir+"/1992.json")
+#	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
+	$map.loadMap(Game.mapDir+"/1992.json")
 	$map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
 	$map.addEnemy(basePos)	#添加敌人
 	#_map.delEnemyNum()
 #	_addEnemy.connect("timeout",self,"addEnemyDelay")
 #	_addEnemy.start()
-#	_nextLevel.connect("timeout",self,"nextLevel")
 
+	$map.setPlayerLive(1,Game.playerLive[0])
+	$map.setPlayerLive(2,Game.playerLive[1])
+	_nextLevel.connect("timeout",self,"nextLevel")
 	Game.connect("hitEnemy",self,"hitEnemy")
 	pass 
 
@@ -95,7 +99,6 @@ func _process(delta):
 #							i.setStop(true)		
 						pass
 			
-		
 		for i in _bullet.get_children():	#子弹跟方块
 			if i.get_class()=="bullet":
 				var rect=i.getRect()
@@ -193,7 +196,7 @@ func _process(delta):
 						pass
 					elif typeA=="enemy" and typeB==Game.bulletType.players:
 						i.hit(y.playerID)
-						enemyCount-=1
+						#enemyCount-=1
 						y.destroy()
 				
 				
@@ -285,7 +288,11 @@ func _process(delta):
 	pass
 
 
-func addScore():
+func addScore(num,pos):
+	var temp=scoreScene.instance()
+	temp.setNum(num)
+	temp.position=pos
+	Game.otherObj.add_child(temp)
 	pass
 
 func addEnemyDelay():
@@ -305,13 +312,14 @@ func addEnemy():
 	if enemyCount>0:
 		if getEnemyCount()<4:
 			_map.addEnemy(basePos)
+			enemyCount-=1
 			if new:
-				new=false
-				
+				new=false		
 			_addEnemy.start()
 					
 	else:  #下一关
 		print("next")
+		_nextLevel.start()
 		pass	
 	pass
 
@@ -324,6 +332,10 @@ func getEnemyCount():
 
 #下一关
 func nextLevel():
+	print("nextLevel")
+	Game.p1Score=p1Score
+	Game.p2Score=p2Score
+	Game.changeScene("res://scenes/menu.tscn")
 	pass
 
 #设置状态
@@ -341,29 +353,34 @@ func setState(state):
 	self.state=state
 
 #击中敌人
-func hitEnemy(enemyType,players):
+func hitEnemy(enemyType,players,pos):
 	if enemyType==Game.enemyType.TYPEA:
 		if players==1:
 			p1Score["typeA"]+=1
 		elif players==2:
 			p2Score["typeA"]+=1
+		addScore(100,pos)
 	elif enemyType==Game.enemyType.TYPEB:	
 		if players==1:
 			p1Score["typeB"]+=1
 		elif players==2:
 			p2Score["typeB"]+=1
+		addScore(200,pos)	
 	elif enemyType==Game.enemyType.TYPEC:		
 		if players==1:
 			p1Score["typeC"]+=1
 		elif players==2:
 			p2Score["typeC"]+=1	
+		addScore(300,pos)		
 	elif enemyType==Game.enemyType.TYPED:	
 		if players==1:
 			p1Score["typeD"]+=1
 		elif players==2:
-			p2Score["typeD"]+=1			
+			p2Score["typeD"]+=1	
+		addScore(400,pos)				
 	print(p1Score)
 	print(p2Score)
+	addEnemyDelay()
 	pass
 
 #基地毁灭	
@@ -372,3 +389,20 @@ func baseDestroy():
 	$ani.play("gameover")
 	#setState(Game.game_state.OVER)
 	pass
+
+
+func _on_Button_pressed():
+	Game.changeScene("res://scenes/menu.tscn")
+	pass # Replace with function body.
+
+
+func _on_Button2_pressed():
+	var temp = bonus.instance()
+	temp.setPos(Vector2(8*26,8*26),2)
+	_bonus.add_child(temp)
+	pass # Replace with function body.
+
+
+func _on_Button3_pressed():
+	_map.addEnemy(basePos)	#添加敌人
+	pass # Replace with function body.

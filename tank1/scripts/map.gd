@@ -246,10 +246,10 @@ func setBrickType(list:Array,type:int):
 func setPlayerLive(playNo:int,lives:int):
 	if playNo==1:
 		_1pLive.visible=true
-		_1pLiveNum.text=lives
+		_1pLiveNum.text=str(lives)
 	elif playNo==2:
 		_2pLive.visible=true
-		_2pLiveNum.text=lives
+		_2pLiveNum.text=str(lives)
 
 
 func addNewPlayer(playNo:int):
