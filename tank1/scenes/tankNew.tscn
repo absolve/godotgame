@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://scripts/tankNew.gd" type="Script" id=1]
 [ext_resource path="res://sprites/tank_main1.png" type="Texture" id=2]
@@ -16,6 +16,17 @@
 [ext_resource path="res://sprites/invincible2.png" type="Texture" id=14]
 [ext_resource path="res://sprites/invincible1.png" type="Texture" id=15]
 [ext_resource path="res://sprites/ship1.png" type="Texture" id=16]
+[ext_resource path="res://sprites/player25.png" type="Texture" id=17]
+[ext_resource path="res://sprites/player26.png" type="Texture" id=18]
+[ext_resource path="res://sprites/player23.png" type="Texture" id=19]
+[ext_resource path="res://sprites/player24.png" type="Texture" id=20]
+[ext_resource path="res://sprites/player27.png" type="Texture" id=21]
+[ext_resource path="res://sprites/player28.png" type="Texture" id=22]
+[ext_resource path="res://sprites/player22.png" type="Texture" id=23]
+[ext_resource path="res://sprites/player21.png" type="Texture" id=24]
+[ext_resource path="res://sounds/bullet_shot.ogg" type="AudioStream" id=25]
+[ext_resource path="res://sounds/eMove.wav" type="AudioStream" id=26]
+[ext_resource path="res://sounds/move.wav" type="AudioStream" id=27]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -29,19 +40,14 @@ animations = [ {
 "name": "flash",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 7 ) ],
-"loop": true,
-"name": "middle",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "super",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
 "loop": true,
-"name": "small_run",
+"name": "middle_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
@@ -49,19 +55,64 @@ animations = [ {
 "name": "super_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "small",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
 "loop": true,
 "name": "big_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 24 ) ],
 "loop": true,
-"name": "middle_run",
+"name": "small_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "small",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ) ],
+"loop": true,
+"name": "big_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
+"loop": true,
+"name": "big_green_run",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 21 ) ],
+"loop": true,
+"name": "super_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 19 ) ],
+"loop": true,
+"name": "middle_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 19 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "middle_green_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 24 ), ExtResource( 23 ) ],
+"loop": true,
+"name": "small_green_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
+"loop": true,
+"name": "super_green_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "middle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "small_run",
 "speed": 5.0
 } ]
 
@@ -74,11 +125,12 @@ animations = [ {
 } ]
 
 [node name="tankNew" type="Node2D"]
+z_index = 1
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "small"
+animation = "big_green_run"
 
 [node name="invincible" type="AnimatedSprite" parent="."]
 visible = false
@@ -88,3 +140,12 @@ animation = "invincible"
 [node name="ship" type="Sprite" parent="."]
 visible = false
 texture = ExtResource( 16 )
+
+[node name="sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 25 )
+
+[node name="walk" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 27 )
+
+[node name="idle" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 26 )

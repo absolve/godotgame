@@ -6,11 +6,10 @@ var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var debug=true
 var vec=Vector2.ZERO
 var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
-var speed = 70
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
 var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=0.01
+var shootDelay=40
 var bullets=[]
 var bulletMax=1	#发射最大子弹数
 var bullet=Game.bullet
@@ -22,12 +21,20 @@ var isInvincible=false
 var invincibleStartTime=0
 var invincibleTime=8000
 var isStop=false#是否停止
-var playId=1  #1=1p 2=2p
+var playId=2  #1=1p 2=2p
+var life=1  #生命默认1
+var speed = 70 #移动速度
+var bulletPower=Game.bulletPower.normal
+var hasShip=false	#是否有船
 
 onready var _invincible=$invincible
 onready var _ship=$ship
+onready var _sound=$sound
+
 
 func _ready():
+	var shot = _sound.stream as AudioStreamOGGVorbis
+	shot.set_loop(false)
 	$ani.play("flash")
 	$ani.playing=true
 	setIsInvincible()
@@ -48,7 +55,7 @@ func getSize():
 func getPos():
 	return position
 	
-func setStop(isSto,dir):
+func setStop(isStop,dir):
 	self.isStop=isStop	
 	 
 func setKeyMap(playerId:int):
@@ -66,6 +73,36 @@ func setKeyMap(playerId:int):
 		keymap["fire"]=Game.player2["fire"]	
 	pass	
 	
+#增加力量	
+func addPower():
+	if level==0:
+		level+=1
+		bulletPower=Game.bulletPower.fast
+	elif level==1:
+		level+=1
+		bulletMax+=1
+	elif level==2:
+		level+=1
+		bulletPower=Game.bulletPower.super
+	elif level==3:
+		pass	
+	pass
+
+#添加最大为例
+func addMaxPower():
+	if level<3:
+		level=3
+		bulletMax=2
+		bulletPower=Game.bulletPower.super
+	
+func addship():
+	if !hasShip:
+		hasShip=true
+		_ship.visible=true
+		
+func delship():
+	hasShip=false
+	_ship.visible=false
 	
 func _process(delta):
 #	update()
@@ -153,6 +190,13 @@ func _update(delta):
 			isStop=false
 		else:
 			vec=Vector2.ZERO	
+		
+#		if vec!=Vector2.ZERO:
+#			if !$walk.playing:
+#				$walk.play()
+#		else:
+#			if !$idle.playing:
+#				$idle.play()
 			
 		if Input.is_key_pressed(keymap["fire"]):
 			print("fire")
@@ -197,24 +241,48 @@ func animation(dir,vec):
 		pass	
 	if level==0:
 		if vec!=Vector2.ZERO:
-			$ani.play("small_run")
-		else:	
-			$ani.play("small")
+			if playId==1:
+				$ani.play("small_run")
+			else:
+				$ani.play("small_green_run")	
+		else:
+			if playId==1:	
+				$ani.play("small")
+			else:
+				$ani.play("small_green")	
 	elif level==1:
 		if vec!=Vector2.ZERO:
-			$ani.play("middle_run")
+			if playId==1:	
+				$ani.play("middle_run")
+			else:
+				$ani.play("middle_green_run")	
 		else:
-			$ani.play("middle")
+			if playId==1:	
+				$ani.play("middle")
+			else:
+				$ani.play("middle_green")	
 	elif level==2:
 		if vec!=Vector2.ZERO:
-			$ani.play("big_run")
+			if playId==1:	
+				$ani.play("big_run")
+			else:
+				$ani.play("big_green_run")		
 		else:
-			$ani.play("big")
+			if playId==1:	
+				$ani.play("big")
+			else:
+				$ani.play("big_green")	
 	elif level==3:
 		if vec!=Vector2.ZERO:
-			$ani.play("super_run")
+			if playId==1:	
+				$ani.play("super_run")
+			else:
+				$ani.play("super_green_run")	
 		else:
-			$ani.play("super")	
+			if playId==1:
+				$ani.play("super")	
+			else:
+				$ani.play("super_green")		
 
 func setState(state):
 	if state==Game.tank_state.START:
@@ -228,34 +296,41 @@ func setIsInvincible():
 
 #开火
 func fire():
-	if OS.get_unix_time()-shootTime<shootDelay:
+	if OS.get_system_time_msecs()-shootTime<shootDelay:
 		return
 	else:
-		shootTime=OS.get_unix_time()
+		shootTime=OS.get_system_time_msecs()
 	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
-		print(is_instance_valid(i))
+	#	print(is_instance_valid(i))
 		if not is_instance_valid(i):
 			del.append(i)
 	for i in del:
 		bullets.remove(bullets.find(i))
 	if bullets.size()<bulletMax:
+		playShot()
 		var temp=bullet.instance()
 		temp.setType("player")
 		temp.position=position
-		#temp.power=2
+		temp.setPower(bulletPower)
 		temp.setDir(dir)
 		temp.setPlayerId(playId)
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)
 
+func playShot():
+	_sound.play()
+
+func getPlayId():
+	return playId
+
 func get_class():
 	return 'player'
 	
 func _draw():
-	if debug:
-		draw_rect(rect,Color.white,false,1,true)
+#	if debug:
+#		draw_rect(rect,Color.white,false,1,true)
 	pass	
 
 

@@ -12,6 +12,9 @@ var vec= Vector2.ZERO
 var isValid=false
 var rect=Rect2(Vector2(-3,-4),Vector2(6,8))
 
+
+
+
 func _ready():
 	if dir==0:
 		$Sprite.flip_v=true
@@ -42,9 +45,9 @@ func getRect()->Rect2:
 func getSize():
 	return rect.size.x
 
-func setFastSpeed():
-	speed=110
-	pass
+#func setFastSpeed():
+#	speed=200
+#	pass
 
 func _process(delta):
 	position+=vec*delta	
@@ -76,8 +79,9 @@ func setPower(power):
 	if power==Game.bulletPower.normal:
 		speed=160
 	elif power==Game.bulletPower.fast:
-		speed=200
+		speed=380
 	elif power==Game.bulletPower.super:
+		speed=380
 		pass
 	self.power=	power
 		
@@ -94,7 +98,8 @@ func addExplode(big):
 	temp.position=position
 	Game.otherObj.add_child(temp)
 	destroy()
-	
+
+
 func _draw():
 	draw_rect(rect,Color.white,false,1,true)
 	

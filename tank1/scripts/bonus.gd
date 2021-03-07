@@ -40,6 +40,12 @@ func getRect()->Vector2:
 func getSize():
 	return rect.size.x
 
+func getType():
+	return type
+
+func setType(type):
+	self.type=type
+
 func setPos(pos:Vector2,type:int):
 	self.position=pos
 	self.type=type

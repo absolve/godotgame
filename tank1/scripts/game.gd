@@ -13,7 +13,7 @@ var player1={"up":KEY_W,"down":KEY_S,"left":KEY_A,"right":KEY_D,'fire':KEY_J}
 var player2={"up":KEY_UP,"down":KEY_DOWN,"left":KEY_LEFT,"right":KEY_RIGHT,'fire':KEY_KP_0 }
 
 enum game_state{LOAD,START,PAUSE,OVER,NEXT_LEVEL}
-enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE}
+enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE,RESTART}
 enum bulletType{players,enemy}
 enum brickType{brickWall,stoneWall,bush,water,ice}
 enum bulletPower{normal,fast,super}
@@ -62,8 +62,8 @@ var level=0  #默认关卡1
 var mode=2	#游戏单人1 双人2
 var playerLive=[21,21]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
-var p1Score={'typeA':10,'typeB':11,'typeC':12,'typeD':13}
-var p2Score={'typeA':10,'typeB':20,'typeC':30,'typeD':40}
+var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 var isGameOver=false#游戏是否结束
 
 func _ready():

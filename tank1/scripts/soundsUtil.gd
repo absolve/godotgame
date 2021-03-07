@@ -23,6 +23,12 @@ func _ready():
 	pause.set_loop(false)
 	var music=$music.stream as AudioStreamOGGVorbis
 	music.set_loop(false)
+	var life=$life.stream as AudioStreamOGGVorbis
+	life.set_loop(false)
+	var eat =$eat.stream as AudioStreamOGGVorbis
+	eat.set_loop(false)
+	var bullet=$bullet.stream as AudioStreamOGGVorbis
+	bullet.set_loop(false)
 	pass
 
 #统计的时候
@@ -42,6 +48,24 @@ func playPause():
 
 func playMusic():
 	$music.play()
+
+func playBouns():
+	$bonus.play()
+
+func playLife():
+	$life.play()
+
+func playEat():
+	$eat.play()
+
+func playBomb():
+	$bomb.play()
+
+func playBullet():
+	$bullet.play()
+
+func playBaseDestroy():
+	$explosion2.play()
 
 func _on_Button_pressed():
 	playPoint()

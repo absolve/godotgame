@@ -57,6 +57,8 @@ onready var _tank=$tanks
 onready var _fileDiaglog=$tools/FileDialog
 onready var _loadDiaglog=$tools/loadDialog
 onready var _bricks = $tools/bricks
+onready var _tanks=$tanks
+onready var _mapbg=$mapbg
 
 
 func _ready():
@@ -64,7 +66,7 @@ func _ready():
 	#print(OS.get_executable_path().get_base_dir())
 	#loadMap()
 #	randomize()
-	$mapbg.rect_position=offset
+	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	print(mapRect)
 	#loadMap("res://levels/2.json")
@@ -84,7 +86,7 @@ func _ready():
 	
 	
 #添加随机的敌人
-func addEnemy(basePos:Vector2):
+func addEnemy(basePos:Vector2,isFreeze=false):
 	var enemy=Game.enemy.instance()
 	var index =randi()%3
 	#var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
@@ -92,6 +94,7 @@ func addEnemy(basePos:Vector2):
 					cellSize*enemyBirthPos[0].y+enemy.getSize()/2)
 	
 	pos+=offset
+	enemy.isFreeze=isFreeze
 	enemy.setPos(pos)
 	enemy.targetPos=basePos
 	_tank.add_child(enemy)
@@ -123,9 +126,38 @@ func setPlayerState():
 	pass
 
 #设置敌人的状态
-func setEnemyState():
+func setEnemyState(state):
+	for i in _tanks.get_children():
+		if i.get_class()=="enemy":
+			i.setState(state)
+			pass
 	pass
 
+#清除敌人tank
+func clearEnemyTank()->Dictionary:
+	var list={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+	for i in _tanks.get_children():
+		if i.get_class()=="enemy" and i.state!=Game.tank_state.IDLE:
+			if i.type==0:
+				list['typeA']+=1
+			elif i.type==1:
+				list['typeB']+=1
+			elif i.type==2:
+				list['typeC']+=1
+			elif i.type==3:	
+				list['typeD']+=1
+			i.addExplode(true)	
+	return list
+	
+	
+
+func getPlayerById(id):
+	var tank
+	for i in _tank.get_children():
+		if i.get_class()=="player" and i.getPlayId()==id:
+			tank=i
+	return tank	
+	
 
 #载入地图
 func loadMap(filename:String):
@@ -219,11 +251,9 @@ func createBase():
 	pass
 
 
-
 #获取固定位置的方块  x [0-25] y[0-25]
 func getBrick(x:int,y:int):
 	var rect = Rect2(Vector2(x*cellSize,y*cellSize)+offset,Vector2(cellSize,cellSize))
-	
 	var child=$brick.get_children()
 	var brick=null
 	for i in child:
@@ -251,7 +281,7 @@ func setPlayerLive(playNo:int,lives:int):
 		_2pLive.visible=true
 		_2pLiveNum.text=str(lives)
 
-
+#添加玩家
 func addNewPlayer(playNo:int):
 	if playNo==1:
 #		var temp=Game.flash.instance()

@@ -7,12 +7,17 @@ var level
 var enemyCount=20  #数量
 var basePos
 var new=false
+var hasClock=false#时钟是否处于开启+
+var maxClockTick=8000
+var clockTick=0
+
 #每个人击中的数量
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 
 var bonus=preload("res://scenes/bonus.tscn")
 var scoreScene=preload("res://scenes/score.tscn")
+
 
 onready var _tank = $map/tanks
 onready var _brick=$map/brick
@@ -26,20 +31,21 @@ onready var _nextLevel=$nextLevel
 
 func _ready():
 	randomize()
+	print(OS.get_system_time_msecs())
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 #	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
-	$map.loadMap(Game.mapDir+"/1992.json")
-	$map.addNewPlayer(1)
+	_map.loadMap(Game.mapDir+"/1992.json")
+	_map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
-	$map.addEnemy(basePos)	#添加敌人
+	_map.addEnemy(basePos)	#添加敌人
 	#_map.delEnemyNum()
 #	_addEnemy.connect("timeout",self,"addEnemyDelay")
 #	_addEnemy.start()
 
-	$map.setPlayerLive(1,Game.playerLive[0])
-	$map.setPlayerLive(2,Game.playerLive[1])
+	_map.setPlayerLive(1,Game.playerLive[0])
+	_map.setPlayerLive(2,Game.playerLive[1])
 	_nextLevel.connect("timeout",self,"nextLevel")
 	Game.connect("hitEnemy",self,"hitEnemy")
 	pass 
@@ -202,8 +208,12 @@ func _process(delta):
 				
 		for i in _bullet.get_children():
 			if i.position.x<_map.offset.x or i.position.x>_map.mapRect.size.x+_map.mapRect.position.x:
+				if i.type==Game.bulletType.players:
+					SoundsUtil.playBullet()
 				i.addExplode(false)
 			if	i.position.y<_map.offset.y or i.position.y>_map.mapRect.size.y+_map.mapRect.position.y:
+				if i.type==Game.bulletType.players:
+					SoundsUtil.playBullet()
 				i.addExplode(false)
 			pass
 		
@@ -227,7 +237,10 @@ func _process(delta):
 				if y.get_class()=="player":
 					var rect1=y.getRect()
 					if rect.intersects(rect1,false):
-						print("_bonus")
+						var type=i.getType()
+						print("_bonus %d"%type)
+						i.destroy()
+						getBonus(type,y.getPlayId())
 						pass
 					pass
 		
@@ -280,6 +293,11 @@ func _process(delta):
 		
 #		for i in _tank.get_children():  #更新
 #			i._update(delta)
+		if hasClock:
+			if OS.get_system_time_msecs()-clockTick>=maxClockTick:	
+				stopClock()
+			pass
+
 	elif state==Game.game_state.NEXT_LEVEL:
 		
 		pass
@@ -311,7 +329,10 @@ func addEnemy():
 	print("addEnemy",enemyCount)
 	if enemyCount>0:
 		if getEnemyCount()<4:
-			_map.addEnemy(basePos)
+			if hasClock:
+				_map.addEnemy(basePos,true)
+			else:
+				_map.addEnemy(basePos)
 			enemyCount-=1
 			if new:
 				new=false		
@@ -386,10 +407,83 @@ func hitEnemy(enemyType,players,pos):
 #基地毁灭	
 func baseDestroy():
 	print('baseDestroy')
-	$ani.play("gameover")
+	SoundsUtil.playBaseDestroy()
+	_ani.play("gameover")
 	#setState(Game.game_state.OVER)
 	pass
 
+func addTankLife(id):
+	if id==1:
+		Game.playerLive[0]+=1
+		_map.setPlayerLive(1,Game.playerLive[0])	
+	elif id==2:
+		Game.playerLive[1]+=1
+		_map.setPlayerLive(2,Game.playerLive[1])
+
+#获取到物品 id 1=1p 2=2p
+func getBonus(type,id):
+	print("type",type,"id",id)
+	if type==0:	#手雷
+		var list=_map.clearEnemyTank()
+		if id==1:
+			Game.p1Score['typeA']+=list['typeA']
+			Game.p1Score['typeB']+=list['typeB']
+			Game.p1Score['typeC']+=list['typeC']
+			Game.p1Score['typeD']+=list['typeD']
+		elif id==2:
+			Game.p2Score['typeA']+=list['typeA']
+			Game.p2Score['typeB']+=list['typeB']
+			Game.p2Score['typeC']+=list['typeC']
+			Game.p2Score['typeD']+=list['typeD']
+		print(Game.p2Score)
+		print(Game.p1Score)
+		SoundsUtil.playBomb()
+		pass
+	elif type==4:
+		SoundsUtil.playLife()
+		addTankLife(id)
+		pass
+	else:
+		if type==1: #帽子
+			var tank=_map.getPlayerById(id)
+			if tank:
+				tank.setIsInvincible()	
+			pass
+		elif type==2:#时钟
+			startClock()
+			pass	
+		elif type==3:	#铲子
+			
+			pass	
+		elif type==5:  #星星
+			var tank=_map.getPlayerById(id)
+			if tank:
+				tank.addPower()		
+			pass
+		elif type==6:	#手枪
+			var tank=_map.getPlayerById(id)
+			if tank:
+				tank.addMaxPower()	
+			pass	
+		elif type==7:
+			var tank=_map.getPlayerById(id)
+			if tank:
+				tank.addship()
+			pass	
+		SoundsUtil.playBouns()
+	pass
+
+func startClock():
+	hasClock=true
+	clockTick=OS.get_system_time_msecs()
+	_map.setEnemyState(Game.tank_state.STOP)
+
+func stopClock():
+	print('stopClock')
+	hasClock=false
+	_map.setEnemyState(Game.tank_state.RESTART)
+	
+	
 
 func _on_Button_pressed():
 	Game.changeScene("res://scenes/menu.tscn")
@@ -399,10 +493,12 @@ func _on_Button_pressed():
 func _on_Button2_pressed():
 	var temp = bonus.instance()
 	temp.setPos(Vector2(8*26,8*26),2)
+	temp.setType(2)
 	_bonus.add_child(temp)
 	pass # Replace with function body.
 
 
 func _on_Button3_pressed():
-	_map.addEnemy(basePos)	#添加敌人
+	#_map.addEnemy(basePos)	#添加敌人
+	addEnemy()
 	pass # Replace with function body.
