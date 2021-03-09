@@ -27,9 +27,9 @@ var enemyPos=[Vector2(0,0),Vector2(0,1),Vector2(1,0),Vector2(1,1),
 var enemyBirthPos=[Vector2(0,0),Vector2(12,0),Vector2(24,0)]
 
 #基地旁的方块
-var baseBrickPos=[Vector2(10,25),Vector2(10,24),Vector2(10,23),
-			Vector2(11,23),Vector2(12,23),Vector2(13,23),
-			Vector2(13,25),Vector2(13,24),Vector2(13,23)]
+var baseBrickPos=[Vector2(11,25),Vector2(11,24),Vector2(11,23),
+			Vector2(12,23),Vector2(13,23),Vector2(14,23),
+			Vector2(14,25),Vector2(14,24)]
 #基地
 var basePlacePos=[Vector2(12,25),Vector2(13,25),
 Vector2(12,24),Vector2(13,24)]
@@ -150,7 +150,6 @@ func clearEnemyTank()->Dictionary:
 	return list
 	
 	
-
 func getPlayerById(id):
 	var tank
 	for i in _tank.get_children():
@@ -199,8 +198,40 @@ func loadMap(filename:String):
 		delBasePlaceBrick()
 		createBase()
 
+#添加基地周边石头
+func addBaseStone():
+	for i in baseBrickPos:
+		var temp=brick.instance()
+		temp.position.x=i['x']*cellSize+temp.size/2
+		temp.position.y=i['y']*cellSize+temp.size/2
+		temp.position+=offset
+		temp.type=1
+		$brick.add_child(temp)
+	pass
 
+#删除基地旁边的方框
+func delBaseBrickPos():
+	for i in baseBrickPos:
+		var brick=getBrick(i.x,i.y)
+		if brick:
+			brick.queue_free()
 
+#设置基地旁边的砖块类型
+func changeBasePlaceBrickType(type):
+	for i in baseBrickPos:
+		var b=getBrick(i.x,i.y)
+		if b:
+			b.changeType(type)
+		else:
+			print('changeBasePlaceBrickType')
+			var temp=brick.instance()
+			temp.position.x=i['x']*cellSize+temp.size/2
+			temp.position.y=i['y']*cellSize+temp.size/2
+			temp.position+=offset
+			temp.type=type
+			$brick.add_child(temp)	
+	pass
+	
 #清空地图
 func clearMap():
 	for i in $brick.get_children():
@@ -241,6 +272,8 @@ func delBasePlaceBrick():
 		var brick=getBrick(i.x,i.y)
 		if brick:
 			brick.queue_free()
+			
+
 
 #创建基地	
 func createBase():
@@ -317,7 +350,6 @@ func checkItem(pos):
 	return flag
 	
 	
-
 func addItem(pos):
 	pos-=offset
 	var x = pos.x

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://sounds/statistics_1.ogg" type="AudioStream" id=1]
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://sounds/life.ogg" type="AudioStream" id=10]
 [ext_resource path="res://sounds/eat.ogg" type="AudioStream" id=11]
 [ext_resource path="res://sounds/bullet_hit_1.ogg" type="AudioStream" id=12]
+[ext_resource path="res://sounds/award.ogg" type="AudioStream" id=13]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 2 )
@@ -54,6 +55,9 @@ stream = ExtResource( 11 )
 
 [node name="bullet" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 12 )
+
+[node name="award" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
 
 [node name="Button" type="Button" parent="."]
 visible = false

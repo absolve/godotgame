@@ -29,6 +29,8 @@ func _ready():
 	eat.set_loop(false)
 	var bullet=$bullet.stream as AudioStreamOGGVorbis
 	bullet.set_loop(false)
+	var award=$award.stream as AudioStreamOGGVorbis
+	award.set_loop(false)
 	pass
 
 #统计的时候
@@ -66,6 +68,9 @@ func playBullet():
 
 func playBaseDestroy():
 	$explosion2.play()
+
+func playaward():
+	$award.play()
 
 func _on_Button_pressed():
 	playPoint()

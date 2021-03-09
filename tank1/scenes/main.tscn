@@ -81,6 +81,17 @@ text = "addenemy"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button4" type="Button" parent="."]
+margin_left = 323.744
+margin_top = 9.24984
+margin_right = 380.744
+margin_bottom = 29.2498
+text = "change"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
 [connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]
+[connection signal="pressed" from="Button4" to="." method="_on_Button4_pressed"]

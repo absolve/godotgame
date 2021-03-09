@@ -25,29 +25,29 @@
 [ext_resource path="res://sprites/player22.png" type="Texture" id=23]
 [ext_resource path="res://sprites/player21.png" type="Texture" id=24]
 [ext_resource path="res://sounds/bullet_shot.ogg" type="AudioStream" id=25]
-[ext_resource path="res://sounds/eMove.wav" type="AudioStream" id=26]
-[ext_resource path="res://sounds/move.wav" type="AudioStream" id=27]
+[ext_resource path="res://sounds/idle.wav" type="AudioStream" id=26]
+[ext_resource path="res://sounds/walk.wav" type="AudioStream" id=27]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 8 ) ],
-"loop": true,
-"name": "big",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 11 ), ExtResource( 12 ), ExtResource( 10 ), ExtResource( 13 ), ExtResource( 10 ), ExtResource( 12 ), ExtResource( 11 ) ],
 "loop": true,
 "name": "flash",
 "speed": 9.0
+}, {
+"frames": [ ExtResource( 8 ) ],
+"loop": true,
+"name": "big",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "super",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 24 ) ],
 "loop": true,
-"name": "middle_run",
+"name": "small_green",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
@@ -60,9 +60,14 @@ animations = [ {
 "name": "big_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 24 ) ],
+"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
 "loop": true,
-"name": "small_green",
+"name": "big_green_run",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 21 ) ],
+"loop": true,
+"name": "super_green",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ) ],
@@ -75,24 +80,24 @@ animations = [ {
 "name": "big_green",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
 "loop": true,
-"name": "big_green_run",
-"speed": 8.0
-}, {
-"frames": [ ExtResource( 21 ) ],
-"loop": true,
-"name": "super_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 19 ) ],
-"loop": true,
-"name": "middle_green",
+"name": "middle_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 19 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "middle_green_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "small_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "middle",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 24 ), ExtResource( 23 ) ],
@@ -105,14 +110,9 @@ animations = [ {
 "name": "super_green_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ) ],
+"frames": [ ExtResource( 19 ) ],
 "loop": true,
-"name": "middle",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
-"loop": true,
-"name": "small_run",
+"name": "middle_green",
 "speed": 5.0
 } ]
 
@@ -146,6 +146,8 @@ stream = ExtResource( 25 )
 
 [node name="walk" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 27 )
+volume_db = -1.0
 
 [node name="idle" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 26 )
+volume_db = -6.0

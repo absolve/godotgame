@@ -9,7 +9,7 @@ var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
 var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=40
+var shootDelay=60
 var bullets=[]
 var bulletMax=1	#发射最大子弹数
 var bullet=Game.bullet
@@ -191,12 +191,17 @@ func _update(delta):
 		else:
 			vec=Vector2.ZERO	
 		
-#		if vec!=Vector2.ZERO:
-#			if !$walk.playing:
-#				$walk.play()
-#		else:
-#			if !$idle.playing:
-#				$idle.play()
+		if vec!=Vector2.ZERO:
+			if !$walk.playing:
+				$walk.play()
+			if $idle.playing:
+				$idle.stop()
+			pass	
+		else:
+			if $walk.playing:
+				$walk.stop()
+			if !$idle.playing:
+				$idle.play()
 			
 		if Input.is_key_pressed(keymap["fire"]):
 			print("fire")
@@ -207,12 +212,12 @@ func _update(delta):
 			position+=vec*delta
 		
 		if isInvincible:
-			invincibleStartTime+=delta*1000
-			if invincibleStartTime>=invincibleTime:
+			if OS.get_system_time_msecs()-invincibleStartTime>=invincibleTime:
 				invincibleStartTime=0
 				isInvincible=false
 				_invincible.visible=false
 				_invincible.playing=false
+			
 	pass
 	
 	
@@ -289,8 +294,9 @@ func setState(state):
 		isInit=true
 		self.state=state
 
-func setIsInvincible():
+func setIsInvincible(time=8000):
 	isInvincible=true
+	invincibleStartTime=OS.get_system_time_msecs()
 	_invincible.visible=true
 	_invincible.playing=true
 

@@ -8,8 +8,14 @@ var enemyCount=20  #数量
 var basePos
 var new=false
 var hasClock=false#时钟是否处于开启+
-var maxClockTick=8000
+var maxClockTick=8000 #ms
 var clockTick=0
+var hasShovel=false #是否获取道具铲子
+var maxShoveTime=20000 #ms
+var getShoveTime=0	#获取道具铲子的时间
+var changeBrickTime=0  #ms
+var brickType=Game.brickType.brickWall	#变化类型
+
 
 #每个人击中的数量
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
@@ -116,8 +122,11 @@ func _process(delta):
 							type==Game.brickType.water:
 								continue	
 						if rect.intersects(rect1,false):  #碰撞
+							if y.getType()==Game.brickType.stoneWall:
+								SoundsUtil.playBullet()
 							i.addExplode(false)
 							y.hit(i.getDir(),i.getPower())
+				
 				
 		for i in _bullet.get_children():	#同一个子弹
 			if i.get_class()=="bullet":
@@ -297,6 +306,26 @@ func _process(delta):
 			if OS.get_system_time_msecs()-clockTick>=maxClockTick:	
 				stopClock()
 			pass
+		if hasShovel:	#铲子
+			if OS.get_system_time_msecs()-getShoveTime>=maxShoveTime:
+				print("end")
+				hasShovel=false
+				brickType==Game.brickType.brickWall
+				_map.changeBasePlaceBrickType(Game.brickType.brickWall)
+			elif OS.get_system_time_msecs()-getShoveTime>=maxShoveTime-5000:
+				#开始变化砖块
+			#	print("=============")
+				if OS.get_system_time_msecs()-changeBrickTime>=350:
+					changeBrickTime=OS.get_system_time_msecs()	
+					
+				#	print("brickType",brickType)	
+					_map.changeBasePlaceBrickType(brickType)	
+					if brickType==Game.brickType.brickWall:
+						brickType=Game.brickType.stoneWall
+					elif brickType==Game.brickType.stoneWall:
+						brickType=Game.brickType.brickWall
+				pass
+			pass
 
 	elif state==Game.game_state.NEXT_LEVEL:
 		
@@ -453,7 +482,7 @@ func getBonus(type,id):
 			startClock()
 			pass	
 		elif type==3:	#铲子
-			
+			getShovel()
 			pass	
 		elif type==5:  #星星
 			var tank=_map.getPlayerById(id)
@@ -482,8 +511,14 @@ func stopClock():
 	print('stopClock')
 	hasClock=false
 	_map.setEnemyState(Game.tank_state.RESTART)
-	
-	
+
+#获取到铲子	
+func getShovel():
+	_map.delBaseBrickPos()
+	_map.addBaseStone()
+	hasShovel=true
+	getShoveTime=OS.get_system_time_msecs()
+	pass
 
 func _on_Button_pressed():
 	Game.changeScene("res://scenes/menu.tscn")
@@ -493,7 +528,7 @@ func _on_Button_pressed():
 func _on_Button2_pressed():
 	var temp = bonus.instance()
 	temp.setPos(Vector2(8*26,8*26),2)
-	temp.setType(2)
+	temp.setType(3)
 	_bonus.add_child(temp)
 	pass # Replace with function body.
 
@@ -501,4 +536,9 @@ func _on_Button2_pressed():
 func _on_Button3_pressed():
 	#_map.addEnemy(basePos)	#添加敌人
 	addEnemy()
+	pass # Replace with function body.
+
+
+func _on_Button4_pressed():
+	_map.changeBasePlaceBrickType(Game.brickType.brickWall)
 	pass # Replace with function body.

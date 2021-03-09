@@ -18,19 +18,19 @@ var aniStartTime=0	#动画时间
 var aniFps=50
 
 func _ready():
-	print(Game.brickType.brickWall)
-	
-	if type==0:
-		_sprite.texture=Game.brick	
-	elif type==1:
-		_sprite.texture=Game.stone
-	elif type==2:
-		_sprite.texture=Game.water
-	elif type==3:
-		_sprite.texture=Game.bush
-		_sprite.z_index=2	
-	elif type==4:
-		_sprite.texture=Game.ice	
+	#print(Game.brickType.brickWall)
+	setType(self.type)
+#	if type==0:
+#		_sprite.texture=Game.brick	
+#	elif type==1:
+#		_sprite.texture=Game.stone
+#	elif type==2:
+#		_sprite.texture=Game.water
+#	elif type==3:
+#		_sprite.texture=Game.bush
+#		_sprite.z_index=2	
+#	elif type==4:
+#		_sprite.texture=Game.ice	
 	
 
 func setPos(pos:Vector2):
@@ -179,17 +179,41 @@ func hit(dir,power):
 		pass
 	pass
 
-
 				
 
 #设置类型
 func setType(type:int):
-	
+	if type==0:
+		_sprite.texture=Game.brick	
+	elif type==1:
+		_sprite.texture=Game.stone
+	elif type==2:
+		_sprite.texture=Game.water
+	elif type==3:
+		_sprite.texture=Game.bush
+		_sprite.z_index=2	
+	elif type==4:
+		_sprite.texture=Game.ice	
+#		rect= Rect2(Vector2(-8,-8),Vector2(16,16))
+#		offset=Vector2.ZERO	
+	pass
+
+#改变类型
+func changeType(type:int):
+	if self.type==Game.brickType.brickWall:
+		rect= Rect2(Vector2(-8,-8),Vector2(16,16))
+		offset=Vector2.ZERO	
+		_sprite.region_rect = Rect2(0,0,size,size)
+		_sprite.position=Vector2.ZERO
+		hitCount=0
+		lastDir=0
+	setType(type)	
+	self.type=type
 	pass
 
 func getType():
 	return type
-	pass
+
 
 func get_class():
 	return 'brick'
