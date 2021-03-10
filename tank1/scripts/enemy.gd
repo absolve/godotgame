@@ -19,17 +19,20 @@ var bullets=[]
 var fireTime=0
 var reloadTime=800
 var newDir=0
+var bulletPower=Game.bulletPower.normal
 
 var isInit=false
 var state=Game.tank_state.IDLE
 var initStartTime=0
 var initTime=1200  #ms
 #var nextState=Game.tank_state.STOP
-var isFreeze=true
-
+var isFreeze=false	#冻结
+var hasItem=true #是否有物品
+var aniStartTime=0	#变化
+var aniDelayTime=240 #ms
 
 onready var _ani=$ani
-
+onready var _hit=$hit
 
 func _ready():
 	randomize()
@@ -44,6 +47,8 @@ func _ready():
 #		$ani.play("typeC")
 #	elif type==3:
 #		$ani.play("typeD")
+#	if hasItem:
+#		aniStartTime=OS.get_system_time_msecs()
 	keepDirectionTime = randi()%1800+300	
 	pass
 
@@ -150,39 +155,104 @@ func _update(delta):
 		if !isStop:
 			position+=vec*delta		
 	elif state==Game.tank_state.STOP:
+		if !hasItem:
+			return
+		if type==0:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+			#	print("frame",index)
+				if _ani.get_animation()=="typeA":
+					_ani.animation="typeA_4"
+				else:
+					_ani.animation="typeA"
+				_ani.frame=	index  #设置动画帧数发生变化
+			#	print("frame==",_ani.frame)	
+			#_ani.play()
+			pass	
+		elif type==1:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()=="typeB":
+					_ani.animation="typeB_4"
+				else:
+					_ani.animation="typeB"
+				_ani.frame=	index  #设置动画帧数发生变化
+		elif type==2:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()=="typeC":
+					_ani.animation="typeC_4"
+				else:
+					_ani.animation="typeC"
+				_ani.frame=	index  #设置动画帧数发生变化
+		elif type==3:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()=="typeD":
+					_ani.animation="typeD_4"
+				else:
+					_ani.animation="typeD"
+				_ani.frame=	index  #设置动画帧数发生变化
 		pass
 	pass
 
 func animation(dir,vec):
 	if dir==0:
-		$ani.flip_v=true
-		$ani.flip_h=true
-		$ani.rotation_degrees=0
+		_ani.flip_v=true
+		_ani.flip_h=true
+		_ani.rotation_degrees=0
 		pass
 	elif dir==1:
-		$ani.flip_v=false
-		$ani.flip_h=false
-		$ani.rotation_degrees=0
+		_ani.flip_v=false
+		_ani.flip_h=false
+		_ani.rotation_degrees=0
 		pass
 	elif dir==2:
-		$ani.flip_v=false
-		$ani.flip_h=false
-		if $ani.rotation_degrees!=90:
-			$ani.rotation_degrees=90
+		_ani.flip_v=false
+		_ani.flip_h=false
+		if _ani.rotation_degrees!=90:
+			_ani.rotation_degrees=90
 		pass
 	elif dir==3:
-		$ani.flip_v=false
-		$ani.flip_h=false
-		if $ani.rotation_degrees!=-90:
-			$ani.rotation_degrees=-90
+		_ani.flip_v=false
+		_ani.flip_h=false
+		if _ani.rotation_degrees!=-90:
+			_ani.rotation_degrees=-90
 	if type==0:
-		$ani.play("typeA")
+		if !hasItem:
+			if armour==0:
+				_ani.play("typeA")
+			elif armour==1:
+				_ani.play("typeA_1")	
+			elif armour==2:	
+				_ani.play("typeA_2")	
+			elif armour==3:		
+				_ani.play("typeA_3")	
+			else:	
+				_ani.play("typeA")
+		else:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+			#	print("frame",index)
+				if _ani.get_animation()=="typeA":
+					_ani.animation="typeA_4"
+				else:
+					_ani.animation="typeA"
+				_ani.frame=	index  #设置动画帧数发生变化
+			#	print("frame==",_ani.frame)	
+			_ani.play()
+			pass	
 	elif type==1:
-		$ani.play("typeB")
+		_ani.play("typeB")
 	elif type==2:
-		$ani.play("typeC")
+		_ani.play("typeC")
 	elif type==3:
-		$ani.play("typeD")
+		_ani.play("typeD")
 	
 #改变方向
 func turnDirection():
@@ -207,8 +277,17 @@ func getPos():
 	return position
 
 func hit(playerId):
-	addExplode(true)
-	Game.emit_signal("hitEnemy",type,playerId,position)
+	if armour>0:
+		armour-=1
+		# todo 播放击中的声音
+		
+		pass
+	else:	
+		addExplode(true)
+		Game.emit_signal("hitEnemy",type,playerId,position)
+		
+	if hasItem:
+		Game.emit_signal("addBonus",type)
 	pass
 
 func addExplode(big):
@@ -254,6 +333,7 @@ func fire():
 		temp.setType("enemy")
 		temp.position=position
 		temp.setDir(dir)
+		temp.setPower(bulletPower)
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)
 

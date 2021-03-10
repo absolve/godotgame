@@ -103,59 +103,7 @@ func addship():
 func delship():
 	hasShip=false
 	_ship.visible=false
-	
-func _process(delta):
-#	update()
-	#print(rect.position)
-#	if state==Game.tank_state.IDLE:
-#		initStartTime+=delta*1000
-#		if initStartTime>=initTime:
-#			initStartTime=0
-#			isInit=true
-#			$ani.playing=false
-#			setState(Game.tank_state.START)
-#		pass
-#	elif state==Game.tank_state.START:
-#		if Input.is_key_pressed(keymap["up"]):
-#			vec.y=-speed
-#			vec.x=0
-#			dir=0
-#			isStop=false
-#		elif Input.is_key_pressed(keymap["down"]):
-#			vec.x=0
-#			vec.y=speed
-#			dir=1
-#			isStop=false
-#		elif Input.is_key_pressed(keymap["left"]):
-#			vec.x=-speed
-#			vec.y=0
-#			isStop=false
-#			dir=2	
-#		elif Input.is_key_pressed(keymap["right"]):	
-#			vec.y=0
-#			vec.x=speed
-#			dir=3
-#			isStop=false
-#		else:
-#			vec=Vector2.ZERO	
-#
-#		if Input.is_key_pressed(keymap["fire"]):
-#			print("fire")
-#			fire()	
-#
-#		animation(dir,vec)	
-#		if !isStop:
-#			position+=vec*delta
-#
-#		if isInvincible:
-#			invincibleStartTime+=delta*1000
-#			if invincibleStartTime>=invincibleTime:
-#				invincibleStartTime=0
-#				isInvincible=false
-#				_invincible.visible=false
-#				_invincible.playing=false
-		
-	pass
+
 
 func _update(delta):
 	if state==Game.tank_state.IDLE:
@@ -333,6 +281,11 @@ func getPlayId():
 
 func get_class():
 	return 'player'
+
+#被击中
+func hit(bulletType):
+	
+	pass
 	
 func _draw():
 #	if debug:

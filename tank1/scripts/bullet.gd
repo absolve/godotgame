@@ -14,7 +14,6 @@ var rect=Rect2(Vector2(-3,-4),Vector2(6,8))
 
 
 
-
 func _ready():
 	if dir==0:
 		$Sprite.flip_v=true
@@ -101,7 +100,7 @@ func addExplode(big):
 
 
 func _draw():
-	draw_rect(rect,Color.white,false,1,true)
+	#draw_rect(rect,Color.white,false,1,true)
 	
 	pass
 

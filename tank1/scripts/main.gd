@@ -54,6 +54,8 @@ func _ready():
 	_map.setPlayerLive(2,Game.playerLive[1])
 	_nextLevel.connect("timeout",self,"nextLevel")
 	Game.connect("hitEnemy",self,"hitEnemy")
+	Game.connect("addBonus",self,"addBonus")
+	
 	pass 
 
 
@@ -518,6 +520,17 @@ func getShovel():
 	_map.addBaseStone()
 	hasShovel=true
 	getShoveTime=OS.get_system_time_msecs()
+	pass
+
+#添加物品
+func addBonus(enemyType):
+	#todo  播放声音
+	for i in _bonus.get_children():
+		_bonus.remove_child(i)
+	var temp = bonus.instance()
+	temp.setPos(Vector2(8*26,8*26),2)
+	temp.setType(3)
+	_bonus.add_child(temp)
 	pass
 
 func _on_Button_pressed():

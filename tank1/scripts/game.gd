@@ -5,6 +5,7 @@ extends Node
 signal baseDestroyed
 signal hitEnemy(enemyType,players,pos)
 signal tankDestroy(id)
+signal addBonus(enemyType)	#添加物品事件
 
 var groups={'player':'player','base':'base',
 			'enemy':'enemy','bullet':'bullet'}
