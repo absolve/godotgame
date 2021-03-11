@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scripts/score.gd" type="Script" id=2]
 
 [node name="score" type="Node2D"]
@@ -11,10 +11,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -15.5
-margin_top = -9.5
-margin_right = 15.5
-margin_bottom = 9.5
+margin_left = -15.0
+margin_top = -5.5
+margin_right = 15.0
+margin_bottom = 5.5
 custom_fonts/font = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

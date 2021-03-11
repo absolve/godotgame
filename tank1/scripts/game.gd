@@ -2,10 +2,11 @@ extends Node
 
 
 
-signal baseDestroyed
-signal hitEnemy(enemyType,players,pos)
+signal baseDestroyed  #基地被消灭
+signal hitEnemy(enemyType,players,pos) #敌人被消灭
 signal tankDestroy(id)
 signal addBonus(enemyType)	#添加物品事件
+signal hitPlayer(id) #玩家被消灭
 
 var groups={'player':'player','base':'base',
 			'enemy':'enemy','bullet':'bullet'}

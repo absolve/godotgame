@@ -41,6 +41,8 @@ func _ready():
 	if playId==2:
 		_ship.texture=Game.ship2
 	setKeyMap(playId)
+	
+	addMaxPower()
 	pass
 
 #获取矩形
@@ -93,6 +95,8 @@ func addMaxPower():
 	if level<3:
 		level=3
 		bulletMax=2
+		if life<=2:
+			life+=1
 		bulletPower=Game.bulletPower.super
 	
 func addship():
@@ -276,17 +280,42 @@ func fire():
 func playShot():
 	_sound.play()
 
+#被击中  属于玩家 还是敌人
+func hit(bulletType):
+	if bulletType==Game.bulletType.enemy:
+		if isInvincible: #无敌
+			return
+		if life>1:
+			life-=1
+			if level>=3:
+				level-=1
+				bulletPower=Game.bulletPower.fast
+		else:
+			addExplode()
+			Game.emit_signal("hitPlayer",playId)	
+			pass
+	elif bulletType==Game.bulletType.players:
+		pass
+	pass
+
+func addExplode(big=true):
+	var temp=Game.explode.instance()
+	if big:
+		temp.big=true
+	temp.position=position
+	Game.otherObj.add_child(temp)
+	destroy()
+
+func destroy():
+	queue_free()
+
+
 func getPlayId():
 	return playId
 
 func get_class():
 	return 'player'
 
-#被击中
-func hit(bulletType):
-	
-	pass
-	
 func _draw():
 #	if debug:
 #		draw_rect(rect,Color.white,false,1,true)

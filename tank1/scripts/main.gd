@@ -42,6 +42,7 @@ func _ready():
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
 #	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
+	_map.mode=0
 	_map.loadMap(Game.mapDir+"/1992.json")
 	_map.addNewPlayer(1)
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
@@ -55,7 +56,7 @@ func _ready():
 	_nextLevel.connect("timeout",self,"nextLevel")
 	Game.connect("hitEnemy",self,"hitEnemy")
 	Game.connect("addBonus",self,"addBonus")
-	
+	Game.connect("hitPlayer",self,"hitPlayer")
 	pass 
 
 
@@ -210,6 +211,8 @@ func _process(delta):
 					var typeA = i.get_class()
 					var typeB=y.getType()
 					if typeA=="player" and typeB==Game.bulletType.enemy:
+						y.destroy()
+						i.hit(typeB)
 						pass
 					elif typeA=="enemy" and typeB==Game.bulletType.players:
 						i.hit(y.playerID)
@@ -525,13 +528,18 @@ func getShovel():
 #添加物品
 func addBonus(enemyType):
 	#todo  播放声音
-	for i in _bonus.get_children():
-		_bonus.remove_child(i)
-	var temp = bonus.instance()
-	temp.setPos(Vector2(8*26,8*26),2)
-	temp.setType(3)
-	_bonus.add_child(temp)
+#	for i in _bonus.get_children():
+#		_bonus.remove_child(i)
+#	var temp = bonus.instance()
+#	temp.setPos(Vector2(8*26,8*26))
+#	temp.setType(3)
+#	_bonus.add_child(temp)
+	_map.addBonus()
 	pass
+
+#玩家被消灭
+func hitPlayer(id):
+	print('id',id)
 
 func _on_Button_pressed():
 	Game.changeScene("res://scenes/menu.tscn")
@@ -539,10 +547,11 @@ func _on_Button_pressed():
 
 
 func _on_Button2_pressed():
-	var temp = bonus.instance()
-	temp.setPos(Vector2(8*26,8*26),2)
-	temp.setType(3)
-	_bonus.add_child(temp)
+#	var temp = bonus.instance()
+#	temp.setPos(Vector2(8*26,8*26))
+#	temp.setType(3)
+#	_bonus.add_child(temp)
+	_map.addBonus()
 	pass # Replace with function body.
 
 

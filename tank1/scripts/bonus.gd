@@ -46,9 +46,9 @@ func getType():
 func setType(type):
 	self.type=type
 
-func setPos(pos:Vector2,type:int):
+func setPos(pos:Vector2):
 	self.position=pos
-	self.type=type
+#	self.type=type
 	pass
 
 func destroy():

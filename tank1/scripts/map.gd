@@ -13,7 +13,7 @@ var brick=preload("res://scenes/brick.tscn")
 var cellSize=16	#每个格子的大小是16px
 #var mapDir="res://levels"
 export var debug=true
-var mode= 0  #0是正常游戏 1是编辑模式
+var mode= 1 #0是正常游戏 1是编辑模式
 export var playerNum=1	# 默认1个人
 
 var player1 = [Vector2(8,25),Vector2(9,25),Vector2(8,24),Vector2(9,24)]
@@ -33,6 +33,7 @@ var baseBrickPos=[Vector2(11,25),Vector2(11,24),Vector2(11,23),
 #基地
 var basePlacePos=[Vector2(12,25),Vector2(13,25),
 Vector2(12,24),Vector2(13,24)]
+
 			
 #基地位置
 var basePos=Vector2(12,24)
@@ -41,9 +42,8 @@ var brickList=[] #方块的数组
 var currentItem=0 #选中的方块
 var lock=false 	#锁定地图不在修改
 
-#var player = preload("res://scenes/tank.tscn")
+var bonus=preload("res://scenes/bonus.tscn")
 var base=preload("res://scenes/base.tscn")
-
 var tankNew= preload("res://scenes/tankNew.tscn")
 
 onready var _level=$tools/level
@@ -59,31 +59,34 @@ onready var _loadDiaglog=$tools/loadDialog
 onready var _bricks = $tools/bricks
 onready var _tanks=$tanks
 onready var _mapbg=$mapbg
-
+onready var _bonus=$bonus
 
 func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
 	#loadMap()
-#	randomize()
+	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
 	print(mapRect)
 	#loadMap("res://levels/2.json")
 	#mode=1
-	if mode==1:
+	if mode==1:#编辑模式
 		_level.hide()
 		_1pLive.hide()
 		_2pLive.hide()
 		_enemyList.hide()
 		_bricks.show()
+		createBase()
+		addBaseBrickInEdit()
 	elif mode==0:
 		_level.show()
 		_1pLive.show()
 		_2pLive.show()
 		_enemyList.show()
 		_bricks.hide()
-	
+		
+		
 	
 #添加随机的敌人
 func addEnemy(basePos:Vector2,isFreeze=false):
@@ -157,6 +160,20 @@ func getPlayerById(id):
 			tank=i
 	return tank	
 	
+#添加物品
+func addBonus():
+	if _bonus.get_child_count()>0:
+		for i in _bonus.get_children():
+			_bonus.remove_child(i)
+	var temp = bonus.instance()
+	#不能在基地附近
+	var pos = Vector2(randi()%25+1,randi()%25+1)
+	while pos in basePlacePos:  #防止在基地旁边
+		pos = Vector2(randi()%25+1,randi()%25+1)
+	temp.setPos(pos*cellSize+offset)
+	temp.setType(randi()%8)
+	_bonus.add_child(temp)
+	pass
 
 #载入地图
 func loadMap(filename:String):
@@ -208,6 +225,11 @@ func addBaseStone():
 		temp.type=1
 		$brick.add_child(temp)
 	pass
+
+#添加基地旁边的砖块在编辑模式下
+func addBaseBrickInEdit():
+	for i in baseBrickPos:
+		brickList.append({'x':i.x,'y':i.y,"type":0})
 
 #删除基地旁边的方框
 func delBaseBrickPos():
@@ -274,7 +296,6 @@ func delBasePlaceBrick():
 			brick.queue_free()
 			
 
-
 #创建基地	
 func createBase():
 	var temp=base.instance()
@@ -330,7 +351,10 @@ func addNewPlayer(playNo:int):
 		_tank.add_child(tank1)
 		pass
 	elif playNo==2:
-		
+		var tank1=tankNew.instance()
+		tank1.playId=2
+		tank1.position=Vector2(15*cellSize,25*cellSize)+offset
+		_tank.add_child(tank1)
 		pass
 	
 #检查点击的地方是否有item
@@ -341,7 +365,10 @@ func checkItem(pos):
 	var y=pos.y
 	var indexX = int(x)/(cellSize)
 	var indexY=int(y)/(cellSize)
+	var temp = Vector2(indexX,indexY)
 	print(indexX,' ',indexY)
+	if temp in basePlacePos:
+		return true
 	for i in brickList:
 		if i['x']==indexX and i['y']==indexY:
 			flag=true 
@@ -430,16 +457,16 @@ func _input(event):
 func _draw():
 #	if not debug:
 #		return
-#	for i in range(27):
-#		draw_line(Vector2(i*cellSize,0)+offset,Vector2(i*cellSize,cellSize*26)+offset,Color.gray,0.5,true)
-#		pass
-#	for i in range(27):
-#		draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
+	if debug and mode==1:
+		for i in range(27):
+			draw_line(Vector2(i*cellSize,0)+offset,Vector2(i*cellSize,cellSize*26)+offset,Color.gray,0.5,true)
+			pass
+		for i in range(27):
+			draw_line(Vector2(0,i*cellSize)+offset,Vector2(cellSize*26,i*cellSize)+offset,Color.gray,0.5,true)
 	
 	if mode==1:
 		for i in brickList:
-			#draw_rect(Rect2(Vector2(i['x']*cellSize,i['y']*cellSize)+offset,Vector2(cellSize,cellSize)),Color.gray)
-			
+			#draw_rect(Rect2(Vector2(i['x']*cellSize,i['y']*cellSize)+offset,Vector2(cellSize,cellSize)),Color.gray)		
 			if i['type']==0:
 				draw_texture(Game.brick,Vector2(i['x']*cellSize,i['y']*cellSize)+offset)
 			elif i['type']==1:
@@ -490,14 +517,12 @@ func _on_Button_pressed():
 
 
 func _on_FileDialog_confirmed():
-	var path=_fileDiaglog.current_dir
-	
+	var path=_fileDiaglog.current_dir	
 	print(_fileDiaglog.current_path)
-	
 	print(path)
 	if _fileDiaglog.current_file:
 		save2File(_fileDiaglog.current_path)
-	
+		#_fileDiaglog.deselect_items()
 
 
 func _on_Button2_pressed():
@@ -512,7 +537,6 @@ func _on_loadDialog_confirmed():
 	print(path)
 	if path:
 		loadMap(path)
-
 	pass # Replace with function body.
 
 
