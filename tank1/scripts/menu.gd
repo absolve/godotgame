@@ -57,7 +57,7 @@ var p2Pos=Vector2(392,400)
 
 
 func _ready():
-	stage.set_text("stage %d"%Game.level)
+	stage.set_text("stage %d"%Game.level+1)
 	if Game.mode==1: #单人
 		p1Score.set_text("%d"%Game.playerScore["player1"])
 		p2Score.set_visible(false)
@@ -70,12 +70,14 @@ func _ready():
 		hiscore.set_text("%d"%Game.playerScore["player1"])
 	else:
 		hiscore.set_text("%d"%Game.playerScore["player2"])
-	$Timer.connect("timeout",self,"nextLevel")	
+	timer.connect("timeout",self,"nextLevel")	
+	print(Game.p1Score)
+	print(Game.p2Score)
 	pass
 
 var state=-1
 var countStartTime=0
-var countTime=1200  #
+var countTime=200  #ms
 var index=0  #计分开始的位置
 var num=1
 
@@ -83,8 +85,8 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_accept"):
 		pass
 	if state==0:
-		if countStartTime>=countTime:
-			countStartTime=0	
+		if OS.get_system_time_msecs()-countStartTime>=countTime:
+			countStartTime=OS.get_system_time_msecs()	
 			var result1=setp1Num(index,num)
 			num+=1
 			if Game.mode==2 && setp2Num(index,num) && result1:
@@ -96,8 +98,6 @@ func _process(delta):
 				index+=1
 				num=1
 			SoundsUtil.playPoint()
-		else:		
-			countStartTime+=30	
 	elif state==1:
 		if index==0:
 			p1TypeA.set_visible(true)
@@ -145,11 +145,11 @@ func _process(delta):
 			if p1Num>p2Num:
 				reward.set_visible(true)
 				reward.set_position(p1Pos)
-				SoundsUtil.playPause()
-			else:
+				SoundsUtil.playaward()
+			elif p1Num<p2Num and p2Num!=0:
 				reward.set_visible(true)
 				reward.set_position(p2Pos)
-				SoundsUtil.playPause()
+				SoundsUtil.playaward()
 		state=3
 		timer.start()		
 	elif state==3:
@@ -217,11 +217,16 @@ func setp2Num(index,num):
 	
 func nextLevel():
 	print("nextLevel")
-	gameOver()
-#	if Game.isGameOver:
-#		gameOver()
-#	else:
-#		pass	
+#	gameOver()
+	if Game.isGameOver:
+		gameOver()
+	elif Game.level>=Game.mapNum:	#最后一关
+		Game.changeScene("res://scenes/info.tscn")
+		pass	
+	else:#下一关
+		Game.level+=1
+		Game.changeScene(Game._mainScene)
+		pass	
 	pass	
 	
 #游戏结束	
@@ -232,5 +237,5 @@ func gameOver():
 
 func _on_Button_pressed():
 	state=1
-	
+	countStartTime=OS.get_system_time_msecs()	
 	pass # Replace with function body.

@@ -23,9 +23,9 @@ func getSize():
 func getPos():
 	return position
 
-func _draw():
-	draw_rect(rect,Color.white,false,1,true)
-	pass
+#func _draw():
+#	draw_rect(rect,Color.white,false,1,true)
+#	pass
 
 #基地被摧毁
 func setBaseDestroyed():

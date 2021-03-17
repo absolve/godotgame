@@ -13,7 +13,7 @@ var brick=preload("res://scenes/brick.tscn")
 var cellSize=16	#每个格子的大小是16px
 #var mapDir="res://levels"
 export var debug=true
-var mode= 1 #0是正常游戏 1是编辑模式
+var mode= 0 #0是正常游戏 1是编辑模式
 export var playerNum=1	# 默认1个人
 
 var player1 = [Vector2(8,25),Vector2(9,25),Vector2(8,24),Vector2(9,24)]
@@ -64,7 +64,8 @@ onready var _bonus=$bonus
 func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
-	#loadMap()
+#	mode=1
+	
 	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
@@ -86,7 +87,21 @@ func _ready():
 		_enemyList.show()
 		_bricks.hide()
 		
-		
+func setMode(mode):
+	if mode==1:#编辑模式
+		_level.hide()
+		_1pLive.hide()
+		_2pLive.hide()
+		_enemyList.hide()
+		_bricks.show()
+		createBase()
+		addBaseBrickInEdit()
+	elif mode==0:
+		_level.show()
+		_1pLive.show()
+		_2pLive.show()
+		_enemyList.show()
+		_bricks.hide()		
 	
 #添加随机的敌人
 func addEnemy(basePos:Vector2,isFreeze=false):
@@ -184,20 +199,7 @@ func loadMap(filename:String):
 #		print("文件",currentLevel)
 		file.close()
 		#return currentLevel
-		print(currentLevel['name'])
-		
-#		for i in currentLevel['base']:
-#			if i['type'] in [0,1,2,3,4]:
-#				if mode==0:
-#					var temp=brick.instance()
-#					temp.position.x=i['x']*cellSize+temp.size/2
-#					temp.position.y=i['y']*cellSize+temp.size/2
-#					temp.position+=offset
-#					temp.type=i['type']
-#					$brick.add_child(temp)
-#				elif mode==1:
-#					brickList.append(i)
-			
+		print(currentLevel['name'])	
 		for i in currentLevel['data']:
 			if i['type'] in [0,1,2,3,4]:
 				if mode==0:
@@ -207,12 +209,14 @@ func loadMap(filename:String):
 					temp.position+=offset
 					temp.type=i['type']
 					$brick.add_child(temp)
-				elif mode==1:
+				elif mode==1:	#编辑模式
 					brickList.append(i)
+	else:
+		print('文件不存在')				
 	if mode==0:
 		delPlayerPosBrick()
 		delEnemyPosBrick()	
-		delBasePlaceBrick()
+		#delBasePlaceBrick()
 		createBase()
 
 #添加基地周边石头
@@ -338,22 +342,15 @@ func setPlayerLive(playNo:int,lives:int):
 #添加玩家
 func addNewPlayer(playNo:int):
 	if playNo==1:
-#		var temp=Game.flash.instance()
-#		temp.position = Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
-#		temp.parentNode = _tank
-#
-#		var tank1 =player.instance()
-#		tank1.position=Vector2(8*cellSize+temp.size/2,24*cellSize+temp.size/2)+offset
-#		temp.addNode = tank1
-#		_tank.add_child(temp)
 		var tank1=tankNew.instance()
+		tank1.playId=1
 		tank1.position=Vector2(9*cellSize,25*cellSize)+offset
 		_tank.add_child(tank1)
 		pass
 	elif playNo==2:
 		var tank1=tankNew.instance()
 		tank1.playId=2
-		tank1.position=Vector2(15*cellSize,25*cellSize)+offset
+		tank1.position=Vector2(17*cellSize,25*cellSize)+offset
 		_tank.add_child(tank1)
 		pass
 	
@@ -533,10 +530,11 @@ func _on_Button2_pressed():
 
 
 func _on_loadDialog_confirmed():
-	var path=_loadDiaglog.current_file
-	print(path)
-	if path:
-		loadMap(path)
+	var dir=_loadDiaglog.current_dir
+	var file=_loadDiaglog.current_file
+	print(dir,file)
+	if file:
+		loadMap(dir+"/"+file)
 	pass # Replace with function body.
 
 

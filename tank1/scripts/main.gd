@@ -41,15 +41,21 @@ func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
-#	$map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
+	print(Game.mapNameList[Game.level])
+	_map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	_map.mode=0
-	_map.loadMap(Game.mapDir+"/1992.json")
-	_map.addNewPlayer(1)
+#	_map.loadMap(Game.mapDir+"/1992.json")
+	if Game.mode==1:
+		_map.addNewPlayer(1)
+	elif Game.mode==2:
+	#	print("2222222222222222")
+		_map.addNewPlayer(1)
+		_map.addNewPlayer(2)	
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
-	_map.addEnemy(basePos)	#添加敌人
+#	_map.addEnemy(basePos)	#添加敌人
 	#_map.delEnemyNum()
-#	_addEnemy.connect("timeout",self,"addEnemyDelay")
-#	_addEnemy.start()
+	_addEnemy.connect("timeout",self,"addEnemyDelay")
+	_addEnemy.start()
 
 	_map.setPlayerLive(1,Game.playerLive[0])
 	_map.setPlayerLive(2,Game.playerLive[1])
@@ -125,7 +131,8 @@ func _process(delta):
 							type==Game.brickType.water:
 								continue	
 						if rect.intersects(rect1,false):  #碰撞
-							if y.getType()==Game.brickType.stoneWall:
+							if y.getType()==Game.brickType.stoneWall and \
+								y.getType()==Game.bulletType.players:
 								SoundsUtil.playBullet()
 							i.addExplode(false)
 							y.hit(i.getDir(),i.getPower())
@@ -207,7 +214,9 @@ func _process(delta):
 			for y in _bullet.get_children():
 				var rect=i.getRect()
 				var rect1=y.getRect()
-				if i.isInit  && rect.intersects(rect1,false):
+				if !i.isInit:
+					continue
+				if rect.intersects(rect1,false):
 					var typeA = i.get_class()
 					var typeB=y.getType()
 					if typeA=="player" and typeB==Game.bulletType.enemy:
@@ -339,7 +348,7 @@ func _process(delta):
 		pass
 	pass
 
-
+#显示分数
 func addScore(num,pos):
 	var temp=scoreScene.instance()
 	temp.setNum(num)
@@ -348,9 +357,9 @@ func addScore(num,pos):
 	pass
 
 func addEnemyDelay():
-	print("addEnemyDelay")
+#	print("addEnemyDelay")
 	if _addEnemy.is_stopped():
-		print(_addEnemy.is_stopped())
+#		print(_addEnemy.is_stopped())
 		addEnemy()
 	#	_addEnemy.start()
 		pass
@@ -360,7 +369,7 @@ func addEnemyDelay():
 	pass
 
 func addEnemy():
-	print("addEnemy",enemyCount)
+#	print("addEnemy",enemyCount)
 	if enemyCount>0:
 		if getEnemyCount()<4:
 			if hasClock:
@@ -370,8 +379,7 @@ func addEnemy():
 			enemyCount-=1
 			if new:
 				new=false		
-			_addEnemy.start()
-					
+			_addEnemy.start()			
 	else:  #下一关
 		print("next")
 		_nextLevel.start()
@@ -412,29 +420,38 @@ func hitEnemy(enemyType,players,pos):
 	if enemyType==Game.enemyType.TYPEA:
 		if players==1:
 			p1Score["typeA"]+=1
+			Game.playerScore['player1']+=100
 		elif players==2:
 			p2Score["typeA"]+=1
+			Game.playerScore['player2']+=100				
 		addScore(100,pos)
 	elif enemyType==Game.enemyType.TYPEB:	
 		if players==1:
 			p1Score["typeB"]+=1
+			Game.playerScore['player1']+=200
 		elif players==2:
 			p2Score["typeB"]+=1
+			Game.playerScore['player2']+=200
 		addScore(200,pos)	
 	elif enemyType==Game.enemyType.TYPEC:		
 		if players==1:
 			p1Score["typeC"]+=1
+			Game.playerScore['player1']+=300
 		elif players==2:
 			p2Score["typeC"]+=1	
+			Game.playerScore['player2']+=300
 		addScore(300,pos)		
 	elif enemyType==Game.enemyType.TYPED:	
 		if players==1:
 			p1Score["typeD"]+=1
+			Game.playerScore['player1']+=400
 		elif players==2:
 			p2Score["typeD"]+=1	
+			Game.playerScore['player2']+=400
 		addScore(400,pos)				
 	print(p1Score)
 	print(p2Score)
+	SoundsUtil.playEnemyDestroy()
 	addEnemyDelay()
 	pass
 
@@ -457,6 +474,10 @@ func addTankLife(id):
 #获取到物品 id 1=1p 2=2p
 func getBonus(type,id):
 	print("type",type,"id",id)
+	if id==1:
+		Game.playerScore['player1']+=500
+	elif id==2:
+		Game.playerScore['player2']+=500	
 	if type==0:	#手雷
 		var list=_map.clearEnemyTank()
 		if id==1:
@@ -531,8 +552,8 @@ func addBonus(enemyType):
 #	for i in _bonus.get_children():
 #		_bonus.remove_child(i)
 #	var temp = bonus.instance()
-#	temp.setPos(Vector2(8*26,8*26))
-#	temp.setType(3)
+#	temp.setPos(Vector2(8*26,23*26))
+#	temp.setType(2)
 #	_bonus.add_child(temp)
 	_map.addBonus()
 	pass
@@ -540,6 +561,7 @@ func addBonus(enemyType):
 #玩家被消灭
 func hitPlayer(id):
 	print('id',id)
+	
 
 func _on_Button_pressed():
 	Game.changeScene("res://scenes/menu.tscn")
@@ -547,11 +569,13 @@ func _on_Button_pressed():
 
 
 func _on_Button2_pressed():
-#	var temp = bonus.instance()
-#	temp.setPos(Vector2(8*26,8*26))
-#	temp.setType(3)
-#	_bonus.add_child(temp)
-	_map.addBonus()
+	for i in _bonus.get_children():
+		_bonus.remove_child(i)
+	var temp = bonus.instance()
+	temp.setPos(Vector2(8*26,10*26))
+	temp.setType(2)
+	_bonus.add_child(temp)
+#	_map.addBonus()
 	pass # Replace with function body.
 
 
@@ -563,4 +587,15 @@ func _on_Button3_pressed():
 
 func _on_Button4_pressed():
 	_map.changeBasePlaceBrickType(Game.brickType.brickWall)
+	pass # Replace with function body.
+
+
+func _on_Button5_pressed():
+	var list=_map.clearEnemyTank()
+	Game.p1Score['typeA']+=list['typeA']
+	Game.p1Score['typeB']+=list['typeB']
+	Game.p1Score['typeC']+=list['typeC']
+	Game.p1Score['typeD']+=list['typeD']
+	
+	#SoundsUtil.playBomb()
 	pass # Replace with function body.

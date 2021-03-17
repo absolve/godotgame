@@ -83,11 +83,21 @@ __meta__ = {
 }
 
 [node name="Button4" type="Button" parent="."]
-margin_left = 323.744
-margin_top = 9.24984
-margin_right = 380.744
-margin_bottom = 29.2498
+margin_left = 282.122
+margin_top = 5.08761
+margin_right = 339.122
+margin_bottom = 25.0876
 text = "change"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button5" type="Button" parent="."]
+margin_left = 362.113
+margin_top = 6.54063
+margin_right = 413.113
+margin_bottom = 26.5406
+text = "CLEAR"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -95,3 +105,4 @@ __meta__ = {
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
 [connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]
 [connection signal="pressed" from="Button4" to="." method="_on_Button4_pressed"]
+[connection signal="pressed" from="Button5" to="." method="_on_Button5_pressed"]

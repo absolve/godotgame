@@ -33,6 +33,7 @@ var aniDelayTime=240 #ms
 
 onready var _ani=$ani
 onready var _hit=$hit
+onready var _timer=$Timer
 
 func _ready():
 	randomize()
@@ -49,6 +50,9 @@ func _ready():
 #		$ani.play("typeD")
 #	if hasItem:
 #		aniStartTime=OS.get_system_time_msecs()
+	#initStartTime=OS.get_system_time_msecs()
+	_timer.connect("timeout",self,'initFinish')
+	_timer.start()
 	keepDirectionTime = randi()%1800+300	
 	pass
 
@@ -65,12 +69,12 @@ func getSize():
 
 func _update(delta):
 	if state==Game.tank_state.IDLE:
-		initStartTime+=delta*1000
-		if initStartTime>=initTime:
-			initStartTime=0
-			isInit=true
-			$ani.playing=false
-			setState(Game.tank_state.START)
+		pass
+#		if OS.get_system_time_msecs()-initStartTime>=initTime:
+#			initStartTime=0
+#			isInit=true
+#			$ani.playing=false
+#			setState(Game.tank_state.START)
 	elif state==Game.tank_state.START:
 		if dir==0:
 			vec.y=-speed
@@ -277,17 +281,16 @@ func getPos():
 	return position
 
 func hit(playerId):
-	if armour>0:
-		armour-=1
-		# todo 播放击中的声音
-		
-		pass
-	else:	
-		addExplode(true)
-		Game.emit_signal("hitEnemy",type,playerId,position)
-		
 	if hasItem:
 		Game.emit_signal("addBonus",type)
+	if armour>0:
+		armour-=1
+		# todo 播放击中的声音	
+		pass
+	else:	
+		Game.emit_signal("hitEnemy",type,playerId,position)
+		addExplode(true)
+	
 	pass
 
 func addExplode(big):
@@ -304,20 +307,36 @@ func destroy():
 func setState(state):
 	print('setState',state) 
 	if state==Game.tank_state.START:
-		isInit=true
-		self.state=state	
+		print('state==Game.tank_state.START',isInit)
+		print("isFreeze",isFreeze)
 		if isFreeze:
-			print("isFreeze",isFreeze)
+		#	print("isFreeze",isFreeze)
 			animation(dir,vec)
 			_ani.stop()
 			self.state=Game.tank_state.STOP	
+		else:
+			self.state=state		
 	elif state==Game.tank_state.STOP:
+		print('state==Game.tank_state.STOP')
+		isFreeze=true	
 		_ani.stop()
 		self.state=state	
 		pass
 	elif state==Game.tank_state.RESTART:
+		if !isInit:
+			print('self.state===========',self.state)
+		print('state==Game.tank_state.RESTART',isInit)
 		isFreeze=false
-		self.state=Game.tank_state.START
+		if self.state==Game.tank_state.STOP:
+			self.state=Game.tank_state.START
+
+func initFinish():
+	isInit=true
+	if !isFreeze:
+		setState(Game.tank_state.START)
+	else:
+		setState(Game.tank_state.STOP)	
+	
 		
 #开火
 func fire():

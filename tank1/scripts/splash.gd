@@ -15,3 +15,5 @@ func setLevel(name:String):
 
 func setLevelName(name):
 	$name.text=name
+
+

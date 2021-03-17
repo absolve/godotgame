@@ -72,6 +72,10 @@ func playBaseDestroy():
 func playaward():
 	$award.play()
 
+#敌人被摧毁
+func playEnemyDestroy():
+	$explosion1.play()
+
 func _on_Button_pressed():
 	playPoint()
 	pass # Replace with function body.

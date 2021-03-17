@@ -30,11 +30,13 @@ var hasShip=false	#是否有船
 onready var _invincible=$invincible
 onready var _ship=$ship
 onready var _sound=$sound
-
+onready var _hit=$hit
 
 func _ready():
 	var shot = _sound.stream as AudioStreamOGGVorbis
 	shot.set_loop(false)
+	var hit=_hit.stream as AudioStreamOGGVorbis
+	hit.set_loop(false)
 	$ani.play("flash")
 	$ani.playing=true
 	setIsInvincible()
@@ -156,7 +158,7 @@ func _update(delta):
 				$idle.play()
 			
 		if Input.is_key_pressed(keymap["fire"]):
-			print("fire")
+		#	print("fire")
 			fire()	
 			
 		animation(dir,vec)	
@@ -258,7 +260,7 @@ func fire():
 		return
 	else:
 		shootTime=OS.get_system_time_msecs()
-	print("dir",dir)	
+#	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
 	#	print(is_instance_valid(i))
@@ -290,6 +292,7 @@ func hit(bulletType):
 			if level>=3:
 				level-=1
 				bulletPower=Game.bulletPower.fast
+			playhit()	
 		else:
 			addExplode()
 			Game.emit_signal("hitPlayer",playId)	
@@ -309,6 +312,9 @@ func addExplode(big=true):
 func destroy():
 	queue_free()
 
+func playhit():
+	if !_hit.playing:
+		_hit.play()
 
 func getPlayId():
 	return playId

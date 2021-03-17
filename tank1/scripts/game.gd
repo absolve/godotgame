@@ -61,8 +61,8 @@ var mapNum	#地图数量
 var mapNameList=[]  #地图文件名字
 var level=0  #默认关卡1
 
-var mode=2	#游戏单人1 双人2
-var playerLive=[21,21]	#玩家生命数
+var mode=1	#游戏单人1 双人2
+var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
@@ -71,6 +71,7 @@ var isGameOver=false#游戏是否结束
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
+	mapNameList.sort()
 	print(mapNameList)
 	pass 
 
@@ -92,6 +93,16 @@ func changeScene(stagePath):
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
 
+#重新设置数据
+func reset():
+	level=0
+	playerLive=[2,2]	#玩家生命数
+	playerScore={"player1":0,"player2":0}  #玩家分数
+	p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+	p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+	isGameOver=false#游戏是否结束
+	pass
+
 func loadMap(level):
 	
 	pass
@@ -109,6 +120,7 @@ func getBuiltInMapNum(mapDir,fileList:Array):
 				fileList.append(file_name)
 				print("Found file: " + file_name)
 			file_name = dir.get_next()
+			
 	else:
 		print("An error occurred when trying to access the path.")
 	return num
