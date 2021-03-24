@@ -15,6 +15,7 @@ Inside the weseewe1 folder are programs, space keys, and mouse jumps.
   
 tank1文件夹里面就是坦克大战的程序，程序可能不是很完善，基本的功能都有了。  
 游戏里面自带了地图编辑，就是编辑完记得按下锁定。  
+1p:wsad j发射子弹 2p:方向键 数字0发射子弹 回车暂停和开始  
 TODO  
 1.完善游戏的碰撞检测，还有一些声音的处理。  
 2.实现冰块滑动，除草的功能。  
