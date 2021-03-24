@@ -37,7 +37,7 @@ onready var _addEnemy=$addEnemy
 onready var _nextLevel=$nextLevel
 onready var _clock=$clockTimer
 onready var _shovel=$shovelTimer
-onready var _pause=$pause
+onready var _pause=$gui/pause
 
 func _ready():
 	randomize()
@@ -48,7 +48,7 @@ func _ready():
 	print(Game.mapNameList[Game.level])
 	_map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	_map.mode=0
-#	_map.loadMap(Game.mapDir+"/1992.json")
+#	_map.loadMap(Game.mapDir+"/2.json")
 	if Game.mode==1:
 		_map.addNewPlayer(1,false,Game.p1State)
 	elif Game.mode==2:

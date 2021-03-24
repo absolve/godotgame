@@ -12,4 +12,8 @@ Space and the left mouse button jump
 weseewe1文件夹里面就是程序,空格键和鼠标跳跃  
 Inside the weseewe1 folder are programs, space keys, and mouse jumps.  
 <img src="https://github.com/absolve/godotgame/blob/master/2020-08-09%20214323.png" />  
- 
+  
+tank1文件夹里面就是坦克大战的程序，程序可能不是很完善，基本的功能都有了。  
+游戏里面自带了地图编辑，就是编辑完记得按下锁定。  
+TODO  
+1.完善游戏的碰撞检测，还有一些声音的处理。  
