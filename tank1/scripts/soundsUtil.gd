@@ -31,6 +31,10 @@ func _ready():
 	bullet.set_loop(false)
 	var award=$award.stream as AudioStreamOGGVorbis
 	award.set_loop(false)
+	var tankDestroy=$tankDestroy.stream as AudioStreamOGGVorbis
+	tankDestroy.set_loop(false)
+	var bouns=$bouns.stream as AudioStreamOGGVorbis
+	bouns.set_loop(false)
 	pass
 
 #统计的时候
@@ -50,9 +54,6 @@ func playPause():
 
 func playMusic():
 	$music.play()
-
-func playBouns():
-	$bonus.play()
 
 func playLife():
 	$life.play()
@@ -75,6 +76,18 @@ func playaward():
 #敌人被摧毁
 func playEnemyDestroy():
 	$explosion1.play()
+
+#玩家被摧毁
+func playTankDestroy():
+	$tankDestroy.play()
+
+#出现物品
+func playBouns():
+	$bouns.play()
+
+#获取物品
+func playGetBouns():
+	$power2.play()
 
 func _on_Button_pressed():
 	playPoint()

@@ -3,12 +3,12 @@ extends Node2D
 #class_name enemy
 
 var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
-var speed=40 
+var speed=42  #移动速度
 var dir=1 # 0上 1下 2左 3右
 
 var type=0  # 0 typeA  1 typeB 2 typeC 3 typeD
 var bulletMax=1	#发射最大子弹数
-var armour=0  #护甲等级  不同等级护甲不同
+var armour=0  #护甲等级  不同等级护甲不同 最大3
 var vec=Vector2.ZERO
 var isStop=false#是否停止
 var keepDirectionTime=0 #保持方向的时间 ms
@@ -27,34 +27,42 @@ var initStartTime=0
 var initTime=1200  #ms
 #var nextState=Game.tank_state.STOP
 var isFreeze=false	#冻结
-var hasItem=true #是否有物品
+var hasItem=false #是否有物品
 var aniStartTime=0	#变化
 var aniDelayTime=240 #ms
 
 onready var _ani=$ani
 onready var _hit=$hit
-onready var _timer=$Timer
+onready var _timer=$Timer #初始化时间
 
 func _ready():
 	randomize()
 	$ani.play("flash")
 	$ani.playing=true
-	print("isFreeze",isFreeze)
-#	if type==0:
-#		$ani.play("typeA")
-#	elif type==1:
-#		$ani.play("typeB")
-#	elif type==2:
-#		$ani.play("typeC")
-#	elif type==3:
-#		$ani.play("typeD")
-#	if hasItem:
-#		aniStartTime=OS.get_system_time_msecs()
-	#initStartTime=OS.get_system_time_msecs()
+#	print("isFreeze",isFreeze)
+	var hit=_hit.stream as AudioStreamOGGVorbis
+	hit.set_loop(false)
+	if type==0:
+		armour=randi()%2
+		pass
+	elif type==1:
+		speed=100
+		armour=randi()%4
+	elif type==2:
+		bulletPower=Game.bulletPower.fast
+		armour=randi()%4	
+	elif type==3:
+		bulletPower=Game.bulletPower.fast
+		armour=randi()%4
+		speed-=5
+		
+	if randi()%100>=75:
+		hasItem=true
+
 	_timer.connect("timeout",self,'initFinish')
 	_timer.start()
 	keepDirectionTime = randi()%1800+300	
-	pass
+
 
 
 #获取矩形
@@ -66,7 +74,6 @@ func getRect()->Vector2:
 func getSize():
 	return rect.size.x
 	
-
 func _update(delta):
 	if state==Game.tank_state.IDLE:
 		pass
@@ -76,6 +83,10 @@ func _update(delta):
 #			$ani.playing=false
 #			setState(Game.tank_state.START)
 	elif state==Game.tank_state.START:
+		animation(dir,vec)	
+		if isFreeze:
+			return
+		
 		if dir==0:
 			vec.y=-speed
 			vec.x=0
@@ -93,8 +104,8 @@ func _update(delta):
 		
 		directionTime+=delta*1000
 		fireTime+=delta*1000
-		if isStop:
-			keepDirectionTime-=20
+#		if isStop:
+#			keepDirectionTime-=20
 			#vec=Vector2.ZERO
 	
 		if directionTime>keepDirectionTime:
@@ -143,8 +154,6 @@ func _update(delta):
 				newDir=temp[randi()%temp.size()]				
 			
 			if dir!=newDir:
-				if isStop:
-					isStop=false	
 				dir=newDir
 			else:
 				dir=newDir	
@@ -153,54 +162,10 @@ func _update(delta):
 		if fireTime>reloadTime:
 			fireTime=0
 			reloadTime=randi()%1000+200
-			fire()
-				
-		animation(dir,vec)		
+			fire()			
 		if !isStop:
 			position+=vec*delta		
 	elif state==Game.tank_state.STOP:
-		if !hasItem:
-			return
-		if type==0:
-			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
-				aniStartTime=OS.get_system_time_msecs()
-				var index=_ani.frame
-			#	print("frame",index)
-				if _ani.get_animation()=="typeA":
-					_ani.animation="typeA_4"
-				else:
-					_ani.animation="typeA"
-				_ani.frame=	index  #设置动画帧数发生变化
-			#	print("frame==",_ani.frame)	
-			#_ani.play()
-			pass	
-		elif type==1:
-			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
-				aniStartTime=OS.get_system_time_msecs()
-				var index=_ani.frame
-				if _ani.get_animation()=="typeB":
-					_ani.animation="typeB_4"
-				else:
-					_ani.animation="typeB"
-				_ani.frame=	index  #设置动画帧数发生变化
-		elif type==2:
-			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
-				aniStartTime=OS.get_system_time_msecs()
-				var index=_ani.frame
-				if _ani.get_animation()=="typeC":
-					_ani.animation="typeC_4"
-				else:
-					_ani.animation="typeC"
-				_ani.frame=	index  #设置动画帧数发生变化
-		elif type==3:
-			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
-				aniStartTime=OS.get_system_time_msecs()
-				var index=_ani.frame
-				if _ani.get_animation()=="typeD":
-					_ani.animation="typeD_4"
-				else:
-					_ani.animation="typeD"
-				_ani.frame=	index  #设置动画帧数发生变化
 		pass
 	pass
 
@@ -238,34 +203,98 @@ func animation(dir,vec):
 				_ani.play("typeA_3")	
 			else:	
 				_ani.play("typeA")
+#			if isFreeze:
+#				_ani.stop()	
 		else:
 			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
 				aniStartTime=OS.get_system_time_msecs()
 				var index=_ani.frame
-			#	print("frame",index)
-				if _ani.get_animation()=="typeA":
+				if _ani.get_animation()!="typeA_4":
 					_ani.animation="typeA_4"
 				else:
 					_ani.animation="typeA"
 				_ani.frame=	index  #设置动画帧数发生变化
-			#	print("frame==",_ani.frame)	
-			_ani.play()
-			pass	
+#			if isFreeze:
+#				_ani.stop()	
+#			else:	
+#				_ani.play()
 	elif type==1:
-		_ani.play("typeB")
+		if !hasItem:
+			if armour==0:
+				_ani.play("typeB")
+			elif armour==1:
+				_ani.play("typeB_1")	
+			elif armour==2:	
+				_ani.play("typeB_2")	
+			elif armour==3:		
+				_ani.play("typeB_3")	
+			else:	
+				_ani.play("typeB")
+		else:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()!="typeB_4":
+					_ani.animation="typeB_4"
+				else:
+					_ani.animation="typeB"
+				_ani.frame=	index  #设置动画帧数发生变化
 	elif type==2:
-		_ani.play("typeC")
+		if !hasItem:
+			if armour==0:
+				_ani.play("typeC")
+			elif armour==1:
+				_ani.play("typeC_1")	
+			elif armour==2:	
+				_ani.play("typeC_2")	
+			elif armour==3:		
+				_ani.play("typeC_3")	
+			else:	
+				_ani.play("typeC")
+		else:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()!="typeC_4":
+					_ani.animation="typeC_4"
+				else:
+					_ani.animation="typeC"
+				_ani.frame=	index  #设置动画帧数发生变化		
 	elif type==3:
-		_ani.play("typeD")
+		if !hasItem:
+			if armour==0:
+				_ani.play("typeD")
+			elif armour==1:
+				_ani.play("typeD_1")	
+			elif armour==2:	
+				_ani.play("typeD_2")	
+			elif armour==3:		
+				_ani.play("typeD_3")	
+			else:	
+				_ani.play("typeD")
+		else:
+			if OS.get_system_time_msecs()-aniStartTime>=aniDelayTime:
+				aniStartTime=OS.get_system_time_msecs()
+				var index=_ani.frame
+				if _ani.get_animation()!="typeD_4":
+					_ani.animation="typeD_4"
+				else:
+					_ani.animation="typeD"
+				_ani.frame=	index  #设置动画帧数发生变化				
+		
+	if isFreeze:
+		_ani.stop()	
+	else:	
+		_ani.play()
 	
 #改变方向
 func turnDirection():
 	newDir=randi()%4	
 	pass
 
-func setStop(isStop,dir):
+func setStop(isStop):
 	self.isStop=isStop
-	vec=Vector2.ZERO
+	#vec=Vector2.ZERO
 
 func getNewDir(dir):
 	var temp=[]
@@ -280,17 +309,17 @@ func setPos(pos:Vector2):
 func getPos():
 	return position
 
+#被击中
 func hit(playerId):
 	if hasItem:
 		Game.emit_signal("addBonus",type)
 	if armour>0:
 		armour-=1
-		# todo 播放击中的声音	
+		playhit()
 		pass
 	else:	
 		Game.emit_signal("hitEnemy",type,playerId,position)
 		addExplode(true)
-	
 	pass
 
 func addExplode(big):
@@ -299,45 +328,58 @@ func addExplode(big):
 		temp.big=true
 	temp.position=position
 	Game.otherObj.add_child(temp)
+	state=Game.tank_state.DEAD
 	destroy()
 
 func destroy():
 	queue_free()
 
 func setState(state):
-	print('setState',state) 
+	#print('setState',state) 
 	if state==Game.tank_state.START:
-		print('state==Game.tank_state.START',isInit)
-		print("isFreeze",isFreeze)
-		if isFreeze:
-		#	print("isFreeze",isFreeze)
-			animation(dir,vec)
-			_ani.stop()
-			self.state=Game.tank_state.STOP	
-		else:
-			self.state=state		
+#		if isFreeze:
+#			animation(dir,vec)
+#			_ani.stop()
+#			self.state=Game.tank_state.STOP	
+#		else:
+#			self.state=state	
+		self.state=state		
 	elif state==Game.tank_state.STOP:
-		print('state==Game.tank_state.STOP')
-		isFreeze=true	
-		_ani.stop()
-		self.state=state	
+#		print('state==Game.tank_state.STOP')
+#		isFreeze=true	
+#		_ani.stop()
+#		self.state=state	
 		pass
 	elif state==Game.tank_state.RESTART:
-		if !isInit:
-			print('self.state===========',self.state)
-		print('state==Game.tank_state.RESTART',isInit)
-		isFreeze=false
-		if self.state==Game.tank_state.STOP:
-			self.state=Game.tank_state.START
+#		if !isInit:
+#			print('self.state===========',self.state)
+#		print('state==Game.tank_state.RESTART',isInit)
+#		isFreeze=false
+#		if self.state==Game.tank_state.STOP:
+#			self.state=Game.tank_state.START
+		pass	
+	elif state==Game.tank_state.DEAD:
+		self.state=state
 
+func isDead():
+	if state==Game.tank_state.DEAD:
+		return true
+	else:
+		return false	
+		
+#设置冻结
+func setFreeze(flag=true):
+	self.isFreeze=flag
+	if flag:
+		vec=Vector2.ZERO			
+		
 func initFinish():
 	isInit=true
-	if !isFreeze:
-		setState(Game.tank_state.START)
-	else:
-		setState(Game.tank_state.STOP)	
+	setState(Game.tank_state.START)
 	
-		
+func playhit():
+	if !_hit.playing:
+		_hit.play()		
 #开火
 func fire():
 	var del=[]

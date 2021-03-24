@@ -614,6 +614,7 @@ text = "0"
 align = 2
 
 [node name="Button" type="Button" parent="."]
+visible = false
 margin_right = 12.0
 margin_bottom = 20.0
 text = "start"
@@ -648,5 +649,9 @@ uppercase = true
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 2.5
+one_shot = true
+
+[node name="initTimer" type="Timer" parent="."]
+wait_time = 1.5
 one_shot = true
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

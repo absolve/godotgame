@@ -7,7 +7,7 @@ func playIn():
 	$ani.play("in")
 	
 func playOut():
-	$ani.play_backwards("in")
+	$ani.play("out")
 
 func setLevel(name:String):
 	$name.set_text("stage %s"%name)

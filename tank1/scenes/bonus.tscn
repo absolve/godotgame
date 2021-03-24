@@ -21,6 +21,7 @@ tracks/0/keys = {
 }
 
 [node name="bonus" type="Node2D"]
+z_index = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true

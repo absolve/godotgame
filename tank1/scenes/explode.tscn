@@ -24,6 +24,7 @@ animations = [ {
 } ]
 
 [node name="explode" type="AnimatedSprite"]
+z_index = 1
 frames = SubResource( 1 )
 animation = "explode_big"
 script = ExtResource( 9 )

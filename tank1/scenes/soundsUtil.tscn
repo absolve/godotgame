@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://sounds/statistics_1.ogg" type="AudioStream" id=1]
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=2]
@@ -13,6 +13,8 @@
 [ext_resource path="res://sounds/eat.ogg" type="AudioStream" id=11]
 [ext_resource path="res://sounds/bullet_hit_1.ogg" type="AudioStream" id=12]
 [ext_resource path="res://sounds/award.ogg" type="AudioStream" id=13]
+[ext_resource path="res://sounds/tankDestroy.ogg" type="AudioStream" id=14]
+[ext_resource path="res://sounds/bouns.ogg" type="AudioStream" id=15]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 2 )
@@ -42,6 +44,7 @@ stream = ExtResource( 4 )
 stream = ExtResource( 3 )
 
 [node name="pause" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
 stream = ExtResource( 8 )
 
 [node name="music" type="AudioStreamPlayer" parent="."]
@@ -59,6 +62,9 @@ stream = ExtResource( 12 )
 [node name="award" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 13 )
 
+[node name="tankDestroy" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+
 [node name="Button" type="Button" parent="."]
 visible = false
 margin_right = 12.0
@@ -67,4 +73,7 @@ text = "play"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="bouns" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 15 )
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

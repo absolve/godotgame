@@ -9,6 +9,7 @@ func _ready():
 func doing():
 	pass
 	print("=========")
+	Game.reset()
 	SoundsUtil.playGameOver()
 	yield(SoundsUtil.gameover,"finished")
 	Game.changeScene(Game._welcomeScene)

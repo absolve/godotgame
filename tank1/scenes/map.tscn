@@ -108,6 +108,7 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2"
 
 [node name="p2live" type="VBoxContainer" parent="tools"]
+visible = false
 margin_left = 454.0
 margin_top = 292.0
 margin_right = 506.0
@@ -339,7 +340,7 @@ __meta__ = {
 }
 
 [node name="Button" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_right = 43.0
+margin_right = 51.0
 margin_bottom = 20.0
 text = "save"
 __meta__ = {
@@ -348,7 +349,7 @@ __meta__ = {
 
 [node name="Button2" type="Button" parent="tools/bricks/VBoxContainer"]
 margin_top = 24.0
-margin_right = 43.0
+margin_right = 51.0
 margin_bottom = 44.0
 text = "load"
 __meta__ = {
@@ -357,7 +358,7 @@ __meta__ = {
 
 [node name="Button3" type="Button" parent="tools/bricks/VBoxContainer"]
 margin_top = 48.0
-margin_right = 43.0
+margin_right = 51.0
 margin_bottom = 68.0
 text = "clear"
 __meta__ = {
@@ -366,12 +367,18 @@ __meta__ = {
 
 [node name="Button4" type="Button" parent="tools/bricks/VBoxContainer"]
 margin_top = 72.0
-margin_right = 43.0
+margin_right = 51.0
 margin_bottom = 92.0
 text = "lock"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Button5" type="Button" parent="tools/bricks/VBoxContainer"]
+margin_top = 96.0
+margin_right = 51.0
+margin_bottom = 116.0
+text = "return"
 
 [node name="FileDialog" type="FileDialog" parent="tools"]
 margin_right = 403.0
@@ -405,5 +412,6 @@ current_path = "/godotgame/tank1/"
 [connection signal="pressed" from="tools/bricks/VBoxContainer/Button2" to="." method="_on_Button2_pressed"]
 [connection signal="pressed" from="tools/bricks/VBoxContainer/Button3" to="." method="_on_Button3_pressed"]
 [connection signal="pressed" from="tools/bricks/VBoxContainer/Button4" to="." method="_on_Button4_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/Button5" to="." method="_on_Button5_pressed"]
 [connection signal="confirmed" from="tools/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="tools/loadDialog" to="." method="_on_loadDialog_confirmed"]

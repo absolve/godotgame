@@ -51,13 +51,14 @@ onready var p2Total=$p2Total
 
 onready var reward=$reward
 onready var timer=$Timer
+onready var initTimer=$initTimer
 
 var p1Pos=Vector2(8,400)
 var p2Pos=Vector2(392,400)
 
 
 func _ready():
-	stage.set_text("stage %d"%Game.level+1)
+	stage.set_text("stage %d"%(Game.level+1))
 	if Game.mode==1: #单人
 		p1Score.set_text("%d"%Game.playerScore["player1"])
 		p2Score.set_visible(false)
@@ -73,6 +74,8 @@ func _ready():
 	timer.connect("timeout",self,"nextLevel")	
 	print(Game.p1Score)
 	print(Game.p2Score)
+	initTimer.connect("timeout",self,"startCount")
+	initTimer.start()
 	pass
 
 var state=-1
@@ -214,6 +217,11 @@ func setp2Num(index,num):
 	return flag	
 
 	pass
+
+#计数开始
+func startCount():
+	state=1
+	countStartTime=OS.get_system_time_msecs()
 	
 func nextLevel():
 	print("nextLevel")
@@ -225,7 +233,7 @@ func nextLevel():
 		pass	
 	else:#下一关
 		Game.level+=1
-		Game.changeScene(Game._mainScene)
+		Game.changeSceneAni(Game._mainScene)
 		pass	
 	pass	
 	

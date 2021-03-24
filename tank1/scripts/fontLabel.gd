@@ -1,10 +1,13 @@
 extends Node2D
 
-export var string:String
 
 func _ready():
-	$Label.text=string
+#	$Timer.connect("timeout",self,"end")
 	$Timer.start()
+	pass
+
+func setNum(num:int):
+	$num.set_text("%d"%num)
 	pass
 
 

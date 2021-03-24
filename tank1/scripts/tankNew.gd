@@ -26,25 +26,42 @@ var life=1  #生命默认1
 var speed = 70 #移动速度
 var bulletPower=Game.bulletPower.normal
 var hasShip=false	#是否有船
+var isFreeze=false	#冻结
 
 onready var _invincible=$invincible
 onready var _ship=$ship
 onready var _sound=$sound
 onready var _hit=$hit
+onready var _invincibleTimer=$invincibleTimer
+onready var _initTimer = $initTimer
+onready var _ani=$ani
 
 func _ready():
 	var shot = _sound.stream as AudioStreamOGGVorbis
 	shot.set_loop(false)
 	var hit=_hit.stream as AudioStreamOGGVorbis
 	hit.set_loop(false)
-	$ani.play("flash")
-	$ani.playing=true
-	setIsInvincible()
+	get_children()
+	_ani.play("flash")
+	_ani.playing=true
+	_invincibleTimer.connect("timeout",self,"invincibleTimerEnd")
+	_initTimer.connect("timeout",self,"initEnd")
+	_initTimer.start()
 	if playId==2:
 		_ship.texture=Game.ship2
 	setKeyMap(playId)
-	
-	addMaxPower()
+	setEnableInvincible(3)
+	if level==1:
+		bulletPower=Game.bulletPower.fast
+	elif level==2:	
+		bulletPower=Game.bulletPower.fast
+		bulletMax+=1
+	elif level==3:
+		bulletMax+=1
+		bulletPower=Game.bulletPower.super
+			
+	#addMaxPower()
+
 	pass
 
 #获取矩形
@@ -59,7 +76,7 @@ func getSize():
 func getPos():
 	return position
 	
-func setStop(isStop,dir):
+func setStop(isStop):
 	self.isStop=isStop	
 	 
 func setKeyMap(playerId:int):
@@ -113,35 +130,31 @@ func delship():
 
 func _update(delta):
 	if state==Game.tank_state.IDLE:
-		initStartTime+=delta*1000
-		if initStartTime>=initTime:
-			initStartTime=0
-			isInit=true
-			$ani.playing=false
-			setState(Game.tank_state.START)
-		pass
+		pass	
 	elif state==Game.tank_state.START:
+		animation(dir,vec)	
+		if isFreeze:
+			return
 		if Input.is_key_pressed(keymap["up"]):
-	#		print("up")
 			vec.y=-speed
 			vec.x=0
 			dir=0
-			isStop=false
+	#		isStop=false
 		elif Input.is_key_pressed(keymap["down"]):
 			vec.x=0
 			vec.y=speed
 			dir=1
-			isStop=false
+	#		isStop=false
 		elif Input.is_key_pressed(keymap["left"]):
 			vec.x=-speed
 			vec.y=0
-			isStop=false
+	#		isStop=false
 			dir=2	
 		elif Input.is_key_pressed(keymap["right"]):	
 			vec.y=0
 			vec.x=speed
 			dir=3
-			isStop=false
+	#		isStop=false
 		else:
 			vec=Vector2.ZERO	
 		
@@ -158,101 +171,107 @@ func _update(delta):
 				$idle.play()
 			
 		if Input.is_key_pressed(keymap["fire"]):
-		#	print("fire")
 			fire()	
 			
-		animation(dir,vec)	
 		if !isStop:
-			position+=vec*delta
-		
-		if isInvincible:
-			if OS.get_system_time_msecs()-invincibleStartTime>=invincibleTime:
-				invincibleStartTime=0
-				isInvincible=false
-				_invincible.visible=false
-				_invincible.playing=false
+			position+=vec*delta	
 			
 	pass
 	
 	
 func animation(dir,vec):
 	if dir==0:
-		$ani.flip_v=false
-		$ani.flip_h=false
-		$ani.rotation_degrees=0
+		_ani.flip_v=false
+		_ani.flip_h=false
+		_ani.rotation_degrees=0
 		pass
 	elif dir==1:
-		$ani.flip_v=true
-		$ani.flip_h=false
-		$ani.rotation_degrees=0
+		_ani.flip_v=true
+		_ani.flip_h=false
+		_ani.rotation_degrees=0
 		pass
 	elif dir==2:
-		$ani.flip_v=false
-		$ani.flip_h=true
-		if $ani.rotation_degrees!=-90:
-			$ani.rotation_degrees=-90
+		_ani.flip_v=false
+		_ani.flip_h=true
+		if _ani.rotation_degrees!=-90:
+			_ani.rotation_degrees=-90
 		pass
 	elif dir==3:
-		$ani.flip_v=false
-		$ani.flip_h=false
-		if $ani.rotation_degrees!=90:
-			$ani.rotation_degrees=90
+		_ani.flip_v=false
+		_ani.flip_h=false
+		if _ani.rotation_degrees!=90:
+			_ani.rotation_degrees=90
 		pass	
 	if level==0:
 		if vec!=Vector2.ZERO:
 			if playId==1:
-				$ani.play("small_run")
+				_ani.play("small_run")
 			else:
-				$ani.play("small_green_run")	
+				_ani.play("small_green_run")	
 		else:
 			if playId==1:	
-				$ani.play("small")
+				_ani.play("small")
 			else:
-				$ani.play("small_green")	
+				_ani.play("small_green")	
 	elif level==1:
 		if vec!=Vector2.ZERO:
 			if playId==1:	
-				$ani.play("middle_run")
+				_ani.play("middle_run")
 			else:
-				$ani.play("middle_green_run")	
+				_ani.play("middle_green_run")	
 		else:
 			if playId==1:	
-				$ani.play("middle")
+				_ani.play("middle")
 			else:
-				$ani.play("middle_green")	
+				_ani.play("middle_green")	
 	elif level==2:
 		if vec!=Vector2.ZERO:
 			if playId==1:	
-				$ani.play("big_run")
+				_ani.play("big_run")
 			else:
-				$ani.play("big_green_run")		
+				_ani.play("big_green_run")		
 		else:
 			if playId==1:	
-				$ani.play("big")
+				_ani.play("big")
 			else:
-				$ani.play("big_green")	
+				_ani.play("big_green")	
 	elif level==3:
 		if vec!=Vector2.ZERO:
 			if playId==1:	
-				$ani.play("super_run")
+				_ani.play("super_run")
 			else:
-				$ani.play("super_green_run")	
+				_ani.play("super_green_run")	
 		else:
 			if playId==1:
-				$ani.play("super")	
+				_ani.play("super")	
 			else:
-				$ani.play("super_green")		
+				_ani.play("super_green")		
 
 func setState(state):
 	if state==Game.tank_state.START:
 		isInit=true
 		self.state=state
 
-func setIsInvincible(time=8000):
+
+#设置无敌
+func setEnableInvincible(time=15):
+	if _invincibleTimer.is_stopped():
+		_invincibleTimer.start(time)
+		_invincible.visible=true
+		_invincible.playing=true
+		pass
+	else:
+		_invincibleTimer.stop()
+		_invincibleTimer.start(time)
 	isInvincible=true
-	invincibleStartTime=OS.get_system_time_msecs()
-	_invincible.visible=true
-	_invincible.playing=true
+	pass
+
+#定时器结束
+func invincibleTimerEnd():
+	_invincible.visible=false
+	_invincible.playing=false
+	isInvincible=false
+	pass
 
 #开火
 func fire():
@@ -260,7 +279,6 @@ func fire():
 		return
 	else:
 		shootTime=OS.get_system_time_msecs()
-#	print("dir",dir)	
 	var del=[]
 	for i in bullets: #清理无效对象
 	#	print(is_instance_valid(i))
@@ -300,6 +318,20 @@ func hit(bulletType):
 	elif bulletType==Game.bulletType.players:
 		pass
 	pass
+
+#设置冻结
+func setFreeze(flag=true):
+	self.isFreeze=flag
+	if flag:
+		$walk.stop()	
+		$idle.stop()
+		vec=Vector2.ZERO	
+		
+#初始化完毕
+func initEnd():
+	isInit=true
+	_ani.playing=false
+	setState(Game.tank_state.START)
 
 func addExplode(big=true):
 	var temp=Game.explode.instance()

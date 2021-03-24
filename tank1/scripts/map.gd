@@ -41,6 +41,7 @@ var mapRect  #地图大小
 var brickList=[] #方块的数组
 var currentItem=0 #选中的方块
 var lock=false 	#锁定地图不在修改
+var isPress=false #是否按下按键
 
 var bonus=preload("res://scenes/bonus.tscn")
 var base=preload("res://scenes/base.tscn")
@@ -65,7 +66,6 @@ func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
 #	mode=1
-	
 	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
@@ -83,7 +83,8 @@ func _ready():
 	elif mode==0:
 		_level.show()
 		_1pLive.show()
-		_2pLive.show()
+		if Game.mode==2:
+			_2pLive.show()
 		_enemyList.show()
 		_bricks.hide()
 		
@@ -99,7 +100,8 @@ func setMode(mode):
 	elif mode==0:
 		_level.show()
 		_1pLive.show()
-		_2pLive.show()
+		if Game.mode==2:
+			_2pLive.show()
 		_enemyList.show()
 		_bricks.hide()		
 	
@@ -107,12 +109,16 @@ func setMode(mode):
 func addEnemy(basePos:Vector2,isFreeze=false):
 	var enemy=Game.enemy.instance()
 	var index =randi()%3
-	#var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
-	var pos = Vector2(cellSize*enemyBirthPos[0].x+enemy.getSize()/2,
-					cellSize*enemyBirthPos[0].y+enemy.getSize()/2)
+#	var pos=Vector2(cellSize+enemy.getSize()/2,cellSize+enemy.getSize()/2)
+#	var pos = Vector2(cellSize*enemyBirthPos[0].x+enemy.getSize()/2,
+#					cellSize*enemyBirthPos[0].y+enemy.getSize()/2)
+	var pos = Vector2(cellSize*enemyBirthPos[randi()%3].x+enemy.getSize()/2,
+					cellSize*enemyBirthPos[randi()%3].y+enemy.getSize()/2)
 	
 	pos+=offset
 	enemy.isFreeze=isFreeze
+	enemy.type=randi()%4
+#	enemy.type=0
 	enemy.setPos(pos)
 	enemy.targetPos=basePos
 	_tank.add_child(enemy)
@@ -140,17 +146,18 @@ func delEnemyNum():
 	pass
 
 #设置玩家状态
-func setPlayerState():
+func setPlayerFreeze():
+	for i in _tank.get_children():
+		if i.get_class()=="player":
+			i.setFreeze()
 	pass
 
-#设置敌人的状态
-func setEnemyState(state):
+#冻住敌人
+func setEnemyFreeze(flag=true):
 	for i in _tanks.get_children():
 		if i.get_class()=="enemy":
-			i.setState(state)
-			pass
-	pass
-
+			i.setFreeze(flag)
+		
 #清除敌人tank
 func clearEnemyTank()->Dictionary:
 	var list={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
@@ -249,7 +256,7 @@ func changeBasePlaceBrickType(type):
 		if b:
 			b.changeType(type)
 		else:
-			print('changeBasePlaceBrickType')
+#			print('changeBasePlaceBrickType')
 			var temp=brick.instance()
 			temp.position.x=i['x']*cellSize+temp.size/2
 			temp.position.y=i['y']*cellSize+temp.size/2
@@ -333,26 +340,42 @@ func setBrickType(list:Array,type:int):
 #设置玩家生命数
 func setPlayerLive(playNo:int,lives:int):
 	if playNo==1:
-		_1pLive.visible=true
+#		_1pLive.visible=true
 		_1pLiveNum.text=str(lives)
 	elif playNo==2:
-		_2pLive.visible=true
+#		_2pLive.visible=true
 		_2pLiveNum.text=str(lives)
 
+#获取玩家的等级
+func getPlayerStatus():
+	var data={'p1':{'level':1,'life':1}
+			,'p2':{'level':1,'life':1}}
+	for i in _tank.get_children():
+		if i.get_class()=="player":
+			if i.playId==1:
+				data['p1']['level']=i.level
+				data['p1']['life']=i.life
+			elif i.playId==2:
+				data['p2']['level']=i.level
+				data['p2']['life']=i.life
+	return 	data
+	
+			
 #添加玩家
-func addNewPlayer(playNo:int):
-	if playNo==1:
-		var tank1=tankNew.instance()
+func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1}):
+	var tank1=tankNew.instance()
+	if playNo==1:		
 		tank1.playId=1
-		tank1.position=Vector2(9*cellSize,25*cellSize)+offset
-		_tank.add_child(tank1)
-		pass
+		tank1.position=Vector2(9*cellSize,25*cellSize)+offset	
+		setPlayerLive(1,Game.playerLive[0])	
 	elif playNo==2:
-		var tank1=tankNew.instance()
 		tank1.playId=2
 		tank1.position=Vector2(17*cellSize,25*cellSize)+offset
-		_tank.add_child(tank1)
-		pass
+		setPlayerLive(1,Game.playerLive[0])	
+	tank1.level=state['level']
+	tank1.life=state['life']
+	tank1.setFreeze(isFreeze)
+	_tank.add_child(tank1)
 	
 #检查点击的地方是否有item
 func checkItem(pos):
@@ -370,9 +393,8 @@ func checkItem(pos):
 		if i['x']==indexX and i['y']==indexY:
 			flag=true 
 			break
-	print(flag)	
+	#print(flag)	
 	return flag
-	
 	
 func addItem(pos):
 	pos-=offset
@@ -416,14 +438,11 @@ func save2File(fileName):
 	file.close()
 	
 
-
 func _process(delta):
 	if mode==1:
 		update()
 	pass
 
-
-var isPress=false
 		
 func _input(event):
 	if _fileDiaglog.visible or _loadDiaglog.visible or lock or mode!=1:
@@ -474,8 +493,6 @@ func _draw():
 				draw_texture(Game.bush,Vector2(i['x']*cellSize,i['y']*cellSize)+offset)
 			elif i['type']==4:
 				draw_texture(Game.ice,Vector2(i['x']*cellSize,i['y']*cellSize)+offset)
-
-
 
 func _on_TextureButton_pressed():
 	currentItem=0
@@ -545,4 +562,10 @@ func _on_Button3_pressed():
 
 func _on_Button4_pressed():
 	lock=!lock
+	pass # Replace with function body.
+
+#返回
+func _on_Button5_pressed():
+	queue_free()
+	Game.changeScene(Game._welcomeScene)
 	pass # Replace with function body.

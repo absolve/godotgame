@@ -17,7 +17,7 @@ var player2={"up":KEY_UP,"down":KEY_DOWN,"left":KEY_LEFT,"right":KEY_RIGHT,'fire
 enum game_state{LOAD,START,PAUSE,OVER,NEXT_LEVEL}
 enum tank_state{IDLE,DEAD,STOP,START,INVINCIBLE,RESTART}
 enum bulletType{players,enemy}
-enum brickType{brickWall,stoneWall,bush,water,ice}
+enum brickType{brickWall,stoneWall,water,bush,ice}
 enum bulletPower{normal,fast,super}
 enum enemyType{TYPEA,TYPEB,TYPEC,TYPED}
 
@@ -66,14 +66,25 @@ var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p1State={'level':1,'life':1}
+var p2State={'level':1,'life':1}
 var isGameOver=false#游戏是否结束
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
-	mapNameList.sort()
+	mapNameList.sort_custom(self,"sort")
 	print(mapNameList)
 	pass 
+
+static func sort(a:String,b:String):
+	var flag=true
+	var aname=a.get_basename()
+	var bname=b.get_basename()
+	if aname.to_int()>=bname.to_int():
+		flag=false
+	return flag
+	pass
 
 
 #更改场景
@@ -100,6 +111,8 @@ func reset():
 	playerScore={"player1":0,"player2":0}  #玩家分数
 	p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 	p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+	p1State={'level':1,'life':1}
+	p2State={'level':1,'life':1}
 	isGameOver=false#游戏是否结束
 	pass
 

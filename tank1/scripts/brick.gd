@@ -10,7 +10,7 @@ var hitCount=0	#砖块击中次数  同一个方向被击中2次就没了  不�
 var lastDir=0 #上一次子弹的方向
 
 var rect= Rect2(Vector2(-8,-8),Vector2(16,16))
-var debug=true
+var debug=false
 onready var _sprite=$Sprite
 var offset=Vector2.ZERO  #图片原点的坐标  每次被击中的话中心点会发生变化
 
@@ -19,7 +19,7 @@ var aniFps=50
 
 func _ready():
 	#print(Game.brickType.brickWall)
-	setType(self.type)
+	setType(type)
 #	if type==0:
 #		_sprite.texture=Game.brick	
 #	elif type==1:
@@ -79,65 +79,65 @@ func hit(dir,power):
 			if dir==0:	#上
 				_sprite.region_rect = Rect2(0,0,size,size/2)
 				_sprite.position.y-=size/4
-				rect.size=Vector2(size,size/2)
-				offset.y=-size/4
+#				rect.size=Vector2(size,size/2)
+#				offset.y=-size/4
 				pass
 			elif dir==1:#下
 				_sprite.region_rect = Rect2(0,size/2,size,size/2)
 				_sprite.position.y+=size/4
-				rect.size=Vector2(size,size/2)
-				rect.position.y+=size/2
-				offset.y=size/4
+#				rect.size=Vector2(size,size/2)
+#				rect.position.y+=size/2
+#				offset.y=size/4
 				pass
 			elif dir==2:	#左
 				_sprite.region_rect = Rect2(0,0,size/2,size)
 				_sprite.position.x-=size/4
-				rect.size=Vector2(size/2,size)
-				offset.x=-size/4
+#				rect.size=Vector2(size/2,size)
+#				offset.x=-size/4
 				pass
 			elif dir==3:#右
 				_sprite.region_rect = Rect2(0,0,size/2,size)
 				_sprite.position.x+=size/4
-				rect.size=Vector2(size/2,size)
-				rect.position=Vector2(0,-size/2)
-				offset.x=size/4
+#				rect.size=Vector2(size/2,size)
+#				rect.position=Vector2(0,-size/2)
+#				offset.x=size/4
 				pass	
 			lastDir=dir	
 			hitCount+=1
 			update()
 		elif hitCount==1:#第二次
-			rect.size=Vector2(size/2,size/2)
+	#		rect.size=Vector2(size/2,size/2)
 			if dir==0:#上
-				offset.y=-size/4
+			#	offset.y=-size/4
 				if lastDir==0 or lastDir==1:
 					queue_free()
 				elif lastDir==2:
 					_sprite.region_rect = Rect2(0,size/2,size/2,size/2)
 					_sprite.position.y-=size/4
-					rect.size=Vector2(size/2,size/2)
+#					rect.size=Vector2(size/2,size/2)
 					pass
 				elif lastDir==3:
 					_sprite.region_rect = Rect2(0,size/2,size/2,size/2)
 					_sprite.position.y+=size/4
-					rect.size=Vector2(size/2,size/2)
+#					rect.size=Vector2(size/2,size/2)
 					pass
 			elif dir==1:	#下
-				offset.y=size/4
+			#	offset.y=size/4
 				if lastDir==0 or lastDir==1:
 					queue_free()	
 				elif lastDir==2:
 				#	print("lastDir==2")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.y+=size/4
-					rect.position.y=0
+#					rect.position.y=0
 					pass
 				elif lastDir==3:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.y+=size/4
-					rect.position.y=0
+#					rect.position.y=0
 					pass	
 			elif dir==2:#左
-				offset.x=-size/4
+	#			offset.x=-size/4
 				if lastDir==2 or lastDir==3:
 					queue_free()	
 				elif lastDir==0:	
@@ -150,20 +150,20 @@ func hit(dir,power):
 					_sprite.position.x-=size/4
 					pass
 			elif dir==3:#右
-				offset.x=size/4
+	#			offset.x=size/4
 				if lastDir==2 or lastDir==3:
 					queue_free()	
 				elif lastDir==0:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x+=size/4
 					#rect.position=Vector2(0,-size/2)
-					rect.position.y=0
+#					rect.position.y=0
 					pass
 				elif lastDir==1:  #下
 	#				print("lastDir==1")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x+=size/4
-					rect.position.x=0
+#					rect.position.x=0
 				#	rect.position=Vector2(0,-size/2)
 					pass						
 			hitCount+=1

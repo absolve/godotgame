@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/splash.gd" type="Script" id=1]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=2]
 
 [sub_resource type="Animation" id=1]
-resource_name = "in"
+resource_name = "out"
+length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath("top:rect_position")
 tracks/0/interp = 1
@@ -12,7 +13,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, -223 ), Vector2( 0, 0 ) ]
@@ -24,7 +25,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 449 ), Vector2( 0, 224 ) ]
@@ -36,10 +37,50 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "out"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath("top:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.2, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -223 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("bottom:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.2, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 224 ), Vector2( 0, 449 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("name:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
 }
 
 [node name="splash" type="Node2D"]
@@ -72,6 +113,7 @@ margin_right = 301.0
 margin_bottom = 229.0
 grow_horizontal = 2
 custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "stage 1"
 align = 1
 valign = 1
@@ -82,3 +124,4 @@ __meta__ = {
 
 [node name="ani" type="AnimationPlayer" parent="."]
 anims/in = SubResource( 1 )
+anims/out = SubResource( 2 )

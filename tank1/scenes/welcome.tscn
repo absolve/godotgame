@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
 [ext_resource path="res://sprites/battle_city.png" type="Texture" id=2]
@@ -11,8 +11,40 @@ animations = [ {
 "frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "idle",
-"speed": 7.0
+"speed": 10.0
 } ]
+
+[sub_resource type="Animation" id=2]
+resource_name = "end"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("main:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "start"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("main:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 448 ), Vector2( 0, 0 ) ]
+}
 
 [node name="welcome" type="Node2D"]
 script = ExtResource( 1 )
@@ -25,11 +57,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="main" type="Node2D" parent="."]
+position = Vector2( 0, 448 )
+
+[node name="Sprite" type="Sprite" parent="main"]
 position = Vector2( 256, 150 )
 texture = ExtResource( 2 )
 
-[node name="hbox" type="HBoxContainer" parent="."]
+[node name="hbox" type="HBoxContainer" parent="main"]
 margin_left = 184.0
 margin_top = 50.5108
 margin_right = 364.0
@@ -39,7 +74,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="hbox"]
+[node name="Label" type="Label" parent="main/hbox"]
 margin_right = 80.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
@@ -48,14 +83,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="score" type="Label" parent="hbox"]
+[node name="score" type="Label" parent="main/hbox"]
 margin_left = 84.0
 margin_right = 164.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "00000"
 
-[node name="vbox" type="VBoxContainer" parent="."]
+[node name="vbox" type="VBoxContainer" parent="main"]
 margin_left = 208.0
 margin_top = 288.0
 margin_right = 400.0
@@ -67,14 +102,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="vbox"]
+[node name="Label" type="Label" parent="main/vbox"]
 margin_right = 192.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "1 player"
 uppercase = true
 
-[node name="Label2" type="Label" parent="vbox"]
+[node name="Label2" type="Label" parent="main/vbox"]
 margin_top = 20.0
 margin_right = 192.0
 margin_bottom = 36.0
@@ -82,7 +117,7 @@ custom_fonts/font = ExtResource( 3 )
 text = "2 player2"
 uppercase = true
 
-[node name="Label3" type="Label" parent="vbox"]
+[node name="Label3" type="Label" parent="main/vbox"]
 margin_top = 40.0
 margin_right = 192.0
 margin_bottom = 56.0
@@ -90,14 +125,14 @@ custom_fonts/font = ExtResource( 3 )
 text = "construction"
 uppercase = true
 
-[node name="ani" type="AnimatedSprite" parent="."]
+[node name="tankAni" type="AnimatedSprite" parent="main"]
 position = Vector2( 180, 295 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"
 playing = true
 
-[node name="copyright" type="Label" parent="."]
+[node name="copyright" type="Label" parent="main"]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -114,3 +149,8 @@ uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ani" type="AnimationPlayer" parent="."]
+autoplay = "start"
+anims/end = SubResource( 2 )
+anims/start = SubResource( 3 )

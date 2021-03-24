@@ -3,5 +3,5 @@
 [ext_resource path="res://fonts/arialbd.ttf" type="DynamicFontData" id=1]
 
 [resource]
-size = 10
+size = 14
 font_data = ExtResource( 1 )
