@@ -17,3 +17,10 @@ tank1文件夹里面就是坦克大战的程序，程序可能不是很完善，
 游戏里面自带了地图编辑，就是编辑完记得按下锁定。  
 TODO  
 1.完善游戏的碰撞检测，还有一些声音的处理。  
+2.实现冰块滑动，除草的功能。  
+  
+<img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20215349.png" />    
+  
+<img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20215543.png" />  
+
+<img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20221318.png" />  
