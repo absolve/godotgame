@@ -167,6 +167,8 @@ func _update(delta):
 			position+=vec*delta		
 	elif state==Game.tank_state.STOP:
 		pass
+	elif state==Game.tank_state.DEAD:
+		pass
 	pass
 
 func animation(dir,vec):
@@ -316,8 +318,8 @@ func hit(playerId):
 	if armour>0:
 		armour-=1
 		playhit()
-		pass
 	else:	
+		setState(Game.tank_state.DEAD)
 		Game.emit_signal("hitEnemy",type,playerId,position)
 		addExplode(true)
 	pass

@@ -133,7 +133,7 @@ func _process(delta):
 		else:
 			state=2		
 	elif state==2:
-		print("end")
+#		print("end")
 		p1Total.set_visible(true)	
 		var p1Num=Game.p1Score['typeA']+\
 				Game.p1Score['typeB']+Game.p1Score['typeC']+\
@@ -149,16 +149,19 @@ func _process(delta):
 				reward.set_visible(true)
 				reward.set_position(p1Pos)
 				SoundsUtil.playaward()
+				Game.playerScore['player1']+=1000
 			elif p1Num<p2Num and p2Num!=0:
 				reward.set_visible(true)
 				reward.set_position(p2Pos)
 				SoundsUtil.playaward()
+				Game.playerScore['player2']+=1000
 		state=3
 		timer.start()		
 	elif state==3:
 		pass		
 	pass
-	
+
+#计分 index第几行  num 个数	 
 func setp1Num(index,num):
 	var flag=false
 	if index==0:
@@ -186,7 +189,7 @@ func setp1Num(index,num):
 		else:
 			flag=true
 	return flag				
-	pass	
+	
 
 func setp2Num(index,num):
 	var flag=false
@@ -222,7 +225,8 @@ func setp2Num(index,num):
 func startCount():
 	state=1
 	countStartTime=OS.get_system_time_msecs()
-	
+
+#下一关	
 func nextLevel():
 	print("nextLevel")
 #	gameOver()

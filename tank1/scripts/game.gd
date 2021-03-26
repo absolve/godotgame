@@ -64,9 +64,9 @@ var level=0  #默认关卡1
 var mode=1	#游戏单人1 双人2
 var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
-var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0} #击中的坦克数量
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
-var p1State={'level':1,'life':1}
+var p1State={'level':1,'life':1} #坦克信息
 var p2State={'level':1,'life':1}
 var isGameOver=false#游戏是否结束
 

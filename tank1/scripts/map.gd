@@ -171,6 +171,7 @@ func clearEnemyTank()->Dictionary:
 				list['typeC']+=1
 			elif i.type==3:	
 				list['typeD']+=1
+			i.setState(Game.tank_state.DEAD)	
 			i.addExplode(true)	
 	return list
 	
@@ -395,7 +396,8 @@ func checkItem(pos):
 			break
 	#print(flag)	
 	return flag
-	
+
+#添加方块	
 func addItem(pos):
 	pos-=offset
 	var x = pos.x

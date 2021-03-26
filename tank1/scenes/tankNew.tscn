@@ -36,39 +36,14 @@ animations = [ {
 "name": "middle_green",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
 "loop": true,
-"name": "small",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 7 ) ],
-"loop": true,
-"name": "middle",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 21 ) ],
-"loop": true,
-"name": "super_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
-"loop": true,
-"name": "super_green_run",
+"name": "big_run",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "super_run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
-"loop": true,
-"name": "big_green_run",
-"speed": 8.0
-}, {
-"frames": [ ExtResource( 17 ) ],
-"loop": true,
-"name": "big_green",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 24 ) ],
@@ -81,19 +56,44 @@ animations = [ {
 "name": "middle_green_run",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 21 ) ],
+"loop": true,
+"name": "super_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
+"loop": true,
+"name": "super_green_run",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 24 ), ExtResource( 23 ) ],
 "loop": true,
 "name": "small_green_run",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
+"frames": [ ExtResource( 2 ) ],
 "loop": true,
-"name": "big_run",
+"name": "small",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "middle",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "small_run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
+"loop": true,
+"name": "big_green_run",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 17 ) ],
+"loop": true,
+"name": "big_green",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 7 ), ExtResource( 5 ) ],

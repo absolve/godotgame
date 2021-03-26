@@ -48,7 +48,7 @@ func _ready():
 	print(Game.mapNameList[Game.level])
 	_map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	_map.mode=0
-#	_map.loadMap(Game.mapDir+"/2.json")
+#	_map.loadMap(Game.mapDir+"/5.json")
 	if Game.mode==1:
 		_map.addNewPlayer(1,false,Game.p1State)
 	elif Game.mode==2:
@@ -95,7 +95,10 @@ func _process(delta):
 					var type=y.getType() #装快的类型
 					if type==Game.brickType.bush or type==Game.brickType.ice:	#草丛
 						continue
-					
+					if type==Game.brickType.water: #水
+						if i.has_method("hasShip"):
+							if i.hasShip():
+								continue
 					var rect1=y.getRect()	
 					if rect.intersects(rect1,false):  #碰撞  判断是否被包围住
 						if rect1.encloses(rect):#完全叠一起
@@ -175,8 +178,6 @@ func _process(delta):
 						var rect1=y.getRect()
 						var iTankDir=i.dir
 						var yTankDir=y.dir
-#						var iPos=i.position
-#						var yPos=y.position
 						var xVal =i.position.x-y.position.x
 						var yVal =i.position.y-y.position.y
 						var absXVal=abs(xVal)
@@ -214,9 +215,7 @@ func _process(delta):
 				pass
 			i.setStop(isStop)
 			
-#		for i in _tank.get_children():  #更新
-#			i._update(delta)
-		
+	
 		
 		for i in _tank.get_children():	#子弹与坦克
 			for y in _bullet.get_children():
@@ -224,17 +223,18 @@ func _process(delta):
 				var rect1=y.getRect()
 				if !i.isInit:
 					continue
+				if i.isDead():	#坦克死亡
+					continue	
 				if rect.intersects(rect1,false):
 					var typeA = i.get_class()
 					var typeB=y.getType()
 					if typeA=="player" and typeB==Game.bulletType.enemy:
 						y.destroy()
 						i.hit(typeB)
-						pass
 					elif typeA=="enemy" and typeB==Game.bulletType.players:
-						i.hit(y.playerID)
-						#enemyCount-=1
 						y.destroy()
+						i.hit(y.playerID)
+						
 				
 				
 		for i in _bullet.get_children():
@@ -353,7 +353,6 @@ func _process(delta):
 #						brickType=Game.brickType.brickWall
 #				pass
 			pass
-
 		
 	elif state==Game.game_state.NEXT_LEVEL:
 		
@@ -390,7 +389,6 @@ func addEnemyDelay():
 	pass
 
 func addEnemy():
-#	print("addEnemy",getEnemyCount())
 	if enemyCount>0:
 		if getEnemyCount()<minEnemyCount:
 			if hasClock:
@@ -398,12 +396,13 @@ func addEnemy():
 			else:
 				_map.addEnemy(basePos)
 			enemyCount-=1
-#			if new:
-#				new=false		
-			_addEnemy.start()			
+			print('enemyCount ',enemyCount)	
+			_addEnemy.start()	
+		else:
+			_addEnemy.start()				
 	else:  #所有敌人全部消灭
 		if getEnemyCount()<=0:
-			print("next")
+			print("next ",enemyCount)
 			_nextLevel.start()
 		else:
 			_addEnemy.start()
@@ -481,11 +480,11 @@ func hitEnemy(enemyType,players,pos):
 			Game.playerScore['player2']+=400
 		addScore(400,pos)				
 	print(p1Score)
-	print(p2Score)
+#	print(p2Score)
 	SoundsUtil.playEnemyDestroy()
 	#addEnemyDelay()
-	if _addEnemy.is_stopped():#添加新坦克
-		_addEnemy.start()
+#	if _addEnemy.is_stopped():#添加新坦克
+#		_addEnemy.start()
 	pass
 
 #基地毁灭	
@@ -525,30 +524,26 @@ func getBonus(type,id):
 	
 	var tank=_map.getPlayerById(id)
 	if tank:
-		addScore(500,tank.getPos())
-		
+		addScore(500,tank.getPos())		
 	if type==0:	#手雷
 		var list=_map.clearEnemyTank()
 		if id==1:
-			Game.p1Score['typeA']+=list['typeA']
-			Game.p1Score['typeB']+=list['typeB']
-			Game.p1Score['typeC']+=list['typeC']
-			Game.p1Score['typeD']+=list['typeD']
+			p1Score["typeA"]+=list['typeA']
+			p1Score["typeB"]+=list['typeB']
+			p1Score["typeC"]+=list['typeC']
+			p1Score["typeD"]+=list['typeD']
 		elif id==2:
-			Game.p2Score['typeA']+=list['typeA']
-			Game.p2Score['typeB']+=list['typeB']
-			Game.p2Score['typeC']+=list['typeC']
-			Game.p2Score['typeD']+=list['typeD']
-		print(Game.p2Score)
-		print(Game.p1Score)
+			p2Score["typeA"]+=list['typeA']
+			p2Score["typeB"]+=list['typeB']
+			p2Score["typeC"]+=list['typeC']
+			p2Score["typeD"]+=list['typeD']
+		print('手雷',list)
 		SoundsUtil.playBomb()
-		if _addEnemy.is_stopped():#添加新坦克
-			_addEnemy.start()
-		pass
+#		if _addEnemy.is_stopped():#添加新坦克
+#			_addEnemy.start()
 	elif type==4:#坦克增加
 		SoundsUtil.playLife()
 		addTankLife(id)
-		pass
 	else:
 		if type==1: #帽子
 			if tank:

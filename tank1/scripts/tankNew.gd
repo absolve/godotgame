@@ -61,7 +61,7 @@ func _ready():
 		bulletPower=Game.bulletPower.super
 			
 	#addMaxPower()
-
+#	addship()
 	pass
 
 #获取矩形
@@ -127,6 +127,8 @@ func delship():
 	hasShip=false
 	_ship.visible=false
 
+func hasShip():
+	return hasShip
 
 func _update(delta):
 	if state==Game.tank_state.IDLE:
@@ -303,6 +305,9 @@ func playShot():
 #被击中  属于玩家 还是敌人
 func hit(bulletType):
 	if bulletType==Game.bulletType.enemy:
+		if hasShip:	#有船
+			delship()
+			return
 		if isInvincible: #无敌
 			return
 		if life>1:
@@ -350,6 +355,12 @@ func playhit():
 
 func getPlayId():
 	return playId
+
+func isDead():
+	if state==Game.tank_state.DEAD:
+		return true
+	else:
+		return false	
 
 func get_class():
 	return 'player'
