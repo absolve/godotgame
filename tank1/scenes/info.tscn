@@ -16,12 +16,19 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="."]
-margin_left = 232.0
-margin_top = 120.0
-margin_right = 280.0
-margin_bottom = 136.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 56.0
+margin_top = 104.0
+margin_right = 472.0
+margin_bottom = 158.0
 custom_fonts/font = ExtResource( 1 )
-text = "end"
+text = "The game was completed on 
+March 25, 2021.
+
+author:wong"
 uppercase = true
 __meta__ = {
 "_edit_use_anchors_": false
