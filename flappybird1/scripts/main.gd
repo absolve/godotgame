@@ -2,42 +2,42 @@ extends Node2D
 
 #分数图片
 const sprite_numbers = [
-	preload("res://sprites/number_large_0.png"),
-	preload("res://sprites/number_large_1.png"),
-	preload("res://sprites/number_large_2.png"),
-	preload("res://sprites/number_large_3.png"),
-	preload("res://sprites/number_large_4.png"),
-	preload("res://sprites/number_large_5.png"),
-	preload("res://sprites/number_large_6.png"),
-	preload("res://sprites/number_large_7.png"),
-	preload("res://sprites/number_large_8.png"),
-	preload("res://sprites/number_large_9.png")
+	preload("res://sprites/number_large_01.png"),
+	preload("res://sprites/number_large_11.png"),
+	preload("res://sprites/number_large_21.png"),
+	preload("res://sprites/number_large_31.png"),
+	preload("res://sprites/number_large_41.png"),
+	preload("res://sprites/number_large_51.png"),
+	preload("res://sprites/number_large_61.png"),
+	preload("res://sprites/number_large_71.png"),
+	preload("res://sprites/number_large_81.png"),
+	preload("res://sprites/number_large_91.png")
 ]
 
 #最后得分
 const sprite_mid_numbers = [
-	preload("res://sprites/number_middle_0.png"),
-	preload("res://sprites/number_middle_1.png"),
-	preload("res://sprites/number_middle_2.png"),
-	preload("res://sprites/number_middle_3.png"),
-	preload("res://sprites/number_middle_4.png"),
-	preload("res://sprites/number_middle_5.png"),
-	preload("res://sprites/number_middle_6.png"),
-	preload("res://sprites/number_middle_7.png"),
-	preload("res://sprites/number_middle_8.png"),
-	preload("res://sprites/number_middle_9.png")
+	preload("res://sprites/number_middle_01.png"),
+	preload("res://sprites/number_middle_11.png"),
+	preload("res://sprites/number_middle_21.png"),
+	preload("res://sprites/number_middle_31.png"),
+	preload("res://sprites/number_middle_41.png"),
+	preload("res://sprites/number_middle_51.png"),
+	preload("res://sprites/number_middle_61.png"),
+	preload("res://sprites/number_middle_71.png"),
+	preload("res://sprites/number_middle_81.png"),
+	preload("res://sprites/number_middle_91.png")
 ]
 
 #奖牌的图片
-const spr_medal_bronze   = preload("res://sprites/medal_bronze.png")
-const spr_medal_silver   = preload("res://sprites/medal_silver.png")
-const spr_medal_gold     = preload("res://sprites/medal_gold.png")
-const spr_medal_platinum = preload("res://sprites/medal_platinum.png")
+const spr_medal_bronze   = preload("res://sprites/medal_bronze1.png")
+const spr_medal_silver   = preload("res://sprites/medal_silver1.png")
+const spr_medal_gold     = preload("res://sprites/medal_gold1.png")
+const spr_medal_platinum = preload("res://sprites/medal_platinum1.png")
 
 var state=game.startGame	#默认游戏开始状态
 
 var offsetNum=16	#摄像机偏移次数
-var magnitude = 2  #偏移
+var magnitude = 4  #偏移
 var num=0
 
 func _ready():
@@ -84,8 +84,8 @@ func gameOver()->void:
 		yield(get_tree(), "idle_frame")
 	num=0
 	magnitude=3
-	$game/camera.offset.x=72
-	$game/camera.offset.y=128
+	$game/camera.offset.x=144
+	$game/camera.offset.y=256
 	#showGameOverPanel()
 	setFinalScore()
 
@@ -118,7 +118,7 @@ func setFinalScore():
 	yield($game/gameOverPanel/ani, "animation_finished")	
 #	for child in $game/gameOverPanel/panel/scoreContainer.get_children():
 #		child.queue_free()
-	
+	game.score=100
 	#设置奖牌
 	var texture
 	if game.score>=game.MEDAL_BRONZE:

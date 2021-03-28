@@ -1,70 +1,70 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://sprites/bird_red_0.png" type="Texture" id=1]
+[ext_resource path="res://sprites/bird_blue_21.png" type="Texture" id=1]
 [ext_resource path="res://scripts/bird.gd" type="Script" id=2]
-[ext_resource path="res://sprites/bird_red_2.png" type="Texture" id=3]
-[ext_resource path="res://sprites/bird_red_1.png" type="Texture" id=4]
-[ext_resource path="res://sprites/bird_orange_0.png" type="Texture" id=5]
-[ext_resource path="res://sprites/bird_blue_1.png" type="Texture" id=6]
-[ext_resource path="res://sprites/bird_blue_2.png" type="Texture" id=7]
-[ext_resource path="res://sprites/bird_blue_0.png" type="Texture" id=8]
-[ext_resource path="res://sprites/bird_orange_1.png" type="Texture" id=9]
-[ext_resource path="res://sprites/bird_orange_2.png" type="Texture" id=10]
+[ext_resource path="res://sprites/bird_blue_11.png" type="Texture" id=3]
+[ext_resource path="res://sprites/bird_red_11.png" type="Texture" id=4]
+[ext_resource path="res://sprites/bird_red_21.png" type="Texture" id=5]
+[ext_resource path="res://sprites/bird_blue_01.png" type="Texture" id=6]
+[ext_resource path="res://sprites/bird_orange_21.png" type="Texture" id=7]
+[ext_resource path="res://sprites/bird_orange_01.png" type="Texture" id=8]
+[ext_resource path="res://sprites/bird_orange_11.png" type="Texture" id=9]
+[ext_resource path="res://sprites/bird_red_01.png" type="Texture" id=10]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 1 ) ],
+"frames": [ ExtResource( 10 ) ],
 "loop": true,
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 1 ) ],
-"loop": false,
-"name": "flap",
-"speed": 11.0
-}, {
-"frames": [ ExtResource( 5 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ) ],
 "loop": false,
 "name": "flap_yellow",
 "speed": 11.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 9 ), ExtResource( 10 ) ],
-"loop": true,
-"name": "fly_yellow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "flap_blue",
 "speed": 11.0
 }, {
-"frames": [ ExtResource( 8 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "fly_yellow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
 "loop": true,
 "name": "idle_blue",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 3 ), ExtResource( 1 ) ],
 "loop": true,
 "name": "fly_blue",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 5 ) ],
+"frames": [ ExtResource( 8 ) ],
 "loop": true,
 "name": "idle_yellow",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 4 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "fly",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 10 ) ],
+"loop": false,
+"name": "flap",
+"speed": 11.0
 } ]
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 6.08647
+radius = 12.8902
 
 [node name="bird" type="RigidBody2D"]
 position = Vector2( 36, 120 )
-gravity_scale = 0.0
+mass = 10.2041
 contacts_reported = 1
 contact_monitor = true
 script = ExtResource( 2 )

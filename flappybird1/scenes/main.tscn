@@ -1,28 +1,28 @@
 [gd_scene load_steps=27 format=2]
 
-[ext_resource path="res://sprites/background_day.png" type="Texture" id=1]
+[ext_resource path="res://sprites/background_night1.png" type="Texture" id=1]
 [ext_resource path="res://scenes/ground.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/main.gd" type="Script" id=3]
-[ext_resource path="res://sprites/button_menu.png" type="Texture" id=4]
-[ext_resource path="res://sprites/button_resume.png" type="Texture" id=5]
-[ext_resource path="res://sprites/button_pause.png" type="Texture" id=6]
-[ext_resource path="res://sprites/panel_score.png" type="Texture" id=7]
-[ext_resource path="res://sprites/label_game_over.png" type="Texture" id=8]
-[ext_resource path="res://sprites/number_middle_0.png" type="Texture" id=9]
-[ext_resource path="res://sprites/label_new.png" type="Texture" id=10]
-[ext_resource path="res://sprites/button_play_pressed.png" type="Texture" id=11]
-[ext_resource path="res://sprites/button_score_pressed.png" type="Texture" id=12]
-[ext_resource path="res://sprites/button_play_normal.png" type="Texture" id=13]
-[ext_resource path="res://sprites/button_score_normal.png" type="Texture" id=14]
-[ext_resource path="res://sprites/spark_2.png" type="Texture" id=15]
-[ext_resource path="res://sprites/instructions.png" type="Texture" id=16]
-[ext_resource path="res://sprites/number_large_0.png" type="Texture" id=17]
+[ext_resource path="res://sprites/button_menu1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/button_resume1.png" type="Texture" id=5]
+[ext_resource path="res://sprites/number_large_01.png" type="Texture" id=6]
+[ext_resource path="res://sprites/panel_score1.png" type="Texture" id=8]
+[ext_resource path="res://sprites/number_middle_01.png" type="Texture" id=9]
+[ext_resource path="res://sprites/label_new1.png" type="Texture" id=10]
+[ext_resource path="res://sprites/button_score_pressed1.png" type="Texture" id=11]
+[ext_resource path="res://sprites/button_play_normal1.png" type="Texture" id=12]
+[ext_resource path="res://sprites/button_score_norma1l.png" type="Texture" id=13]
+[ext_resource path="res://sprites/button_play_pressed1.png" type="Texture" id=14]
+[ext_resource path="res://sprites/spark_21.png" type="Texture" id=15]
+[ext_resource path="res://sprites/instructions1.png" type="Texture" id=16]
+[ext_resource path="res://sprites/button_pause1.png" type="Texture" id=17]
 [ext_resource path="res://scenes/pipe.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scenes/bird.tscn" type="PackedScene" id=19]
-[ext_resource path="res://sprites/spark_0.png" type="Texture" id=20]
-[ext_resource path="res://sprites/spark_1.png" type="Texture" id=21]
+[ext_resource path="res://sprites/spark_01.png" type="Texture" id=20]
+[ext_resource path="res://sprites/spark_11.png" type="Texture" id=21]
 [ext_resource path="res://scripts/spark.gd" type="Script" id=22]
-[ext_resource path="res://sprites/label_get_ready.png" type="Texture" id=23]
+[ext_resource path="res://sprites/label_get_ready1.png" type="Texture" id=23]
+[ext_resource path="res://sprites/label_game_over1.png" type="Texture" id=24]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -52,10 +52,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.8 ),
+"times": PoolRealArray( -0.1, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 16, 270 ), Vector2( 16, 90 ) ]
+"values": [ Vector2( 31, 656 ), Vector2( 31, 150 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -102,27 +102,29 @@ centered = false
 follow_viewport_enable = true
 
 [node name="pipe" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 167, 80 )
+position = Vector2( 334, 80 )
 
 [node name="pipe2" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 258, 80 )
+position = Vector2( 516, 80 )
 
 [node name="pipe3" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 349, 80 )
+position = Vector2( 698, 80 )
 
 [node name="ground" parent="game" instance=ExtResource( 2 )]
+position = Vector2( 0, 387 )
 z_index = 0
 
 [node name="ground1" parent="game" instance=ExtResource( 2 )]
-position = Vector2( 168, 256 )
+position = Vector2( 375, 387 )
 z_index = 0
 
 [node name="bird" parent="game" instance=ExtResource( 19 )]
+position = Vector2( 70, 180 )
 z_index = 1
 
 [node name="score" type="HBoxContainer" parent="game"]
 margin_top = 10.0
-margin_right = 144.0
+margin_right = 288.0
 margin_bottom = 28.0
 alignment = 1
 __meta__ = {
@@ -130,10 +132,10 @@ __meta__ = {
 }
 
 [node name="TextureRect" type="TextureRect" parent="game/score"]
-margin_left = 66.0
-margin_right = 78.0
-margin_bottom = 18.0
-texture = ExtResource( 17 )
+margin_left = 132.0
+margin_right = 156.0
+margin_bottom = 36.0
+texture = ExtResource( 6 )
 
 [node name="btnPause" type="TextureButton" parent="game"]
 margin_left = 10.0
@@ -141,17 +143,19 @@ margin_top = 10.0
 margin_right = 23.0
 margin_bottom = 24.0
 action_mode = 0
-texture_normal = ExtResource( 6 )
+texture_normal = ExtResource( 17 )
 stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="tipBtn" type="TextureButton" parent="game"]
-margin_left = 44.0
-margin_top = 104.0
-margin_right = 101.0
-margin_bottom = 153.0
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -57.0
+margin_top = 150.0
+margin_right = 57.0
+margin_bottom = 248.0
 texture_normal = ExtResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -159,33 +163,36 @@ __meta__ = {
 
 [node name="gameOverPanel" type="Control" parent="game"]
 visible = false
-margin_right = 144.0
-margin_bottom = 256.0
+margin_right = 288.0
+margin_bottom = 512.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="game_over" type="Sprite" parent="game/gameOverPanel"]
-position = Vector2( 24, 50 )
+position = Vector2( 144, 100 )
 scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 8 )
-centered = false
+texture = ExtResource( 24 )
 
 [node name="panel" type="TextureRect" parent="game/gameOverPanel"]
-margin_left = 16.0
-margin_top = 270.0
-margin_right = 129.0
-margin_bottom = 327.0
-texture = ExtResource( 7 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -113.0
+margin_top = 354.0
+margin_right = 113.0
+margin_bottom = 468.0
+texture = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="scoreContainer" type="HBoxContainer" parent="game/gameOverPanel/panel"]
-margin_left = 62.0
-margin_top = 17.0
-margin_right = 102.0
-margin_bottom = 27.0
+margin_left = 115.0
+margin_top = 34.0
+margin_right = 200.0
+margin_bottom = 54.0
 grow_horizontal = 0
 alignment = 2
 __meta__ = {
@@ -193,72 +200,77 @@ __meta__ = {
 }
 
 [node name="score" type="TextureRect" parent="game/gameOverPanel/panel/scoreContainer"]
-margin_left = 33.0
-margin_right = 40.0
-margin_bottom = 10.0
+margin_left = 71.0
+margin_right = 85.0
+margin_bottom = 20.0
 texture = ExtResource( 9 )
 
 [node name="bestContainer" type="HBoxContainer" parent="game/gameOverPanel/panel"]
-margin_left = 62.0
-margin_top = 37.0
-margin_right = 102.0
-margin_bottom = 47.0
+margin_left = 111.0
+margin_top = 75.0
+margin_right = 200.0
+margin_bottom = 95.0
 alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="best" type="TextureRect" parent="game/gameOverPanel/panel/bestContainer"]
-margin_left = 33.0
-margin_right = 40.0
-margin_bottom = 10.0
+margin_left = 75.0
+margin_right = 89.0
+margin_bottom = 20.0
 texture = ExtResource( 9 )
 
 [node name="newHighScore" type="TextureRect" parent="game/gameOverPanel/panel"]
 visible = false
-margin_left = 67.0
-margin_top = 29.0
-margin_right = 83.0
-margin_bottom = 36.0
+margin_left = 129.0
+margin_top = 58.0
+margin_right = 161.0
+margin_bottom = 72.0
 texture = ExtResource( 10 )
 
 [node name="medal" type="TextureRect" parent="game/gameOverPanel/panel"]
-margin_left = 13.0
-margin_top = 21.0
-margin_right = 35.0
-margin_bottom = 43.0
+margin_left = 25.0
+margin_top = 41.0
+margin_right = 69.0
+margin_bottom = 85.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="spark" type="AnimatedSprite" parent="game/gameOverPanel/panel/medal"]
 visible = false
+position = Vector2( 0, 3 )
 frames = SubResource( 1 )
-frame = 2
 script = ExtResource( 22 )
 
 [node name="btn" type="HBoxContainer" parent="game/gameOverPanel"]
 visible = false
-margin_left = 18.0
-margin_top = 160.0
-margin_right = 126.0
-margin_bottom = 189.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -106.0
+margin_top = 24.0
+margin_right = 106.0
+margin_bottom = 82.0
 __meta__ = {
+"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="btnRestart" type="TextureButton" parent="game/gameOverPanel/btn"]
-margin_right = 52.0
-margin_bottom = 29.0
-texture_normal = ExtResource( 13 )
-texture_pressed = ExtResource( 11 )
+margin_right = 104.0
+margin_bottom = 58.0
+texture_normal = ExtResource( 12 )
+texture_pressed = ExtResource( 14 )
 
 [node name="TextureButton2" type="TextureButton" parent="game/gameOverPanel/btn"]
-margin_left = 56.0
-margin_right = 108.0
-margin_bottom = 29.0
-texture_normal = ExtResource( 14 )
-texture_pressed = ExtResource( 12 )
+margin_left = 108.0
+margin_right = 212.0
+margin_bottom = 58.0
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 11 )
 
 [node name="ani" type="AnimationPlayer" parent="game/gameOverPanel"]
 anims/idle = SubResource( 2 )
@@ -266,15 +278,15 @@ anims/idle = SubResource( 2 )
 [node name="pausePanel" type="Control" parent="game"]
 pause_mode = 2
 visible = false
-margin_right = 144.0
-margin_bottom = 256.0
+margin_right = 288.0
+margin_bottom = 512.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="bg" type="ColorRect" parent="game/pausePanel"]
-margin_right = 144.0
-margin_bottom = 256.0
+margin_right = 288.0
+margin_bottom = 512.0
 color = Color( 0, 0, 0, 0.223529 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -291,10 +303,14 @@ __meta__ = {
 }
 
 [node name="btnMenu" type="TextureButton" parent="game/pausePanel"]
-margin_left = 52.0
-margin_top = 121.0
-margin_right = 92.0
-margin_bottom = 135.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -40.0
+margin_top = -14.0
+margin_right = 40.0
+margin_bottom = 14.0
 texture_normal = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -305,14 +321,14 @@ wait_time = 2.0
 one_shot = true
 
 [node name="ready" type="Sprite" parent="game"]
-position = Vector2( 72, 70 )
+position = Vector2( 144, 100 )
 texture = ExtResource( 23 )
 
 [node name="ani" type="AnimationPlayer" parent="game/ready"]
 anims/fade_out = SubResource( 3 )
 
 [node name="camera" type="Camera2D" parent="game"]
-offset = Vector2( 72, 128 )
+offset = Vector2( 144, 256 )
 current = true
 [connection signal="pressed" from="game/btnPause" to="." method="_on_btnPause_pressed"]
 [connection signal="pressed" from="game/tipBtn" to="." method="_on_tipBtn_pressed"]

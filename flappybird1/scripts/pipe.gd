@@ -2,16 +2,16 @@ extends StaticBody2D
 
 
 #地面的高度
-const GROUND_HEIGHT = 56
-const OFFSET_Y      = 55
-const PIPE_WIDTH    = 26 #水管长度
-const OFFSET_X      = 65 #每个水管的位置
+const GROUND_HEIGHT = 125
+const OFFSET_Y      = 110
+const PIPE_WIDTH    = 52 #水管长度
+const OFFSET_X      = 130 #每个水管的位置
   
 #signal scoreChange	#分数变化
 
 #状态
 var state=game.stop
-var speed=55	#速度
+var speed=110	#速度
 
 
 func _ready():

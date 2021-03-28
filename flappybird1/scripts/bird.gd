@@ -6,7 +6,7 @@ var state = game.idle #默认状态
 var ypos=3	#上下飞行的距离
 var filp=true
 var flyspeed=25 #上下飞行的速度
-var speed=150	#向上飞的速度
+var speed=200	#向上飞的速度
 signal birdStateChange  #状态改变
 var ani= ["idle","fly","flap"]
 var ani2=["idle_blue","fly_blue","flap_blue"]

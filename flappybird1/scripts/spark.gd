@@ -3,7 +3,7 @@ extends AnimatedSprite
 
 #显示闪光的功能
 
-var OFFSET=22 #偏移的位置
+var OFFSET=44 #偏移的位置
 
 func _ready():
 	randomize()

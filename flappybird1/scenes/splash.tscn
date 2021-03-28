@@ -36,8 +36,8 @@ tracks/0/keys = {
 layer = 3
 
 [node name="bg" type="ColorRect" parent="."]
-margin_right = 144.0
-margin_bottom = 256.0
+margin_right = 288.0
+margin_bottom = 512.0
 mouse_filter = 2
 color = Color( 0, 0, 0, 0 )
 __meta__ = {
