@@ -35,6 +35,7 @@ var boat=preload("res://sprites/bonus_boat.png")
 var bullet=preload("res://scenes/bullet.tscn")
 var ship1 = preload("res://sprites/ship1.png")
 var ship2 = preload("res://sprites/ship2.png")
+var baseNew=preload("res://sprites/base_new.png")
 
 #方块图片
 var brick=preload("res://sprites/brick.png")

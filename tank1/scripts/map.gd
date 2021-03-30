@@ -194,7 +194,7 @@ func addBonus():
 	while pos in basePlacePos:  #防止在基地旁边
 		pos = Vector2(randi()%25+1,randi()%25+1)
 	temp.setPos(pos*cellSize+offset)
-	temp.setType(randi()%8)
+	temp.setType(randi()%9)
 	_bonus.add_child(temp)
 	pass
 

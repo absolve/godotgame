@@ -17,6 +17,7 @@ var changeBrickTime=0  #ms
 var brickType=Game.brickType.brickWall	#变化类型
 var minEnemyCount=4	#最小敌人数量 2人就6个
 var gamePause=false	#游戏暂停
+var isNoBase=false #基地被摧毁游戏不结束
 
 #每个人击中的数量
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
@@ -491,6 +492,8 @@ func hitEnemy(enemyType,players,pos):
 func baseDestroy():
 	print('baseDestroy')
 	SoundsUtil.playBaseDestroy()
+	if isNoBase: #五基地继续战斗
+		return
 	gameOver()
 	#setState(Game.game_state.OVER)
 	pass
@@ -567,6 +570,8 @@ func getBonus(type,id):
 			if tank:
 				tank.addship()
 			pass	
+		elif type==8: #没有基地游戏继续
+			isNoBase=true
 		SoundsUtil.playGetBouns()
 	pass
 
@@ -670,7 +675,7 @@ func _on_Button2_pressed():
 		_bonus.remove_child(i)
 	var temp = bonus.instance()
 	temp.setPos(Vector2(8*26,10*26))
-	temp.setType(2)
+	temp.setType(8)
 	_bonus.add_child(temp)
 #	_map.addBonus()
 	pass # Replace with function body.

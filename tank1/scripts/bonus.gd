@@ -1,6 +1,6 @@
 extends Node2D
 
-var type=0	#0是手雷 1帽子 2时钟 3 铲子 4坦克 5星星 6手枪 7船
+var type=0	#0是手雷 1帽子 2时钟 3 铲子 4坦克 5星星 6手枪 7船 8新基地
 
 var rect=Rect2(-16,-16,32,32)
 
@@ -30,6 +30,8 @@ func _ready():
 	elif type==7:
 		$Sprite.texture=Game.boat
 		pass	
+	elif type==8:
+		$Sprite.texture=Game.baseNew
 	pass
 
 func getRect()->Vector2:
