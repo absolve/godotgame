@@ -28,8 +28,9 @@ func _input(event):
 					_ani.play("end")
 					return
 				if mode in [1,2]:
-					Game.mode=mode
-					Game.changeSceneAni(Game._mainScene)
+					Game.mode=mode		
+					Game.change2SceneLevel(Game._mainScene)
+					queue_free()
 				else:
 					var scene = preload("res://scenes/map.tscn"	)
 					var temp=scene.instance()

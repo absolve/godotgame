@@ -67,9 +67,10 @@ var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0} #击中的坦克数量
 var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
-var p1State={'level':1,'life':1} #坦克信息
-var p2State={'level':1,'life':1}
+var p1State={'level':1,'life':1,'hasShip':false} #坦克信息
+var p2State={'level':1,'life':1,'hasShip':false}
 var isGameOver=false#游戏是否结束
+var canSelectLevel=true#选择关卡
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
@@ -87,18 +88,28 @@ static func sort(a:String,b:String):
 	return flag
 	pass
 
-
-#更改场景
-func changeSceneAni(stagePath):
-	Splash.setLevel(str(level+1)) #关卡从0开始
+#改变到选择场景
+func change2SceneLevel(stagePath):
+	Splash.setLevel(str(level+1)) #关卡从0开始	
 	Splash.playIn()
 	yield(Splash.find_node("ani"),"animation_finished")
+	Splash.select=true
+	pass
+	
+#更改场景
+func changeSceneAni(stagePath):
+	Splash.setLevel(str(level+1)) #关卡从0开始	
+	Splash.playIn()
+	yield(Splash.find_node("ani"),"animation_finished")
+#	Splash.select=true
+#	print("222=====",Game.canSelectLevel)
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
 	Splash.playOut()
-	yield(Splash.find_node("ani"),"animation_finished")
 	SoundsUtil.playMusic()
+	yield(Splash.find_node("ani"),"animation_finished")
+	
 
 func changeScene(stagePath):
 	set_process_input(false)
@@ -112,9 +123,10 @@ func reset():
 	playerScore={"player1":0,"player2":0}  #玩家分数
 	p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
 	p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
-	p1State={'level':1,'life':1}
-	p2State={'level':1,'life':1}
+	p1State={'level':1,'life':1,'hasShip':false}
+	p2State={'level':1,'life':1,'hasShip':false}
 	isGameOver=false#游戏是否结束
+	canSelectLevel=true
 	pass
 
 func loadMap(level):

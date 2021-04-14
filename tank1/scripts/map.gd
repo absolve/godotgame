@@ -349,21 +349,24 @@ func setPlayerLive(playNo:int,lives:int):
 
 #获取玩家的等级
 func getPlayerStatus():
-	var data={'p1':{'level':1,'life':1}
-			,'p2':{'level':1,'life':1}}
+	var data={'p1':{'level':1,'life':1,'hasShip':false}
+			,'p2':{'level':1,'life':1,'hasShip':false}}
 	for i in _tank.get_children():
 		if i.get_class()=="player":
 			if i.playId==1:
 				data['p1']['level']=i.level
 				data['p1']['life']=i.life
+				data['p1']['hasShip']=i.hasShip
 			elif i.playId==2:
 				data['p2']['level']=i.level
 				data['p2']['life']=i.life
+				data['p2']['hasShip']=i.hasShip
 	return 	data
 	
 			
 #添加玩家
-func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1}):
+func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1,
+										'hasShip':false}):
 	var tank1=tankNew.instance()
 	if playNo==1:		
 		tank1.playId=1
@@ -375,6 +378,7 @@ func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1
 		setPlayerLive(1,Game.playerLive[0])	
 	tank1.level=state['level']
 	tank1.life=state['life']
+	tank1.hasShip=state['hasShip']
 	tank1.setFreeze(isFreeze)
 	_tank.add_child(tank1)
 	

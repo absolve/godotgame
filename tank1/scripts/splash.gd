@@ -1,5 +1,7 @@
 extends Node2D
 
+var select=false
+
 func _ready():
 	pass
 
@@ -16,4 +18,31 @@ func setLevel(name:String):
 func setLevelName(name):
 	$name.text=name
 
-
+func _input(event):	
+	if !select:
+		return
+	if !Game.canSelectLevel:
+		return
+	if event is InputEventKey:
+		if event.is_pressed():
+			if (event as InputEventKey).scancode==KEY_ENTER:	
+				print("===========")
+				Game.canSelectLevel=false
+				get_tree().change_scene(Game._mainScene)
+				playOut()
+				SoundsUtil.playMusic()
+				yield($ani,"animation_finished")
+				select=false	
+				pass
+			elif (event as InputEventKey).scancode==KEY_DOWN:	
+				print(222222222)
+				if Game.level <Game.mapNum-1:
+					Game.level+=1
+					setLevel(str(Game.level+1))
+				pass
+			elif (event as InputEventKey).scancode==KEY_UP:	
+				if Game.level >0:
+					Game.level-=1	
+					setLevel(str(Game.level+1))
+				pass
+	pass

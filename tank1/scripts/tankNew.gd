@@ -59,8 +59,10 @@ func _ready():
 	elif level==3:
 		bulletMax+=1
 		bulletPower=Game.bulletPower.super
+	if hasShip:
+		_ship.visible=true
 			
-	#addMaxPower()
+	addMaxPower()
 #	addship()
 	pass
 

@@ -423,8 +423,10 @@ func nextLevel():
 	var data=_map.getPlayerStatus()
 	Game.p1State['level']=data['p1']['level']
 	Game.p1State['life']=data['p1']['life']
+	Game.p1State['hasShip']=data['p1']['hasShip']
 	Game.p2State['level']=data['p2']['level']
 	Game.p2State['life']=data['p2']['life']
+	Game.p2State['hasShip']=data['p2']['hasShip']
 	Game.p1Score=p1Score
 	Game.p2Score=p2Score
 	Game.changeScene("res://scenes/menu.tscn")
@@ -675,7 +677,7 @@ func _on_Button2_pressed():
 		_bonus.remove_child(i)
 	var temp = bonus.instance()
 	temp.setPos(Vector2(8*26,10*26))
-	temp.setType(8)
+	temp.setType(7)
 	_bonus.add_child(temp)
 #	_map.addBonus()
 	pass # Replace with function body.
