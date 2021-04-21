@@ -62,7 +62,7 @@ func _ready():
 	if hasShip:
 		_ship.visible=true
 			
-	addMaxPower()
+#	addMaxPower()
 #	addship()
 	pass
 

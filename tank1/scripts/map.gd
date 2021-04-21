@@ -62,6 +62,7 @@ onready var _tanks=$tanks
 onready var _mapbg=$mapbg
 onready var _bonus=$bonus
 
+
 func _ready():
 	#获取可执行文件基本路径
 	#print(OS.get_executable_path().get_base_dir())
@@ -104,6 +105,10 @@ func setMode(mode):
 			_2pLive.show()
 		_enemyList.show()
 		_bricks.hide()		
+
+#设置地图关卡
+func setLevelName(level):
+	_levelNum.text=str(level)
 	
 #添加随机的敌人
 func addEnemy(basePos:Vector2,isFreeze=false):

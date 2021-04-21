@@ -43,7 +43,6 @@ func _input(event):
 				
 				
 func setMode(index):
-	print(index)
 	if index==0:
 		_tankAni.position.y=pos.x
 		mode=1

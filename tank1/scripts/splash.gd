@@ -26,7 +26,6 @@ func _input(event):
 	if event is InputEventKey:
 		if event.is_pressed():
 			if (event as InputEventKey).scancode==KEY_ENTER:	
-				print("===========")
 				Game.canSelectLevel=false
 				get_tree().change_scene(Game._mainScene)
 				playOut()
@@ -35,7 +34,6 @@ func _input(event):
 				select=false	
 				pass
 			elif (event as InputEventKey).scancode==KEY_DOWN:	
-				print(222222222)
 				if Game.level <Game.mapNum-1:
 					Game.level+=1
 					setLevel(str(Game.level+1))

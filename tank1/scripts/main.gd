@@ -63,6 +63,7 @@ func _ready():
 	basePos=Vector2(_map.basePos.x*_map.cellSize,_map.basePos.y*_map.cellSize)
 #	_map.addEnemy(basePos)	#添加敌人
 
+	_map.setLevelName(Game.level+1)
 	#设置生命数量
 	_map.setPlayerLive(1,Game.playerLive[0])
 	_map.setPlayerLive(2,Game.playerLive[1])
