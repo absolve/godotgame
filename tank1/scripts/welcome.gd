@@ -3,7 +3,8 @@ extends Node2D
 
 var mode=1  #1单人 2双人  3编辑
 
-var pos=Vector3(295,315,335)	#选择1p 2p 时的y坐标
+var pos=Vector3(285,305,325)	#选择1p 2p 时的y坐标
+var setting=345
 var index=0
 onready var _tankAni=$main/tankAni
 onready var _ani=$ani
@@ -15,7 +16,7 @@ func _input(event):
 	if event is InputEventKey:
 		if event.is_pressed():
 			if (event as InputEventKey).scancode==KEY_DOWN:		
-				if index<2:
+				if index<3:
 					index+=1
 					setMode(index)
 			elif (event as InputEventKey).scancode==KEY_UP:
@@ -52,4 +53,6 @@ func setMode(index):
 	elif index==2:
 		_tankAni.position.y=pos.z
 		mode=3
-		
+	elif index==3:	
+		_tankAni.position.y=setting
+		mode=3

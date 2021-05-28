@@ -90,10 +90,10 @@ custom_fonts/font = ExtResource( 3 )
 text = "00000"
 
 [node name="vbox" type="VBoxContainer" parent="main"]
-margin_left = 208.0
-margin_top = 288.0
-margin_right = 400.0
-margin_bottom = 344.0
+margin_left = 207.0
+margin_top = 278.0
+margin_right = 399.0
+margin_bottom = 354.0
 grow_horizontal = 0
 grow_vertical = 0
 __meta__ = {
@@ -124,8 +124,19 @@ custom_fonts/font = ExtResource( 3 )
 text = "construction"
 uppercase = true
 
+[node name="Label4" type="Label" parent="main/vbox"]
+margin_top = 60.0
+margin_right = 192.0
+margin_bottom = 76.0
+custom_fonts/font = ExtResource( 3 )
+text = "setting"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="tankAni" type="AnimatedSprite" parent="main"]
-position = Vector2( 180, 295 )
+position = Vector2( 171, 285 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"
