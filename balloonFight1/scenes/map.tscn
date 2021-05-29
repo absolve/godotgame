@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scripts/map.gd" type="Script" id=1]
+[ext_resource path="res://sprites/bkidRunR1_0.png" type="Texture" id=2]
+[ext_resource path="res://sprites/earthBlock1.png" type="Texture" id=3]
+[ext_resource path="res://sprites/earthBelow.png" type="Texture" id=4]
+[ext_resource path="res://sprites/deepEarthL.png" type="Texture" id=5]
+
+[node name="map" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 346, 312 )
+texture = ExtResource( 3 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 405, 354 )
+texture = ExtResource( 5 )
+
+[node name="Sprite3" type="Sprite" parent="."]
+position = Vector2( 264, 358 )
+texture = ExtResource( 4 )
+
+[node name="Sprite4" type="Sprite" parent="."]
+position = Vector2( 320, 297 )
+texture = ExtResource( 2 )

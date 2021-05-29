@@ -45,7 +45,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="VBoxContainer" parent="."]
+[node name="hbox" type="VBoxContainer" parent="."]
 margin_left = 166.0
 margin_top = 285.0
 margin_right = 406.0
@@ -55,12 +55,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="hbox"]
 margin_right = 240.0
 margin_bottom = 26.0
 custom_constants/margin_bottom = 10
 
-[node name="p1" type="Label" parent="HBoxContainer/MarginContainer"]
+[node name="p1" type="Label" parent="hbox/MarginContainer"]
 margin_right = 240.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
@@ -70,7 +70,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="hbox"]
 margin_top = 30.0
 margin_right = 240.0
 margin_bottom = 56.0
@@ -79,7 +79,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="p2" type="Label" parent="HBoxContainer/MarginContainer2"]
+[node name="p2" type="Label" parent="hbox/MarginContainer2"]
 margin_right = 240.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
@@ -89,7 +89,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="p3" type="Label" parent="HBoxContainer"]
+[node name="p3" type="Label" parent="hbox"]
 margin_top = 60.0
 margin_right = 240.0
 margin_bottom = 76.0
@@ -115,5 +115,5 @@ __meta__ = {
 [node name="ani" type="AnimatedSprite" parent="."]
 position = Vector2( 131, 295 )
 frames = SubResource( 1 )
-frame = 1
+frame = 3
 playing = true

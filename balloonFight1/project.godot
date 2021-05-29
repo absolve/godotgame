@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="balloonFight"
 run/main_scene="res://scenes/welcome.tscn"
-config/icon="res://icon.png"
+config/icon="res://sprites/lifeBalloon1.png"
 
 [display]
 
