@@ -50,6 +50,7 @@ var enemy=preload("res://scenes/enemy.tscn")
 var _welcomeScene="res://scenes/welcome.tscn"
 var _mainScene="res://scenes/main.tscn"	#主界面
 var _menuScene="res://scenes/menu.tscn" #记分界面
+const _settingScene="res://scenes/setting.tscn" #设置界面
 
 var mainRoot
 var mainScene #主场景 用来添加子弹数据

@@ -89,45 +89,65 @@ margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "00000"
 
-[node name="vbox" type="VBoxContainer" parent="main"]
+[node name="vbox" type="Control" parent="main"]
 margin_left = 207.0
-margin_top = 278.0
+margin_top = 263.0
 margin_right = 399.0
-margin_bottom = 354.0
+margin_bottom = 362.0
 grow_horizontal = 0
 grow_vertical = 0
 __meta__ = {
-"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="main/vbox"]
+[node name="MarginContainer" type="MarginContainer" parent="main/vbox"]
+margin_right = 192.0
+margin_bottom = 16.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="main/vbox/MarginContainer"]
 margin_right = 192.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "1 player"
 uppercase = true
 
-[node name="Label2" type="Label" parent="main/vbox"]
-margin_top = 20.0
+[node name="MarginContainer2" type="MarginContainer" parent="main/vbox"]
+margin_top = 28.0
 margin_right = 192.0
-margin_bottom = 36.0
+margin_bottom = 44.0
+
+[node name="Label2" type="Label" parent="main/vbox/MarginContainer2"]
+margin_right = 192.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "2 player2"
 uppercase = true
 
-[node name="Label3" type="Label" parent="main/vbox"]
-margin_top = 40.0
+[node name="MarginContainer3" type="MarginContainer" parent="main/vbox"]
+margin_top = 56.0
 margin_right = 192.0
-margin_bottom = 56.0
+margin_bottom = 72.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="main/vbox/MarginContainer3"]
+margin_right = 192.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "construction"
 uppercase = true
 
-[node name="Label4" type="Label" parent="main/vbox"]
-margin_top = 60.0
+[node name="MarginContainer4" type="MarginContainer" parent="main/vbox"]
+margin_top = 84.0
 margin_right = 192.0
-margin_bottom = 76.0
+margin_bottom = 100.0
+
+[node name="Label4" type="Label" parent="main/vbox/MarginContainer4"]
+margin_right = 192.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "setting"
 uppercase = true
@@ -136,7 +156,7 @@ __meta__ = {
 }
 
 [node name="tankAni" type="AnimatedSprite" parent="main"]
-position = Vector2( 171, 285 )
+position = Vector2( 171, 270 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"

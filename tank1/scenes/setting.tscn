@@ -1,18 +1,116 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/Control.gd" type="Script" id=1]
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=2]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -551.518, 0 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TabContainer" type="TabContainer" parent="."]
-margin_right = 507.0
-margin_bottom = 36.0
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 512.0
+margin_bottom = 448.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="tab" type="TabContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 150.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="control" type="MarginContainer" parent="tab"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="actionList" type="VBoxContainer" parent="tab/control"]
+margin_right = 392.0
+margin_bottom = 314.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="tab/control/actionList"]
+margin_right = 392.0
+margin_bottom = 30.0
+
+[node name="Label" type="Label" parent="tab/control/actionList/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 385.0
+margin_bottom = 23.0
+custom_fonts/font = ExtResource( 2 )
+text = "actions"
+align = 1
+uppercase = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="tab/control/actionList"]
+margin_top = 34.0
+margin_right = 392.0
+margin_bottom = 314.0
+size_flags_vertical = 3
+
+[node name="actions" type="VBoxContainer" parent="tab/control/actionList/ScrollContainer"]
+margin_right = 392.0
+margin_bottom = 280.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="about" type="MarginContainer" parent="tab"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -244.0
+margin_top = -41.0
+margin_right = 244.0
+margin_bottom = -9.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="return" type="Button" parent="HBoxContainer"]
+margin_left = 201.0
+margin_right = 254.0
+margin_bottom = 32.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 2 )
+enabled_focus_mode = 0
+text = "return"
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+margin_left = 258.0
+margin_right = 287.0
+margin_bottom = 32.0
+focus_mode = 0
+size_flags_horizontal = 5
+custom_fonts/font = ExtResource( 2 )
+enabled_focus_mode = 0
+text = "ok"
+
+[connection signal="pressed" from="HBoxContainer/return" to="." method="_on_return_pressed"]
+[connection signal="pressed" from="HBoxContainer/Button" to="." method="_on_Button_pressed"]

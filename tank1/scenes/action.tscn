@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scripts/action.gd" type="Script" id=2]
+
+[node name="Control" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -414.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hbox" type="HBoxContainer" parent="."]
+margin_right = 512.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PanelContainer" type="PanelContainer" parent="hbox"]
+margin_right = 470.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="action" type="Label" parent="hbox/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 463.0
+margin_bottom = 23.0
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 1 )
+text = "key"
+uppercase = true
+
+[node name="Button" type="Button" parent="hbox"]
+margin_left = 474.0
+margin_right = 512.0
+margin_bottom = 30.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 1 )
+enabled_focus_mode = 0
+text = "add"
+
+[node name="keyList" type="VBoxContainer" parent="."]
+margin_top = 34.0
+margin_right = 512.0
+margin_bottom = 34.0
+
+[connection signal="pressed" from="hbox/Button" to="." method="_on_Button_pressed"]

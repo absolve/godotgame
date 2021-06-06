@@ -142,6 +142,7 @@ one_shot = true
 [node name="shovelTimer" type="Timer" parent="."]
 wait_time = 15.0
 one_shot = true
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
 [connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]

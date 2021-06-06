@@ -3,8 +3,8 @@ extends Node2D
 
 var mode=1  #1单人 2双人  3编辑
 
-var pos=Vector3(285,305,325)	#选择1p 2p 时的y坐标
-var setting=345
+var pos=Vector3(270,298,326)	#选择1p 2p 时的y坐标
+var setting=354
 var index=0
 onready var _tankAni=$main/tankAni
 onready var _ani=$ani
@@ -32,7 +32,7 @@ func _input(event):
 					Game.mode=mode		
 					Game.change2SceneLevel(Game._mainScene)
 					queue_free()
-				else:
+				elif mode==3:
 					var scene = preload("res://scenes/map.tscn"	)
 					var temp=scene.instance()
 					temp.mode=1
@@ -41,7 +41,14 @@ func _input(event):
 					get_tree().get_root().add_child(temp)
 					set_process_input(true)
 					#Game.changeSceneAni(Game._welcomeScene)
-				
+				elif mode==4:
+					var scene = load(Game._settingScene)
+					var temp=scene.instance()
+					queue_free()
+					set_process_input(false)
+					get_tree().get_root().add_child(temp)
+					set_process_input(true)
+					pass
 				
 func setMode(index):
 	if index==0:
@@ -55,4 +62,4 @@ func setMode(index):
 		mode=3
 	elif index==3:	
 		_tankAni.position.y=setting
-		mode=3
+		mode=4
