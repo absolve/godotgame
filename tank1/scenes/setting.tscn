@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/Control.gd" type="Script" id=1]
 [ext_resource path="res://fonts/label.tres" type="DynamicFont" id=2]
+[ext_resource path="res://ui/normal.tres" type="StyleBox" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -16,6 +17,9 @@ __meta__ = {
 margin_right = 512.0
 margin_bottom = 448.0
 color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="tab" type="TabContainer" parent="."]
 anchor_left = 0.5
@@ -26,6 +30,9 @@ margin_left = -200.0
 margin_top = -200.0
 margin_right = 200.0
 margin_bottom = 150.0
+custom_styles/tab_bg = ExtResource( 4 )
+custom_styles/panel = ExtResource( 4 )
+custom_fonts/font = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -33,40 +40,41 @@ __meta__ = {
 [node name="control" type="MarginContainer" parent="tab"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 32.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_left = 2.0
+margin_top = 28.0
+margin_right = -2.0
+margin_bottom = -2.0
 
 [node name="actionList" type="VBoxContainer" parent="tab/control"]
-margin_right = 392.0
-margin_bottom = 314.0
+margin_right = 396.0
+margin_bottom = 320.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="tab/control/actionList"]
-margin_right = 392.0
-margin_bottom = 30.0
+margin_right = 396.0
+margin_bottom = 20.0
+custom_styles/panel = ExtResource( 4 )
 
 [node name="Label" type="Label" parent="tab/control/actionList/PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 385.0
-margin_bottom = 23.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 394.0
+margin_bottom = 18.0
 custom_fonts/font = ExtResource( 2 )
 text = "actions"
 align = 1
 uppercase = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="tab/control/actionList"]
-margin_top = 34.0
-margin_right = 392.0
-margin_bottom = 314.0
+margin_top = 24.0
+margin_right = 396.0
+margin_bottom = 320.0
 size_flags_vertical = 3
 
 [node name="actions" type="VBoxContainer" parent="tab/control/actionList/ScrollContainer"]
-margin_right = 392.0
-margin_bottom = 280.0
+margin_right = 396.0
+margin_bottom = 296.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -75,7 +83,7 @@ visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
-margin_top = 32.0
+margin_top = 26.0
 margin_right = -4.0
 margin_bottom = -4.0
 
