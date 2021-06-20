@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
 [ext_resource path="res://sprites/brick.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://sprites/del.png" type="Texture" id=9]
 [ext_resource path="res://sprites/water.png" type="Texture" id=10]
 [ext_resource path="res://sprites/ice.png" type="Texture" id=11]
+[ext_resource path="res://scenes/button.tscn" type="PackedScene" id=12]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -331,54 +332,54 @@ __meta__ = {
 
 [node name="VBoxContainer" type="VBoxContainer" parent="tools/bricks"]
 anchor_bottom = 10.0
-margin_top = 100.0
-margin_right = 43.0
-margin_bottom = 234.0
+margin_left = -25.0
+margin_top = 111.0
+margin_right = 59.0
+margin_bottom = 357.0
 grow_vertical = 0
 __meta__ = {
+"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_right = 51.0
-margin_bottom = 20.0
+[node name="save" parent="tools/bricks/VBoxContainer" instance=ExtResource( 12 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 84.0
+margin_bottom = 22.0
 text = "save"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Button2" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_top = 24.0
-margin_right = 51.0
-margin_bottom = 44.0
+[node name="load" parent="tools/bricks/VBoxContainer" instance=ExtResource( 12 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 26.0
+margin_right = 84.0
+margin_bottom = 48.0
 text = "load"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Button3" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_top = 48.0
-margin_right = 51.0
-margin_bottom = 68.0
+[node name="clear" parent="tools/bricks/VBoxContainer" instance=ExtResource( 12 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 52.0
+margin_right = 84.0
+margin_bottom = 74.0
 text = "clear"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Button4" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_top = 72.0
-margin_right = 51.0
-margin_bottom = 92.0
+[node name="lock" parent="tools/bricks/VBoxContainer" instance=ExtResource( 12 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 78.0
+margin_right = 84.0
+margin_bottom = 100.0
 text = "lock"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Button5" type="Button" parent="tools/bricks/VBoxContainer"]
-margin_top = 96.0
-margin_right = 51.0
-margin_bottom = 116.0
-text = "return"
+[node name="return" parent="tools/bricks/VBoxContainer" instance=ExtResource( 12 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 104.0
+margin_right = 84.0
+margin_bottom = 126.0
+text = "back"
 
 [node name="FileDialog" type="FileDialog" parent="tools"]
 margin_right = 403.0
@@ -396,22 +397,23 @@ current_path = "/godotgame/tank1/"
 margin_right = 416.0
 margin_bottom = 201.0
 popup_exclusive = true
-window_title = "打开单个文件"
+window_title = "打开文件"
 resizable = true
 mode = 0
 access = 2
 current_dir = "/godotgame/tank1"
 current_path = "/godotgame/tank1/"
+
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton" to="." method="_on_TextureButton_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton2" to="." method="_on_TextureButton2_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton3" to="." method="_on_TextureButton3_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton5" to="." method="_on_TextureButton5_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton6" to="." method="_on_TextureButton6_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton4" to="." method="_on_TextureButton4_pressed"]
-[connection signal="pressed" from="tools/bricks/VBoxContainer/Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="tools/bricks/VBoxContainer/Button2" to="." method="_on_Button2_pressed"]
-[connection signal="pressed" from="tools/bricks/VBoxContainer/Button3" to="." method="_on_Button3_pressed"]
-[connection signal="pressed" from="tools/bricks/VBoxContainer/Button4" to="." method="_on_Button4_pressed"]
-[connection signal="pressed" from="tools/bricks/VBoxContainer/Button5" to="." method="_on_Button5_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/clear" to="." method="_on_clear_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/lock" to="." method="_on_lock_pressed"]
+[connection signal="pressed" from="tools/bricks/VBoxContainer/return" to="." method="_on_return_pressed"]
 [connection signal="confirmed" from="tools/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="tools/loadDialog" to="." method="_on_loadDialog_confirmed"]

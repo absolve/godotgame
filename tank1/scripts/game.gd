@@ -87,7 +87,7 @@ static func sort(a:String,b:String):
 	if aname.to_int()>=bname.to_int():
 		flag=false
 	return flag
-	pass
+
 
 #改变到选择场景
 func change2SceneLevel(stagePath):
@@ -103,7 +103,6 @@ func changeSceneAni(stagePath):
 	Splash.playIn()
 	yield(Splash.find_node("ani"),"animation_finished")
 #	Splash.select=true
-#	print("222=====",Game.canSelectLevel)
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
@@ -145,9 +144,8 @@ func getBuiltInMapNum(mapDir,fileList:Array):
 			if !dir.current_is_dir():
 				num+=1
 				fileList.append(file_name)
-				print("Found file: " + file_name)
+			#	print("Found file: " + file_name)
 			file_name = dir.get_next()
-			
 	else:
 		print("An error occurred when trying to access the path.")
 	return num
@@ -160,7 +158,6 @@ func getExtensionMapNum():
 	var mapPath=baseDir+"/levels"
 	var dir = Directory.new()
 	if dir.dir_exists(mapPath):
-		print("1212")
 		if dir.open(mapPath) == OK:
 			dir.list_dir_begin()
 			var file_name = dir.get_next()

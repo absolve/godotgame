@@ -8,7 +8,7 @@
 
 [node name="Control" type="VBoxContainer"]
 margin_right = 512.0
-margin_bottom = 34.0
+margin_bottom = 26.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -16,7 +16,7 @@ __meta__ = {
 
 [node name="hbox" type="HBoxContainer" parent="."]
 margin_right = 512.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -24,16 +24,16 @@ __meta__ = {
 
 [node name="PanelContainer" type="PanelContainer" parent="hbox"]
 margin_right = 478.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = ExtResource( 3 )
 
 [node name="action" type="Label" parent="hbox/PanelContainer"]
 margin_left = 2.0
-margin_top = 2.0
+margin_top = 3.0
 margin_right = 476.0
-margin_bottom = 18.0
+margin_bottom = 19.0
 size_flags_vertical = 0
 custom_fonts/font = ExtResource( 1 )
 text = "key"
@@ -42,18 +42,14 @@ uppercase = true
 [node name="Button" type="Button" parent="hbox"]
 margin_left = 482.0
 margin_right = 512.0
-margin_bottom = 20.0
-focus_mode = 0
+margin_bottom = 22.0
 custom_styles/hover = ExtResource( 4 )
 custom_styles/pressed = ExtResource( 5 )
 custom_styles/normal = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
-enabled_focus_mode = 0
 text = "add"
 
 [node name="keyList" type="VBoxContainer" parent="."]
-margin_top = 24.0
+margin_top = 26.0
 margin_right = 512.0
-margin_bottom = 24.0
-
-[connection signal="pressed" from="hbox/Button" to="." method="_on_Button_pressed"]
+margin_bottom = 26.0

@@ -533,13 +533,6 @@ func _on_TextureButton6_pressed():
 	pass # Replace with function body.
 
 
-func _on_Button_pressed():
-	var baseDir=OS.get_executable_path().get_base_dir()
-	_fileDiaglog.current_dir=baseDir
-	_fileDiaglog.current_file="1992.json"
-	_fileDiaglog.popup_centered()
-	pass # Replace with function body.
-
 
 func _on_FileDialog_confirmed():
 	var path=_fileDiaglog.current_dir	
@@ -566,17 +559,33 @@ func _on_loadDialog_confirmed():
 	pass # Replace with function body.
 
 
-func _on_Button3_pressed():
+
+func _on_load_pressed():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	_loadDiaglog.current_dir=baseDir
+	_loadDiaglog.popup_centered()
+	pass # Replace with function body.
+
+
+func _on_clear_pressed():
 	clearAllItem()
 	pass # Replace with function body.
 
 
-func _on_Button4_pressed():
+func _on_lock_pressed():
 	lock=!lock
 	pass # Replace with function body.
 
-#返回
-func _on_Button5_pressed():
+
+func _on_return_pressed():
 	queue_free()
 	Game.changeScene(Game._welcomeScene)
+	pass # Replace with function body.
+
+
+func _on_save_pressed():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	_fileDiaglog.current_dir=baseDir
+	_fileDiaglog.current_file="1992.json"
+	_fileDiaglog.popup_centered()
 	pass # Replace with function body.
