@@ -70,7 +70,7 @@ func _ready():
 	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
-	print(mapRect)
+#	print(mapRect)
 	#loadMap("res://levels/2.json")
 	#mode=1
 	if mode==1:#编辑模式

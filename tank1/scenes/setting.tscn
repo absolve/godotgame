@@ -43,13 +43,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Base" type="MarginContainer" parent="tab"]
+[node name="Base" type="Control" parent="tab"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 2.0
 margin_top = 29.0
 margin_right = -2.0
 margin_bottom = -3.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tab/Base"]
+margin_right = 394.0
+margin_bottom = 51.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckButton" type="CheckButton" parent="tab/Base/HBoxContainer"]
+margin_right = 207.0
+margin_bottom = 51.0
+custom_fonts/font = ExtResource( 2 )
+text = "use ExtensionMap"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Control" type="Control" parent="tab"]
 visible = false

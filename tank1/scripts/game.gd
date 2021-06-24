@@ -72,12 +72,19 @@ var p1State={'level':1,'life':1,'hasShip':false} #坦克信息
 var p2State={'level':1,'life':1,'hasShip':false}
 var isGameOver=false#游戏是否结束
 var canSelectLevel=true#选择关卡
+var controls =['p1_up','p1_down','p1_left','p1_right','p1_fire',
+	'p2_up','p2_down','p2_left','p2_right','p2_fire','game_start']
+var configFile="config.ini"
+var ActionEvent:Dictionary = {} #事件集合
+
 
 func _ready():
 	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
 	mapNameList.sort_custom(self,"sort")
 	print(mapNameList)
+	loadConfig()
+	
 	pass 
 
 static func sort(a:String,b:String):
@@ -129,9 +136,6 @@ func reset():
 	canSelectLevel=true
 	pass
 
-func loadMap(level):
-	
-	pass
 
 #获取内置的地图文件数量
 func getBuiltInMapNum(mapDir,fileList:Array):
@@ -171,3 +175,58 @@ func getExtensionMapNum():
 	else:
 		print("Directory not exist")
 	return num
+
+#载入按键配置
+func loadConfig():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var file=File.new()
+#	print(baseDir+configFile)
+	if file.file_exists(baseDir+configFile):
+		file.open(baseDir+configFile, File.READ)
+	#	print(file.get_as_text())
+		var data=parse_json(file.get_as_text())
+		print('data ',data)
+		if data:
+			var input=data
+			for i in controls:
+				var event=input[i]
+				ActionEvent[i]=[]
+				for z in event:
+					var NewEvent:InputEvent
+					if z.eventtype == "InputEventKey":
+						NewEvent = InputEventKey.new()
+						NewEvent.scancode = z.scancode
+					elif z.eventtype == "InputEventJoypadButton":
+						NewEvent = InputEventJoypadButton.new()
+						NewEvent.device = z.device
+						NewEvent.button_index = z.button_index
+					elif z.eventtype=='InputEventJoypadMotion':
+						NewEvent = InputEventJoypadMotion.new()
+						NewEvent.device = z.device
+						NewEvent.axis = z.axis
+						NewEvent.axis_value = z.axis_value
+					ActionEvent[i].append(NewEvent)
+			setActionEvent()
+		else: #如果都没有配置的话就使用默认自带的
+			loadDefaultActions()
+		file.close()
+	else:
+		print("file not exist")
+		file.open(baseDir+configFile, File.WRITE)
+		file.close()
+		loadDefaultActions()
+	pass
+	
+#设置inputmap的事件根据本地保存
+func setActionEvent():
+	for i in controls:
+		InputMap.action_erase_events(i)
+		for event in ActionEvent[i]:
+			InputMap.action_add_event(i,event)	
+
+#加载默认的数据
+func loadDefaultActions():
+	InputMap.load_from_globals() #项目配置的信息
+	for  i in controls:
+		ActionEvent[i]=InputMap.get_action_list(i)
+	

@@ -112,8 +112,7 @@ func _update(delta):
 	#		print("change")
 			keepDirectionTime=randi()%1800+300	
 			directionTime=0
-			var p=randf()   #随机概率值
-				
+			var p=randf()   #随机概率值		
 			var dx=position.x-targetPos.x
 			var dy=position.y-targetPos.y 
 			if p>0.4:
@@ -124,15 +123,7 @@ func _update(delta):
 						newDir=3
 					if p>0.7:
 						var temp = getNewDir(dir)
-						newDir=temp[randi()%temp.size()]	
-#					if p<0.7:
-#						if dx<0:
-#							newDir=2
-#						else:
-#							newDir=3	
-#					else:
-#						var temp = getNewDir(dir)
-#						newDir=temp[randi()%temp.size()]			
+						newDir=temp[randi()%temp.size()]			
 				else:
 					if dy<0:
 						newDir=1
@@ -140,15 +131,7 @@ func _update(delta):
 						newDir=0
 					if p>0.7:
 						var temp = getNewDir(dir)
-						newDir=temp[randi()%temp.size()]		
-#					if p<0.7:
-#						if dy<0:
-#							newDir=1
-#						else:
-#							newDir=0
-#					else:
-#						var temp = getNewDir(dir)
-#						newDir=temp[randi()%temp.size()]						
+						newDir=temp[randi()%temp.size()]							
 			else:
 				var temp = getNewDir(dir)
 				newDir=temp[randi()%temp.size()]				
@@ -161,7 +144,10 @@ func _update(delta):
 			
 		if fireTime>reloadTime:
 			fireTime=0
-			reloadTime=randi()%1000+200
+			if type==1 || type==2: #类型1 类型2开火间隔长
+				reloadTime=randi()%2000+500
+			else:
+				reloadTime=randi()%1000+200
 			fire()			
 		if !isStop:
 			position+=vec*delta		
