@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/main.gd" type="Script" id=1]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=2]
 [ext_resource path="res://scenes/map.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/autoHideLabel.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Animation" id=1]
 resource_name = "gameover"
@@ -44,7 +45,7 @@ margin_right = 279.0
 margin_bottom = 487.0
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.72549, 0.133333, 0.0588235, 1 )
-text = "GAME 
+text = "GAME
 OVER"
 align = 1
 __meta__ = {
@@ -70,6 +71,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="p1Over" parent="gui" instance=ExtResource( 4 )]
+visible = false
+margin_left = 144.0
+margin_top = 398.0
+margin_right = 208.0
+margin_bottom = 433.0
+
+[node name="p2Over" parent="gui" instance=ExtResource( 4 )]
+visible = false
+margin_left = 272.0
+margin_top = 398.0
+margin_right = 336.0
+margin_bottom = 433.0
+
 [node name="ani" type="AnimationPlayer" parent="."]
 root_node = NodePath("../gui/Label")
 anims/gameover = SubResource( 1 )
@@ -82,59 +97,6 @@ one_shot = true
 wait_time = 1.2
 one_shot = true
 
-[node name="Button" type="Button" parent="."]
-visible = false
-margin_right = 12.0
-margin_bottom = 20.0
-text = "next"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button2" type="Button" parent="."]
-visible = false
-margin_left = 84.2798
-margin_top = 2.24746
-margin_right = 135.28
-margin_bottom = 22.2475
-text = "bonus"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button3" type="Button" parent="."]
-visible = false
-margin_left = 186.89
-margin_top = 4.48985
-margin_right = 265.89
-margin_bottom = 24.4898
-text = "addenemy"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button4" type="Button" parent="."]
-visible = false
-margin_left = 282.122
-margin_top = 5.08761
-margin_right = 339.122
-margin_bottom = 25.0876
-text = "change"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Button5" type="Button" parent="."]
-visible = false
-margin_left = 362.113
-margin_top = 6.54063
-margin_right = 413.113
-margin_bottom = 26.5406
-text = "CLEAR"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="clockTimer" type="Timer" parent="."]
 wait_time = 8.0
 one_shot = true
@@ -142,8 +104,3 @@ one_shot = true
 [node name="shovelTimer" type="Timer" parent="."]
 wait_time = 15.0
 one_shot = true
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
-[connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]
-[connection signal="pressed" from="Button4" to="." method="_on_Button4_pressed"]
-[connection signal="pressed" from="Button5" to="." method="_on_Button5_pressed"]

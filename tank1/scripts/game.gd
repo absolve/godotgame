@@ -50,6 +50,7 @@ var enemy=preload("res://scenes/enemy.tscn")
 var _welcomeScene="res://scenes/welcome.tscn"
 var _mainScene="res://scenes/main.tscn"	#主界面
 var _menuScene="res://scenes/menu.tscn" #记分界面
+const _settingScene="res://scenes/setting.tscn" #设置界面
 
 var mainRoot
 var mainScene #主场景 用来添加子弹数据
@@ -66,17 +67,26 @@ var mode=1	#游戏单人1 双人2
 var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0} #击中的坦克数量
-var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p2Score={'typeA':10,'typeB':10,'typeC':10,'typeD':10}
 var p1State={'level':1,'life':1,'hasShip':false} #坦克信息
 var p2State={'level':1,'life':1,'hasShip':false}
 var isGameOver=false#游戏是否结束
 var canSelectLevel=true#选择关卡
+var controls =['p1_up','p1_down','p1_left','p1_right','p1_fire',
+	'p2_up','p2_down','p2_left','p2_right','p2_fire','game_start']
+var configFile="config.ini"
+var ActionEvent:Dictionary = {} #事件集合
+var gameConfigFile="gameConfig.ini"
+var useExtensionMap=false  #使用你扩展
 
 func _ready():
-	mapNum = getBuiltInMapNum(mapDir,mapNameList)
+#	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
-	mapNameList.sort_custom(self,"sort")
-	print(mapNameList)
+#	mapNameList.sort_custom(self,"sort")
+	loadConfig()
+	loadGameConfig()
+	loadMaps()
+	print(mapNameList)	
 	pass 
 
 static func sort(a:String,b:String):
@@ -86,7 +96,7 @@ static func sort(a:String,b:String):
 	if aname.to_int()>=bname.to_int():
 		flag=false
 	return flag
-	pass
+
 
 #改变到选择场景
 func change2SceneLevel(stagePath):
@@ -102,7 +112,6 @@ func changeSceneAni(stagePath):
 	Splash.playIn()
 	yield(Splash.find_node("ani"),"animation_finished")
 #	Splash.select=true
-#	print("222=====",Game.canSelectLevel)
 	set_process_input(false)
 	get_tree().change_scene(stagePath)
 	set_process_input(true)
@@ -129,9 +138,14 @@ func reset():
 	canSelectLevel=true
 	pass
 
-func loadMap(level):
-	
-	pass
+func loadMaps():
+	print('loadMaps')
+	if useExtensionMap:
+		mapNum=getExtensionMapNum(mapNameList)
+	else:
+		mapNum = getBuiltInMapNum(mapDir,mapNameList)
+	if mapNum>0:
+		mapNameList.sort_custom(self,"sort")
 
 #获取内置的地图文件数量
 func getBuiltInMapNum(mapDir,fileList:Array):
@@ -144,32 +158,125 @@ func getBuiltInMapNum(mapDir,fileList:Array):
 			if !dir.current_is_dir():
 				num+=1
 				fileList.append(file_name)
-				print("Found file: " + file_name)
+			#	print("Found file: " + file_name)
 			file_name = dir.get_next()
-			
 	else:
 		print("An error occurred when trying to access the path.")
 	return num
 
 
 #获取扩展的地图	
-func getExtensionMapNum():
+func getExtensionMapNum(fileList:Array):
 	var num=0
 	var baseDir=OS.get_executable_path().get_base_dir()
 	var mapPath=baseDir+"/levels"
+#	print(OS.get_executable_path())
 	var dir = Directory.new()
 	if dir.dir_exists(mapPath):
-		print("1212")
 		if dir.open(mapPath) == OK:
 			dir.list_dir_begin()
 			var file_name = dir.get_next()
 			while file_name != "":
 				if !dir.current_is_dir():
 					num+=1
-					print("Found file: " + file_name)
+					fileList.append(file_name)
+				#	print("Found file: " + file_name)
 				file_name = dir.get_next()
 		else:
 			print("An error occurred when trying to access the path.")
 	else:
-		print("Directory not exist")
+		print("Directory not exist ",mapPath)
+		var err=dir.make_dir_recursive(mapPath) #新建一个
+		print(err==OK)
 	return num
+
+#载入配置文件
+func loadGameConfig():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var config = ConfigFile.new()
+	var err = config.load(baseDir+gameConfigFile)
+	if err == OK:
+		print(err)
+		if config.has_section("map"):
+			if config.has_section_key("map","useExtensionMap"):
+				useExtensionMap=config.get_value("map","useExtensionMap",false)		
+	else:
+		print('newGameConfigFile')
+		newGameConfigFile()
+
+#保存配置文件
+func saveGameConfig(flag):
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var config = ConfigFile.new()
+	var err = config.load(baseDir+gameConfigFile)
+	if err == OK:
+		if config.has_section("map"):
+			config.set_value("map","useExtensionMap",flag)	
+		else:
+			config.set_value("map","useExtensionMap",flag)
+		config.save(baseDir+gameConfigFile)	
+	else:
+		print("err ",err)		
+		
+func newGameConfigFile():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var file=File.new()
+	if !file.file_exists(baseDir+gameConfigFile):
+		file.open(baseDir+gameConfigFile, File.WRITE)
+		file.close()
+		
+#载入按键配置
+func loadConfig():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var file=File.new()
+#	print(baseDir+configFile)
+	if file.file_exists(baseDir+configFile):
+		file.open(baseDir+configFile, File.READ)
+	#	print(file.get_as_text())
+		var input=parse_json(file.get_as_text())
+		print('data ',input)
+		if input:
+			for i in controls:
+				if !input.has(i):
+					continue
+				var event=input[i]
+				ActionEvent[i]=[]
+				for z in event:
+					var NewEvent:InputEvent
+					if z.eventtype == "InputEventKey":
+						NewEvent = InputEventKey.new()
+						NewEvent.scancode = z.scancode
+					elif z.eventtype == "InputEventJoypadButton":
+						NewEvent = InputEventJoypadButton.new()
+						NewEvent.device = z.device
+						NewEvent.button_index = z.button_index
+					elif z.eventtype=='InputEventJoypadMotion':
+						NewEvent = InputEventJoypadMotion.new()
+						NewEvent.device = z.device
+						NewEvent.axis = z.axis
+						NewEvent.axis_value = z.axis_value
+					ActionEvent[i].append(NewEvent)
+			setActionEvent()
+		else: #如果都没有配置的话就使用默认自带的
+			loadDefaultActions()
+		file.close()
+	else:
+		print("file not exist")
+		file.open(baseDir+configFile, File.WRITE)
+		file.close()
+		loadDefaultActions()
+	pass
+	
+#设置inputmap的事件根据本地保存
+func setActionEvent():
+	for i in controls:
+		InputMap.action_erase_events(i)
+		for event in ActionEvent[i]:
+			InputMap.action_add_event(i,event)	
+
+#加载默认的数据
+func loadDefaultActions():
+	InputMap.load_from_globals() #项目配置的信息
+	for  i in controls:
+		ActionEvent[i]=InputMap.get_action_list(i)
+	

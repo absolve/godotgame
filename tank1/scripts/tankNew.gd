@@ -83,17 +83,27 @@ func setStop(isStop):
 	 
 func setKeyMap(playerId:int):
 	if playerId==1:
-		keymap["up"]=Game.player1["up"]
-		keymap["down"]=Game.player1["down"]
-		keymap["left"]=Game.player1["left"]
-		keymap["right"]=Game.player1["right"]
-		keymap["fire"]=Game.player1["fire"]
+#		keymap["up"]=Game.player1["up"]
+#		keymap["down"]=Game.player1["down"]
+#		keymap["left"]=Game.player1["left"]
+#		keymap["right"]=Game.player1["right"]
+#		keymap["fire"]=Game.player1["fire"]
+		keymap["up"]="p1_up"
+		keymap["down"]="p1_down"
+		keymap["left"]="p1_left"
+		keymap["right"]="p1_right"
+		keymap["fire"]="p1_fire"
 	elif playerId==2:
-		keymap["up"]=Game.player2["up"]
-		keymap["down"]=Game.player2["down"]
-		keymap["left"]=Game.player2["left"]
-		keymap["right"]=Game.player2["right"]
-		keymap["fire"]=Game.player2["fire"]	
+#		keymap["up"]=Game.player2["up"]
+#		keymap["down"]=Game.player2["down"]
+#		keymap["left"]=Game.player2["left"]
+#		keymap["right"]=Game.player2["right"]
+#		keymap["fire"]=Game.player2["fire"]	
+		keymap["up"]="p2_up"
+		keymap["down"]="p2_down"
+		keymap["left"]="p2_left"
+		keymap["right"]="p2_right"
+		keymap["fire"]="p2_fire"
 	pass	
 	
 #增加力量	
@@ -139,26 +149,24 @@ func _update(delta):
 		animation(dir,vec)	
 		if isFreeze:
 			return
-		if Input.is_key_pressed(keymap["up"]):
+		
+		
+		if Input.is_action_pressed(keymap["up"]):
 			vec.y=-speed
 			vec.x=0
 			dir=0
-	#		isStop=false
-		elif Input.is_key_pressed(keymap["down"]):
+		elif Input.is_action_pressed(keymap["down"]):
 			vec.x=0
 			vec.y=speed
 			dir=1
-	#		isStop=false
-		elif Input.is_key_pressed(keymap["left"]):
+		elif Input.is_action_pressed(keymap["left"]):
 			vec.x=-speed
 			vec.y=0
-	#		isStop=false
 			dir=2	
-		elif Input.is_key_pressed(keymap["right"]):	
+		elif Input.is_action_pressed(keymap["right"]):	
 			vec.y=0
 			vec.x=speed
 			dir=3
-	#		isStop=false
 		else:
 			vec=Vector2.ZERO	
 		
@@ -174,7 +182,7 @@ func _update(delta):
 			if !$idle.playing:
 				$idle.play()
 			
-		if Input.is_key_pressed(keymap["fire"]):
+		if Input.is_action_pressed(keymap["fire"]):
 			fire()	
 			
 		if !isStop:

@@ -77,11 +77,6 @@ func getSize():
 func _update(delta):
 	if state==Game.tank_state.IDLE:
 		pass
-#		if OS.get_system_time_msecs()-initStartTime>=initTime:
-#			initStartTime=0
-#			isInit=true
-#			$ani.playing=false
-#			setState(Game.tank_state.START)
 	elif state==Game.tank_state.START:
 		animation(dir,vec)	
 		if isFreeze:
@@ -104,55 +99,38 @@ func _update(delta):
 		
 		directionTime+=delta*1000
 		fireTime+=delta*1000
-#		if isStop:
-#			keepDirectionTime-=20
-			#vec=Vector2.ZERO
+		if isStop:
+			keepDirectionTime-=20
+			vec=Vector2.ZERO
 	
 		if directionTime>keepDirectionTime:
 	#		print("change")
 			keepDirectionTime=randi()%1800+300	
 			directionTime=0
-			var p=randf()   #随机概率值
-				
+			var p=randf()   #随机概率值		
 			var dx=position.x-targetPos.x
 			var dy=position.y-targetPos.y 
-			if p>0.4:
-				if abs(dx)>abs(dy):
-					if dx<0:
-						newDir=2
-					else:
-						newDir=3
-					if p>0.7:
-						var temp = getNewDir(dir)
-						newDir=temp[randi()%temp.size()]	
-#					if p<0.7:
-#						if dx<0:
-#							newDir=2
-#						else:
-#							newDir=3	
-#					else:
-#						var temp = getNewDir(dir)
-#						newDir=temp[randi()%temp.size()]			
-				else:
-					if dy<0:
-						newDir=1
-					else:
-						newDir=0
-					if p>0.7:
-						var temp = getNewDir(dir)
-						newDir=temp[randi()%temp.size()]		
-#					if p<0.7:
-#						if dy<0:
-#							newDir=1
-#						else:
-#							newDir=0
-#					else:
-#						var temp = getNewDir(dir)
-#						newDir=temp[randi()%temp.size()]						
-			else:
-				var temp = getNewDir(dir)
-				newDir=temp[randi()%temp.size()]				
 			
+			
+			if type==0:
+				if p>0.3:
+					targetEagle(p)
+				else:
+					var temp = getNewDir(dir)
+					newDir=temp[randi()%temp.size()]			
+			elif type==1 ||type==2:
+				if p>0.5:
+					targetEagle(p)
+				else:
+					var temp = getNewDir(dir)
+					newDir=temp[randi()%temp.size()]	
+			elif type==3:
+				if p>0.1:
+					targetEagle(p)
+				else:
+					var temp = getNewDir(dir)
+					newDir=temp[randi()%temp.size()]				
+
 			if dir!=newDir:
 				dir=newDir
 			else:
@@ -161,7 +139,10 @@ func _update(delta):
 			
 		if fireTime>reloadTime:
 			fireTime=0
-			reloadTime=randi()%1000+200
+			if type==0 || type==1: #类型s 类型b开火间隔长
+				reloadTime=randi()%2000+300
+			else:
+				reloadTime=randi()%1000+200
 			fire()			
 		if !isStop:
 			position+=vec*delta		
@@ -294,9 +275,29 @@ func turnDirection():
 	newDir=randi()%4	
 	pass
 
+#向基地出发
+func targetEagle(p):
+	var dx=position.x-targetPos.x
+	var dy=position.y-targetPos.y 
+	if abs(dx)>abs(dy):
+		if dx<0:
+			newDir=3
+		else:
+			newDir=2
+		if p>0.8:
+			var temp = getNewDir(dir)
+			newDir=temp[randi()%temp.size()]			
+	else:
+		if dy<0:
+			newDir=1
+		else:
+			newDir=0
+		if p>0.8:
+			var temp = getNewDir(dir)
+			newDir=temp[randi()%temp.size()]	
+
 func setStop(isStop):
 	self.isStop=isStop
-	#vec=Vector2.ZERO
 
 func getNewDir(dir):
 	var temp=[]
@@ -337,28 +338,11 @@ func destroy():
 	queue_free()
 
 func setState(state):
-	#print('setState',state) 
 	if state==Game.tank_state.START:
-#		if isFreeze:
-#			animation(dir,vec)
-#			_ani.stop()
-#			self.state=Game.tank_state.STOP	
-#		else:
-#			self.state=state	
 		self.state=state		
 	elif state==Game.tank_state.STOP:
-#		print('state==Game.tank_state.STOP')
-#		isFreeze=true	
-#		_ani.stop()
-#		self.state=state	
 		pass
 	elif state==Game.tank_state.RESTART:
-#		if !isInit:
-#			print('self.state===========',self.state)
-#		print('state==Game.tank_state.RESTART',isInit)
-#		isFreeze=false
-#		if self.state==Game.tank_state.STOP:
-#			self.state=Game.tank_state.START
 		pass	
 	elif state==Game.tank_state.DEAD:
 		self.state=state
@@ -386,7 +370,6 @@ func playhit():
 func fire():
 	var del=[]
 	for i in bullets: #清理无效对象
-		#print(is_instance_valid(i))
 		if not is_instance_valid(i):
 			del.append(i)
 	for i in del:

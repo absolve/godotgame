@@ -76,4 +76,5 @@ __meta__ = {
 
 [node name="bouns" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 15 )
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

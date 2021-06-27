@@ -70,7 +70,7 @@ func _ready():
 	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
-	print(mapRect)
+#	print(mapRect)
 	#loadMap("res://levels/2.json")
 	#mode=1
 	if mode==1:#编辑模式
@@ -372,6 +372,7 @@ func getPlayerStatus():
 #添加玩家
 func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1,
 										'hasShip':false}):
+	print(Game.playerLive[0])
 	var tank1=tankNew.instance()
 	if playNo==1:		
 		tank1.playId=1
@@ -380,7 +381,7 @@ func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1
 	elif playNo==2:
 		tank1.playId=2
 		tank1.position=Vector2(17*cellSize,25*cellSize)+offset
-		setPlayerLive(1,Game.playerLive[0])	
+		setPlayerLive(2,Game.playerLive[1])	
 	tank1.level=state['level']
 	tank1.life=state['life']
 	tank1.hasShip=state['hasShip']
@@ -396,7 +397,7 @@ func checkItem(pos):
 	var indexX = int(x)/(cellSize)
 	var indexY=int(y)/(cellSize)
 	var temp = Vector2(indexX,indexY)
-	print(indexX,' ',indexY)
+#	print(indexX,' ',indexY)
 	if temp in basePlacePos:
 		return true
 	for i in brickList:
@@ -533,13 +534,6 @@ func _on_TextureButton6_pressed():
 	pass # Replace with function body.
 
 
-func _on_Button_pressed():
-	var baseDir=OS.get_executable_path().get_base_dir()
-	_fileDiaglog.current_dir=baseDir
-	_fileDiaglog.current_file="1992.json"
-	_fileDiaglog.popup_centered()
-	pass # Replace with function body.
-
 
 func _on_FileDialog_confirmed():
 	var path=_fileDiaglog.current_dir	
@@ -566,17 +560,33 @@ func _on_loadDialog_confirmed():
 	pass # Replace with function body.
 
 
-func _on_Button3_pressed():
+
+func _on_load_pressed():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	_loadDiaglog.current_dir=baseDir
+	_loadDiaglog.popup_centered()
+	pass # Replace with function body.
+
+
+func _on_clear_pressed():
 	clearAllItem()
 	pass # Replace with function body.
 
 
-func _on_Button4_pressed():
+func _on_lock_pressed():
 	lock=!lock
 	pass # Replace with function body.
 
-#返回
-func _on_Button5_pressed():
+
+func _on_return_pressed():
 	queue_free()
 	Game.changeScene(Game._welcomeScene)
+	pass # Replace with function body.
+
+
+func _on_save_pressed():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	_fileDiaglog.current_dir=baseDir
+	_fileDiaglog.current_file="1992.json"
+	_fileDiaglog.popup_centered()
 	pass # Replace with function body.

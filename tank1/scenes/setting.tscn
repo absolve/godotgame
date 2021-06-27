@@ -1,0 +1,186 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripts/Control.gd" type="Script" id=1]
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=2]
+[ext_resource path="res://ui/pressed.tres" type="StyleBox" id=3]
+[ext_resource path="res://ui/normal.tres" type="StyleBox" id=4]
+[ext_resource path="res://scenes/button.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/Popup.tscn" type="PackedScene" id=6]
+[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=7]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -551.518, 0 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 512.0
+margin_bottom = 448.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="tab" type="TabContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -200.0
+margin_right = 200.0
+margin_bottom = 160.0
+custom_styles/tab_fg = ExtResource( 3 )
+custom_styles/tab_bg = ExtResource( 4 )
+custom_styles/panel = ExtResource( 4 )
+custom_fonts/font = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Base" type="Control" parent="tab"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 29.0
+margin_right = -2.0
+margin_bottom = -3.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tab/Base"]
+margin_right = 394.0
+margin_bottom = 51.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CheckButton" type="CheckButton" parent="tab/Base/HBoxContainer"]
+margin_right = 207.0
+margin_bottom = 51.0
+custom_fonts/font = ExtResource( 2 )
+text = "use ExtensionMap"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="save" parent="tab/Base" instance=ExtResource( 5 )]
+margin_left = 14.0
+margin_top = 299.0
+margin_right = -6.0
+margin_bottom = -7.0
+size_flags_horizontal = 3
+text = "save"
+
+[node name="Control" type="Control" parent="tab"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 29.0
+margin_right = -2.0
+margin_bottom = -3.0
+
+[node name="control" type="VBoxContainer" parent="tab/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -2.0
+margin_bottom = 3.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="actionList" type="VBoxContainer" parent="tab/Control/control"]
+margin_right = 394.0
+margin_bottom = 305.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="tab/Control/control/actionList"]
+margin_right = 394.0
+margin_bottom = 22.0
+custom_styles/panel = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="tab/Control/control/actionList/PanelContainer"]
+margin_left = 2.0
+margin_top = 3.0
+margin_right = 392.0
+margin_bottom = 19.0
+custom_fonts/font = ExtResource( 2 )
+text = "actions"
+align = 1
+uppercase = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="tab/Control/control/actionList"]
+margin_top = 26.0
+margin_right = 394.0
+margin_bottom = 305.0
+size_flags_vertical = 3
+
+[node name="actions" type="VBoxContainer" parent="tab/Control/control/actionList/ScrollContainer"]
+margin_right = 394.0
+margin_bottom = 279.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="save" parent="tab/Control/control" instance=ExtResource( 5 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 309.0
+margin_right = 394.0
+margin_bottom = 331.0
+text = "save"
+
+[node name="About" type="MarginContainer" parent="tab"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 29.0
+margin_right = -2.0
+margin_bottom = -3.0
+
+[node name="Panel" type="Panel" parent="tab/About"]
+margin_right = 396.0
+margin_bottom = 328.0
+
+[node name="Label" type="Label" parent="tab/About/Panel"]
+margin_left = -1.0
+margin_top = 19.0
+margin_right = 415.0
+margin_bottom = 137.0
+custom_fonts/font = ExtResource( 7 )
+text = "The game was completed on 
+March 25, 2021.
+
+author:wong"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="btn_back" parent="." instance=ExtResource( 5 )]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+margin_left = -48.0
+margin_top = -39.0
+margin_right = 48.0
+margin_bottom = -7.0
+text = "back"
+
+[node name="Popup" parent="." instance=ExtResource( 6 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -199.0
+margin_top = -7.0
+margin_right = 199.0
+margin_bottom = -7.0
+
+[connection signal="pressed" from="tab/Base/save" to="." method="_on_savegame_config_pressed"]
+[connection signal="pressed" from="tab/Control/control/save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="btn_back" to="." method="_on_btn_back_pressed"]

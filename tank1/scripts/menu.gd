@@ -80,9 +80,10 @@ func _ready():
 
 var state=-1
 var countStartTime=0
-var countTime=200  #ms
+var countTime=320  #ms
 var index=0  #计分开始的位置
-var num=1
+var p1Num=1
+var p2Num=1
 
 func _process(delta):
 	if Input.is_action_just_pressed("ui_accept"):
@@ -90,18 +91,28 @@ func _process(delta):
 	if state==0:
 		if OS.get_system_time_msecs()-countStartTime>=countTime:
 			countStartTime=OS.get_system_time_msecs()	
-			var result1=setp1Num(index,num)
-			num+=1
-			if Game.mode==2 && setp2Num(index,num) && result1:
+			var result1=setp1Num(index,p1Num)
+			var result2=false
+			if Game.mode==2:
+				result2=setp2Num(index,p2Num)
+			
+			if Game.mode==2 && result2 && result1:
 				state=1
 				index+=1
-				num=1
-			elif result1:
+				p2Num=1
+				p1Num=1
+			elif Game.mode==1 && result1:
 				state=1
 				index+=1
-				num=1
+				p1Num=1
+				
+			if Game.mode==1:
+				p1Num+=1	
+			else:
+				p1Num+=1	
+				p2Num+=1	
 			SoundsUtil.playPoint()
-	elif state==1:
+	elif state==1: #进入下一个分数
 		if index==0:
 			p1TypeA.set_visible(true)
 			p1TypeANum.set_visible(true)
@@ -192,6 +203,7 @@ func setp1Num(index,num):
 	
 
 func setp2Num(index,num):
+	print('setp2Num',index,num)
 	var flag=false
 	if index==0:
 		if Game.p2Score['typeA']>=num:
@@ -217,9 +229,9 @@ func setp2Num(index,num):
 			p2TypeDNum_.set_text("%d"%num)
 		else:
 			flag=true
+	print(flag)		
 	return flag	
 
-	pass
 
 #计数开始
 func startCount():

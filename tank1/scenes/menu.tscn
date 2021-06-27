@@ -648,10 +648,11 @@ text = "1000pts"
 uppercase = true
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 2.5
+wait_time = 3.0
 one_shot = true
 
 [node name="initTimer" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

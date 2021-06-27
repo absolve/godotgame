@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=1]
+[ext_resource path="res://ui/pressed.tres" type="StyleBox" id=2]
+[ext_resource path="res://ui/hover.tres" type="StyleBox" id=3]
+[ext_resource path="res://ui/normal.tres" type="StyleBox" id=4]
+
+[node name="button" type="Button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -416.0
+margin_bottom = -416.0
+custom_styles/hover = ExtResource( 3 )
+custom_styles/pressed = ExtResource( 2 )
+custom_styles/normal = ExtResource( 4 )
+custom_fonts/font = ExtResource( 1 )
+text = "text"
+__meta__ = {
+"_edit_use_anchors_": false
+}

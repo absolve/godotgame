@@ -1,10 +1,13 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
 [ext_resource path="res://sprites/battle_city.png" type="Texture" id=2]
 [ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=3]
 [ext_resource path="res://sprites/tank_main1.png" type="Texture" id=4]
 [ext_resource path="res://sprites/tank_main2.png" type="Texture" id=5]
+[ext_resource path="res://fonts/title.tres" type="DynamicFont" id=6]
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=7]
+[ext_resource path="res://scenes/button.tscn" type="PackedScene" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -89,46 +92,78 @@ margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "00000"
 
-[node name="vbox" type="VBoxContainer" parent="main"]
-margin_left = 208.0
-margin_top = 288.0
-margin_right = 400.0
-margin_bottom = 344.0
+[node name="vbox" type="Control" parent="main"]
+margin_left = 207.0
+margin_top = 263.0
+margin_right = 399.0
+margin_bottom = 362.0
 grow_horizontal = 0
 grow_vertical = 0
 __meta__ = {
-"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="main/vbox"]
+[node name="MarginContainer" type="MarginContainer" parent="main/vbox"]
+margin_right = 192.0
+margin_bottom = 16.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="main/vbox/MarginContainer"]
 margin_right = 192.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "1 player"
 uppercase = true
 
-[node name="Label2" type="Label" parent="main/vbox"]
-margin_top = 20.0
+[node name="MarginContainer2" type="MarginContainer" parent="main/vbox"]
+margin_top = 28.0
 margin_right = 192.0
-margin_bottom = 36.0
+margin_bottom = 44.0
+
+[node name="Label2" type="Label" parent="main/vbox/MarginContainer2"]
+margin_right = 192.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "2 player2"
 uppercase = true
 
-[node name="Label3" type="Label" parent="main/vbox"]
-margin_top = 40.0
+[node name="MarginContainer3" type="MarginContainer" parent="main/vbox"]
+margin_top = 56.0
 margin_right = 192.0
-margin_bottom = 56.0
+margin_bottom = 72.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="main/vbox/MarginContainer3"]
+margin_right = 192.0
+margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 text = "construction"
 uppercase = true
 
+[node name="MarginContainer4" type="MarginContainer" parent="main/vbox"]
+margin_top = 84.0
+margin_right = 192.0
+margin_bottom = 100.0
+
+[node name="Label4" type="Label" parent="main/vbox/MarginContainer4"]
+margin_right = 192.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 3 )
+text = "setting"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="tankAni" type="AnimatedSprite" parent="main"]
-position = Vector2( 180, 295 )
+position = Vector2( 171, 270 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"
+frame = 1
 playing = true
 
 [node name="copyright" type="Label" parent="main"]
@@ -149,7 +184,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="main"]
+margin_left = 207.0
+margin_top = 371.0
+margin_right = 339.0
+margin_bottom = 394.0
+custom_fonts/font = ExtResource( 6 )
+custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+text = "namcot"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ani" type="AnimationPlayer" parent="."]
 autoplay = "start"
 anims/end = SubResource( 2 )
 anims/start = SubResource( 3 )
+
+[node name="tip" type="Panel" parent="."]
+visible = false
+margin_left = 8.0
+margin_top = 216.0
+margin_right = 504.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="tip"]
+margin_top = 14.0
+margin_right = 496.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 7 )
+text = "maps is null"
+align = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" parent="tip" instance=ExtResource( 8 )]
+margin_left = 208.0
+margin_top = 40.0
+margin_right = -208.0
+margin_bottom = -10.0
+text = "ok"
+
+[connection signal="pressed" from="tip/button" to="." method="_on_button_pressed"]

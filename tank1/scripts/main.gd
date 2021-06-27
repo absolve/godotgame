@@ -39,6 +39,8 @@ onready var _nextLevel=$nextLevel
 onready var _clock=$clockTimer
 onready var _shovel=$shovelTimer
 onready var _pause=$gui/pause
+onready var _p1Over=$gui/p1Over
+onready var _p2Over=$gui/p2Over
 
 func _ready():
 	randomize()
@@ -82,8 +84,6 @@ func _ready():
 func _process(delta):
 	if state==Game.game_state.LOAD:
 		if Input.is_action_just_pressed("ui_accept"):
-			#Splash.playOut()
-			#state = Game.game_state.START
 			setState(Game.game_state.START)
 			pass
 	elif state==Game.game_state.START:
@@ -92,6 +92,7 @@ func _process(delta):
 		
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
+#			var isStop=false
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
 					var type=y.getType() #装快的类型
@@ -101,11 +102,34 @@ func _process(delta):
 						if i.has_method("hasShip"):
 							if i.hasShip():
 								continue
-					var rect1=y.getRect()	
-					if rect.intersects(rect1,false):  #碰撞  判断是否被包围住
+					var rect1=y.getRect()	#砖块矩形
+					if rect.intersects(rect1):  #碰撞  判断是否被包围住
 						if rect1.encloses(rect):#完全叠一起
 							continue
-							
+						
+#						var iTankDir=i.dir
+#						var xVal =i.position.x-y.position.x
+#						var yVal =i.position.y-y.position.y
+#						var absXVal=abs(xVal)
+#						var absYVal=abs(yVal)
+#						if iTankDir in [0,1]:	#上下
+#							if absYVal<i.getSize() and absYVal>i.getSize()/2:
+#								if yVal<0 and iTankDir==1:
+#									isStop=true
+#								elif yVal>0	and iTankDir==0:
+#									isStop=true
+#							else:
+#								isStop=false
+#						elif iTankDir in [2,3]:	#左右
+#							if absXVal<i.getSize() and absXVal>i.getSize()/2:			
+#								if xVal<0 and iTankDir==3:
+#									isStop=true
+#								elif xVal>0 and iTankDir==2:
+#									isStop=true
+#							else:
+#								isStop=false	
+			
+#			i.setStop(isStop)					
 						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
 						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
 						var absDX = abs(dx)
@@ -131,10 +155,8 @@ func _process(delta):
 								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
 							else:
 								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
-#						var type=i.get_class()
-#						if type=="enemy":
-#							i.setStop(true)		
-						pass
+
+						
 			
 		for i in _bullet.get_children():	#子弹跟方块
 			if i.get_class()=="bullet":
@@ -148,7 +170,7 @@ func _process(delta):
 								continue	
 						if rect.intersects(rect1,false):  #碰撞
 							if y.getType()==Game.brickType.stoneWall and \
-								y.getType()==Game.bulletType.players:
+								i.getType()==Game.bulletType.players:
 								SoundsUtil.playBullet()
 							i.addExplode(false)
 							y.hit(i.getDir(),i.getPower())
@@ -169,11 +191,11 @@ func _process(delta):
 								i.destroy()
 								y.destroy()
 		
-		var tanks=_tank.get_children()
+#		var tanks=_tank.get_children()
 		
-		for i in tanks:	#坦克与坦克的碰撞
+		for i in _tank.get_children():	#坦克与坦克的碰撞
 			var isStop=false
-			for y in tanks:
+			for y in _tank.get_children():
 				if i!=y:
 					if i.isInit && y.isInit:
 						var rect=i.getRect()
@@ -186,37 +208,24 @@ func _process(delta):
 						var absYVal=abs(yVal)
 						
 						if rect.intersects(rect1,false):
-							if iTankDir in [0,1]:	#上下
+							if iTankDir in [0,1]:	#上下 判断坦克前面的位置有没有坦克
 								if absYVal<i.getSize() and absYVal>i.getSize()/2:
 									if yVal<0 and iTankDir==1:
 										isStop=true
 									elif yVal>0	and iTankDir==0:
 										isStop=true
-										
-#									if yVal<0:
-#										i.position.y=y.getPos().y-y.getSize()/2-i.getSize()/2			
-#									else:
-#										i.position.y=y.getPos().y+y.getSize()/2+i.getSize()/2	
 								else:
 									isStop=false
-								pass
 							elif iTankDir in [2,3]:	#左右
 								if absXVal<i.getSize() and absXVal>i.getSize()/2:			
 									if xVal<0 and iTankDir==3:
 										isStop=true
 									elif xVal>0 and iTankDir==2:
 										isStop=true
-#									if xVal<0:
-#										i.position.x=y.getPos().x-y.getSize()/2-i.getSize()/2	
-#									else:
-#										i.position.x=y.getPos().x+y.getSize()/2+i.getSize()/2
 								else:
 									isStop=false
-								pass				
-					pass
-				pass
+
 			i.setStop(isStop)
-			
 	
 		
 		for i in _tank.get_children():	#子弹与坦克
@@ -237,9 +246,7 @@ func _process(delta):
 						y.destroy()
 						i.hit(y.playerID)
 						
-				
-				
-		for i in _bullet.get_children():
+		for i in _bullet.get_children(): #子弹边界
 			if i.position.x<_map.offset.x or i.position.x>_map.mapRect.size.x+_map.mapRect.position.x:
 				if i.type==Game.bulletType.players:
 					SoundsUtil.playBullet()
@@ -261,7 +268,6 @@ func _process(delta):
 				i.position.y= _map.mapRect.position.y+i.getSize()/2	
 			if i.position.y+i.getSize()/2>_map.mapRect.size.y+_map.mapRect.position.y:
 				i.position.y = _map.mapRect.size.y+_map.mapRect.position.y-i.getSize()/2	
-			pass
 		
 		
 		for i in _bonus.get_children():
@@ -271,11 +277,9 @@ func _process(delta):
 					var rect1=y.getRect()
 					if rect.intersects(rect1,false):
 						var type=i.getType()
-						print("_bonus %d"%type)
+#						print("_bonus %d"%type)
 						i.destroy()
 						getBonus(type,y.getPlayId())
-						pass
-					pass
 		
 		for i in _base.get_children():
 			if !i.destroy:
@@ -368,7 +372,6 @@ func _input(event):
 		if event.is_pressed():
 			if (event as InputEventKey).scancode==KEY_ENTER:	
 				gamePause()
-	pass
 
 #显示分数
 func addScore(num,pos):
@@ -483,7 +486,7 @@ func hitEnemy(enemyType,players,pos):
 			p2Score["typeD"]+=1	
 			Game.playerScore['player2']+=400
 		addScore(400,pos)				
-	print(p1Score)
+#	print(p1Score)
 #	print(p2Score)
 	SoundsUtil.playEnemyDestroy()
 	#addEnemyDelay()
@@ -543,7 +546,7 @@ func getBonus(type,id):
 			p2Score["typeB"]+=list['typeB']
 			p2Score["typeC"]+=list['typeC']
 			p2Score["typeD"]+=list['typeD']
-		print('手雷',list)
+#		print('手雷',list)
 		SoundsUtil.playBomb()
 #		if _addEnemy.is_stopped():#添加新坦克
 #			_addEnemy.start()
@@ -554,25 +557,19 @@ func getBonus(type,id):
 		if type==1: #帽子
 			if tank:
 				tank.setEnableInvincible()	
-			pass
 		elif type==2:#时钟
 			startClock()
-			pass	
 		elif type==3:	#铲子
 			getShovel()
-			pass	
 		elif type==5:  #星星
 			if tank:
 				tank.addPower()		
-			pass
 		elif type==6:	#手枪
 			if tank:
 				tank.addMaxPower()	
-			pass	
 		elif type==7:
 			if tank:
-				tank.addship()
-			pass	
+				tank.addship()	
 		elif type==8: #没有基地游戏继续
 			isNoBase=true
 		SoundsUtil.playGetBouns()
@@ -610,25 +607,17 @@ func getShovel():
 	else:
 		_shovel.stop()
 		_shovel.start()
-	#getShoveTime=OS.get_system_time_msecs()
 	pass
 
 #添加物品
 func addBonus(enemyType):
-	#todo  播放声音
-#	for i in _bonus.get_children():
-#		_bonus.remove_child(i)
-#	var temp = bonus.instance()
-#	temp.setPos(Vector2(8*26,23*26))
-#	temp.setType(2)
-#	_bonus.add_child(temp)
 	SoundsUtil.playBouns()
 	_map.addBonus()
 	pass
 
 #玩家被消灭 id=1 1p, =2 2p
 func hitPlayer(id):
-	print('id',id)
+#	print('id',id)
 	SoundsUtil.playTankDestroy()
 	if Game.mode==1: #一个人的时候
 		if Game.playerLive[0]<=0:
@@ -636,6 +625,10 @@ func hitPlayer(id):
 	elif Game.mode==2:		
 		if Game.playerLive[0]<=0 and Game.playerLive[1]<=0:
 			gameOver()
+		if Game.playerLive[0]<=0:
+			_p1Over.startHideTimer()
+		elif Game.playerLive[1]<0:
+			_p2Over.startHideTimer()	
 	if id==1 and Game.playerLive[0]>0:
 		Game.playerLive[0]-=1
 		_map.addNewPlayer(1,Game.isGameOver)
@@ -643,6 +636,7 @@ func hitPlayer(id):
 		Game.playerLive[1]-=1
 		_map.addNewPlayer(2,Game.isGameOver)
 
+		
 #游戏暂停	
 func gamePause():
 	if Game.isGameOver:
