@@ -39,6 +39,8 @@ onready var _nextLevel=$nextLevel
 onready var _clock=$clockTimer
 onready var _shovel=$shovelTimer
 onready var _pause=$gui/pause
+onready var _p1Over=$gui/p1Over
+onready var _p2Over=$gui/p2Over
 
 func _ready():
 	randomize()
@@ -168,7 +170,7 @@ func _process(delta):
 								continue	
 						if rect.intersects(rect1,false):  #碰撞
 							if y.getType()==Game.brickType.stoneWall and \
-								y.getType()==Game.bulletType.players:
+								i.getType()==Game.bulletType.players:
 								SoundsUtil.playBullet()
 							i.addExplode(false)
 							y.hit(i.getDir(),i.getPower())
@@ -484,7 +486,7 @@ func hitEnemy(enemyType,players,pos):
 			p2Score["typeD"]+=1	
 			Game.playerScore['player2']+=400
 		addScore(400,pos)				
-	print(p1Score)
+#	print(p1Score)
 #	print(p2Score)
 	SoundsUtil.playEnemyDestroy()
 	#addEnemyDelay()
@@ -623,6 +625,10 @@ func hitPlayer(id):
 	elif Game.mode==2:		
 		if Game.playerLive[0]<=0 and Game.playerLive[1]<=0:
 			gameOver()
+		if Game.playerLive[0]<=0:
+			_p1Over.startHideTimer()
+		elif Game.playerLive[1]<0:
+			_p2Over.startHideTimer()	
 	if id==1 and Game.playerLive[0]>0:
 		Game.playerLive[0]-=1
 		_map.addNewPlayer(1,Game.isGameOver)
@@ -630,6 +636,7 @@ func hitPlayer(id):
 		Game.playerLive[1]-=1
 		_map.addNewPlayer(2,Game.isGameOver)
 
+		
 #游戏暂停	
 func gamePause():
 	if Game.isGameOver:

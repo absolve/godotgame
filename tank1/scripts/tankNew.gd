@@ -101,7 +101,7 @@ func setKeyMap(playerId:int):
 #		keymap["fire"]=Game.player2["fire"]	
 		keymap["up"]="p2_up"
 		keymap["down"]="p2_down"
-		keymap["left"]="p2_eft"
+		keymap["left"]="p2_left"
 		keymap["right"]="p2_right"
 		keymap["fire"]="p2_fire"
 	pass	

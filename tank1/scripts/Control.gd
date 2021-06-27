@@ -8,11 +8,14 @@ onready var actions=$tab/Control/control/actionList/ScrollContainer/actions
 var action=preload("res://scenes/action.tscn")
 var keyList=preload("res://scenes/keyList.tscn")
 onready var popup=$Popup
+onready var checkBox=$tab/Base/HBoxContainer/CheckButton
+
 #var ActionNodes:Dictionary = {}	#inputmap对应的action
 var configFile="config.ini"
 var ActionEvent:Dictionary = {} #事件
 
 func _ready():
+	checkBox.pressed=Game.useExtensionMap
 	#loadConfig()
 	#print(ActionEvent)
 	ActionEvent=Game.ActionEvent.duplicate(true)
@@ -185,8 +188,19 @@ func saveConfig():
 
 
 func _on_btn_back_pressed():
-	saveConfig()
 	queue_free()
 	Game.changeScene(Game._welcomeScene)
 	pass # Replace with function body.
 
+func _on_save_pressed():
+	saveConfig()
+	pass # Replace with function body.
+
+
+func _on_savegame_config_pressed():
+	var flag=checkBox.pressed
+#	print(flag)
+	Game.saveGameConfig(flag)
+	Game.useExtensionMap=flag
+	Game.loadMaps()
+	pass # Replace with function body.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
 [ext_resource path="res://sprites/battle_city.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://sprites/tank_main1.png" type="Texture" id=4]
 [ext_resource path="res://sprites/tank_main2.png" type="Texture" id=5]
 [ext_resource path="res://fonts/title.tres" type="DynamicFont" id=6]
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=7]
+[ext_resource path="res://scenes/button.tscn" type="PackedScene" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -199,3 +201,36 @@ __meta__ = {
 autoplay = "start"
 anims/end = SubResource( 2 )
 anims/start = SubResource( 3 )
+
+[node name="tip" type="Panel" parent="."]
+visible = false
+margin_left = 8.0
+margin_top = 216.0
+margin_right = 504.0
+margin_bottom = 288.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="tip"]
+margin_top = 14.0
+margin_right = 496.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 7 )
+text = "maps is null"
+align = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" parent="tip" instance=ExtResource( 8 )]
+margin_left = 208.0
+margin_top = 40.0
+margin_right = -208.0
+margin_bottom = -10.0
+text = "ok"
+
+[connection signal="pressed" from="tip/button" to="." method="_on_button_pressed"]

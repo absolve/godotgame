@@ -67,7 +67,7 @@ var mode=1	#游戏单人1 双人2
 var playerLive=[2,2]	#玩家生命数
 var playerScore={"player1":0,"player2":0}  #玩家分数
 var p1Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0} #击中的坦克数量
-var p2Score={'typeA':0,'typeB':0,'typeC':0,'typeD':0}
+var p2Score={'typeA':10,'typeB':10,'typeC':10,'typeD':10}
 var p1State={'level':1,'life':1,'hasShip':false} #坦克信息
 var p2State={'level':1,'life':1,'hasShip':false}
 var isGameOver=false#游戏是否结束
@@ -76,15 +76,17 @@ var controls =['p1_up','p1_down','p1_left','p1_right','p1_fire',
 	'p2_up','p2_down','p2_left','p2_right','p2_fire','game_start']
 var configFile="config.ini"
 var ActionEvent:Dictionary = {} #事件集合
-
+var gameConfigFile="gameConfig.ini"
+var useExtensionMap=false  #使用你扩展
 
 func _ready():
-	mapNum = getBuiltInMapNum(mapDir,mapNameList)
+#	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
-	mapNameList.sort_custom(self,"sort")
-	print(mapNameList)
+#	mapNameList.sort_custom(self,"sort")
 	loadConfig()
-	
+	loadGameConfig()
+	loadMaps()
+	print(mapNameList)	
 	pass 
 
 static func sort(a:String,b:String):
@@ -136,6 +138,14 @@ func reset():
 	canSelectLevel=true
 	pass
 
+func loadMaps():
+	print('loadMaps')
+	if useExtensionMap:
+		mapNum=getExtensionMapNum(mapNameList)
+	else:
+		mapNum = getBuiltInMapNum(mapDir,mapNameList)
+	if mapNum>0:
+		mapNameList.sort_custom(self,"sort")
 
 #获取内置的地图文件数量
 func getBuiltInMapNum(mapDir,fileList:Array):
@@ -156,10 +166,11 @@ func getBuiltInMapNum(mapDir,fileList:Array):
 
 
 #获取扩展的地图	
-func getExtensionMapNum():
+func getExtensionMapNum(fileList:Array):
 	var num=0
 	var baseDir=OS.get_executable_path().get_base_dir()
 	var mapPath=baseDir+"/levels"
+#	print(OS.get_executable_path())
 	var dir = Directory.new()
 	if dir.dir_exists(mapPath):
 		if dir.open(mapPath) == OK:
@@ -168,14 +179,52 @@ func getExtensionMapNum():
 			while file_name != "":
 				if !dir.current_is_dir():
 					num+=1
-					print("Found file: " + file_name)
+					fileList.append(file_name)
+				#	print("Found file: " + file_name)
 				file_name = dir.get_next()
 		else:
 			print("An error occurred when trying to access the path.")
 	else:
-		print("Directory not exist")
+		print("Directory not exist ",mapPath)
+		var err=dir.make_dir_recursive(mapPath) #新建一个
+		print(err==OK)
 	return num
 
+#载入配置文件
+func loadGameConfig():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var config = ConfigFile.new()
+	var err = config.load(baseDir+gameConfigFile)
+	if err == OK:
+		print(err)
+		if config.has_section("map"):
+			if config.has_section_key("map","useExtensionMap"):
+				useExtensionMap=config.get_value("map","useExtensionMap",false)		
+	else:
+		print('newGameConfigFile')
+		newGameConfigFile()
+
+#保存配置文件
+func saveGameConfig(flag):
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var config = ConfigFile.new()
+	var err = config.load(baseDir+gameConfigFile)
+	if err == OK:
+		if config.has_section("map"):
+			config.set_value("map","useExtensionMap",flag)	
+		else:
+			config.set_value("map","useExtensionMap",flag)
+		config.save(baseDir+gameConfigFile)	
+	else:
+		print("err ",err)		
+		
+func newGameConfigFile():
+	var baseDir=OS.get_executable_path().get_base_dir()
+	var file=File.new()
+	if !file.file_exists(baseDir+gameConfigFile):
+		file.open(baseDir+gameConfigFile, File.WRITE)
+		file.close()
+		
 #载入按键配置
 func loadConfig():
 	var baseDir=OS.get_executable_path().get_base_dir()
@@ -184,11 +233,12 @@ func loadConfig():
 	if file.file_exists(baseDir+configFile):
 		file.open(baseDir+configFile, File.READ)
 	#	print(file.get_as_text())
-		var data=parse_json(file.get_as_text())
-		print('data ',data)
-		if data:
-			var input=data
+		var input=parse_json(file.get_as_text())
+		print('data ',input)
+		if input:
 			for i in controls:
+				if !input.has(i):
+					continue
 				var event=input[i]
 				ActionEvent[i]=[]
 				for z in event:

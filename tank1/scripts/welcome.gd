@@ -8,6 +8,7 @@ var setting=354
 var index=0
 onready var _tankAni=$main/tankAni
 onready var _ani=$ani
+onready var tip=$tip
 
 func _ready():
 	pass 
@@ -29,6 +30,10 @@ func _input(event):
 					_ani.play("end")
 					return
 				if mode in [1,2]:
+#					Game.mapNum=0
+					if Game.mapNum<=0:
+						tip.visible=true
+						return
 					Game.mode=mode		
 					Game.change2SceneLevel(Game._mainScene)
 					queue_free()
@@ -63,3 +68,8 @@ func setMode(index):
 	elif index==3:	
 		_tankAni.position.y=setting
 		mode=4
+
+
+func _on_button_pressed():
+	tip.visible=false
+	pass # Replace with function body.

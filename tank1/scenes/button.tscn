@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://fonts/prstartk.tres" type="DynamicFont" id=1]
+[ext_resource path="res://fonts/label.tres" type="DynamicFont" id=1]
 [ext_resource path="res://ui/pressed.tres" type="StyleBox" id=2]
 [ext_resource path="res://ui/hover.tres" type="StyleBox" id=3]
 [ext_resource path="res://ui/normal.tres" type="StyleBox" id=4]

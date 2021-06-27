@@ -372,6 +372,7 @@ func getPlayerStatus():
 #添加玩家
 func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1,
 										'hasShip':false}):
+	print(Game.playerLive[0])
 	var tank1=tankNew.instance()
 	if playNo==1:		
 		tank1.playId=1
@@ -380,7 +381,7 @@ func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1
 	elif playNo==2:
 		tank1.playId=2
 		tank1.position=Vector2(17*cellSize,25*cellSize)+offset
-		setPlayerLive(1,Game.playerLive[0])	
+		setPlayerLive(2,Game.playerLive[1])	
 	tank1.level=state['level']
 	tank1.life=state['life']
 	tank1.hasShip=state['hasShip']
@@ -396,7 +397,7 @@ func checkItem(pos):
 	var indexX = int(x)/(cellSize)
 	var indexY=int(y)/(cellSize)
 	var temp = Vector2(indexX,indexY)
-	print(indexX,' ',indexY)
+#	print(indexX,' ',indexY)
 	if temp in basePlacePos:
 		return true
 	for i in brickList:
