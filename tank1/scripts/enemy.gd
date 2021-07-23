@@ -39,7 +39,6 @@ func _ready():
 	randomize()
 	$ani.play("flash")
 	$ani.playing=true
-#	print("isFreeze",isFreeze)
 	var hit=_hit.stream as AudioStreamOGGVorbis
 	hit.set_loop(false)
 	if type==0:
@@ -104,7 +103,6 @@ func _update(delta):
 			vec=Vector2.ZERO
 	
 		if directionTime>keepDirectionTime:
-	#		print("change")
 			keepDirectionTime=randi()%1800+300	
 			directionTime=0
 			var p=randf()   #随机概率值		
@@ -133,6 +131,7 @@ func _update(delta):
 
 			if dir!=newDir:
 				dir=newDir
+				turnDir() #位置调整
 			else:
 				dir=newDir	
 			
@@ -157,18 +156,15 @@ func animation(dir,vec):
 		_ani.flip_v=true
 		_ani.flip_h=true
 		_ani.rotation_degrees=0
-		pass
 	elif dir==1:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-		pass
 	elif dir==2:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		if _ani.rotation_degrees!=90:
 			_ani.rotation_degrees=90
-		pass
 	elif dir==3:
 		_ani.flip_v=false
 		_ani.flip_h=false
@@ -197,10 +193,6 @@ func animation(dir,vec):
 				else:
 					_ani.animation="typeA"
 				_ani.frame=	index  #设置动画帧数发生变化
-#			if isFreeze:
-#				_ani.stop()	
-#			else:	
-#				_ani.play()
 	elif type==1:
 		if !hasItem:
 			if armour==0:
@@ -263,8 +255,7 @@ func animation(dir,vec):
 					_ani.animation="typeD_4"
 				else:
 					_ani.animation="typeD"
-				_ani.frame=	index  #设置动画帧数发生变化				
-		
+				_ani.frame=	index  #设置动画帧数发生变化					
 	if isFreeze:
 		_ani.stop()	
 	else:	
@@ -273,7 +264,6 @@ func animation(dir,vec):
 #改变方向
 func turnDirection():
 	newDir=randi()%4	
-	pass
 
 #向基地出发
 func targetEagle(p):
@@ -323,7 +313,6 @@ func hit(playerId):
 		setState(Game.tank_state.DEAD)
 		Game.emit_signal("hitEnemy",type,playerId,position)
 		addExplode(true)
-	pass
 
 func addExplode(big):
 	var temp=Game.explode.instance()
@@ -382,6 +371,14 @@ func fire():
 		temp.setPower(bulletPower)
 		bullets.append(temp)
 		Game.mainScene.add_child(temp)
+
+#改变方向
+#每个方块的大小是16px 坦克大小32px 图片大小差不多是28px
+#坦克的位置一定是16的倍数这样就可以每次旋转都正好在每个方块的边缘
+#这样的话就不会出现叠在一起的情况
+func turnDir(): 
+	position.y=round((position.y)/16)*16
+	position.x=round((position.x)/16)*16
 
 func get_class():
 	return 'enemy'

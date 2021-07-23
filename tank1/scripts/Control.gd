@@ -15,6 +15,8 @@ var configFile="config.ini"
 var ActionEvent:Dictionary = {} #事件
 
 func _ready():
+#	print('11111111')
+#	print((1.9)/2)
 	checkBox.pressed=Game.useExtensionMap
 	#loadConfig()
 	#print(ActionEvent)

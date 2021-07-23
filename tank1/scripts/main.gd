@@ -92,7 +92,7 @@ func _process(delta):
 		
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
-#			var isStop=false
+			var isStop=false
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
 					var type=y.getType() #装快的类型
@@ -106,55 +106,54 @@ func _process(delta):
 					if rect.intersects(rect1):  #碰撞  判断是否被包围住
 						if rect1.encloses(rect):#完全叠一起
 							continue
-						
-#						var iTankDir=i.dir
-#						var xVal =i.position.x-y.position.x
-#						var yVal =i.position.y-y.position.y
-#						var absXVal=abs(xVal)
-#						var absYVal=abs(yVal)
-#						if iTankDir in [0,1]:	#上下
-#							if absYVal<i.getSize() and absYVal>i.getSize()/2:
-#								if yVal<0 and iTankDir==1:
-#									isStop=true
-#								elif yVal>0	and iTankDir==0:
-#									isStop=true
-#							else:
-#								isStop=false
-#						elif iTankDir in [2,3]:	#左右
-#							if absXVal<i.getSize() and absXVal>i.getSize()/2:			
-#								if xVal<0 and iTankDir==3:
-#									isStop=true
-#								elif xVal>0 and iTankDir==2:
-#									isStop=true
-#							else:
-#								isStop=false	
-			
-#			i.setStop(isStop)					
-						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
-						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
-						var absDX = abs(dx)
-						var absDY = abs(dy)
 
-						if abs(absDX - absDY) < .1:
-							if dx<0:
-								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2			
+						var iTankDir=i.dir
+						var xVal =i.position.x-y.position.x
+						var yVal =i.position.y-y.position.y
+						var absXVal=abs(xVal)
+						var absYVal=abs(yVal)
+						if iTankDir in [0,1]:	#上下
+							if absYVal<i.getSize() and absYVal>i.getSize()/2:
+								if yVal<0 and iTankDir==1:
+									isStop=true
+								elif yVal>0	and iTankDir==0:
+									isStop=true
 							else:
-								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2	
-
-							if dy<0:
-								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2			
+								isStop=false
+						elif iTankDir in [2,3]:	#左右
+							if absXVal<i.getSize() and absXVal>i.getSize()/2:			
+								if xVal<0 and iTankDir==3:
+									isStop=true
+								elif xVal>0 and iTankDir==2:
+									isStop=true
 							else:
-								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
-						elif absDX > absDY:
-							if dx<0:
-								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
-							else:
-								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2		
-						else:
-							if dy<0:
-								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
-							else:
-								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
+								isStop=false	
+			i.setStop(isStop)					
+#						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
+#						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
+#						var absDX = abs(dx)
+#						var absDY = abs(dy)
+#
+#						if abs(absDX - absDY) < .1:
+#							if dx<0:
+#								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2			
+#							else:
+#								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2	
+#
+#							if dy<0:
+#								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2			
+#							else:
+#								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
+#						elif absDX > absDY:
+#							if dx<0:
+#								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
+#							else:
+#								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2		
+#						else:
+#							if dy<0:
+#								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
+#							else:
+#								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
 
 						
 			
@@ -191,8 +190,7 @@ func _process(delta):
 								i.destroy()
 								y.destroy()
 		
-#		var tanks=_tank.get_children()
-		
+	
 		for i in _tank.get_children():	#坦克与坦克的碰撞
 			var isStop=false
 			for y in _tank.get_children():
@@ -224,8 +222,8 @@ func _process(delta):
 										isStop=true
 								else:
 									isStop=false
-
-			i.setStop(isStop)
+			if !i.isStop:#已经停止就不设置
+				i.setStop(isStop)
 	
 		
 		for i in _tank.get_children():	#子弹与坦克

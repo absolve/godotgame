@@ -27,6 +27,7 @@ var speed = 70 #移动速度
 var bulletPower=Game.bulletPower.normal
 var hasShip=false	#是否有船
 var isFreeze=false	#冻结
+var lastDir=0#上次的方向
 
 onready var _invincible=$invincible
 onready var _ship=$ship
@@ -64,7 +65,7 @@ func _ready():
 			
 #	addMaxPower()
 #	addship()
-	pass
+
 
 #获取矩形
 func getRect()->Vector2:
@@ -103,8 +104,7 @@ func setKeyMap(playerId:int):
 		keymap["down"]="p2_down"
 		keymap["left"]="p2_left"
 		keymap["right"]="p2_right"
-		keymap["fire"]="p2_fire"
-	pass	
+		keymap["fire"]="p2_fire"	
 	
 #增加力量	
 func addPower():
@@ -119,7 +119,6 @@ func addPower():
 		bulletPower=Game.bulletPower.super
 	elif level==3:
 		pass	
-	pass
 
 #添加最大为例
 func addMaxPower():
@@ -149,7 +148,7 @@ func _update(delta):
 		animation(dir,vec)	
 		if isFreeze:
 			return
-		
+		lastDir=dir
 		
 		if Input.is_action_pressed(keymap["up"]):
 			vec.y=-speed
@@ -170,12 +169,14 @@ func _update(delta):
 		else:
 			vec=Vector2.ZERO	
 		
+		if lastDir!=dir:
+			turnDir()
+		
 		if vec!=Vector2.ZERO:
 			if !$walk.playing:
 				$walk.play()
 			if $idle.playing:
-				$idle.stop()
-			pass	
+				$idle.stop()	
 		else:
 			if $walk.playing:
 				$walk.stop()
@@ -187,8 +188,6 @@ func _update(delta):
 			
 		if !isStop:
 			position+=vec*delta	
-			
-	pass
 	
 	
 func animation(dir,vec):
@@ -196,24 +195,20 @@ func animation(dir,vec):
 		_ani.flip_v=false
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-		pass
 	elif dir==1:
 		_ani.flip_v=true
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-		pass
 	elif dir==2:
 		_ani.flip_v=false
 		_ani.flip_h=true
 		if _ani.rotation_degrees!=-90:
 			_ani.rotation_degrees=-90
-		pass
 	elif dir==3:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		if _ani.rotation_degrees!=90:
-			_ani.rotation_degrees=90
-		pass	
+			_ani.rotation_degrees=90	
 	if level==0:
 		if vec!=Vector2.ZERO:
 			if playId==1:
@@ -271,19 +266,16 @@ func setEnableInvincible(time=15):
 		_invincibleTimer.start(time)
 		_invincible.visible=true
 		_invincible.playing=true
-		pass
 	else:
 		_invincibleTimer.stop()
 		_invincibleTimer.start(time)
 	isInvincible=true
-	pass
 
 #定时器结束
 func invincibleTimerEnd():
 	_invincible.visible=false
 	_invincible.playing=false
 	isInvincible=false
-	pass
 
 #开火
 func fire():
@@ -374,6 +366,19 @@ func isDead():
 
 func get_class():
 	return 'player'
+
+#改变方向
+#每个方块的大小是16px 坦克大小32px 图片大小差不多是28px
+#坦克的位置一定是16的倍数这样就可以每次旋转都正好在每个方块的边缘
+#这样的话就不会出现叠在一起的情况
+func turnDir(): 
+	position.y=round((position.y)/16)*16
+	position.x=round((position.x)/16)*16
+#	if dir%2!=0:
+#		position.y=round((position.y)/16)*16
+#	else:
+#		position.x=round((position.x)/16)*16
+	pass
 
 func _draw():
 #	if debug:

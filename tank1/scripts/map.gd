@@ -1,13 +1,16 @@
 extends Node2D
 
-
+####
+#地图的保存可以选择放在工程内部也可以选择放在程序外面
+####
 #地图为26x26的方块大小 最小的一块就是墙壁和石头小块
+
 
 var currentLevel
 var builtInMapNum  #内置地图数
 var builtInMapFileList  #内置地图数量
 
-export var offset=Vector2(32,16)
+export var offset=Vector2(32,16)  #地图偏移位置
 
 var brick=preload("res://scenes/brick.tscn")
 var cellSize=16	#每个格子的大小是16px
@@ -186,6 +189,7 @@ func getPlayerById(id):
 	for i in _tank.get_children():
 		if i.get_class()=="player" and i.getPlayId()==id:
 			tank=i
+			break
 	return tank	
 	
 #添加物品
@@ -372,7 +376,7 @@ func getPlayerStatus():
 #添加玩家
 func addNewPlayer(playNo:int,isFreeze=false,state:Dictionary={'level':1,'life':1,
 										'hasShip':false}):
-	print(Game.playerLive[0])
+#	print(Game.playerLive[0])
 	var tank1=tankNew.instance()
 	if playNo==1:		
 		tank1.playId=1
