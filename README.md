@@ -23,7 +23,7 @@ Add the key configuration and map selection.
 1p:wsad j Launch Bullet 2p: direction key Digital 0 launch bullet, return key pause and start.  
 TODO  
 1.完善游戏的碰撞检测，还有一些声音的处理。(已修复游戏中的碰撞，已增加新的声音)  
-2.实现冰块滑动，除草的功能。  
+2.实现冰块滑动，除草的功能(增加冰块滑动功能)。  
   
 <img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20215349.png" />    
   

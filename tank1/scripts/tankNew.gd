@@ -28,6 +28,8 @@ var bulletPower=Game.bulletPower.normal
 var hasShip=false	#是否有船
 var isFreeze=false	#冻结
 var lastDir=0#上次的方向
+var isOnIce=false  #是否在冰块上
+var slideTime =20 #冰块滑动次数
 
 onready var _invincible=$invincible
 onready var _ship=$ship
@@ -36,6 +38,9 @@ onready var _hit=$hit
 onready var _invincibleTimer=$invincibleTimer
 onready var _initTimer = $initTimer
 onready var _ani=$ani
+onready var _slide=$slide
+onready var _walk=$walk
+onready var _idle=$idle
 
 func _ready():
 	var shot = _sound.stream as AudioStreamOGGVorbis
@@ -81,6 +86,10 @@ func getPos():
 	
 func setStop(isStop):
 	self.isStop=isStop	
+
+#是否在冰上
+func setOnIce(isOnIce):
+	self.isOnIce=isOnIce
 	 
 func setKeyMap(playerId:int):
 	if playerId==1:
@@ -151,37 +160,64 @@ func _update(delta):
 		lastDir=dir
 		
 		if Input.is_action_pressed(keymap["up"]):
+			if vec==Vector2.ZERO&&isOnIce: #之前的是停下来并且在冰上
+				_slide.play()
 			vec.y=-speed
 			vec.x=0
 			dir=0
 		elif Input.is_action_pressed(keymap["down"]):
+			if vec==Vector2.ZERO&&isOnIce:
+				_slide.play()
 			vec.x=0
 			vec.y=speed
 			dir=1
 		elif Input.is_action_pressed(keymap["left"]):
+			if vec==Vector2.ZERO&&isOnIce:
+				_slide.play()
 			vec.x=-speed
 			vec.y=0
 			dir=2	
 		elif Input.is_action_pressed(keymap["right"]):	
+			if vec==Vector2.ZERO&&isOnIce:
+				_slide.play()
 			vec.y=0
 			vec.x=speed
 			dir=3
 		else:
 			vec=Vector2.ZERO	
 		
+		if vec!=Vector2.ZERO: #重新设置滑行时间
+			slideTime=20
+			
+			
+		if isOnIce&&slideTime>0&&vec==Vector2.ZERO: #冰块上继续滑行
+			if dir==0:
+				vec.y=-speed
+				vec.x=0
+			elif dir==1:
+				vec.x=0
+				vec.y=speed
+			elif dir==2:
+				vec.x=-speed
+				vec.y=0
+			elif dir==3:
+				vec.y=0
+				vec.x=speed
+			slideTime-=1
+			
 		if lastDir!=dir:
 			turnDir()
 		
 		if vec!=Vector2.ZERO:
-			if !$walk.playing:
-				$walk.play()
-			if $idle.playing:
-				$idle.stop()	
+			if !_walk.playing:
+				_walk.play()
+			if _idle.playing:
+				_idle.stop()	
 		else:
-			if $walk.playing:
-				$walk.stop()
-			if !$idle.playing:
-				$idle.play()
+			if _walk.playing:
+				_walk.stop()
+			if !_idle.playing:
+				_idle.play()
 			
 		if Input.is_action_pressed(keymap["fire"]):
 			fire()	
@@ -372,12 +408,12 @@ func get_class():
 #坦克的位置一定是16的倍数这样就可以每次旋转都正好在每个方块的边缘
 #这样的话就不会出现叠在一起的情况
 func turnDir(): 
-	position.y=round((position.y)/16)*16
-	position.x=round((position.x)/16)*16
-#	if dir%2!=0:
-#		position.y=round((position.y)/16)*16
-#	else:
-#		position.x=round((position.x)/16)*16
+#	position.y=round((position.y)/16)*16
+#	position.x=round((position.x)/16)*16
+	if dir==2||dir==3:
+		position.y=round((position.y)/16)*16
+	else:
+		position.x=round((position.x)/16)*16
 	pass
 
 func _draw():

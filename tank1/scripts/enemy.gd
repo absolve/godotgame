@@ -377,8 +377,11 @@ func fire():
 #坦克的位置一定是16的倍数这样就可以每次旋转都正好在每个方块的边缘
 #这样的话就不会出现叠在一起的情况
 func turnDir(): 
-	position.y=round((position.y)/16)*16
-	position.x=round((position.x)/16)*16
+	if dir==2||dir==3:
+		position.y=round((position.y)/16)*16
+	else:
+		position.x=round((position.x)/16)*16
+	
 
 func get_class():
 	return 'enemy'

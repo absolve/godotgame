@@ -48,6 +48,7 @@ func _ready():
 	Game.connect("baseDestroyed",self,"baseDestroy")
 	Game.otherObj=$map/obj
 	Game.mainScene=$map/bullets
+#	Game.level=15
 	print(Game.mapNameList[Game.level])
 	_map.loadMap(Game.mapDir+"/"+Game.mapNameList[Game.level])
 	_map.mode=0
@@ -93,16 +94,22 @@ func _process(delta):
 		for i in _tank.get_children():	#检查坦克与砖块的碰撞
 			var rect=i.getRect()
 			var isStop=false
+			var isOnIce=false
 			for y in _brick.get_children():
 				if y.get_class()=="brick":
 					var type=y.getType() #装快的类型
+					var rect1=y.getRect()	#砖块矩形
 					if type==Game.brickType.bush or type==Game.brickType.ice:	#草丛
+						if type==Game.brickType.ice:
+							if i.get_class()=='player' && rect.intersects(rect1):
+								isOnIce=true
+							
 						continue
 					if type==Game.brickType.water: #水
 						if i.has_method("hasShip"):
 							if i.hasShip():
 								continue
-					var rect1=y.getRect()	#砖块矩形
+					
 					if rect.intersects(rect1):  #碰撞  判断是否被包围住
 						if rect1.encloses(rect):#完全叠一起
 							continue
@@ -128,7 +135,10 @@ func _process(delta):
 									isStop=true
 							else:
 								isStop=false	
-			i.setStop(isStop)					
+			i.setStop(isStop)
+#			print(isOnIce)	
+			if i.get_class()=='player':
+				i.setOnIce(isOnIce)				
 #						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
 #						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
 #						var absDX = abs(dx)

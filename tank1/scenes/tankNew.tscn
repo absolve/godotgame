@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://scripts/tankNew.gd" type="Script" id=1]
 [ext_resource path="res://sprites/tank_main1.png" type="Texture" id=2]
@@ -28,9 +28,80 @@
 [ext_resource path="res://sounds/idle.wav" type="AudioStream" id=26]
 [ext_resource path="res://sounds/walk.wav" type="AudioStream" id=27]
 [ext_resource path="res://sounds/hit.ogg" type="AudioStream" id=28]
+[ext_resource path="res://sounds/slide.wav" type="AudioStream" id=29]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "big_run",
+"speed": 15.0
+}, {
+"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
+"loop": true,
+"name": "super_green_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "small_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 19 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "middle_green_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "middle_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 24 ) ],
+"loop": true,
+"name": "small_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "small",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "super_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 21 ) ],
+"loop": true,
+"name": "super_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
+"loop": true,
+"name": "big_green_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "middle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 19 ) ],
+"loop": true,
+"name": "middle_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 24 ), ExtResource( 23 ) ],
+"loop": true,
+"name": "small_green_run",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 17 ) ],
+"loop": true,
+"name": "big_green",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 8 ) ],
 "loop": true,
 "name": "big",
@@ -44,76 +115,6 @@ animations = [ {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "super",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 19 ), ExtResource( 20 ) ],
-"loop": true,
-"name": "middle_green_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 7 ), ExtResource( 5 ) ],
-"loop": true,
-"name": "middle_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
-"loop": true,
-"name": "small_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "small",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 19 ) ],
-"loop": true,
-"name": "middle_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 9 ) ],
-"loop": true,
-"name": "big_run",
-"speed": 15.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ) ],
-"loop": true,
-"name": "big_green_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 24 ) ],
-"loop": true,
-"name": "small_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 24 ), ExtResource( 23 ) ],
-"loop": true,
-"name": "small_green_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 21 ) ],
-"loop": true,
-"name": "super_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 21 ), ExtResource( 22 ) ],
-"loop": true,
-"name": "super_green_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 17 ) ],
-"loop": true,
-"name": "big_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
-"loop": true,
-"name": "super_run",
-"speed": 20.0
-}, {
-"frames": [ ExtResource( 7 ) ],
-"loop": true,
-"name": "middle",
 "speed": 5.0
 } ]
 
@@ -155,6 +156,9 @@ volume_db = -6.0
 
 [node name="hit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 28 )
+
+[node name="slide" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 29 )
 
 [node name="invincibleTimer" type="Timer" parent="."]
 wait_time = 10.0
