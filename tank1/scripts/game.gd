@@ -180,7 +180,6 @@ func getExtensionMapNum(fileList:Array):
 				if !dir.current_is_dir():
 					num+=1
 					fileList.append(file_name)
-				#	print("Found file: " + file_name)
 				file_name = dir.get_next()
 		else:
 			print("An error occurred when trying to access the path.")
@@ -194,7 +193,7 @@ func getExtensionMapNum(fileList:Array):
 func loadGameConfig():
 	var baseDir=OS.get_executable_path().get_base_dir()
 	var config = ConfigFile.new()
-	var err = config.load(baseDir+gameConfigFile)
+	var err = config.load(baseDir+"/"+gameConfigFile)
 	if err == OK:
 		print(err)
 		if config.has_section("map"):
@@ -208,21 +207,22 @@ func loadGameConfig():
 func saveGameConfig(flag):
 	var baseDir=OS.get_executable_path().get_base_dir()
 	var config = ConfigFile.new()
-	var err = config.load(baseDir+gameConfigFile)
+	var err = config.load(baseDir+"/"+gameConfigFile)
 	if err == OK:
 		if config.has_section("map"):
 			config.set_value("map","useExtensionMap",flag)	
 		else:
 			config.set_value("map","useExtensionMap",flag)
-		config.save(baseDir+gameConfigFile)	
+		config.save(baseDir+"/"+gameConfigFile)	
 	else:
 		print("err ",err)		
 		
 func newGameConfigFile():
 	var baseDir=OS.get_executable_path().get_base_dir()
+#	print(baseDir)
 	var file=File.new()
-	if !file.file_exists(baseDir+gameConfigFile):
-		file.open(baseDir+gameConfigFile, File.WRITE)
+	if !file.file_exists(baseDir+"/"+gameConfigFile):
+		file.open(baseDir+"/"+gameConfigFile, File.WRITE)
 		file.close()
 		
 #载入按键配置
@@ -230,8 +230,8 @@ func loadConfig():
 	var baseDir=OS.get_executable_path().get_base_dir()
 	var file=File.new()
 #	print(baseDir+configFile)
-	if file.file_exists(baseDir+configFile):
-		file.open(baseDir+configFile, File.READ)
+	if file.file_exists(baseDir+"/"+configFile):
+		file.open(baseDir+"/"+configFile, File.READ)
 	#	print(file.get_as_text())
 		var input=parse_json(file.get_as_text())
 		print('data ',input)
@@ -262,7 +262,7 @@ func loadConfig():
 		file.close()
 	else:
 		print("file not exist")
-		file.open(baseDir+configFile, File.WRITE)
+		file.open(baseDir+"/"+configFile, File.WRITE)
 		file.close()
 		loadDefaultActions()
 	pass

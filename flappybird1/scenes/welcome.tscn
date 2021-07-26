@@ -79,4 +79,5 @@ position = Vector2( 0, 387 )
 
 [node name="ground1" parent="." instance=ExtResource( 11 )]
 position = Vector2( 375, 387 )
+
 [connection signal="pressed" from="HBoxContainer/startBtn" to="." method="_on_startBtn_pressed"]

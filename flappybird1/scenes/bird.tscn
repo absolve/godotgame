@@ -18,19 +18,9 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ) ],
-"loop": false,
-"name": "flap_yellow",
-"speed": 11.0
-}, {
-"frames": [ ExtResource( 6 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 6 ) ],
-"loop": false,
-"name": "flap_blue",
-"speed": 11.0
-}, {
-"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
-"name": "fly_yellow",
+"name": "fly",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 6 ) ],
@@ -48,10 +38,20 @@ animations = [ {
 "name": "idle_yellow",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 6 ) ],
+"loop": false,
+"name": "flap_blue",
+"speed": 11.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ) ],
 "loop": true,
-"name": "fly",
+"name": "fly_yellow",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "flap_yellow",
+"speed": 11.0
 }, {
 "frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 10 ) ],
 "loop": false,
@@ -65,6 +65,7 @@ radius = 12.8902
 [node name="bird" type="RigidBody2D"]
 position = Vector2( 36, 120 )
 mass = 10.2041
+gravity_scale = 7.0
 contacts_reported = 1
 contact_monitor = true
 script = ExtResource( 2 )
@@ -76,4 +77,5 @@ animation = "idle"
 [node name="shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
 one_way_collision_margin = 2.0
+
 [connection signal="body_entered" from="." to="." method="_on_bird_body_entered"]

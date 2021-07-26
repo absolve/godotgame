@@ -330,6 +330,7 @@ anims/fade_out = SubResource( 3 )
 [node name="camera" type="Camera2D" parent="game"]
 offset = Vector2( 144, 256 )
 current = true
+
 [connection signal="pressed" from="game/btnPause" to="." method="_on_btnPause_pressed"]
 [connection signal="pressed" from="game/tipBtn" to="." method="_on_tipBtn_pressed"]
 [connection signal="animation_finished" from="game/gameOverPanel/panel/medal/spark" to="game/gameOverPanel/panel/medal/spark" method="_on_spark_animation_finished"]

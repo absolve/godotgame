@@ -102,9 +102,9 @@ func saveConfig():
 	for i in controls:
 		data[i]=[]
 		var event=ActionEvent[i]
-		print(event)
+#		print(event)
 		for z in event:
-			print(z)
+#			print(z)
 			var button_data:Dictionary = {}
 			if z is InputEventKey:
 				button_data["eventtype"] = "InputEventKey"
@@ -122,71 +122,10 @@ func saveConfig():
 	print(data)
 	var file=File.new()
 	var baseDir=OS.get_executable_path().get_base_dir()
-	file.open(baseDir+configFile, File.WRITE)
+	file.open(baseDir+"/"+configFile, File.WRITE)
 	file.store_string(to_json(data))
 	file.close()
 	pass
-
-#载入配置
-#func loadConfig():
-#	var baseDir=OS.get_executable_path().get_base_dir()
-#	var file=File.new()
-##	print(baseDir+configFile)
-#	if file.file_exists(baseDir+configFile):
-#		file.open(baseDir+configFile, File.READ)
-#	#	print(file.get_as_text())
-#		var data=parse_json(file.get_as_text())
-#		print('data ',data)
-#		if data:
-#			var input=data['input']
-#			for i in controls:
-#				var event=input[i]
-#				ActionEvent[i]=[]
-#				for z in event:
-#					var NewEvent:InputEvent
-#					if z.eventtype == "InputEventKey":
-#						NewEvent = InputEventKey.new()
-#						NewEvent.scancode = z.scancode
-#					elif z.eventtype == "InputEventJoypadButton":
-#						NewEvent = InputEventJoypadButton.new()
-#						NewEvent.device = z.device
-#						NewEvent.button_index = z.button_index
-#					elif z.eventtype=='InputEventJoypadMotion':
-#						NewEvent = InputEventJoypadMotion.new()
-#						NewEvent.device = z.device
-#						NewEvent.axis = z.axis
-#						NewEvent.axis_value = z.axis_value
-#					ActionEvent[i].append(NewEvent)
-#			setActionEvent()
-#		else: #如果都没有配置的话就使用默认自带的
-#			loadDefaultActions()
-#		file.close()
-#	else:
-#		print("file not exist")
-#		file.open(baseDir+configFile, File.WRITE)
-#		file.close()
-#		loadDefaultActions()
-#	pass
-
-#设置inputmap的事件根据本地保存
-#func setActionEvent():
-#	for i in controls:
-#		InputMap.action_erase_events(i)
-#		for event in ActionEvent[i]:
-#			InputMap.action_add_event(i,event)
-
-#加载默认的数据
-#func loadDefaultActions():
-#	for  i in controls:
-#		var event=InputMap.get_action_list(i)
-#		ActionEvent[i]=event
-#		var tempAction=action.instance() #
-#		actions.add_child(tempAction)
-#		tempAction.setAction(i)
-#		var button=tempAction.find_node("Button")
-#		button.connect("pressed",self,"addActionEvent",[i,tempAction])
-#		for z in event:
-#			addEvent(i,z,tempAction)
 
 
 func _on_btn_back_pressed():
@@ -201,7 +140,6 @@ func _on_save_pressed():
 
 func _on_savegame_config_pressed():
 	var flag=checkBox.pressed
-#	print(flag)
 	Game.saveGameConfig(flag)
 	Game.useExtensionMap=flag
 	Game.loadMaps()
