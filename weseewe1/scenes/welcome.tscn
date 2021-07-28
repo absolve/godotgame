@@ -729,6 +729,7 @@ wait_time = 20.0
 process_mode = 0
 wait_time = 5.0
 one_shot = true
+
 [connection signal="_pressed" from="ui/btnHelp2" to="." method="_on_btnHelp2__pressed"]
 [connection signal="_pressed" from="ui/btnStart2" to="." method="_on_btnStart2__pressed"]
 [connection signal="_pressed" from="ui/btnSound2" to="." method="_on_btnSound2__pressed"]

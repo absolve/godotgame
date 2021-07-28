@@ -10,7 +10,6 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
@@ -22,6 +21,7 @@ config/icon="res://mario1.png"
 [autoload]
 
 constants="*res://scripts/constants.gd"
+Game="*res://scripts/game.gd"
 
 [display]
 
@@ -48,4 +48,5 @@ ui_jump={
 
 [rendering]
 
+2d/snapping/use_gpu_pixel_snap=true
 quality/2d/use_pixel_snap=true

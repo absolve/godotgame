@@ -47,6 +47,7 @@ signal scoreChange	#分数变化
 
 
 func _ready():
+	printFont()
 	winWidth=ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
 	#OS.center_window()
@@ -90,3 +91,13 @@ func get_digits(number):
 		digits.append(str_number[i].to_int())
 	return digits
 
+func printFont():
+	print("""
+ _____  _       ____  ____  ____  __ __      ____   ____  ____   ___   
+|     || |     /    ||    \\|    \\|  |  |    |    \\ |    ||    \\ |   \\  
+|   __|| |    |  o  ||  o  )  o  )  |  |    |  o  ) |  | |  D  )|    \\ 
+|  |_  | |___ |     ||   _/|   _/|  ~  |    |     | |  | |    / |  D  |
+|   _] |     ||  _  ||  |  |  |  |___, |    |  O  | |  | |    \\ |     |
+|  |   |     ||  |  ||  |  |  |  |     |    |     | |  | |  .  \\|     |
+|__|   |_____||__|__||__|  |__|  |____/     |_____||____||__|\\_||_____|
+	""")

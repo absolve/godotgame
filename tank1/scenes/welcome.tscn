@@ -163,6 +163,7 @@ position = Vector2( 171, 270 )
 rotation = 1.5708
 frames = SubResource( 1 )
 animation = "idle"
+frame = 1
 playing = true
 
 [node name="copyright" type="Label" parent="main"]

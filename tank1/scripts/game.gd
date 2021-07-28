@@ -83,6 +83,7 @@ func _ready():
 #	mapNum = getBuiltInMapNum(mapDir,mapNameList)
 	#mapDir.split()
 #	mapNameList.sort_custom(self,"sort")
+	printFont()
 	loadConfig()
 	loadGameConfig()
 	loadMaps()
@@ -280,3 +281,13 @@ func loadDefaultActions():
 	for  i in controls:
 		ActionEvent[i]=InputMap.get_action_list(i)
 	
+func printFont():
+	print(""" 
+ ____    ____  ______  ______  _        ___         __  ____  ______  __ __ 
+|    \\  /    ||      ||      || |      /   ]       /  ]|    ||      ||  |  |
+|  o  )|  o  ||      ||      || |     /  [_       /  /  |  | |      ||  |  |
+|     ||     ||_|  |_||_|  |_|| |___ |    _]     /  /   |  | |_|  |_||  ~  |
+|  O  ||  _  |  |  |    |  |  |     ||   [_     /   \\_  |  |   |  |  |___, |
+|     ||  |  |  |  |    |  |  |     ||     |    \\     | |  |   |  |  |     |
+|_____||__|__|  |__|    |__|  |_____||_____|     \\____||____|  |__|  |____/ 
+	""")
