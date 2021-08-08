@@ -8,6 +8,7 @@ var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
+var isOnFloor=true #是否在地面上
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -32,21 +33,25 @@ onready var ani=$ani
 func _ready():
 	debug=true
 	self.rect=Rect2(Vector2(-13,-16),Vector2(26,32))	
+	gravity=constants.marioGravity
 	pass 
 
 
 func _update(delta):
 	if status==constants.stand:
 		stand(delta)
-		pass
 	elif status==constants.walk:
 		walk(delta)
-		pass
+	elif status==constants.fall:
+		fall(delta)
+	elif status==constants.jump:
+		jump(delta)	
 	pass
+	
 
 func stand(delta):
 	self.xVel=0
-	self.yVel=0
+	self.yVel+=gravity
 	animation("stand")
 	if Input.is_action_pressed("ui_left"):
 		faceRight=false
@@ -54,10 +59,13 @@ func stand(delta):
 	elif Input.is_action_pressed("ui_right"):
 		faceRight=true
 		status = constants.walk
-		
+	position.y+=self.yVel*delta	
+	if !isOnFloor:
+		status=constants.fall
 	pass
 
 func walk(delta):
+	yVel+=gravity
 	if xVel>0:
 		ani.speed_scale=1+xVel/constants.marioAniSpeed
 	elif xVel<0:
@@ -112,6 +120,7 @@ func walk(delta):
 				status=constants.stand	
 					
 	position.x+=self.xVel*delta
+	position.y+=self.yVel*delta	
 	pass
 
 func jump(delta):
@@ -119,7 +128,18 @@ func jump(delta):
 	pass
 
 func fall(delta):
+	yVel+=gravity
+	if Input.is_action_pressed("ui_left"):
+		if xVel<-maxXVel:
+			xVel-=acceleration
+	elif Input.is_action_pressed("ui_right"):
+		if xVel>maxXVel:
+			xVel-=acceleration	
+	position.x+=self.xVel*delta
+	position.y+=self.yVel*delta	
 	
+	if isOnFloor:
+		status = constants.walk			
 	pass
 
 func animation(type):

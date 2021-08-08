@@ -19,3 +19,10 @@ func _draw():
 		draw_rect(rect,Color.white,false,1)
 	pass
 
+func getRect():
+	var temp =rect
+	temp.position+=position
+	return temp
+
+func getSize():
+	return rect.size.x

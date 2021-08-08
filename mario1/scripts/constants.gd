@@ -50,6 +50,7 @@ const runAcceleration=10 #跑的加速度
 const marioWalkMaxSpeed=180 #走的时候最大速度
 const marioRunMaxSpeed=350 #跑的时候最大速度
 const marioAniSpeed=150
+const marioGravity=20 #重力
 
 func _ready():
 	pass 
