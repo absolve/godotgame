@@ -59,6 +59,10 @@ func stand(delta):
 	elif Input.is_action_pressed("ui_right"):
 		faceRight=true
 		status = constants.walk
+	elif Input.is_action_pressed("ui_jump"):	
+		yVel=-constants.marioJumpSpeed
+		gravity=constants.marioJumpGravity
+		status=constants.jump
 	position.y+=self.yVel*delta	
 	if !isOnFloor:
 		status=constants.fall
