@@ -1,10 +1,21 @@
 extends Node
-
 #保存所有的常量
+
+#方块状态
 var resting="resting"  #静止
 var bumped="bumped"	#突起
 var opened="opened"	#已打开
 
+#蘑菇 星星状态
+var growing="growing" #出现
+var moving="moving" #移动
+var stop="stop"
+var jumping="jumping"
+
+#敌人的状态
+var walking="walking"
+var dead="dead"
+var deadJump="deadJump"
 
 #mario的状态
 var idle="idle"
@@ -29,7 +40,11 @@ var coin="coin"
 var mushroom1up="mushroom1up"
 var fireball="fireball"
 var coins6="coins6"
+var box="box"
 var brick='brick'
+
+var right="right"
+var left="left"
 
 #mario 数据
 var mario_speed=180
@@ -50,9 +65,12 @@ const runAcceleration=10 #跑的加速度
 const marioWalkMaxSpeed=180 #走的时候最大速度
 const marioRunMaxSpeed=350 #跑的时候最大速度
 const marioAniSpeed=150
-const marioGravity=20 #重力
-const marioJumpGravity=12
-const marioJumpSpeed=300
+const marioGravity=1300 #重力
+const marioJumpGravity=600
+const marioJumpSpeed=430
+const boxGravity=1400 #箱子重力
+
+
 func _ready():
 	pass 
 

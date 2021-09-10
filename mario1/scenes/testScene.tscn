@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/test2.gd" type="Script" id=1]
 [ext_resource path="res://scenes/mario1.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/brick .tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/box1.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/item.tscn" type="PackedScene" id=5]
 
 [node name="testScene" type="Node2D"]
 script = ExtResource( 1 )
@@ -38,3 +40,41 @@ position = Vector2( 249, 186.92 )
 
 [node name="brick 9" parent="brick" instance=ExtResource( 3 )]
 position = Vector2( 282, 186.92 )
+
+[node name="box1" parent="brick" instance=ExtResource( 4 )]
+position = Vector2( 198.452, 71.4762 )
+
+[node name="item" parent="brick" instance=ExtResource( 5 )]
+position = Vector2( 197.769, 69.7942 )
+
+[node name="Button" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "small2big"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="."]
+margin_left = 121.93
+margin_top = 7.56807
+margin_right = 133.93
+margin_bottom = 27.5681
+text = "box1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button3" type="Button" parent="."]
+margin_left = 208.0
+margin_top = 8.0819
+margin_right = 250.0
+margin_bottom = 28.0819
+text = "grow"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_Button3_pressed"]

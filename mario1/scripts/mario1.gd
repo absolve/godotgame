@@ -8,7 +8,7 @@ var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
-var isOnFloor=true #是否在地面上
+var isOnFloor=false #是否在地面上
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -46,12 +46,14 @@ func _update(delta):
 		fall(delta)
 	elif status==constants.jump:
 		jump(delta)	
+	elif status==constants.small2big:
+		pass
 	pass
 	
 
 func stand(delta):
 	self.xVel=0
-	self.yVel+=gravity
+	self.yVel+=gravity*delta
 	animation("stand")
 	if Input.is_action_pressed("ui_left"):
 		faceRight=false
@@ -69,7 +71,7 @@ func stand(delta):
 	pass
 
 func walk(delta):
-	yVel+=gravity
+	yVel+=gravity*delta
 	if xVel>0:
 		ani.speed_scale=1+xVel/constants.marioAniSpeed
 	elif xVel<0:
@@ -81,6 +83,13 @@ func walk(delta):
 	else:
 		acceleration=constants.acceleration
 		maxXVel=constants.marioWalkMaxSpeed	
+	
+	#跳跃
+	if Input.is_action_pressed("ui_jump"):
+		yVel=-constants.marioJumpSpeed
+		gravity=constants.marioJumpGravity
+		status=constants.jump
+		return
 	
 	if Input.is_action_pressed("ui_left"):
 		if xVel>0: #反方向
@@ -113,26 +122,48 @@ func walk(delta):
 		if faceRight:
 			if	self.xVel>0:
 				self.xVel-=acceleration
+				animation("walk")
 			else:
 				self.xVel=0
+				ani.speed_scale=1
 				status=constants.stand	
 		else:
 			if self.xVel<0:
 				self.xVel+=acceleration
+				animation("walk")
 			else:
 				self.xVel=0
+				ani.speed_scale=1
 				status=constants.stand	
 					
+	position.x+=xVel*delta
+	position.y+=yVel*delta	
+	pass
+
+func jump(delta):
+	yVel+=gravity*delta
+	animation("jump")
+	if yVel>0:
+		gravity=constants.marioGravity
+		status=constants.fall	
+		return
+		
+	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
+		print(2121)
+		gravity=constants.marioGravity
+	
+	if Input.is_action_pressed("ui_left"):
+		if xVel>-maxXVel:
+			xVel-=acceleration
+	elif Input.is_action_pressed("ui_right"):
+		if xVel<maxXVel:
+			xVel+acceleration
 	position.x+=self.xVel*delta
 	position.y+=self.yVel*delta	
 	pass
 
-func jump(delta):
-	
-	pass
-
 func fall(delta):
-	yVel+=gravity
+	yVel+=gravity*delta
 	if Input.is_action_pressed("ui_left"):
 		if xVel<-maxXVel:
 			xVel-=acceleration
@@ -144,6 +175,11 @@ func fall(delta):
 	
 	if isOnFloor:
 		status = constants.walk			
+	pass
+
+func small2Big():
+	status=constants.small2big
+	ani.play("small2big")
 	pass
 
 func animation(type):
@@ -172,3 +208,24 @@ func animation(type):
 	elif !faceRight && !ani.flip_h:
 		ani.flip_h=true	
 	pass
+
+
+func _on_ani_frame_changed():
+	if status==constants.small2big:
+		print(ani.frame)
+		if ani.frame in [0,2,4]:
+			ani.position.y= 0
+		else:
+			ani.position.y=-20
+		
+#		if ani.frame==11:
+#			big=true
+#			status=constants.walk
+	pass # Replace with function body.
+
+
+func _on_ani_animation_finished():
+	if status==constants.small2big:
+			big=true
+			status=constants.walk
+	pass # Replace with function body.
