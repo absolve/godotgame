@@ -5,8 +5,10 @@ onready var mario=$mario1
 onready var brick=$brick
 onready var box1=$brick/box1
 onready var item=$brick/item
+onready var obj=$obj
 
 func _ready():
+	box1.mainScene=obj
 	pass # Replace with function body.
 
 
@@ -14,6 +16,9 @@ func _process(delta):
 	mario._update(delta)
 	box1._update(delta)
 	item._update(delta)
+	
+	for i in obj.get_children():
+		i._update(delta)
 	
 	var onFloor=false
 	for i in brick.get_children():

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scripts/test2.gd" type="Script" id=1]
 [ext_resource path="res://scenes/mario1.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/brick .tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/brick.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/box1.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/item.tscn" type="PackedScene" id=5]
 
@@ -74,6 +74,8 @@ text = "grow"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="obj" type="Node2D" parent="."]
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

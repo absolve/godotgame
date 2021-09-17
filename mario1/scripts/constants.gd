@@ -16,6 +16,7 @@ var jumping="jumping"
 var walking="walking"
 var dead="dead"
 var deadJump="deadJump"
+var sliding="sliding"
 
 #mario的状态
 var idle="idle"
@@ -42,6 +43,8 @@ var fireball="fireball"
 var coins6="coins6"
 var box="box"
 var brick='brick'
+var brickPiece="brickPiece"
+
 
 var right="right"
 var left="left"

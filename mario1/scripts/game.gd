@@ -7,12 +7,18 @@ var  backgroundcolor = [{"r":92, "g":148,"b": 252},
 						{"r":0, "g":0,"b": 0},
 						{"r":32, "g":56,"b": 236}]
 
-
+var mainScene
+var otherObj
 
 func _ready():
 	printFont()
 	pass 
 
+func add2MainScene(obj):
+	mainScene.add_child(obj)
+
+func add2OtherObj(obj):
+	otherObj.add_child(obj)
 
 func printFont():
 	print("""
