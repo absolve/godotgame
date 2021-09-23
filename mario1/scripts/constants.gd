@@ -44,7 +44,7 @@ var coins6="coins6"
 var box="box"
 var brick='brick'
 var brickPiece="brickPiece"
-
+var pipe="pipe"
 
 var right="right"
 var left="left"
