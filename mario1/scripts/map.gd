@@ -22,20 +22,23 @@ var allTiles=[]
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
-
+onready var _itemList=$Control/ItemList
 
 
 func _ready():
 	print(camera.get_camera_position())
 	print(camera.get_camera_screen_center())
-	loadMapFile(path)
+#	loadMapFile(path)
 	
-#	var obj={"x":0,"y":14}
-#	var obj2={"x":0,"y":15}
-#	var obj1={"x":10,"y":15}
-#	allTiles.append(obj)
-#	allTiles.append(obj2)
-#	print(allTiles.bsearch_custom(obj1,self,"checkXY"))
+	nodeItem()
+	pass
+
+func nodeItem():
+	_itemList.add_item("12",null,true)
+	_itemList.add_item("12",null,true)
+	_itemList.add_item("12",null,true)
+	_itemList.add_item("12",null,true)
+	_itemList.add_item("12",null,true)
 	pass
 
 

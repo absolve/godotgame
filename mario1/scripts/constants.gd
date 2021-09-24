@@ -74,6 +74,25 @@ const marioJumpSpeed=430
 const boxGravity=1400 #箱子重力
 
 
+#图块对应的属性
+var tiles=["mario","goomba","koopa","box","brick","pipe"]
+var tilesAttribute={"mario":{"x":0,"y":0},"goomba":{"x":0,"y":0},
+					"koopa":{"x":0,"y":0},"box":{
+												"type":"box",
+												"spriteIndex":0,
+												"x":0,
+												"y":0
+											},
+											"pipe":{"type":"pipe",
+												"spriteIndex":0,
+												"x":0,
+												"y":0},
+				"brick":{
+					"type":"brick",
+												"spriteIndex":0,
+												"x":0,
+												"y":0
+				}}
 func _ready():
 	pass 
 
