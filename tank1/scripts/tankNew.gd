@@ -1,18 +1,16 @@
-extends Node2D
+extends "res://scripts/tank.gd"
 
 
-
-var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
-var debug=true
+#var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var vec=Vector2.ZERO
 var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
-var dir=0 # 0上 1下 2左 3右
+#var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
-var shootDelay=60
-var bullets=[]
-var bulletMax=1	#发射最大子弹数
-var bullet=Game.bullet
+var shootDelay=90
+#var bullets=[]
+#var bulletMax=1	#发射最大子弹数
+#var bullet=Game.bullet
 var isInit=false
 var state=Game.tank_state.IDLE
 var initStartTime=0
@@ -20,16 +18,16 @@ var initTime=1200  #ms
 var isInvincible=false #无敌
 var invincibleStartTime=0
 var invincibleTime=8000
-var isStop=false#是否停止
+#var isStop=false#是否停止
 var playId=2  #1=1p 2=2p
-var life=1  #生命默认1
+#var life=1  #生命默认1
 var speed = 70 #移动速度
 var bulletPower=Game.bulletPower.normal
 var hasShip=false	#是否有船
 var isFreeze=false	#冻结
 var lastDir=0#上次的方向
 var isOnIce=false  #是否在冰块上
-var slideTime =20 #冰块滑动次数
+var slideTime =20 #冰块滑动次数 每帧
 
 onready var _invincible=$invincible
 onready var _ship=$ship
@@ -416,9 +414,6 @@ func turnDir():
 		position.x=round((position.x)/16)*16
 	pass
 
-func _draw():
-#	if debug:
-#		draw_rect(rect,Color.white,false,1,true)
-	pass	
+	
 
 

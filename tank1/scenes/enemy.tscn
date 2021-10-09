@@ -49,19 +49,29 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
+"frames": [ ExtResource( 10 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "flash",
+"speed": 9.0
+}, {
 "frames": [ ExtResource( 7 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "typeB",
 "speed": 8.0
 }, {
+"frames": [ ExtResource( 21 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "typeA_1",
+"speed": 15.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 26 ) ],
+"loop": true,
+"name": "typeB_3",
+"speed": 15.0
+}, {
 "frames": [ ExtResource( 43 ), ExtResource( 42 ) ],
 "loop": true,
 "name": "typeD_3",
-"speed": 15.0
-}, {
-"frames": [ ExtResource( 23 ), ExtResource( 22 ) ],
-"loop": true,
-"name": "typeB_1",
 "speed": 15.0
 }, {
 "frames": [ ExtResource( 38 ), ExtResource( 39 ) ],
@@ -69,20 +79,10 @@ animations = [ {
 "name": "typeD_2",
 "speed": 15.0
 }, {
-"frames": [ ExtResource( 31 ), ExtResource( 30 ) ],
+"frames": [ ExtResource( 23 ), ExtResource( 22 ) ],
 "loop": true,
-"name": "typeC_2",
+"name": "typeB_1",
 "speed": 15.0
-}, {
-"frames": [ ExtResource( 21 ), ExtResource( 20 ) ],
-"loop": true,
-"name": "typeA_1",
-"speed": 15.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 9 ) ],
-"loop": true,
-"name": "typeC",
-"speed": 8.0
 }, {
 "frames": [ ExtResource( 44 ), ExtResource( 45 ) ],
 "loop": true,
@@ -92,11 +92,6 @@ animations = [ {
 "frames": [ ExtResource( 28 ), ExtResource( 29 ) ],
 "loop": true,
 "name": "typeB_4",
-"speed": 15.0
-}, {
-"frames": [ ExtResource( 41 ), ExtResource( 40 ) ],
-"loop": true,
-"name": "typeD_4",
 "speed": 15.0
 }, {
 "frames": [ ExtResource( 33 ), ExtResource( 32 ) ],
@@ -114,6 +109,16 @@ animations = [ {
 "name": "typeA",
 "speed": 8.0
 }, {
+"frames": [ ExtResource( 31 ), ExtResource( 30 ) ],
+"loop": true,
+"name": "typeC_2",
+"speed": 15.0
+}, {
+"frames": [ ExtResource( 41 ), ExtResource( 40 ) ],
+"loop": true,
+"name": "typeD_4",
+"speed": 15.0
+}, {
 "frames": [ ExtResource( 25 ), ExtResource( 24 ) ],
 "loop": true,
 "name": "typeB_2",
@@ -122,11 +127,6 @@ animations = [ {
 "frames": [ ExtResource( 34 ), ExtResource( 35 ) ],
 "loop": true,
 "name": "typeC_3",
-"speed": 15.0
-}, {
-"frames": [ ExtResource( 27 ), ExtResource( 26 ) ],
-"loop": true,
-"name": "typeB_3",
 "speed": 15.0
 }, {
 "frames": [ ExtResource( 37 ), ExtResource( 36 ) ],
@@ -139,15 +139,15 @@ animations = [ {
 "name": "typeA_4",
 "speed": 15.0
 }, {
+"frames": [ ExtResource( 4 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "typeC",
+"speed": 8.0
+}, {
 "frames": [ ExtResource( 14 ), ExtResource( 15 ) ],
 "loop": true,
 "name": "typeA_2",
 "speed": 15.0
-}, {
-"frames": [ ExtResource( 10 ), ExtResource( 13 ), ExtResource( 12 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 10 ) ],
-"loop": true,
-"name": "flash",
-"speed": 9.0
 }, {
 "frames": [ ExtResource( 16 ), ExtResource( 17 ) ],
 "loop": true,

@@ -1,21 +1,20 @@
-extends Node2D
+extends "res://scripts/tank.gd"
 
-#class_name enemy
 
-var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
+#var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var speed=42  #移动速度
-var dir=1 # 0上 1下 2左 3右
+#var dir=1 # 0上 1下 2左 3右
 
 var type=0  # 0 typeA  1 typeB 2 typeC 3 typeD
-var bulletMax=1	#发射最大子弹数
+#var bulletMax=1	#发射最大子弹数
 var armour=0  #护甲等级  不同等级护甲不同 最大3
 var vec=Vector2.ZERO
-var isStop=false#是否停止
+#var isStop=false#是否停止
 var keepDirectionTime=0 #保持方向的时间 ms
 var directionTime=0
 var targetPos=Vector2(0,0)	#目标位置
-var bullet=Game.bullet
-var bullets=[]
+#var bullet=Game.bullet
+#var bullets=[]
 var fireTime=0
 var reloadTime=800
 var newDir=0
@@ -28,7 +27,7 @@ var initTime=1200  #ms
 #var nextState=Game.tank_state.STOP
 var isFreeze=false	#冻结
 var hasItem=false #是否有物品
-var aniStartTime=0	#变化
+var aniStartTime=0	#动画变化
 var aniDelayTime=240 #ms
 
 onready var _ani=$ani
@@ -37,6 +36,7 @@ onready var _timer=$Timer #初始化时间
 
 func _ready():
 	randomize()
+	dir=1
 	$ani.play("flash")
 	$ani.playing=true
 	var hit=_hit.stream as AudioStreamOGGVorbis

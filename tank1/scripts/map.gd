@@ -64,12 +64,12 @@ onready var _bricks = $tools/bricks
 onready var _tanks=$tanks
 onready var _mapbg=$mapbg
 onready var _bonus=$bonus
+onready var _brick=$brick
+onready var _bullets=$bullets
+onready var _base=$base
 
 
 func _ready():
-	#获取可执行文件基本路径
-	#print(OS.get_executable_path().get_base_dir())
-#	mode=1
 	randomize()
 	_mapbg.rect_position=offset
 	mapRect =Rect2(offset,Vector2(cellSize*26,cellSize*26))
@@ -158,7 +158,7 @@ func setPlayerFreeze():
 	for i in _tank.get_children():
 		if i.get_class()=="player":
 			i.setFreeze()
-	pass
+
 
 #冻住敌人
 func setEnemyFreeze(flag=true):
@@ -198,7 +198,7 @@ func addBonus():
 		for i in _bonus.get_children():
 			_bonus.remove_child(i)
 	var temp = bonus.instance()
-	#不能在基地附近
+	#不能在基地附近 不能在玩家附近
 	var pos = Vector2(randi()%25+1,randi()%25+1)
 	while pos in basePlacePos:  #防止在基地旁边
 		pos = Vector2(randi()%25+1,randi()%25+1)
@@ -215,7 +215,6 @@ func loadMap(filename:String):
 		currentLevel = parse_json(file.get_as_text())
 #		print("文件",currentLevel)
 		file.close()
-		#return currentLevel
 		print(currentLevel['name'])	
 		for i in currentLevel['data']:
 			if i['type'] in [0,1,2,3,4]:
@@ -225,7 +224,7 @@ func loadMap(filename:String):
 					temp.position.y=i['y']*cellSize+temp.size/2
 					temp.position+=offset
 					temp.type=i['type']
-					$brick.add_child(temp)
+					_brick.add_child(temp)
 				elif mode==1:	#编辑模式
 					brickList.append(i)
 	else:
@@ -244,7 +243,7 @@ func addBaseStone():
 		temp.position.y=i['y']*cellSize+temp.size/2
 		temp.position+=offset
 		temp.type=1
-		$brick.add_child(temp)
+		_brick.add_child(temp)
 	pass
 
 #添加基地旁边的砖块在编辑模式下
@@ -272,21 +271,21 @@ func changeBasePlaceBrickType(type):
 			temp.position.y=i['y']*cellSize+temp.size/2
 			temp.position+=offset
 			temp.type=type
-			$brick.add_child(temp)	
+			_brick.add_child(temp)	
 	pass
 	
 #清空地图
 func clearMap():
-	for i in $brick.get_children():
-		$brick.remove_child(i)
-	for i in $bonus.get_children():
-		$bonus.remove_child(i)	
-	for i in $tanks.get_children():
-		$tanks.remove_child(i)
-	for i in $bullets.get_children():
-		$bullets.remove_child(i)		
-	for i in $base.get_children():
-		$base.remove_child(i)
+	for i in _brick.get_children():
+		_brick.remove_child(i)
+	for i in _bonus.get_children():
+		_bonus.remove_child(i)	
+	for i in _tanks.get_children():
+		_tanks.remove_child(i)
+	for i in _bullets.get_children():
+		_bullets.remove_child(i)		
+	for i in _base.get_children():
+		_base.remove_child(i)
 
 
 #删除敌人出生点方块
@@ -322,14 +321,14 @@ func createBase():
 	var temp=base.instance()
 	temp.position=Vector2(basePos.x*cellSize+temp.size/2,basePos.y*cellSize+temp.size/2)
 	temp.position+=offset
-	$base.add_child(temp)
+	_base.add_child(temp)
 	pass
 
 
 #获取固定位置的方块  x [0-25] y[0-25]
 func getBrick(x:int,y:int):
 	var rect = Rect2(Vector2(x*cellSize,y*cellSize)+offset,Vector2(cellSize,cellSize))
-	var child=$brick.get_children()
+	var child=_brick.get_children()
 	var brick=null
 	for i in child:
 		if rect.has_point(i.position):
@@ -418,7 +417,6 @@ func addItem(pos):
 	var y=pos.y
 	var indexX = int(x)/(cellSize)
 	var indexY=int(y)/(cellSize)
-	
 	brickList.append({'x':indexX,'y':indexY,"type":currentItem})
 	pass
 
@@ -428,7 +426,7 @@ func clearItem(pos):
 	var y=pos.y
 	var indexX = int(x)/(cellSize)
 	var indexY=int(y)/(cellSize)
-	print(indexX,' ',indexY)
+#	print(indexX,' ',indexY)
 	var tempList = []
 	for i in brickList:
 		if i['x']==indexX and i['y']==indexY:

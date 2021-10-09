@@ -76,7 +76,7 @@ func getDir():
 
 func setPower(power):
 	if power==Game.bulletPower.normal:
-		speed=160
+		speed=180
 	elif power==Game.bulletPower.fast:
 		speed=380
 	elif power==Game.bulletPower.super:

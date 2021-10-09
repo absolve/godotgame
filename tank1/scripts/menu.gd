@@ -105,12 +105,12 @@ func _process(delta):
 				state=1
 				index+=1
 				p1Num=1
-				
-			if Game.mode==1:
-				p1Num+=1	
-			else:
-				p1Num+=1	
-				p2Num+=1	
+			else:	
+				if Game.mode==1:
+					p1Num+=1	
+				else:
+					p1Num+=1	
+					p2Num+=1	
 			SoundsUtil.playPoint()
 	elif state==1: #进入下一个分数
 		if index==0:
