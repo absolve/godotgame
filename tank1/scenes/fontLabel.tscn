@@ -17,6 +17,7 @@ margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 8.0
 custom_fonts/font = ExtResource( 2 )
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -24,4 +25,5 @@ __meta__ = {
 [node name="Timer" type="Timer" parent="."]
 wait_time = 1.8
 one_shot = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
