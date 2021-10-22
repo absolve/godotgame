@@ -1,7 +1,7 @@
 extends Node2D
 
 var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
-var dir=0 # 0上 1下 2左 3右
+var dir=Game.up # 0上 1下 2左 3右
 var debug=false
 var isStop=false#是否停止
 var bullet=Game.bullet

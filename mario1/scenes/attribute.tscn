@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/theme.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/attribute.gd" type="Script" id=2]
+
+[node name="attribute" type="PanelContainer"]
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+
+[node name="PanelContainer" type="PanelContainer" parent="ScrollContainer"]
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="list" type="VBoxContainer" parent="ScrollContainer/PanelContainer"]
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

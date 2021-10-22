@@ -17,7 +17,7 @@ var targetPos=Vector2(0,0)	#目标位置
 #var bullets=[]
 var fireTime=0
 var reloadTime=800
-var newDir=0
+var newDir=Game.up
 var bulletPower=Game.bulletPower.normal
 
 var isInit=false
@@ -36,7 +36,7 @@ onready var _timer=$Timer #初始化时间
 
 func _ready():
 	randomize()
-	dir=1
+	dir=Game.down
 	$ani.play("flash")
 	$ani.playing=true
 	var hit=_hit.stream as AudioStreamOGGVorbis
@@ -81,16 +81,16 @@ func _update(delta):
 		if isFreeze:
 			return
 		
-		if dir==0:
+		if dir==Game.up:
 			vec.y=-speed
 			vec.x=0
-		elif dir==1:
+		elif dir==Game.down:
 			vec.x=0
 			vec.y=speed
-		elif dir==2:
+		elif dir==Game.left:
 			vec.x=-speed
 			vec.y=0
-		elif dir==3:
+		elif dir==Game.right:
 			vec.y=0
 			vec.x=speed		
 		else:
@@ -152,20 +152,20 @@ func _update(delta):
 	pass
 
 func animation(dir,vec):
-	if dir==0:
+	if dir==Game.up:
 		_ani.flip_v=true
 		_ani.flip_h=true
 		_ani.rotation_degrees=0
-	elif dir==1:
+	elif dir==Game.down:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-	elif dir==2:
+	elif dir==Game.left:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		if _ani.rotation_degrees!=90:
 			_ani.rotation_degrees=90
-	elif dir==3:
+	elif dir==Game.right:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		if _ani.rotation_degrees!=-90:
@@ -263,7 +263,8 @@ func animation(dir,vec):
 	
 #改变方向
 func turnDirection():
-	newDir=randi()%4	
+	var temp=[Game.up,Game.down,Game.left,Game.right]
+	newDir=temp[randi()%4]
 
 #向基地出发
 func targetEagle(p):
@@ -271,17 +272,17 @@ func targetEagle(p):
 	var dy=position.y-targetPos.y 
 	if abs(dx)>abs(dy):
 		if dx<0:
-			newDir=3
+			newDir=Game.right
 		else:
-			newDir=2
+			newDir=Game.left
 		if p>0.8:
 			var temp = getNewDir(dir)
 			newDir=temp[randi()%temp.size()]			
 	else:
 		if dy<0:
-			newDir=1
+			newDir=Game.down
 		else:
-			newDir=0
+			newDir=Game.up
 		if p>0.8:
 			var temp = getNewDir(dir)
 			newDir=temp[randi()%temp.size()]	
@@ -291,7 +292,8 @@ func setStop(isStop):
 
 func getNewDir(dir):
 	var temp=[]
-	for i in range(4):
+	var tempdir=[Game.up,Game.down,Game.left,Game.right]
+	for i in tempdir:
 		if dir!=i:
 			temp.append(i)
 	return temp
@@ -377,7 +379,7 @@ func fire():
 #坦克的位置一定是16的倍数这样就可以每次旋转都正好在每个方块的边缘
 #这样的话就不会出现叠在一起的情况
 func turnDir(): 
-	if dir==2||dir==3:
+	if dir==Game.left||dir==Game.right:
 		position.y=round((position.y)/16)*16
 	else:
 		position.x=round((position.x)/16)*16

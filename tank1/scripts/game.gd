@@ -78,6 +78,11 @@ var configFile="config.ini"
 var ActionEvent:Dictionary = {} #事件集合
 var gameConfigFile="gameConfig.ini"
 var useExtensionMap=false  #使用你扩展
+"""方向"""
+const left="left"
+const right="right"
+const up="up" 
+const down="down"
 
 func _ready():
 #	mapNum = getBuiltInMapNum(mapDir,mapNameList)

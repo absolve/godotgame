@@ -119,19 +119,19 @@ func _process(delta):
 						var yVal =i.position.y-y.position.y
 						var absXVal=abs(xVal)
 						var absYVal=abs(yVal)
-						if iTankDir in [0,1]:	#上下
+						if iTankDir in [Game.up,Game.down]:	#上下
 							if absYVal<i.getSize() and absYVal>i.getSize()/2:
-								if yVal<0 and iTankDir==1:
+								if yVal<0 and iTankDir==Game.down:
 									isStop=true
-								elif yVal>0	and iTankDir==0:
+								elif yVal>0	and iTankDir==Game.up:
 									isStop=true
 							else:
 								isStop=false
-						elif iTankDir in [2,3]:	#左右
+						elif iTankDir in [Game.left,Game.right]:	#左右
 							if absXVal<i.getSize() and absXVal>i.getSize()/2:			
-								if xVal<0 and iTankDir==3:
+								if xVal<0 and iTankDir==Game.right:
 									isStop=true
-								elif xVal>0 and iTankDir==2:
+								elif xVal>0 and iTankDir==Game.left:
 									isStop=true
 							else:
 								isStop=false	
@@ -139,34 +139,7 @@ func _process(delta):
 #			print(isOnIce)	
 			if i.get_class()=='player':
 				i.setOnIce(isOnIce)				
-#						var dx=(y.getPos().x-i.position.x)/(y.getXSize()/2)
-#						var dy=(y.getPos().y-i.position.y)/(y.getYSize()/2)
-#						var absDX = abs(dx)
-#						var absDY = abs(dy)
-#
-#						if abs(absDX - absDY) < .1:
-#							if dx<0:
-#								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2			
-#							else:
-#								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2	
-#
-#							if dy<0:
-#								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2			
-#							else:
-#								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2						
-#						elif absDX > absDY:
-#							if dx<0:
-#								i.position.x=y.getPos().x+y.getXSize()/2+i.getSize()/2					
-#							else:
-#								i.position.x=y.getPos().x-y.getXSize()/2-i.getSize()/2		
-#						else:
-#							if dy<0:
-#								i.position.y=y.getPos().y+y.getYSize()/2+i.getSize()/2	
-#							else:
-#								i.position.y=y.getPos().y-y.getYSize()/2-i.getSize()/2	
-
-						
-			
+					
 		for i in _bullet.get_children():	#子弹跟方块
 			if i.get_class()=="bullet":
 				var rect=i.getRect()
@@ -216,19 +189,19 @@ func _process(delta):
 						var absYVal=abs(yVal)
 						
 						if rect.intersects(rect1,false):
-							if iTankDir in [0,1]:	#上下 判断坦克前面的位置有没有坦克
+							if iTankDir in [Game.up,Game.down]:	#上下 判断坦克前面的位置有没有坦克
 								if absYVal<i.getSize() and absYVal>i.getSize()/2:
-									if yVal<0 and iTankDir==1:
+									if yVal<0 and iTankDir==Game.down:
 										isStop=true
-									elif yVal>0	and iTankDir==0:
+									elif yVal>0	and iTankDir==Game.up:
 										isStop=true
 								else:
 									isStop=false
-							elif iTankDir in [2,3]:	#左右
+							elif iTankDir in [Game.left,Game.right]:	#左右
 								if absXVal<i.getSize() and absXVal>i.getSize()/2:			
-									if xVal<0 and iTankDir==3:
+									if xVal<0 and iTankDir==Game.right:
 										isStop=true
-									elif xVal>0 and iTankDir==2:
+									elif xVal>0 and iTankDir==Game.left:
 										isStop=true
 								else:
 									isStop=false
@@ -285,7 +258,6 @@ func _process(delta):
 					var rect1=y.getRect()
 					if rect.intersects(rect1,false):
 						var type=i.getType()
-#						print("_bonus %d"%type)
 						i.destroy()
 						getBonus(type,y.getPlayId())
 		
@@ -346,26 +318,6 @@ func _process(delta):
 						brickType=Game.brickType.stoneWall
 					elif brickType==Game.brickType.stoneWall:
 						brickType=Game.brickType.brickWall
-				
-			
-#			if OS.get_system_time_msecs()-getShoveTime>=maxShoveTime:
-#				print("end")
-#				hasShovel=false
-#				brickType==Game.brickType.brickWall
-#				_map.changeBasePlaceBrickType(Game.brickType.brickWall)
-#			elif OS.get_system_time_msecs()-getShoveTime>=maxShoveTime-5000:
-#				#开始变化砖块
-#			#	print("=============")
-#				if OS.get_system_time_msecs()-changeBrickTime>=350:
-#					changeBrickTime=OS.get_system_time_msecs()	
-#
-#				#	print("brickType",brickType)	
-#					_map.changeBasePlaceBrickType(brickType)	
-#					if brickType==Game.brickType.brickWall:
-#						brickType=Game.brickType.stoneWall
-#					elif brickType==Game.brickType.stoneWall:
-#						brickType=Game.brickType.brickWall
-#				pass
 			pass
 		
 	elif state==Game.game_state.NEXT_LEVEL:

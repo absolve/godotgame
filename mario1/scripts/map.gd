@@ -16,13 +16,16 @@ var mapSize=19  #宽度 一个屏幕19块
 var enemyList=[] #敌人列表
 var currentLevel  #文件数据
 var path="res://levels/1-1.json"
-var bg="overworld" #overworld   castle underwater
 var currentMapWidth=0 #当前地图的宽度
-var allTiles=[]
+var bg="overworld" #overworld   castle underwater
+var allTiles=[]  #所有方块的集合
+var marioPos={} #mario地图出生地
+
+
+var mode="edit"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
-onready var _itemList=$Control/ItemList
 
 
 func _ready():
@@ -34,11 +37,7 @@ func _ready():
 	pass
 
 func nodeItem():
-	_itemList.add_item("12",null,true)
-	_itemList.add_item("12",null,true)
-	_itemList.add_item("12",null,true)
-	_itemList.add_item("12",null,true)
-	_itemList.add_item("12",null,true)
+
 	pass
 
 
@@ -124,9 +123,27 @@ func checkTile(obj):
 func checkXY(a,b):
 	return a["x"]==b["x"]&&a["y"]==b["y"]
 
+#检查点击的位置是否有这个方块
+func checkHasItem(pos):
+	var x = pos.x
+	var y=pos.y
+	var indexX = int(x)/(blockSize)
+	var indexY=int(y)/(blockSize)
+	var temp = {"x":indexX,"y":indexY}
+	print(temp)
+	if allTiles.bsearch_custom(temp,self,"checkXY")!=0:
+		return true
+	else:
+		return false		
+	pass
+
+#添加方块信息
+func addItem(type,value):
+	
+	pass
 
 func _input(event):
-	if debug:
+	if mode=='edit':
 		if event is InputEventKey:
 			if event.is_pressed():
 				if (event as InputEventKey).scancode==KEY_LEFT:	
@@ -137,6 +154,18 @@ func _input(event):
 					if currentMapWidth-camera.position.x>minWidthNun*blockSize:
 						camera.position.x+=10
 					pass	
+		elif event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT and  event.pressed:
+				
+				
+				pass
+			elif !event.pressed:	
+				
+				pass	
+			pass
+		elif event is InputEventMouseMotion:	#移动
+			
+			pass	
 		pass
 	pass
 

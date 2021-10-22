@@ -75,13 +75,15 @@ const boxGravity=1400 #箱子重力
 
 
 #图块对应的属性
-var tiles=["mario","goomba","koopa","box","brick","pipe"]
+var tiles=['del',"mario","goomba","koopa","box","brick","pipe","coin","bg"]
 var tilesAttribute={"mario":{"x":0,"y":0},"goomba":{"x":0,"y":0},
 					"koopa":{"x":0,"y":0},"box":{
 												"type":"box",
 												"spriteIndex":0,
 												"x":0,
-												"y":0
+												"y":0,
+												"content":"mushroom",
+												"visible":true
 											},
 											"pipe":{"type":"pipe",
 												"spriteIndex":0,
@@ -92,6 +94,17 @@ var tilesAttribute={"mario":{"x":0,"y":0},"goomba":{"x":0,"y":0},
 												"spriteIndex":0,
 												"x":0,
 												"y":0
+				},
+				"coin":{
+					"type":"coin",
+					"spriteIndex":0,
+					"x":0,
+					"y":0
+				},"bg":{
+					"type":"bg",
+					"spriteIndex":0,
+					"x":0,
+					"y":0
 				}}
 func _ready():
 	pass 

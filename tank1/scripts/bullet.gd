@@ -1,7 +1,7 @@
 extends Node2D
 
 
-export var dir=2 # 0上 1下 2左 3右
+var dir=Game.down # 0上 1下 2左 3右
 var speed=160  
 var type=Game.bulletType.players
 var playerID  #玩家id
@@ -15,20 +15,20 @@ var rect=Rect2(Vector2(-3,-4),Vector2(6,8))
 
 
 func _ready():
-	if dir==0:
+	if dir==Game.up:
 		$Sprite.flip_v=true
 		vec.x=0
 		vec.y=-speed
-	elif dir==1:
+	elif dir==Game.down:
 		vec.x=0
 		vec.y=speed
-	elif dir==2:
+	elif dir==Game.left:
 		$Sprite.rotation_degrees=90
 		$Sprite.rotation_degrees=90
 		rect =Rect2(Vector2(-4,-3),Vector2(8,6))
 		vec.x=-speed
 		vec.y=0
-	elif dir==3:
+	elif dir==Game.right:
 		$Sprite.rotation_degrees=-90
 		$Sprite.rotation_degrees=-90
 		rect =Rect2(Vector2(-4,-3),Vector2(8,6))

@@ -162,25 +162,25 @@ func _update(delta):
 				_slide.play()
 			vec.y=-speed
 			vec.x=0
-			dir=0
+			dir=Game.up
 		elif Input.is_action_pressed(keymap["down"]):
 			if vec==Vector2.ZERO&&isOnIce:
 				_slide.play()
 			vec.x=0
 			vec.y=speed
-			dir=1
+			dir=Game.down
 		elif Input.is_action_pressed(keymap["left"]):
 			if vec==Vector2.ZERO&&isOnIce:
 				_slide.play()
 			vec.x=-speed
 			vec.y=0
-			dir=2	
+			dir=Game.left
 		elif Input.is_action_pressed(keymap["right"]):	
 			if vec==Vector2.ZERO&&isOnIce:
 				_slide.play()
 			vec.y=0
 			vec.x=speed
-			dir=3
+			dir=Game.right
 		else:
 			vec=Vector2.ZERO	
 		
@@ -189,16 +189,16 @@ func _update(delta):
 			
 			
 		if isOnIce&&slideTime>0&&vec==Vector2.ZERO: #冰块上继续滑行
-			if dir==0:
+			if dir==Game.up:
 				vec.y=-speed
 				vec.x=0
-			elif dir==1:
+			elif dir==Game.down:
 				vec.x=0
 				vec.y=speed
-			elif dir==2:
+			elif dir==Game.left:
 				vec.x=-speed
 				vec.y=0
-			elif dir==3:
+			elif dir==Game.right:
 				vec.y=0
 				vec.x=speed
 			slideTime-=1
@@ -225,20 +225,20 @@ func _update(delta):
 	
 	
 func animation(dir,vec):
-	if dir==0:
+	if dir==Game.up:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-	elif dir==1:
+	elif dir==Game.down:
 		_ani.flip_v=true
 		_ani.flip_h=false
 		_ani.rotation_degrees=0
-	elif dir==2:
+	elif dir==Game.left:
 		_ani.flip_v=false
 		_ani.flip_h=true
 		if _ani.rotation_degrees!=-90:
 			_ani.rotation_degrees=-90
-	elif dir==3:
+	elif dir==Game.right:
 		_ani.flip_v=false
 		_ani.flip_h=false
 		if _ani.rotation_degrees!=90:
@@ -408,7 +408,7 @@ func get_class():
 func turnDir(): 
 #	position.y=round((position.y)/16)*16
 #	position.x=round((position.x)/16)*16
-	if dir==2||dir==3:
+	if dir==Game.left||dir==Game.right:
 		position.y=round((position.y)/16)*16
 	else:
 		position.x=round((position.x)/16)*16
