@@ -7,6 +7,7 @@ onready var ani=$ani
 var brick=preload("res://scenes/brickPiece.tscn")
 var mainScene
 var spriteIndex=0  #打开后的颜色 0 是普通颜色 1 蓝色 2灰色  3金币盒子
+var _visible=true #是否可见
 
 func _ready():
 	gravity=constants.boxGravity

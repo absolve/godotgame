@@ -24,3 +24,5 @@ custom_constants/vseparation = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[connection signal="item_selected" from="list" to="." method="_on_list_item_selected"]

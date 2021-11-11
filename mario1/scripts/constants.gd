@@ -73,40 +73,268 @@ const marioJumpGravity=600
 const marioJumpSpeed=430
 const boxGravity=1400 #箱子重力
 
+#图块类型
+const tilesType=['del',"mario","goomba","koopa","brick","pipe"
+			,"coin","bg","box"]
 
-#图块对应的属性
-var tiles=['del',"mario","goomba","koopa","box","brick","pipe","coin","bg"]
-var tilesAttribute={"mario":{"x":0,"y":0},"goomba":{"x":0,"y":0},
-					"koopa":{"x":0,"y":0},"box":{
-												"type":"box",
-												"spriteIndex":0,
-												"x":0,
-												"y":0,
-												"content":"mushroom",
-												"visible":true
-											},
-											"pipe":{"type":"pipe",
-												"spriteIndex":0,
-												"x":0,
-												"y":0},
-				"brick":{
-					"type":"brick",
-												"spriteIndex":0,
-												"x":0,
-												"y":0
-				},
-				"coin":{
-					"type":"coin",
-					"spriteIndex":0,
-					"x":0,
-					"y":0
-				},"bg":{
-					"type":"bg",
-					"spriteIndex":0,
-					"x":0,
-					"y":0
-				}}
+#图块 所有的图块
+const tiles=['del',"mario","goomba","koopa","brick","pipe"
+			,"coin","bg","box","box_blue",'box_grey','box_default']
+			
+const allTitle=[{'name':'del','type':'del'},
+{'name':"mario",'type':'mario'},{'name':"koopa",'type':'koopa'},
+{'name':"brick",'type':'brick'},{'name':"pipe",'type':'pipe'},
+{'name':"coin",'type':'coin'},{'name':"bg",'type':'bg'},{
+	'name':"box",'type':'box'},{'name':"box_blue",'type':'box'},
+	{'name':"box_grey",'type':'box'},{'name':"box_default",'type':'box'}]
+			
+#图块属性
+const tilesAttribute={
+	"del":{
+		"type": "del",
+		"x": 0,
+		"y": 0
+	},
+	"mario": {
+		"type": "mario",
+		"x": 0,
+		"y": 0
+	},
+	"goomba": {
+		"type": "goomba",
+		"x": 0,
+		"y": 0,
+		'dir': 'left'
+	},
+	"koopa": {
+		"type": "koopa",
+		"x": 0,
+		"y": 0,
+		'dir': 'left'
+	},
+
+	"coin": {
+		"type": "coin",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0
+	},
+	"bg": {
+		"type": "bg",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0
+	},
+	"box": {
+		"type": "box",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"content": "mushroom",
+		"visible": true
+	},
+	"box_blue": {
+		"type": "box",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"content": "mushroom",
+		"visible": true
+	},
+	"box_grey": {
+		"type": "box",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		"content": "mushroom",
+		"visible": true
+	},
+	"box_default": {
+		"type": "box",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"content": "mushroom",
+		"visible": true
+	},
+	"brick": {
+		"type": "brick",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0
+	},
+	"brick2": {
+		"type": "brick",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0
+	},
+	"brick3": {
+		"type": "brick",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0
+	},
+	"brick4": {
+		"type": "brick",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0
+	},
+	"brick5": {
+		"type": "brick",
+		"spriteIndex": 4,
+		"x": 0,
+		"y": 0
+	},
+	"brick6": {
+		"type": "brick",
+		"spriteIndex": 5,
+		"x": 0,
+		"y": 0
+	},
+	"brick7": {
+		"type": "brick",
+		"spriteIndex": 6,
+		"x": 0,
+		"y": 0
+	},
+	"brick8": {
+		"type": "brick",
+		"spriteIndex": 7,
+		"x": 0,
+		"y": 0
+	},
+	"brick9": {
+		"type": "brick",
+		"spriteIndex": 8,
+		"x": 0,
+		"y": 0
+	},
+	"brick10": {
+		"type": "brick",
+		"spriteIndex": 9,
+		"x": 0,
+		"y": 0
+	},
+	"brick11": {
+		"type": "brick",
+		"spriteIndex": 10,
+		"x": 0,
+		"y": 0
+	},
+	"brick12": {
+		"type": "brick",
+		"spriteIndex": 11,
+		"x": 0,
+		"y": 0
+	},
+	"pipe": {
+	"type": "pipe",
+	"spriteIndex": 0,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe1": {
+	"type": "pipe",
+	"spriteIndex": 1,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe2": {
+	"type": "pipe",
+	"spriteIndex": 2,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe3": {
+	"type": "pipe",
+	"spriteIndex": 3,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe4": {
+	"type": "pipe",
+	"spriteIndex": 4,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe5": {
+	"type": "pipe",
+	"spriteIndex": 5,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe6": {
+	"type": "pipe",
+	"spriteIndex": 6,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe7": {
+	"type": "pipe",
+	"spriteIndex": 7,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe8": {
+	"type": "pipe",
+	"spriteIndex": 8,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	"pipe9": {
+	"type": "pipe",
+	"spriteIndex": 9,
+	"x": 0,
+	"y": 0,
+	"rotate":0
+	},
+	
+	
+}
+				
+var mapTiles={
+}
+
 func _ready():
-	pass 
+	for i in constants.tilesType:
+		mapTiles[i]={}
+	loadIcon()	
+	pass
 
 
+#载入方块的图片
+func loadIcon():
+	var dic=Directory.new()
+	dic.open("res://icon")
+	dic.list_dir_begin()
+	while true:
+		var file = dic.get_next()
+		if file == "":
+			break
+#		print(file.get_extension())
+#		print(dic.get_current_dir()+"/"+file)
+#		print(file.get_file())
+		if file.get_extension()=='png':
+			var fileName=file.get_basename().split("#")
+			var type = fileName[0]
+			if fileName.size()>1:
+				var index=fileName[1]
+				if mapTiles.has(type): #载入文件
+					mapTiles[type][index]=load(dic.get_current_dir()+"/"+file)
+			else: #只有名字
+				if mapTiles.has(type):
+					mapTiles[type]["0"]=load(dic.get_current_dir()+"/"+file)
+			pass	
+	dic.list_dir_end()
+	pass

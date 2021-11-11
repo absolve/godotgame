@@ -8,7 +8,7 @@
 [ext_resource path="res://ui/line_edit.tres" type="StyleBox" id=6]
 [ext_resource path="res://ui/panel.tres" type="StyleBox" id=7]
 [ext_resource path="res://ui/panel_popup.tres" type="StyleBox" id=8]
-[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=9]
+[ext_resource path="res://fonts/uifont.tres" type="DynamicFont" id=9]
 
 [resource]
 default_font = ExtResource( 9 )
@@ -23,11 +23,11 @@ Button/styles/focus = ExtResource( 2 )
 Button/styles/hover = ExtResource( 3 )
 Button/styles/normal = ExtResource( 1 )
 Button/styles/pressed = ExtResource( 4 )
-CheckBox/colors/font_color = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_disabled = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_hover = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_hover_pressed = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_pressed = Color( 0, 0, 0, 1 )
+CheckBox/colors/font_color = Color( 0.901961, 0.870588, 0.870588, 1 )
+CheckBox/colors/font_color_disabled = Color( 0.901961, 0.901961, 0.901961, 0.2 )
+CheckBox/colors/font_color_hover = Color( 1, 1, 1, 1 )
+CheckBox/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
+CheckBox/colors/font_color_pressed = Color( 1, 1, 1, 1 )
 CheckBox/constants/check_vadjust = 0
 CheckBox/constants/hseparation = 4
 CheckBox/fonts/font = null
@@ -216,12 +216,13 @@ MenuButton/styles/focus = null
 MenuButton/styles/hover = null
 MenuButton/styles/normal = null
 MenuButton/styles/pressed = null
-OptionButton/colors/font_color = Color( 0, 0, 0, 1 )
-OptionButton/colors/font_color_disabled = Color( 0, 0, 0, 1 )
-OptionButton/colors/font_color_hover = Color( 0, 0, 0, 1 )
-OptionButton/colors/font_color_pressed = Color( 0, 0, 0, 1 )
-OptionButton/constants/arrow_margin = 2
-OptionButton/constants/hseparation = 2
+OptionButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+OptionButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+OptionButton/colors/font_color_focus = Color( 0.94, 0.94, 0.94, 1 )
+OptionButton/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+OptionButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+OptionButton/constants/arrow_margin = 4
+OptionButton/constants/hseparation = 4
 OptionButton/fonts/font = null
 OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
@@ -232,11 +233,11 @@ OptionButton/styles/pressed = null
 Panel/styles/panel = ExtResource( 7 )
 PanelContainer/styles/panel = ExtResource( 7 )
 PopupDialog/styles/panel = null
-PopupMenu/colors/font_color = Color( 0, 0, 0, 1 )
-PopupMenu/colors/font_color_accel = Color( 0, 0, 0, 1 )
-PopupMenu/colors/font_color_disabled = Color( 0, 0, 0, 1 )
-PopupMenu/colors/font_color_hover = Color( 0, 0, 0, 1 )
-PopupMenu/colors/font_color_separator = Color( 0, 0, 0, 1 )
+PopupMenu/colors/font_color = Color( 0.901961, 0.870588, 0.870588, 1 )
+PopupMenu/colors/font_color_accel = Color( 0.901961, 0.901961, 0.901961, 0.2 )
+PopupMenu/colors/font_color_disabled = Color( 1, 1, 1, 1 )
+PopupMenu/colors/font_color_hover = Color( 1, 1, 1, 1 )
+PopupMenu/colors/font_color_separator = Color( 1, 1, 1, 1 )
 PopupMenu/constants/hseparation = 4
 PopupMenu/constants/vseparation = 4
 PopupMenu/fonts/font = null

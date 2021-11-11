@@ -1,24 +1,25 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ui/theme.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/attr.gd" type="Script" id=2]
 
 [node name="attr" type="HBoxContainer"]
 margin_right = 206.0
 margin_bottom = 30.0
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="name" type="Label" parent="."]
 margin_top = 8.0
-margin_right = 64.0
-margin_bottom = 24.0
+margin_bottom = 31.0
 theme = ExtResource( 1 )
-text = "1212"
 
 [node name="value" type="LineEdit" parent="."]
-margin_left = 68.0
-margin_right = 284.0
-margin_bottom = 32.0
+margin_left = 4.0
+margin_right = 206.0
+margin_bottom = 39.0
 size_flags_horizontal = 3
 theme = ExtResource( 1 )
+clear_button_enabled = true

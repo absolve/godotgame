@@ -1,22 +1,25 @@
 extends Control
 
 
-onready var list=$PanelContainer/list
+onready var list=$ScrollContainer/PanelContainer/list
 var attr=preload("res://scenes/attr.tscn")
 
 func _ready():
 	pass
 
-func addttr(name,value):
+func addAttr(name,value):
 	var temp=attr.instance()
-	temp.get_node("name").text=str(name)
-	temp.get_node("value").text=str(value)
+	temp.key=str(name)
+	temp.value=str(value)
 	
 	list.add_child(temp)
 	pass
 
-
+func clearAttr():
+	for child in list.get_children():
+		child.queue_free()
+	pass
 
 func _on_Button_pressed():
-	addttr("1","2")
+	addAttr("1","2")
 	pass # Replace with function body.
