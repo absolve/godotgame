@@ -62,10 +62,11 @@ func stand(delta):
 		faceRight=true
 		status = constants.walk
 	elif Input.is_action_pressed("ui_jump"):	
+		print('stand','ui_jump')
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
-	position.y+=self.yVel*delta	
+	position.y+=yVel*delta	
 	if !isOnFloor:
 		status=constants.fall
 	pass
@@ -89,6 +90,7 @@ func walk(delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
+		print('walk jump')
 		return
 	
 	if Input.is_action_pressed("ui_left"):
@@ -143,9 +145,11 @@ func walk(delta):
 func jump(delta):
 	yVel+=gravity*delta
 	animation("jump")
+#	print(yVel)
 	if yVel>0:
 		gravity=constants.marioGravity
 		status=constants.fall	
+		print('jump')
 		return
 		
 	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
@@ -164,17 +168,19 @@ func jump(delta):
 
 func fall(delta):
 	yVel+=gravity*delta
+#	animation("jump")
 	if Input.is_action_pressed("ui_left"):
 		if xVel<-maxXVel:
 			xVel-=acceleration
 	elif Input.is_action_pressed("ui_right"):
 		if xVel>maxXVel:
 			xVel-=acceleration	
-	position.x+=self.xVel*delta
-	position.y+=self.yVel*delta	
+	position.x+=xVel*delta
+	position.y+=yVel*delta	
 	
 	if isOnFloor:
-		status = constants.walk			
+		status = constants.walk
+		print('fall end')			
 	pass
 
 func small2Big():

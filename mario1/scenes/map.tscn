@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
 [ext_resource path="res://scenes/itemList.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/attr.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/attr_dropDown.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/toolBtn.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/mario1.tscn" type="PackedScene" id=8]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -20,9 +21,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="brick" type="Node2D" parent="."]
+[node name="background" type="Node2D" parent="."]
+position = Vector2( 0, -1 )
 
 [node name="mario" type="Node2D" parent="."]
+
+[node name="mario1" parent="mario" instance=ExtResource( 8 )]
+position = Vector2( 126, 118 )
+
+[node name="brick" type="Node2D" parent="."]
+
+[node name="bullet" type="Node2D" parent="."]
+
+[node name="item" type="Node2D" parent="."]
+
+[node name="otherObj" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 320, 240 )
@@ -55,7 +68,7 @@ size_flags_vertical = 3
 
 [node name="vbox" type="VBoxContainer" parent="layer/Control/tab/common"]
 margin_right = 220.0
-margin_bottom = 386.0
+margin_bottom = 359.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -100,14 +113,26 @@ key = "spriteset"
 list = [ "overworld", "castle", "underwater" ]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="layer/Control/tab/common"]
-margin_top = 390.0
+margin_top = 363.0
 margin_right = 220.0
 margin_bottom = 440.0
 size_flags_horizontal = 3
 
-[node name="hbox" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
+[node name="hbox2" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
 margin_right = 220.0
 margin_bottom = 23.0
+
+[node name="apply" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox2"]
+margin_right = 220.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+theme = ExtResource( 4 )
+text = "APPLY"
+
+[node name="hbox" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
+margin_top = 27.0
+margin_right = 220.0
+margin_bottom = 50.0
 size_flags_vertical = 9
 
 [node name="save" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox"]
@@ -127,9 +152,9 @@ theme = ExtResource( 4 )
 text = "HIDE"
 
 [node name="hbox1" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
-margin_top = 27.0
+margin_top = 54.0
 margin_right = 220.0
-margin_bottom = 50.0
+margin_bottom = 77.0
 size_flags_horizontal = 3
 
 [node name="Button" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox1"]
@@ -211,6 +236,7 @@ access = 2
 current_dir = "/godotgame/mario1"
 current_path = "/godotgame/mario1/"
 
+[connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox2/apply" to="." method="_on_apply_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/hide" to="." method="_on_hide_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox1/Button" to="." method="_on_Button_pressed"]

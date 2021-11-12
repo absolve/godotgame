@@ -45,6 +45,7 @@ var box="box"
 var brick='brick'
 var brickPiece="brickPiece"
 var pipe="pipe"
+var bg='background'
 
 var right="right"
 var left="left"
@@ -119,12 +120,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0
 	},
-	"bg": {
-		"type": "bg",
-		"spriteIndex": 0,
-		"x": 0,
-		"y": 0
-	},
+	
 	"box": {
 		"type": "box",
 		"spriteIndex": 0,
@@ -299,8 +295,132 @@ const tilesAttribute={
 	"y": 0,
 	"rotate":0
 	},
-	
-	
+	"bg": {
+		"type": "bg",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0
+	},
+	"bg1": {
+		"type": "bg",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0
+	},
+	"bg2": {
+		"type": "bg",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0
+	},
+	"bg3": {
+		"type": "bg",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0
+	},
+	"bg4": {
+		"type": "bg",
+		"spriteIndex": 4,
+		"x": 0,
+		"y": 0
+	},
+	"bg5": {
+		"type": "bg",
+		"spriteIndex": 5,
+		"x": 0,
+		"y": 0
+	},
+	"bg6": {
+		"type": "bg",
+		"spriteIndex": 6,
+		"x": 0,
+		"y": 0
+	},
+	"bg7": {
+		"type": "bg",
+		"spriteIndex": 7,
+		"x": 0,
+		"y": 0
+	},
+	"bg8": {
+		"type": "bg",
+		"spriteIndex": 8,
+		"x": 0,
+		"y": 0
+	},
+	"bg9": {
+		"type": "bg",
+		"spriteIndex": 9,
+		"x": 0,
+		"y": 0
+	},
+	"bg10": {
+		"type": "bg",
+		"spriteIndex": 10,
+		"x": 0,
+		"y": 0
+	},
+	"bg11": {
+		"type": "bg",
+		"spriteIndex": 11,
+		"x": 0,
+		"y": 0
+	},
+	"bg12": {
+		"type": "bg",
+		"spriteIndex": 12,
+		"x": 0,
+		"y": 0
+	},
+	"bg13": {
+		"type": "bg",
+		"spriteIndex": 13,
+		"x": 0,
+		"y": 0
+	},
+	"bg14": {
+		"type": "bg",
+		"spriteIndex": 14,
+		"x": 0,
+		"y": 0
+	},
+	"bg15": {
+		"type": "bg",
+		"spriteIndex": 15,
+		"x": 0,
+		"y": 0
+	},
+	"bg16": {
+		"type": "bg",
+		"spriteIndex": 16,
+		"x": 0,
+		"y": 0
+	},
+	"bg17": {
+		"type": "bg",
+		"spriteIndex": 17,
+		"x": 0,
+		"y": 0
+	},
+	"bg18": {
+		"type": "bg",
+		"spriteIndex": 18,
+		"x": 0,
+		"y": 0
+	},
+	"bg19": {
+		"type": "bg",
+		"spriteIndex": 19,
+		"x": 0,
+		"y": 0
+	},
+	"bg20": {
+		"type": "bg",
+		"spriteIndex": 20,
+		"x": 0,
+		"y": 0
+	},
 }
 				
 var mapTiles={

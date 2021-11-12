@@ -12,7 +12,7 @@ var pipe=preload("res://scenes/pipe.tscn")
 
 var map=[]
 var debug=true
-var mapWidthSize=40  #地图宽度 
+var mapWidthSize=20  #地图宽度 
 var enemyList=[] #敌人列表
 var currentLevel  #文件数据
 var path="res://levels/1-1.json"
@@ -24,7 +24,7 @@ var selectItem='' #选择的item
 
 
 
-var mode="edit"  #game正常游戏  edit编辑  test测试
+var mode="game"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
@@ -38,13 +38,17 @@ onready var _time=$layer/Control/tab/common/vbox/time
 onready var _background=$layer/Control/tab/common/vbox/background
 onready var _music=$layer/Control/tab/common/vbox/music
 onready var _spriteSet=$layer/Control/tab/common/vbox/spriteset
-
+onready var _marioList=$mario
+onready var _brickList=$brick
+onready var _bulletList=$bullet
+onready var _itemsList=$item
+onready var _otherobjList=$otherObj
 
 
 func _ready():
 	print(camera.get_camera_position())
 	print(camera.get_camera_screen_center())
-#	loadMapFile(path)
+#	loadMapFile("res://levels/test.json")
 	_itemList.connect("itemSelect",self,'selectItem')
 
 	if mode=='edit':
@@ -57,6 +61,7 @@ func _ready():
 	elif mode=='game':
 		_tab.hide()
 		_toolBtn.hide()
+		loadMapFile("res://levels/test.json")
 		pass	
 	elif mode=='test':
 		
@@ -67,35 +72,80 @@ func nodeItem():
 
 	pass
 
-#载入方块的图片
-#func loadIcon():
-#	var dic=Directory.new()
-#	dic.open("res://icon")
-#	dic.list_dir_begin()
-#	while true:
-#		var file = dic.get_next()
-#		if file == "":
-#			break
-##		print(file.get_extension())
-##		print(dic.get_current_dir()+"/"+file)
-#		print(file.get_file())
-#		if file.get_extension()=='png':
-#			var fileName=file.get_basename().split("#")
-#			var type = fileName[0]
-#			if fileName.size()>1:
-#				var index=fileName[1]
-#				if mapTiles.has(type): #载入文件
-#					mapTiles[type][index]=load(dic.get_current_dir()+"/"+file)
-#			else: #只有名字
-#				mapTiles[type]["0"]=load(dic.get_current_dir()+"/"+file)
-#			pass
-#
-#	dic.list_dir_end()
-#
-#	pass
 
 func _update(delta):
+	if mode=='edit':
+		pass
+	elif mode=='game':
+		for i in _marioList.get_children():
+			i._update(delta)
+		for i in _brickList.get_children():
+			i._update(delta)
+		for i in _bulletList.get_children():
+			i._update(delta)
+		for i in _itemsList.get_children():
+			i._update(delta)
+		for i in _otherobjList.get_children():
+			i._update(delta)
 	
+		for i in _marioList.get_children():
+			var onFloor=false
+			for y in _brickList.get_children():
+				var rect1 = i.getRect()
+				var rect2=y.getRect()
+				if rect1.intersects(rect2):
+					if rect1.encloses(rect2):#完全叠一起
+							continue
+#					if i.position.y<y.position.y:
+#						i.yVel=0
+#						i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
+#						onFloor=true
+#						pass
+#					else:
+#						i.yVel=8
+#						if !onFloor:
+#							onFloor=false
+#						pass
+					var dx=(y.position.x-i.position.x)/y.getSize()/2
+					var dy=(y.position.y-i.position.y)/y.getSize()/2
+					if abs(abs(dx)-abs(dy))<.1:
+#						if dx<0:
+#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+#						else:
+#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+#
+#						if dy<0:
+#							i.yVel=8
+#							if !onFloor:
+#								onFloor=false
+#						else:
+#							if i.yVel>0:
+#								i.yVel=0
+#							i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
+#							onFloor=true	
+						pass
+					elif abs(dx)>abs(dy):
+						i.xVel=0
+						if dx<0:
+							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+						else:
+							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+						pass
+					else:
+						if dy<0:
+							i.yVel=8
+							if !onFloor:
+								onFloor=false
+						else:
+							if i.yVel>0:  #掉落的情况
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
+							onFloor=true	
+						pass
+			i.isOnFloor=onFloor
+			
+			
+		pass
 	pass
 
 func loadMapFile(fileName:String):
@@ -327,6 +377,7 @@ func getItemAttr(pos:Vector2):
 
 func _process(delta):
 	update()
+	_update(delta)
 	pass
 
 func _input(event):
@@ -436,4 +487,9 @@ func _on_Button_pressed():
 func _on_FileDialog_confirmed():
 	if _saveDialog.current_file:
 		save2File(_saveDialog.current_path)
+	pass # Replace with function body.
+
+
+func _on_apply_pressed():
+	
 	pass # Replace with function body.

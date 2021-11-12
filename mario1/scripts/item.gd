@@ -4,6 +4,8 @@ var status=constants.growing
 var dir=constants.left
 var oldPos=0
 const speed=50
+var spriteIndex=0 #0 1 是蘑菇
+var content=constants.mushroom  #内容
 onready var ani=$ani
 
 func _ready():

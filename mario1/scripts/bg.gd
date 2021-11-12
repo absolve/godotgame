@@ -4,15 +4,13 @@ var spriteIndex=0
 onready var ani=$ani
 
 func _ready():
-	type=constants.brick
+	type=constants.bg
 	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	if spriteIndex >=0&&spriteIndex<=13:
+	if spriteIndex>=0&&spriteIndex<=20:
 		ani.play(str(spriteIndex))
 	else:
 		ani.play("0")	
-	pass 
-
-func _update(delta):
 	pass
+
 
