@@ -10,6 +10,7 @@ var brick=preload("res://scenes/brick.tscn")
 var box=preload("res://scenes/box1.tscn")
 var pipe=preload("res://scenes/pipe.tscn")
 
+
 var map=[]
 var debug=true
 var mapWidthSize=20  #地图宽度 
@@ -43,6 +44,7 @@ onready var _brickList=$brick
 onready var _bulletList=$bullet
 onready var _itemsList=$item
 onready var _otherobjList=$otherObj
+onready var _enemyList=$enemy
 
 
 func _ready():
@@ -50,7 +52,8 @@ func _ready():
 	print(camera.get_camera_screen_center())
 #	loadMapFile("res://levels/test.json")
 	_itemList.connect("itemSelect",self,'selectItem')
-
+	Game.setMap(self)
+	
 	if mode=='edit':
 #		for i in constants.tilesType:
 #			mapTiles[i]={}
@@ -70,82 +73,6 @@ func _ready():
 
 func nodeItem():
 
-	pass
-
-
-func _update(delta):
-	if mode=='edit':
-		pass
-	elif mode=='game':
-		for i in _marioList.get_children():
-			i._update(delta)
-		for i in _brickList.get_children():
-			i._update(delta)
-		for i in _bulletList.get_children():
-			i._update(delta)
-		for i in _itemsList.get_children():
-			i._update(delta)
-		for i in _otherobjList.get_children():
-			i._update(delta)
-	
-		for i in _marioList.get_children():
-			var onFloor=false
-			for y in _brickList.get_children():
-				var rect1 = i.getRect()
-				var rect2=y.getRect()
-				if rect1.intersects(rect2):
-					if rect1.encloses(rect2):#完全叠一起
-							continue
-#					if i.position.y<y.position.y:
-#						i.yVel=0
-#						i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
-#						onFloor=true
-#						pass
-#					else:
-#						i.yVel=8
-#						if !onFloor:
-#							onFloor=false
-#						pass
-					var dx=(y.position.x-i.position.x)/y.getSize()/2
-					var dy=(y.position.y-i.position.y)/y.getSize()/2
-					if abs(abs(dx)-abs(dy))<.1:
-#						if dx<0:
-#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-#						else:
-#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
-#
-#						if dy<0:
-#							i.yVel=8
-#							if !onFloor:
-#								onFloor=false
-#						else:
-#							if i.yVel>0:
-#								i.yVel=0
-#							i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
-#							onFloor=true	
-						pass
-					elif abs(dx)>abs(dy):
-						i.xVel=0
-						if dx<0:
-							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-						else:
-							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
-						pass
-					else:
-						if dy<0:
-							i.yVel=8
-							if !onFloor:
-								onFloor=false
-						else:
-							if i.yVel>0:  #掉落的情况
-								i.yVel=0
-							i.position.y=y.position.y-y.getSize()/2-i.getSize()/2
-							onFloor=true	
-						pass
-			i.isOnFloor=onFloor
-			
-			
-		pass
 	pass
 
 func loadMapFile(fileName:String):
@@ -263,7 +190,7 @@ func checkHasItem(pos):
 			break
 	print(flag)		
 	return 	flag
-	pass
+
 
 #添加方块信息
 func addItem(type,pos):
@@ -274,50 +201,8 @@ func addItem(type,pos):
 	var g=constants.tilesAttribute[type].duplicate()
 	g.x=pos.x
 	g.y=pos.y
-	allTiles.append(g)
-#	if type=='goomba':
-#		var g=constants.tilesAttribute[type].duplicate()	
-#		g.x=pos.x
-#		g.y=pos.y
-#		allTiles.append(g)
-#	elif type=='koopa':
-#		var k=constants.tilesAttribute[type].duplicate()	
-#		k.x=pos.x
-#		k.y=pos.y
-#		allTiles.append(k)
-#		pass
-#	elif type=='box':
-#		var b=constants.tilesAttribute[type].duplicate()	
-#		b.x=pos.x
-#		b.y=pos.y
-#		print(b)
-#		allTiles.append(b)
-#		pass
-#	elif type=='brick':
-#		var b=constants.tilesAttribute[type].duplicate()	
-#		b.x=pos.x
-#		b.y=pos.y
-#		allTiles.append(b)
-#		pass
-#	elif type=='pipe':	
-#		var p=constants.tilesAttribute[type].duplicate()	
-#		p.x=pos.x
-#		p.y=pos.y
-#		allTiles.append(p)
-#		pass
-#	elif type=='coin':
-#		var c=constants.tilesAttribute[type].duplicate()	
-#		c.x=pos.x
-#		c.y=pos.y
-#		allTiles.append(c)
-#		pass
-#	elif type=='bg':
-#		var bg=constants.tilesAttribute[type].duplicate()	
-#		bg.x=pos.x
-#		bg.y=pos.y
-#		allTiles.append(bg)
-#		pass					
-	pass
+	allTiles.append(g)			
+
 
 #删除一个方块
 func delItem(pos:Vector2):
@@ -328,25 +213,20 @@ func delItem(pos:Vector2):
 		if allTiles[i]["x"]==indexX&&allTiles[i]["y"]==indexY:
 			allTiles.remove(i)
 			break
-#	var index = allTiles.bsearch_custom(temp,self,"checkXY")
-#	print(index)
-#	print(allTiles.size())
-#	if index!=0:
-#		allTiles.remove(index-1)
-	pass
+
 
 #选择方块
 func selectItem(index,itemName):
 	print(index,itemName)
 	selectItem=itemName
-	pass
+
 
 func getItemPos(pos:Vector2):
 	return {
 		'x':int(pos.x)/blockSize,
 		'y':int(pos.y)/blockSize
 	}
-	pass
+
 
 #获取属性
 func getItemAttr(pos:Vector2):
@@ -362,18 +242,255 @@ func getItemAttr(pos:Vector2):
 			for y in attr.keys():
 				print(y)
 				_itemAttr.addAttr(y,i[y])
-			break	
-#	if index!=0:
-#		var type=allTiles[index-1].type
-#		print(allTiles[index-1])
-#		var attr=constants.tilesAttribute[type]
-#		print(attr)
-#		_itemAttr.clearAttr()
-#		for i in attr.keys():
-#			print(i)
-#			_itemAttr.addAttr(i,allTiles[index-1][i])
-			
+			break			
 	pass
+
+func addObj2Brick(obj):
+	_brickList.add_child(obj)
+
+func addObj2Item(obj):
+	_itemsList.add_child(obj)
+
+func addObj2Other(obj):
+	_otherobjList.add_child(obj)
+
+
+
+func _update(delta):
+	if mode=='edit':
+		pass
+	elif mode=='game':
+		#清除超过屏幕的敌人
+		for i in _enemyList.get_children():
+			var pos=camera.get_camera_position()
+			if i.position.x+i.getSize()/2<=pos.x-camera.offset.x:
+				queue_free()
+			elif i.position.x-i.getSize()/2>=pos.x+camera.offset.x:
+				queue_free()
+			if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
+				queue_free()		
+			pass
+		
+		for i in _marioList.get_children():
+			i._update(delta)
+		for i in _brickList.get_children():
+			i._update(delta)
+		for i in _bulletList.get_children():
+			i._update(delta)
+		for i in _itemsList.get_children():
+			i._update(delta)
+		for i in _otherobjList.get_children():
+			i._update(delta)
+		for i in _enemyList.get_children():
+			i._update(delta)
+		
+		for i in _marioList.get_children():  #mario跟方块
+			var onFloor=false
+			for y in _brickList.get_children():
+				var rect1 = i.getRect()
+				var rect2=y.getRect()
+				if rect1.encloses(rect2):#完全叠一起
+					continue
+				if rect1.intersects(rect2):		
+					var dx=(y.position.x-i.position.x)/y.getSize()/2
+					var dy=(y.position.y-i.position.y)/y.getSize()/2
+					if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+						if dy<0:
+							i.yVel=30
+							i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2
+							if !onFloor:
+								onFloor=false
+						else:
+							if i.yVel>0:
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+							onFloor=true	
+#						if dx<0:
+#							if i.dir==constants.left:
+#								i.xStop=true
+#							else:
+#								i.xStop=false	
+##							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2+1
+#						else:
+#							if i.dir==constants.right:
+#								i.xStop=true
+#							else:
+#								i.xStop=false		
+##							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2	
+					elif abs(dx)>abs(dy): #左右的碰撞
+						if dx<0:
+							if i.dir==constants.left:
+								i.xVel=0
+							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+						else:
+							if i.dir==constants.right:
+								i.xVel=0	
+							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+					else: #上下的碰撞
+						if dy<0:  #下方
+							i.yVel=30
+							i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2
+							if !onFloor:
+								onFloor=false
+							if y.type==constants.box:
+								if y.status==constants.resting:
+									if y.isDestructible():
+										y.add4Brick()
+										y.destroy()
+									else:	
+										y.startBumped()
+						else:
+							if i.yVel>0:  #掉落的情况
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+							onFloor=true	
+						pass
+			i.isOnFloor=onFloor
+	
+		
+		for i in _itemsList.get_children():  #物品的判断
+			for y in _brickList.get_children():
+				if i.status==constants.growing: #排除在增长的状态
+					continue
+				var rect1 = i.getRect()
+				var rect2=y.getRect()
+				if rect1.encloses(rect2):#完全叠一起
+					continue
+				if rect1.intersects(rect2):
+					var dx=(y.position.x-i.position.x)/y.getSize()/2
+					var dy=(y.position.y-i.position.y)/y.getSize()/2
+					if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+#						if dx<0:
+#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+#						else:
+#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+						if dy<0:
+							i.yVel=8
+						else:
+							if i.yVel>0:
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+					elif abs(dx)>abs(dy): #左右的碰撞
+						i.xVel=0
+						if dx<0:
+							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+							i.turnRight()
+						else:
+							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+							i.turnLeft()
+					else: #上下的碰撞
+						if dy<0:  #下方
+							i.yVel=8
+						else:
+							if i.yVel>0:  #掉落的情况
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+							if i.status==constants.jumping:
+								i.yVel=-i.jumpSpeed
+			pass
+			
+		
+		for i in _enemyList.get_children():  #敌人跟方块
+			if i.status==constants.dead||i.status==constants.deadJump:
+				continue
+			for y in _brickList.get_children():
+				var rect1 = i.getRect()
+				var rect2=y.getRect()
+				if rect1.intersects(rect2):
+#					print(rect1,rect2)
+					if rect1.encloses(rect2):#完全叠一起
+							continue
+					var dx=(y.position.x-i.position.x)/y.getSize()/2
+					var dy=(y.position.y-i.position.y)/y.getSize()/2
+					if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+#						if dx<0:
+#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+#						else:
+#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+							
+						if dy<0:
+							i.yVel=8
+						else:
+							if i.yVel>0:
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+					elif abs(dx)>abs(dy): #左右的碰撞
+						if dx<0:
+							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+							i.turnRight()
+						else:
+							i.turnLeft()
+							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+					else: #上下的碰撞
+						if dy<0:  #下方
+							i.yVel=8
+#							i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2+1
+						else:
+							if i.yVel>0:  #掉落的情况
+								i.yVel=0
+							if y.type==constants.box&& y.status==constants.bumped:
+								i.startDeathJump()
+							else:		
+								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+							
+		for i in _marioList.get_children():
+			for y in _enemyList.get_children():
+				if y.status==constants.dead||y.status==constants.deadJump:
+					continue
+				var rect1 = i.getRect()
+				var rect2=y.getRect()
+				if rect1.encloses(rect2):#完全叠一起
+					continue
+				if rect1.intersects(rect2):
+					var dx=(y.position.x-i.position.x)/y.getSize()/2
+					var dy=(y.position.y-i.position.y)/y.getSize()/2
+					if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+						if dx<0:
+							if y.type==constants.koopa && y.status==constants.shell:
+								y.status=constants.sliding
+								y.dir=constants.left
+						else:
+							if y.type==constants.koopa && y.status==constants.shell:
+								y.status=constants.sliding
+								y.dir=constants.right
+						if dy<0:
+#							i.yVel=8
+							pass
+						else:
+							if i.yVel>0:
+								i.yVel=0
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+						pass
+					elif abs(dx)>abs(dy): #左右的碰撞
+						if dx<0:
+#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+							if y.type==constants.koopa && y.status==constants.shell:
+								y.status=constants.sliding
+								y.dir=constants.left
+						else:
+							if y.type==constants.koopa && y.status==constants.shell:
+								y.status=constants.sliding
+								y.dir=constants.right
+#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+						pass	
+					else: #上下的碰撞
+						if dy<0:  #下方
+#							i.yVel=8
+							pass
+						else:
+							i.yVel=-300
+							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2+1#位置调整
+							if y.type==constants.koopa:
+								if dx<0:
+									y.dir=constants.right
+								else:
+									y.dir=constants.left
+								pass		
+							y.jumpedOn()	
+			pass
+		pass
+	pass
+
 
 func _process(delta):
 	update()

@@ -27,7 +27,10 @@ position = Vector2( 0, -1 )
 [node name="mario" type="Node2D" parent="."]
 
 [node name="mario1" parent="mario" instance=ExtResource( 8 )]
-position = Vector2( 126, 118 )
+position = Vector2( 216, 118 )
+
+[node name="enemy" type="Node2D" parent="."]
+position = Vector2( 0, -1 )
 
 [node name="brick" type="Node2D" parent="."]
 

@@ -30,11 +30,6 @@ region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
-"loop": true,
-"name": "star",
-"speed": 8.0
-}, {
 "frames": [ ExtResource( 7 ) ],
 "loop": true,
 "name": "1up",
@@ -49,6 +44,11 @@ animations = [ {
 "loop": true,
 "name": "mush_room",
 "speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": true,
+"name": "star",
+"speed": 8.0
 } ]
 
 [node name="item" type="Node2D"]

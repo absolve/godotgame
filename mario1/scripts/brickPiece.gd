@@ -1,8 +1,9 @@
 extends "res://scripts/object.gd"
 
 var dir=constants.left
-const speed=55
+const speed=90
 onready var ani=$ani
+var spriteIndex=0
 
 func _ready():
 	gravity=constants.marioGravity
@@ -10,7 +11,12 @@ func _ready():
 	debug=true
 	if dir==constants.right:
 		ani.flip_h=true
-	
+	if spriteIndex==0:
+		ani.play('brick')
+	elif spriteIndex==1:
+		ani.play('brick_blue')	
+	elif spriteIndex==2:
+		ani.play('brick_grey')		
 	pass
 
 func _update(delta):

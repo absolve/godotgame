@@ -61,32 +61,33 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 10 ) ],
-"loop": true,
+"loop": false,
 "name": "box",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ) ],
-"loop": true,
+"loop": false,
 "name": "box_grey",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 9 ) ],
-"loop": true,
+"loop": false,
 "name": "box_blue",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 6 ) ],
-"loop": true,
+"loop": false,
 "name": "opened_blue",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 7 ) ],
-"loop": true,
+"loop": false,
 "name": "opened_grey",
 "speed": 5.0
 } ]
 
 [node name="box1" type="Node2D"]
+z_index = 1
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

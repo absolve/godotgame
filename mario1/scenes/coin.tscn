@@ -1,0 +1,22 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/coin.gd" type="Script" id=1]
+[ext_resource path="res://sprites/coin_an2.png" type="Texture" id=2]
+[ext_resource path="res://sprites/coin_an0.png" type="Texture" id=3]
+[ext_resource path="res://sprites/coin_an1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/coin_an3.png" type="Texture" id=5]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 8.0
+} ]
+
+[node name="coin" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="ani" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+frame = 1

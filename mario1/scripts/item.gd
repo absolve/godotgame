@@ -1,21 +1,34 @@
 extends "res://scripts/object.gd"
 
 var status=constants.growing
-var dir=constants.left
+var dir=constants.right
 var oldPos=0
-const speed=50
+const speed=70  #速度
+const jumpSpeed=460
 var spriteIndex=0 #0 1 是蘑菇
-var content=constants.mushroom  #内容
+#var content=constants.mushroom  #内容
 onready var ani=$ani
 
 func _ready():
-	type=constants.mushroom
+#	type=constants.mushroom
 	debug=true
-	self.rect=Rect2(Vector2(-16,-16),Vector2(32,32))	
+	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 	gravity=constants.marioGravity
 	oldPos=position.y
-	yVel=-speed
-	ani.playing=true
+	yVel=-50
+	if dir==constants.left:
+		xVel=-speed
+	else:
+		xVel=speed
+#	ani.playing=true
+	if type==constants.mushroom:
+		ani.play("mush_room")
+	elif type==	constants.star:
+		ani.play("star")
+	elif type==constants.mushroom1up:
+		ani.play("1up")
+	elif type==constants.fireflower:
+		ani.play("fire_flower")	
 	pass
 
 func _update(delta):
@@ -32,11 +45,11 @@ func _update(delta):
 
 func growing(delta):
 	if oldPos-position.y>=rect.size.y:
-	#	yVel=0
 		status=constants.moving
 		if type==constants.fireflower:
 			status=constants.stop
 		elif type==constants.star:
+			yVel=-jumpSpeed/2
 			status=constants.jumping	
 	else:	
 		position.y+=yVel*delta	
@@ -44,12 +57,11 @@ func growing(delta):
 	
 func moving(delta):
 	yVel+=gravity*delta
-	if dir==constants.left:
-		xVel=-speed
-		pass
-	else:
-		xVel=speed
-		pass
+#	if dir==constants.left:
+#		xVel=-speed
+#		pass
+#	else:
+#		xVel=speed
 	position.x+=xVel*delta
 	position.y+=yVel*delta		
 	pass
@@ -59,4 +71,14 @@ func stop(delta):
 	pass
 
 func jumping(delta):
+	yVel+=gravity*delta
+	position.x+=xVel*delta
+	position.y+=yVel*delta	
 	pass
+
+func turnLeft():
+	xVel=-speed
+	pass
+
+func turnRight():
+	xVel=speed	

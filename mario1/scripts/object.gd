@@ -9,7 +9,8 @@ var type=constants.empty  #类型
 var gravity=0  #重力
 var xVel=0 #x轴速度
 var yVel=0 #y轴速度
-
+var xStop=false
+var yStop=false
 
 func _ready():
 	pass 
@@ -26,3 +27,6 @@ func getRect():
 
 func getSize():
 	return rect.size.x
+
+func getSizeY():
+	return rect.size.y

@@ -6,19 +6,25 @@ extends Node
 var  backgroundcolor = ['#5C94FC',
 						'#000',
 						'#2038EC']
+var score =preload("res://scenes/score.tscn")
 
-var mainScene
-var otherObj
+var map  #地图
 
 func _ready():
 	printFont()
 	pass 
 
-func add2MainScene(obj):
-	mainScene.add_child(obj)
+func setMap(obj):
+	self.map=obj
 
-func add2OtherObj(obj):
-	otherObj.add_child(obj)
+func addObj2Brick(obj):
+	map.addObj2Brick(obj)
+
+func addObj2Item(obj):
+	map.addObj2Item(obj)
+
+func addObj2Other(obj):
+	map.addObj2Other(obj)
 
 func printFont():
 	print("""

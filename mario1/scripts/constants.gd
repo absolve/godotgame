@@ -17,6 +17,10 @@ var walking="walking"
 var dead="dead"
 var deadJump="deadJump"
 var sliding="sliding"
+var shell='shell'
+
+#其他的状态
+var spin="spin"
 
 #mario的状态
 var idle="idle"
@@ -47,6 +51,8 @@ var brickPiece="brickPiece"
 var pipe="pipe"
 var bg='background'
 
+
+#方向
 var right="right"
 var left="left"
 
@@ -63,16 +69,17 @@ var gravityJump=600	#跳跃的时候重力
 var dropSpeed=400 #下落最大速度
 var jumpSpeed=400	#跳跃高度
 
-const slideFriction=9 #滑行的加速度
+const slideFriction=14 #滑行的加速度
 const acceleration=8	#移动加速度
 const runAcceleration=10 #跑的加速度
-const marioWalkMaxSpeed=180 #走的时候最大速度
-const marioRunMaxSpeed=350 #跑的时候最大速度
+const marioWalkMaxSpeed=200 #走的时候最大速度
+const marioRunMaxSpeed=400 #跑的时候最大速度
 const marioAniSpeed=150
 const marioGravity=1300 #重力
-const marioJumpGravity=600
-const marioJumpSpeed=430
-const boxGravity=1400 #箱子重力
+const marioJumpGravity=900
+const marioJumpSpeed=500
+const boxGravity=1800 #箱子重力
+const deathJumpGravity=1000
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
