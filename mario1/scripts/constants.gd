@@ -2,59 +2,63 @@ extends Node
 #保存所有的常量
 
 #方块状态
-var resting="resting"  #静止
-var bumped="bumped"	#突起
-var opened="opened"	#已打开
+const resting="resting"  #静止
+const bumped="bumped"	#突起
+const opened="opened"	#已打开
 
 #蘑菇 星星状态
-var growing="growing" #出现
-var moving="moving" #移动
-var stop="stop"
-var jumping="jumping"
+const growing="growing" #出现
+const moving="moving" #移动
+const stop="stop"
+const jumping="jumping"
 
 #敌人的状态
-var walking="walking"
-var dead="dead"
-var deadJump="deadJump"
-var sliding="sliding"
-var shell='shell'
+const walking="walking"
+const dead="dead"
+const deadJump="deadJump"
+const sliding="sliding"
+const shell='shell'
+
+#子弹状态
+const fly='fly' 
+const boom='boom'
 
 #其他的状态
-var spin="spin"
+const spin="spin"
 
 #mario的状态
-var idle="idle"
-var stand="stand"
-var walk="walk"
-var jump ="jump"
-var fall="fall"
-var small2big="small2big"
-var big2fire="big2fire"
-var big2small="big2small"
-var crouch="crouch"
+const idle="idle"
+const stand="stand"
+const walk="walk"
+const jump ="jump"
+const fall="fall"
+const small2big="small2big"
+const big2fire="big2fire"
+const big2small="big2small"
+const crouch="crouch"
 
 #类型
-var empty="empty"
-var mario="mario"
-var goomba="goomba"
-var koopa="koopa"
-var mushroom="mushroom"
-var star="star"
-var fireflower="fireflower"
-var coin="coin"
-var mushroom1up="mushroom1up"
-var fireball="fireball"
-var coins6="coins6"
-var box="box"
-var brick='brick'
-var brickPiece="brickPiece"
-var pipe="pipe"
-var bg='background'
+const empty="empty"
+const mario="mario"
+const goomba="goomba"
+const koopa="koopa"
+const mushroom="mushroom"
+const star="star"
+const fireflower="fireflower"
+const coin="coin"
+const mushroom1up="mushroom1up"
+const fireball="fireball"
+const coins6="coins6"
+const box="box"
+const brick='brick'
+const brickPiece="brickPiece"
+const pipe="pipe"
+const bg='background'
 
 
 #方向
-var right="right"
-var left="left"
+const right="right"
+const left="left"
 
 #mario 数据
 var mario_speed=180
@@ -64,10 +68,10 @@ var runAccel=8 #奔跑加速度
 var friction=9	#摩檫力
 var animation_speed=120	#动画速度
 var gravity=1100	#重力
-var gravityJump=600	#跳跃的时候重力
+const gravityJump=600	#跳跃的时候重力
 
-var dropSpeed=400 #下落最大速度
-var jumpSpeed=400	#跳跃高度
+const dropSpeed=400 #下落最大速度
+const jumpSpeed=400	#跳跃高度
 
 const slideFriction=14 #滑行的加速度
 const acceleration=8	#移动加速度
