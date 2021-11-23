@@ -10,6 +10,7 @@ var spriteIndex=0 #0 1 是蘑菇
 onready var ani=$ani
 
 func _ready():
+	
 #	type=constants.mushroom
 	debug=true
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
@@ -82,3 +83,10 @@ func turnLeft():
 
 func turnRight():
 	xVel=speed	
+
+func pause():
+	ani.stop()
+
+func resume():
+	ani.play()	
+	

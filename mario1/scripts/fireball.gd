@@ -5,6 +5,7 @@ var playerId=0
 var dir=constants.right
 var rotate
 var status=constants.fly
+const speed=400
 
 func _ready():
 	debug=true
@@ -12,20 +13,26 @@ func _ready():
 	rect=Rect2(Vector2(-4,-4),Vector2(8,8))
 	gravity=constants.marioGravity
 	if dir==constants.left:
-		xVel=-100
+		xVel=-400
 	else:
-		xVel=100
+		xVel=400
 		
-		
+	ani.play('fly')	
 	pass
 
 func _update(delta):
 	if status==constants.fly:
+		rotation_degrees+=5
+		yVel+=gravity*delta
+		position.x+=xVel*delta
+		position.y+=yVel*delta	
 		pass
 	elif status==constants.boom:	
 		pass
 	pass
 
 func boom():
-	ani.play()
 	status=constants.boom
+	ani.play('boom')
+	yield(ani,"animation_finished")
+	queue_free()

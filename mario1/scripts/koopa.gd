@@ -98,3 +98,9 @@ func changeDir():
 	else:
 		dir=constants.left
 	pass
+
+func pause():
+	ani.stop()
+
+func resume():
+	ani.play()	

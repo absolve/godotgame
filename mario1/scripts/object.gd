@@ -13,6 +13,7 @@ var xStop=false
 var yStop=false
 
 func _ready():
+	
 	pass 
 
 func _draw():

@@ -17,7 +17,7 @@ func _ready():
 	gravity=constants.boxGravity
 	type=constants.box
 	debug=true
-	self.rect=Rect2(Vector2(-16,-16),Vector2(32,32))	
+	self.rect=Rect2(Vector2(-15,-15),Vector2(30,30))	
 	oldPos=position.y
 	ani.playing=true
 	if spriteIndex==0:

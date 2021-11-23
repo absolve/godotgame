@@ -239,9 +239,18 @@ access = 2
 current_dir = "/godotgame/mario1"
 current_path = "/godotgame/mario1/"
 
+[node name="Button" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "big2smal"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox2/apply" to="." method="_on_apply_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/hide" to="." method="_on_hide_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox1/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="layer/Control/toolBtn" to="." method="_on_toolBtn_pressed"]
 [connection signal="confirmed" from="layer/FileDialog" to="." method="_on_FileDialog_confirmed"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

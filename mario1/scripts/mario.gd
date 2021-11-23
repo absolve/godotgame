@@ -13,7 +13,7 @@ var isCrouch=false 	#是否蹲下
 var toFireTime=0 #变成开火的时间
 
 
-export var big = false #是否是变大的状态
+export var big = true #是否是变大的状态
 export var fire = false #发射子弹
 var invincible=false  #是否无敌
 var hurtInvincible=false #受伤无敌

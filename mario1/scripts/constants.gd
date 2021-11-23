@@ -1,6 +1,10 @@
 extends Node
 #保存所有的常量
 
+#游戏状态
+const stateChange='stateChange'
+const startState='startState'
+
 #方块状态
 const resting="resting"  #静止
 const bumped="bumped"	#突起
@@ -74,14 +78,14 @@ const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
 
 const slideFriction=14 #滑行的加速度
-const acceleration=8	#移动加速度
+const acceleration=6	#移动加速度
 const runAcceleration=10 #跑的加速度
-const marioWalkMaxSpeed=200 #走的时候最大速度
+const marioWalkMaxSpeed=140 #走的时候最大速度
 const marioRunMaxSpeed=400 #跑的时候最大速度
 const marioAniSpeed=150
-const marioGravity=1300 #重力
+const marioGravity=2200 #重力
 const marioJumpGravity=900
-const marioJumpSpeed=500
+const marioJumpSpeed=600
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
 

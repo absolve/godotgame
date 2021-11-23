@@ -3,13 +3,27 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=0
-var big = true #是否变大
+var big = false #是否变大
 #var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
 var isOnFloor=false #是否在地面上
 var dir=constants.right
+var throwAniFinish=false
+var playerId=1
+var shootDelay=200 #发射延迟
+var shootStart=0
+var allowShoot=false
+var big2FireAni=[2,3,0] #变成发射动画列表
+var big2FireTime=0
+var FireAniIndex=0  #动画索引
+var currentAnimation  #当前动画
+var preStatus   #之前状态
+var invincible=false #无敌
+var invincibleStartTime=0
+var invincibleEndime=600
+var invincibleAnimationTimer=0
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -38,9 +52,9 @@ onready var ani=$ani
 func _ready():
 	debug=true
 	if big:
-		rect=Rect2(Vector2(-15,-32),Vector2(30,64))	
+		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 	else:	
-		rect=Rect2(Vector2(-13,-16),Vector2(26,32))	
+		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 	gravity=constants.marioGravity
 	if big && fire:
 		aniIndex=2
@@ -59,17 +73,58 @@ func _update(delta):
 		jump(delta)	
 	elif status==constants.small2big:
 		pass
+	elif status==constants.big2fire:
+		fireState(delta)
+		pass
+	elif status==constants.big2small:
+		
+		pass
 	elif status==constants.crouch:
 		crouch(delta)
 		pass
-	update()	
+	specialState(delta)
+	if debug:	
+		update()	
 	pass
 	
+func specialState(delta):
+#	if invincible:
+#		if OS.get_unix_time()-invincibleStartTime<=10:
+#			if invincibleAnimationTimer%7==0:
+#				if aniIndex==3:
+#					aniIndex=0
+#				else:
+#					aniIndex+=1
+#		elif OS.get_unix_time()-invincibleStartTime<=12:		
+#			if invincibleAnimationTimer%10==0:
+#				if aniIndex==3:
+#					aniIndex=0
+#				else:
+#					aniIndex+=1
+#		else:
+#			invincible=false
+#			if fire:
+#				aniIndex=2
+#			else:
+#				aniIndex=0			
+#		invincibleAnimationTimer+=1
+				
+	pass	
 
+func setInvincible():
+	invincible=true
+	invincibleStartTime=OS.get_unix_time()
+	invincibleAnimationTimer=0
+	
+	
 func stand(delta):
 	xVel=0
 	yVel+=gravity*delta
-	animation("stand")
+	if ani.animation in throw_animation&&throwAniFinish:	
+		animation("stand")
+	elif !(ani.animation  in throw_animation):
+		animation("stand")
+		
 	if Input.is_action_pressed("ui_left"):
 #		faceRight=false
 		dir=constants.left
@@ -86,6 +141,9 @@ func stand(delta):
 	if Input.is_action_just_pressed("ui_down") &&big:
 		startCrouch()
 		return
+	if Input.is_action_just_pressed("ui_action")&&fire:
+		shootFireball()
+		pass
 		
 	position.y+=yVel*delta	
 	if !isOnFloor:
@@ -104,10 +162,14 @@ func walk(delta):
 	if Input.is_action_pressed("ui_action"):
 		acceleration=constants.runAcceleration
 		maxXVel=constants.marioRunMaxSpeed
+		if fire&&allowShoot:
+			shootFireball(false)
+			allowShoot=false
 	else:
 		acceleration=constants.acceleration
 		maxXVel=constants.marioWalkMaxSpeed	
-	
+		allowShoot=true
+		
 	#跳跃
 	if Input.is_action_pressed("ui_jump"):
 		yVel=-constants.marioJumpSpeed
@@ -188,12 +250,15 @@ func jump(delta):
 		print(2121)
 		gravity=constants.marioGravity
 	
+	if Input.is_action_just_pressed("ui_action")&&fire:
+		shootFireball(false)
+	
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
 			xVel-=acceleration
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<maxXVel:
-			xVel+acceleration
+			xVel+=acceleration
 		
 	position.x+=xVel*delta
 	position.y+=yVel*delta	
@@ -208,7 +273,8 @@ func fall(delta):
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<maxXVel:
 			xVel+=acceleration	
-			
+	if Input.is_action_just_pressed("ui_action")&&fire:
+		shootFireball(false)		
 	position.x+=xVel*delta
 	position.y+=yVel*delta	
 	
@@ -219,18 +285,21 @@ func fall(delta):
 
 func startCrouch():
 	status=constants.crouch	
-	rect=Rect2(Vector2(-15,-16),Vector2(30,32))	
+	rect=Rect2(Vector2(-12,-16),Vector2(24,32))	
 	position.y+=15  #不能到边界
 #	position.y+=16
 #	rect.size.y-=32
-	ani.position.y-=20
+	ani.position.y-=15
 	
 func crouch(delta):
 	yVel+=gravity*delta
 	animation("crouch")
+	if Input.is_action_just_pressed("ui_action")&&fire:
+		shootFireball(false)
+		
 	if Input.is_action_just_released("ui_down"):
 		status=constants.walk	
-		rect=Rect2(Vector2(-15,-32),Vector2(30,64))	
+		rect=Rect2(Vector2(-12,-32),Vector2(24,64))	
 		position.y-=15
 #		rect.size.y+=32
 		ani.position.y=0
@@ -258,8 +327,56 @@ func crouch(delta):
 	pass
 
 func small2Big():
+	preStatus=status
 	status=constants.small2big
 	ani.play("small2big")
+	ani.speed_scale=1
+	Game.emit_signal("stateChange")
+	pass
+
+
+func big2Fire():
+	preStatus=status
+	status=constants.big2fire
+	Game.emit_signal("stateChange")
+	ani.stop()
+	var name=ani.animation
+	print(name)
+	var animationList = ['stand_big','jump_big',
+						'walk_big','slide_big',
+						'crouch']
+	for ani in animationList:
+		if ani in name:
+			if ani =='stand_big':
+				currentAnimation = stand_big_animation
+			elif ani=='jump_big':
+				currentAnimation=jump_big_animation
+			elif ani=='walk_big':
+				currentAnimation=walk_big_animation
+			elif ani=='slide_big':
+				currentAnimation=slide_big_animation
+			elif ani=='crouch':
+				currentAnimation=crouch_animation
+	
+
+func fireState(delta):	
+	if big2FireTime%30==0:
+		FireAniIndex+=1
+		if FireAniIndex>=big2FireAni.size():
+			FireAniIndex=0
+		ani.animation=currentAnimation[big2FireAni[FireAniIndex]]
+	big2FireTime+=5
+	if big2FireTime>=390:
+		status=preStatus
+		aniIndex=2
+		fire=true
+
+func big2Small():
+	preStatus=status
+	status=constants.big2small
+	ani.speed_scale=1
+	ani.play("big2small")
+	Game.emit_signal("stateChange")
 	pass
 
 func animation(type):
@@ -286,11 +403,24 @@ func animation(type):
 	elif type=='crouch':
 		if big:
 			ani.play(crouch_animation[aniIndex])		
+	elif type=='fire':
+		if big:
+			throwAniFinish=false
+			ani.play(throw_animation[aniIndex])			
 	if dir==constants.right && ani.flip_h:
 		ani.flip_h=false
 	elif dir==constants.left && !ani.flip_h:
 		ani.flip_h=true	
 	pass
+
+func shootFireball(play=true):
+	if OS.get_system_time_msecs()-shootStart>shootDelay:
+		if Game.getPlayerBulletCount(playerId)<2:
+			shootStart=OS.get_system_time_msecs()
+			if play:
+				animation("fire")
+			Game.addObj2Bullet(position,dir)
+			
 
 
 func _on_ani_frame_changed():
@@ -300,15 +430,32 @@ func _on_ani_frame_changed():
 			ani.position.y= 0
 		else:
 			ani.position.y=-20
-		
-#		if ani.frame==11:
-#			big=true
-#			status=constants.walk
+	elif ani.animation in throw_animation:
+		throwAniFinish=true
+	elif status	==constants.big2small:
+		if ani.frame in [0]:
+			ani.position.y= 0
+		elif ani.frame in [2,4,6,8]:
+			ani.position.y=20	
+		else:
+			 ani.position.y= 0
+		pass
 	pass # Replace with function body.
 
 
 func _on_ani_animation_finished():
 	if status==constants.small2big:
 		big=true
-		status=constants.walk
+		ani.position.y= 0
+		status=preStatus
+		rect=Rect2(Vector2(-15,-32),Vector2(30,64))	
+		Game.emit_signal('stateFinish')
+	elif status==constants.big2small:
+		big=false
+		fire=false
+		ani.position.y= 0
+		aniIndex=0
+		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+		status=preStatus
+		Game.emit_signal('stateFinish')
 	pass # Replace with function body.

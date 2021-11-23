@@ -1,12 +1,16 @@
 extends Node
 
 #游戏中一些数据
+signal stateChange
+signal stateFinish
+
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',
 						'#000',
 						'#2038EC']
 var score =preload("res://scenes/score.tscn")
+var fireball=preload("res://scenes/fireball.tscn")
 
 var map  #地图
 
@@ -25,6 +29,15 @@ func addObj2Item(obj):
 
 func addObj2Other(obj):
 	map.addObj2Other(obj)
+
+func addObj2Bullet(pos,dir):
+	var temp=fireball.instance()
+	temp.position=pos
+	temp.dir=dir
+	map.addObj2Bullet(temp)
+
+func getPlayerBulletCount(id):
+	return map.getBulletCount(id)
 
 func printFont():
 	print("""

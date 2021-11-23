@@ -41,7 +41,7 @@ func jumpedOn():
 	status=constants.dead	
 	pass
 
-#
+
 func startDeathJump():
 	.startDeathJump()
 	ani.playing=false
@@ -51,3 +51,8 @@ func startDeathJump():
 	status=constants.deadJump
 	pass
 
+func pause():
+	ani.stop()
+
+func resume():
+	ani.play()	
