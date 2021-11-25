@@ -40,6 +40,7 @@ const small2big="small2big"
 const big2fire="big2fire"
 const big2small="big2small"
 const crouch="crouch"
+const poleSliding='poleSliding'
 
 #类型
 const empty="empty"
@@ -86,6 +87,7 @@ const marioAniSpeed=150
 const marioGravity=2200 #重力
 const marioJumpGravity=900
 const marioJumpSpeed=600
+const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
 

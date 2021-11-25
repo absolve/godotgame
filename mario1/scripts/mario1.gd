@@ -3,7 +3,7 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=0
-var big = false #是否变大
+var big = true #是否变大
 #var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
@@ -22,8 +22,15 @@ var currentAnimation  #当前动画
 var preStatus   #之前状态
 var invincible=false #无敌
 var invincibleStartTime=0
-var invincibleEndime=600
+var invincibleEndime=720
 var invincibleAnimationTimer=0
+var shadowIndex=0
+var hurtInvincible=false
+var hurtInvincibleStartTime=0
+var hurtInvincibleEndime=700
+var dead=false
+var deadStartTime=0
+var deadEndTime=30
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -45,9 +52,12 @@ var crouch_animation=['crouch','crouch_green',
 						'crouch_red','crouch_black']
 var throw_animation=['throw','throw_green',
 						'throw_red','throw_black']
+var death_jump_animation=['death','death_green',
+						'death_red','death_black']
 							
 var aniIndex=0	#动画索引					
 onready var ani=$ani
+onready var shadow=$shadow
 
 func _ready():
 	debug=true
@@ -59,6 +69,7 @@ func _ready():
 	if big && fire:
 		aniIndex=2
 	animation("stand")
+	shadowIndex=aniIndex
 	pass 
 
 
@@ -77,10 +88,14 @@ func _update(delta):
 		fireState(delta)
 		pass
 	elif status==constants.big2small:
-		
 		pass
 	elif status==constants.crouch:
 		crouch(delta)
+		pass
+	elif status==constants.deadJump:
+		deathJump(delta)	
+	elif status==constants.poleSliding:
+		
 		pass
 	specialState(delta)
 	if debug:	
@@ -88,33 +103,47 @@ func _update(delta):
 	pass
 	
 func specialState(delta):
-#	if invincible:
-#		if OS.get_unix_time()-invincibleStartTime<=10:
-#			if invincibleAnimationTimer%7==0:
-#				if aniIndex==3:
-#					aniIndex=0
-#				else:
-#					aniIndex+=1
-#		elif OS.get_unix_time()-invincibleStartTime<=12:		
-#			if invincibleAnimationTimer%10==0:
-#				if aniIndex==3:
-#					aniIndex=0
-#				else:
-#					aniIndex+=1
-#		else:
-#			invincible=false
-#			if fire:
-#				aniIndex=2
-#			else:
-#				aniIndex=0			
-#		invincibleAnimationTimer+=1
-				
-	pass	
+	if invincible:
+		if invincibleEndime-invincibleStartTime>200:
+			if invincibleStartTime%6==0:
+				if shadowIndex==3:
+					shadowIndex=0
+				else:
+					shadowIndex+=1
+		elif invincibleEndime-invincibleStartTime>=0:		
+			if invincibleStartTime%11==0:
+				if shadowIndex==3:
+					shadowIndex=0
+				else:
+					shadowIndex+=1
+		else:
+			invincible=false
+			shadow.visible=false
+			if fire:
+				shadowIndex=2
+			else:
+				shadowIndex=0			
+		invincibleStartTime+=1
+	if hurtInvincible:
+		if hurtInvincibleEndime-hurtInvincibleStartTime>=0:
+			if hurtInvincibleStartTime%3==0:
+				modulate.a=0
+			else:
+				modulate.a=1
+		else:
+			hurtInvincible=false
+			modulate.a=1
+		hurtInvincibleStartTime+=1
+		pass
 
 func setInvincible():
 	invincible=true
-	invincibleStartTime=OS.get_unix_time()
-	invincibleAnimationTimer=0
+	invincibleStartTime=0
+	shadow.visible=true
+
+func setHurtInvincible():
+	hurtInvincible=true
+	hurtInvincibleStartTime=0
 	
 	
 func stand(delta):
@@ -266,7 +295,7 @@ func jump(delta):
 
 func fall(delta):
 	yVel+=gravity*delta
-#	animation("jump")
+	animation("fall")
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
 			xVel-=acceleration
@@ -283,9 +312,28 @@ func fall(delta):
 		print('fall end')			
 	pass
 
+func startDeathJump():
+	status=constants.deadJump
+	dead=true
+	yVel=-500
+	gravity=constants.marioDeathGravity
+	Game.emit_signal("stateChange")
+	ani.play(death_jump_animation[aniIndex])
+	z_index=5
+	deadStartTime=0
+	pass
+
+func deathJump(delta):
+	if deadEndTime-deadStartTime<0:
+		yVel+=gravity*delta
+		position.y+=yVel*delta	
+	else:
+		deadStartTime+=1
+	pass
+
 func startCrouch():
 	status=constants.crouch	
-	rect=Rect2(Vector2(-12,-16),Vector2(24,32))	
+	rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
 	position.y+=15  #不能到边界
 #	position.y+=16
 #	rect.size.y-=32
@@ -299,7 +347,7 @@ func crouch(delta):
 		
 	if Input.is_action_just_released("ui_down"):
 		status=constants.walk	
-		rect=Rect2(Vector2(-12,-32),Vector2(24,64))	
+		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		position.y-=15
 #		rect.size.y+=32
 		ani.position.y=0
@@ -327,6 +375,8 @@ func crouch(delta):
 	pass
 
 func small2Big():
+	if big:
+		return
 	preStatus=status
 	status=constants.small2big
 	ani.play("small2big")
@@ -336,6 +386,8 @@ func small2Big():
 
 
 func big2Fire():
+	if fire:
+		return
 	preStatus=status
 	status=constants.big2fire
 	Game.emit_signal("stateChange")
@@ -379,39 +431,102 @@ func big2Small():
 	Game.emit_signal("stateChange")
 	pass
 
+func startSliding():
+	status=constants.poleSliding
+	
+	pass
+
+func poleSliding(delta):
+	yVel+=gravity*delta
+	position.y+=yVel*delta
+		
+	pass
+
 func animation(type):
 	if type=='stand':
 		if big:
 			ani.play(stand_big_animation[aniIndex])
+			if invincible:
+				shadow.animation=stand_big_animation[shadowIndex]
 		else:	
 			ani.play(stand_small_animation[aniIndex])
+			if invincible:
+				shadow.animation=stand_small_animation[shadowIndex]
 	elif type=='slide':
 		if big:
 			ani.play(slide_big_animation[aniIndex])
+			if invincible:
+				shadow.animation=slide_big_animation[shadowIndex]
 		else:	
 			ani.play(slide_small_animation[aniIndex])
+			if invincible:
+				shadow.animation=slide_small_animation[shadowIndex]
 	elif type=='walk':
 		if big:
 			ani.play(walk_big_animation[aniIndex])
+			if invincible:
+				shadow.animation=walk_big_animation[shadowIndex]
 		else:	
 			ani.play(walk_small_animation[aniIndex])
+			if invincible:
+				shadow.animation=walk_small_animation[shadowIndex]
 	elif type=='jump':
 		if big:
 			ani.play(jump_big_animation[aniIndex])
+			if invincible:
+				shadow.animation=jump_big_animation[shadowIndex]
 		else:	
 			ani.play(jump_small_animation[aniIndex])
+			if invincible:
+				shadow.animation=jump_small_animation[shadowIndex]
 	elif type=='crouch':
 		if big:
-			ani.play(crouch_animation[aniIndex])		
+			ani.play(crouch_animation[aniIndex])	
+			if invincible:
+				shadow.animation=crouch_animation[shadowIndex]		
 	elif type=='fire':
 		if big:
 			throwAniFinish=false
-			ani.play(throw_animation[aniIndex])			
+			ani.play(throw_animation[aniIndex])		
+			if invincible:
+				shadow.animation=throw_animation[shadowIndex]
+	elif type=='fall':
+		if invincible&&getFallAni().size()>0:
+			shadow.animation=getFallAni()[shadowIndex]
+		pass					
 	if dir==constants.right && ani.flip_h:
 		ani.flip_h=false
 	elif dir==constants.left && !ani.flip_h:
 		ani.flip_h=true	
+	if invincible:
+		shadow.flip_h=ani.flip_h
+		shadow.speed_scale=ani.speed_scale
+		shadow.position.y=ani.position.y
 	pass
+
+func getFallAni():
+	if ani.animation in stand_big_animation:
+		return stand_big_animation
+	elif ani.animation in stand_small_animation:
+		return stand_small_animation
+	elif ani.animation in slide_big_animation:
+		return slide_big_animation
+	elif ani.animation in slide_small_animation:
+		return slide_small_animation
+	elif ani.animation in walk_big_animation:
+		return walk_big_animation
+	elif ani.animation in walk_small_animation:
+		return walk_small_animation
+	elif ani.animation in jump_big_animation:
+		return jump_big_animation
+	elif ani.animation in jump_small_animation:
+		return jump_small_animation
+	elif ani.animation in crouch_animation:
+		return crouch_animation
+	elif ani.animation in throw_animation:
+		return throw_animation
+	else:
+		return []	
 
 func shootFireball(play=true):
 	if OS.get_system_time_msecs()-shootStart>shootDelay:
@@ -440,6 +555,8 @@ func _on_ani_frame_changed():
 		else:
 			 ani.position.y= 0
 		pass
+	if invincible:
+		shadow.frame=ani.frame
 	pass # Replace with function body.
 
 
@@ -448,14 +565,15 @@ func _on_ani_animation_finished():
 		big=true
 		ani.position.y= 0
 		status=preStatus
-		rect=Rect2(Vector2(-15,-32),Vector2(30,64))	
+		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		Game.emit_signal('stateFinish')
 	elif status==constants.big2small:
 		big=false
 		fire=false
 		ani.position.y= 0
 		aniIndex=0
-		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+		position.y+=10
+		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
 		status=preStatus
 		Game.emit_signal('stateFinish')
 	pass # Replace with function body.

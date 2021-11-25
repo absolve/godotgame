@@ -328,30 +328,26 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+#							print('abs(abs(dx)-abs(dy))')
+							if dx<0:
+#								if i.dir==constants.left:
+#									i.xVel=0
+								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+							else:
+#								if i.dir==constants.right:
+#									i.xVel=0	
+								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 							if dy<0:
 								i.yVel=abs(i.yVel)-abs(i.yVel)/4
-#								i.yVel=30
 #								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2
 								if !onFloor:
 									onFloor=false
 							else:
-								if i.yVel>0:
-									i.yVel=0
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-								onFloor=true	
-
-	#						if dx<0:
-	#							if i.dir==constants.left:
-	#								i.xStop=true
-	#							else:
-	#								i.xStop=false	
-	##							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2+1
-	#						else:
-	#							if i.dir==constants.right:
-	#								i.xStop=true
-	#							else:
-	#								i.xStop=false		
-	##							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2	
+#								if i.yVel>0:
+#									i.yVel=0
+#								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+#								onFloor=true
+								pass	
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							if dx<0:
@@ -607,11 +603,15 @@ func _update(delta):
 		elif state==constants.stateChange:
 			for i in _marioList.get_children():
 				i._update(delta)
+				if i.dead:
+					if i.position.y-i.getSizeY()/2>=camera.offset.y*2:
+						print(i.position.y)
+						i.queue_free()
 			pass
 	pass
 
 
-func _physics_process(delta):
+func _process(delta):
 	if debug:
 		update()
 	_update(delta)
@@ -718,7 +718,7 @@ func _on_toolBtn_pressed():
 
 func _on_Button_pressed():
 	for i in _marioList.get_children():
-		i.setInvincible()
+		i.startDeathJump()
 	pass # Replace with function body.
 
 

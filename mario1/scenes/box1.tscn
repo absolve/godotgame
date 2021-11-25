@@ -38,15 +38,15 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 96, 64, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 96, 128, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=9]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 96, 128, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -75,14 +75,14 @@ animations = [ {
 "name": "opened_blue",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ) ],
-"loop": false,
-"name": "opened_grey",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 9 ) ],
 "loop": false,
 "name": "box_blue",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ) ],
+"loop": false,
+"name": "opened_grey",
 "speed": 5.0
 } ]
 

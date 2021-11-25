@@ -16,7 +16,7 @@ var coin=preload("res://scenes/coin.tscn")
 func _ready():
 	gravity=constants.boxGravity
 	type=constants.box
-	debug=true
+	debug=false
 	self.rect=Rect2(Vector2(-15,-15),Vector2(30,30))	
 	oldPos=position.y
 	ani.playing=true
