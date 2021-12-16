@@ -38,6 +38,8 @@ var slide_small_animation=['slide_small','slide_small_green',
 						'slide_small_red','slide_small_black']
 var walk_small_animation=['walk_small','walk_small_green',
 						'walk_small_red','walk_small_black']
+var landing_small_animation=['landing_small','landing_small_green',
+						'landing_small_red','landing_small_black']				
 var jump_small_animation=['jump_small','jump_small_green',
 						'jump_small_red','jump_small_black']
 var stand_big_animation=['stand_big','stand_big_green',
@@ -48,12 +50,15 @@ var slide_big_animation=['slide_big','slide_big_green',
 						'slide_big_red','slide_big_black']
 var jump_big_animation=['jump_big','jump_big_green',
 						'jump_big_red','jump_big_black']	
+var landing_big_animation=['landing_big','landing_big_green',
+						'landing_big_red','landing_big_black']						
 var crouch_animation=['crouch','crouch_green',
 						'crouch_red','crouch_black']
 var throw_animation=['throw','throw_green',
 						'throw_red','throw_black']
 var death_jump_animation=['death','death_green',
 						'death_red','death_black']
+
 							
 var aniIndex=0	#动画索引					
 onready var ani=$ani
@@ -439,7 +444,7 @@ func startSliding():
 func poleSliding(delta):
 	yVel+=gravity*delta
 	position.y+=yVel*delta
-		
+	animation("poleSliding")
 	pass
 
 func animation(type):
@@ -493,7 +498,13 @@ func animation(type):
 	elif type=='fall':
 		if invincible&&getFallAni().size()>0:
 			shadow.animation=getFallAni()[shadowIndex]
-		pass					
+		pass
+	elif type=='poleSliding':
+		if 	big:
+			ani.play(landing_big_animation[aniIndex])	
+		else:
+			ani.play(landing_small_animation[aniIndex])		
+								
 	if dir==constants.right && ani.flip_h:
 		ani.flip_h=false
 	elif dir==constants.left && !ani.flip_h:

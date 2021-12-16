@@ -4,6 +4,7 @@ extends Node
 #游戏状态
 const stateChange='stateChange'
 const startState='startState'
+const flagDown="flagDown"  #mario下降旗
 
 #方块状态
 const resting="resting"  #静止
@@ -27,6 +28,13 @@ const shell='shell'
 const fly='fly' 
 const boom='boom'
 
+#旗杆状态
+const flagLanding="flagLanding"
+
+#时间状态
+const countDown="countDown"
+const fastCountDown="fastCountDown"
+
 #其他的状态
 const spin="spin"
 
@@ -40,7 +48,9 @@ const small2big="small2big"
 const big2fire="big2fire"
 const big2small="big2small"
 const crouch="crouch"
-const poleSliding='poleSliding'
+const poleSliding='poleSliding' #下降
+
+
 
 #类型
 const empty="empty"

@@ -3,7 +3,7 @@ extends Node
 #游戏中一些数据
 signal stateChange
 signal stateFinish
-
+signal flagEnd  #旗到了底部
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',
