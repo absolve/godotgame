@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 #游戏标题的功能
+onready var _hbox=$hbox
 onready var _name=$hbox/name
 onready var _score=$hbox/name/score
 onready var _coin=$hbox/Label5/Label4/coin
@@ -13,11 +14,12 @@ var currentTime=400
 var tick=0
 var tickNum=12
 var fastTickNum=1
-var status=constants.fastCountDown
+var status=constants.empty
 
 
 func _ready():
 	_time.text=str(currentTime)
+	hide()
 	pass 
 
 #添加分数
@@ -43,11 +45,12 @@ func stopCoinAni()->void:
 	_coin.frame=0
 	pass
 
-
+func hide():
+	_hbox.hide()
 
 	
-func _process(delta):
-	_update(delta)
+#func _process(delta):
+#	_update(delta)
 		
 	
 func _update(delta):

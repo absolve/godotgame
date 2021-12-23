@@ -472,7 +472,9 @@
 
 
 ],
-"mapSize":38,
+"mapSize":40,
 "bg":"overworld",
-"marioPos":{"x":2,"y":12}
+"music": "overworld",
+"marioPos":{"x":2,"y":12},
+"time": "400"
 	}

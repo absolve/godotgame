@@ -120,6 +120,7 @@ const allTitle=[{'name':'del','type':'del'},
 const tilesAttribute={
 	"del":{
 		"type": "del",
+		"spriteIndex": 0,
 		"x": 0,
 		"y": 0
 	},

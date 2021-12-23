@@ -11,7 +11,7 @@ var box=preload("res://scenes/box1.tscn")
 var pipe=preload("res://scenes/pipe.tscn")
 
 
-var map=[]
+#var map=[]
 var debug=true
 var mapWidthSize=20  #地图宽度 
 var enemyList=[] #敌人列表
@@ -19,13 +19,14 @@ var currentLevel  #文件数据
 var path="res://levels/1-1.json"
 var currentMapWidth=0 #当前地图的宽度
 var bg="overworld" #overworld   castle underwater
+var time=400 #时间
 var allTiles=[]  #所有方块的集合
 var marioPos={} #mario地图出生地
 var selectItem='' #选择的item
 var state=constants.startState
 
 
-var mode="game"  #game正常游戏  edit编辑  test测试
+var mode="edit"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
@@ -45,7 +46,8 @@ onready var _bulletList=$bullet
 onready var _itemsList=$item
 onready var _otherobjList=$otherObj
 onready var _enemyList=$enemy
-
+onready var _loadDiaglog=$layer/loadDialog
+onready var _title = $title
 
 func _ready():
 	print(camera.get_camera_position())
@@ -57,15 +59,11 @@ func _ready():
 	Game.connect("stateFinish",self,'stateFinish')
 	
 	if mode=='edit':
-#		for i in constants.tilesType:
-#			mapTiles[i]={}
-#			pass
-#		print(mapTiles)
-#		loadIcon()
+		_title.hide()
 		pass
 	elif mode=='game':
 		_tab.hide()
-		_toolBtn.hide()
+		_toolBtn.hide()	
 		loadMapFile("res://levels/test.json")
 		pass	
 	elif mode=='test':
@@ -74,17 +72,19 @@ func _ready():
 	print(camera.get_camera_position())	
 	pass
 
-func nodeItem():
+#func nodeItem():
+#
+#	pass
 
-	pass
-
+#载入文件
 func loadMapFile(fileName:String):
 	var file = File.new()
 	if file.file_exists(fileName):
 		file.open(fileName, File.READ)
 		currentLevel= parse_json(file.get_as_text())
-		currentMapWidth=currentLevel['mapSize']*blockSize
-		print(currentMapWidth)
+		mapWidthSize=currentLevel['mapSize']
+		print(currentLevel['time'])
+		time =int(currentLevel['time'])
 		if currentLevel['bg']=="overworld":
 			_bg.color=Color(Game.backgroundcolor[0])
 		elif currentLevel['bg']=="castle":
@@ -94,31 +94,34 @@ func loadMapFile(fileName:String):
 			
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
-				var temp=brick.instance()
-				temp.spriteIndex=i['spriteIndex']
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				var obj={"x":i['x'],"y":i['y']}
-#				print(obj)
-				if checkTile(obj):
-					print(obj,' has one brick')
-				else:
-					_brick.add_child(temp)
-#				_brick.add_child(temp)
+				if mode=='edit':
+					allTiles.append(i)
+				elif mode=='game':	
+					var temp=brick.instance()
+					temp.spriteIndex=i['spriteIndex']
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one brick')
+					else:
+						_brick.add_child(temp)
 				pass
 			elif i['type']=='box':
-				var temp=box.instance()
-				temp.spriteIndex=i['spriteIndex']
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				temp.content=i['content']
-				temp._visible=i['visible']
-				var obj={"x":i['x'],"y":i['y']}
-				if checkTile(obj):
-					print(obj,' has one box')
-				else:
-					_brick.add_child(temp)
-#				_brick.add_child(temp)
+				if mode=='edit':
+					allTiles.append(i)
+				else:	
+					var temp=box.instance()
+					temp.spriteIndex=i['spriteIndex']
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.content=i['content']
+					temp._visible=i['visible']
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one box')
+					else:
+						_brick.add_child(temp)
 				pass
 			elif i['type']=='goomba':	
 				
@@ -127,16 +130,19 @@ func loadMapFile(fileName:String):
 				
 				pass
 			elif i['type']=='pipe':
-				var temp=pipe.instance()
-				temp.spriteIndex=i['spriteIndex']
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				var obj={"x":i['x'],"y":i['y']}
-				if checkTile(obj):
-					print(obj,' has one pipe')
-				else:
+				if mode=='edit':
+					allTiles.append(i)
+				else:	
+					var temp=pipe.instance()
+					temp.spriteIndex=i['spriteIndex']
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one pipe')
+					else:
+						_brick.add_child(temp)
 					_brick.add_child(temp)
-				_brick.add_child(temp)
 		file.close()
 	else:
 		print('文件不存在')	
@@ -178,7 +184,7 @@ func checkTile(obj):
 
 #检查点击的位置是否有这个方块
 func checkHasItem(pos):
-	print('checkHasItem',pos)
+#	print('checkHasItem',pos)
 	var x = pos.x
 	var y=pos.y
 	var indexX = int(x)/(blockSize)
@@ -186,12 +192,11 @@ func checkHasItem(pos):
 #	var temp = {"x":indexX,"y":indexY}
 #	print(temp)
 	var flag=false
-	
 	for i in allTiles:
 		if i["x"]==indexX&&i["y"]==indexY:
 			flag=true
 			break
-	print(flag)		
+#	print(flag)		
 	return 	flag
 
 
@@ -220,7 +225,7 @@ func delItem(pos:Vector2):
 
 #选择方块
 func selectItem(index,itemName):
-	print(index,itemName)
+#	print(index,itemName)
 	selectItem=itemName
 
 
@@ -243,7 +248,7 @@ func getItemAttr(pos:Vector2):
 			var attr=constants.tilesAttribute[i.type]
 			_itemAttr.clearAttr()
 			for y in attr.keys():
-				print(y)
+#				print(y)
 				_itemAttr.addAttr(y,i[y])
 			break			
 	pass
@@ -619,7 +624,7 @@ func _process(delta):
 
 func _input(event):
 	if mode=='edit':
-		if _saveDialog.visible:
+		if _saveDialog.visible||_loadDiaglog.visible:
 			return
 		if event is InputEventKey:
 			if event.is_pressed():
@@ -633,9 +638,10 @@ func _input(event):
 					pass	
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and  event.pressed:
-				if _tab.is_visible_in_tree()&& _tab.get_rect().has_point(get_local_mouse_position()):
+				print(camera.get_local_mouse_position())
+				if _tab.is_visible_in_tree()&& _tab.get_rect().has_point(camera.get_local_mouse_position()):
 					return
-				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(get_local_mouse_position()):
+				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
 					return
 				if checkHasItem(get_global_mouse_position()):
 					if selectItem=='del':
@@ -717,8 +723,12 @@ func _on_toolBtn_pressed():
 
 
 func _on_Button_pressed():
-	for i in _marioList.get_children():
-		i.startDeathJump()
+#	for i in _marioList.get_children():
+#		i.startDeathJump()
+	var baseDir=OS.get_executable_path().get_base_dir()
+	print(baseDir)
+	_loadDiaglog.current_dir=baseDir
+	_loadDiaglog.popup_centered()	
 	pass # Replace with function body.
 
 
@@ -730,4 +740,14 @@ func _on_FileDialog_confirmed():
 
 func _on_apply_pressed():
 	
+	pass # Replace with function body.
+
+
+func _on_loadDialog_confirmed():
+	var dir=_loadDiaglog.current_dir
+	var file=_loadDiaglog.current_file
+	print(dir,' ',file)
+	print(_loadDiaglog.current_path)
+	if file:
+		loadMapFile(dir+"/"+file)
 	pass # Replace with function body.
