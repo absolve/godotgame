@@ -32,138 +32,138 @@
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 22 ) ],
-"loop": true,
+"loop": false,
 "name": "20",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 21 ) ],
-"loop": true,
+"loop": false,
 "name": "19",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 13 ) ],
-"loop": true,
-"name": "5",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 9 ) ],
-"loop": true,
-"name": "3",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 7 ) ],
-"loop": true,
-"name": "11",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 14 ) ],
-"loop": true,
-"name": "1",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ) ],
-"loop": true,
-"name": "8",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 10 ) ],
-"loop": true,
-"name": "7",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 6 ) ],
-"loop": true,
-"name": "6",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 12 ) ],
-"loop": true,
-"name": "9",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ) ],
-"loop": true,
-"name": "10",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 11 ) ],
-"loop": true,
-"name": "2",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 17 ) ],
-"loop": true,
-"name": "4",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "0",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 8 ) ],
-"loop": true,
+"loop": false,
 "name": "14",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 3 ) ],
-"loop": true,
+"loop": false,
 "name": "16",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 18 ) ],
-"loop": true,
+"loop": false,
 "name": "17",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 15 ) ],
-"loop": true,
+"loop": false,
 "name": "13",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 20 ) ],
-"loop": true,
-"name": "12",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 16 ) ],
-"loop": true,
-"name": "15",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 23 ) ],
-"loop": true,
-"name": "22",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 27 ) ],
-"loop": true,
-"name": "24",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 25 ) ],
-"loop": true,
-"name": "21",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 19 ) ],
-"loop": true,
+"loop": false,
 "name": "18",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 28 ) ],
-"loop": true,
-"name": "26",
+"frames": [ ExtResource( 16 ) ],
+"loop": false,
+"name": "15",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 26 ) ],
-"loop": true,
+"loop": false,
 "name": "25",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 25 ) ],
+"loop": false,
+"name": "21",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ) ],
+"loop": false,
+"name": "24",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 28 ) ],
+"loop": false,
+"name": "26",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 20 ) ],
+"loop": false,
+"name": "12",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 24 ) ],
-"loop": true,
+"loop": false,
 "name": "23",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 23 ) ],
+"loop": false,
+"name": "22",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
+"name": "0",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": false,
+"name": "8",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 11 ) ],
+"loop": false,
+"name": "2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": false,
+"name": "11",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ) ],
+"loop": false,
+"name": "1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ) ],
+"loop": false,
+"name": "3",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ) ],
+"loop": false,
+"name": "4",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": false,
+"name": "5",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "9",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": false,
+"name": "6",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 10 ) ],
+"loop": false,
+"name": "7",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": false,
+"name": "10",
 "speed": 5.0
 } ]
 

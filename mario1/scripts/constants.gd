@@ -451,8 +451,7 @@ const tilesAttribute={
 	},
 }
 				
-var mapTiles={
-}
+var mapTiles={}
 
 func _ready():
 	for i in constants.tilesType:

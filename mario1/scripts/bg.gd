@@ -7,7 +7,7 @@ func _ready():
 	type=constants.bg
 	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	if spriteIndex>=0&&spriteIndex<=20:
+	if spriteIndex>=0&&spriteIndex<=30:
 		ani.play(str(spriteIndex))
 	else:
 		ani.play("0")	

@@ -9,7 +9,7 @@ const heightNun=15
 var brick=preload("res://scenes/brick.tscn")
 var box=preload("res://scenes/box1.tscn")
 var pipe=preload("res://scenes/pipe.tscn")
-
+var background=preload("res://scenes/bg.tscn")
 
 #var map=[]
 var debug=true
@@ -142,7 +142,22 @@ func loadMapFile(fileName:String):
 						print(obj,' has one pipe')
 					else:
 						_brick.add_child(temp)
-					_brick.add_child(temp)
+#					_brick.add_child(temp)
+			elif i['type']=='bg':	
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					var temp=background.instance()	
+					temp.spriteIndex=i['spriteIndex']
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one ng')
+					else:	
+						_background.add_child(temp)
+					
+					
 		file.close()
 	else:
 		print('文件不存在')	
@@ -696,6 +711,12 @@ func _draw():
 			elif i.type=='coin':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
+			elif i.type=='pipe':
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
+			elif i.type=='bg':
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 			pass
 	pass
 	
