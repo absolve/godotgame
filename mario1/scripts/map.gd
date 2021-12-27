@@ -3,7 +3,7 @@ extends Node2D
 地图显示砖块，箱子
 """
 const blockSize=32
-const minWidthNum=20  #一个屏幕20块
+const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15
 
 var brick=preload("res://scenes/brick.tscn")
@@ -24,6 +24,7 @@ var allTiles=[]  #所有方块的集合
 var marioPos={} #mario地图出生地
 var selectItem='' #选择的item
 var state=constants.startState
+var selectedItem={'x':-1,'y':-1}	#编辑选中方块
 
 
 var mode="edit"  #game正常游戏  edit编辑  test测试
@@ -48,6 +49,8 @@ onready var _otherobjList=$otherObj
 onready var _enemyList=$enemy
 onready var _loadDiaglog=$layer/loadDialog
 onready var _title = $title
+onready var _bgList=$background
+
 
 func _ready():
 	print(camera.get_camera_position())
@@ -72,9 +75,6 @@ func _ready():
 	print(camera.get_camera_position())	
 	pass
 
-#func nodeItem():
-#
-#	pass
 
 #载入文件
 func loadMapFile(fileName:String):
@@ -82,7 +82,7 @@ func loadMapFile(fileName:String):
 	if file.file_exists(fileName):
 		file.open(fileName, File.READ)
 		currentLevel= parse_json(file.get_as_text())
-		mapWidthSize=currentLevel['mapSize']
+		mapWidthSize=int(currentLevel['mapSize'])
 		print(currentLevel['time'])
 		time =int(currentLevel['time'])
 		if currentLevel['bg']=="overworld":
@@ -91,6 +91,12 @@ func loadMapFile(fileName:String):
 			_bg.color=Color(Game.backgroundcolor[1])
 		elif currentLevel['bg']=="underwater":	
 			_bg.color=Color(Game.backgroundcolor[2])
+		
+		_mapWidth.setValue(str(mapWidthSize))
+		_time.setValue(str(currentLevel['time']))
+		_background.setValue(str(currentLevel['bg']))
+		_music.setValue(str(currentLevel['music']))
+			
 			
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
@@ -155,9 +161,8 @@ func loadMapFile(fileName:String):
 					if checkTile(obj):
 						print(obj,' has one ng')
 					else:	
-						_background.add_child(temp)
-					
-					
+						_bgList.add_child(temp)
+									
 		file.close()
 	else:
 		print('文件不存在')	
@@ -167,11 +172,12 @@ func loadMapFile(fileName:String):
 #保存到文件
 func save2File(fileName):
 	print(fileName)
+	print()
 	var data={
-		"mapSize":mapWidthSize,
-		"bg":_background.value,
-		"music":_music.value,
-		'time':_time.value,
+		"mapSize":_mapWidth.getValue(),
+		"bg":_background.getValue(),
+		"music":_music.getValue(),
+		'time':_time.getValue(),
 		'marioPos':marioPos,
 		'data':allTiles
 	}
@@ -221,6 +227,10 @@ func addItem(type,pos):
 		print('item type error ',type)
 		return	
 	print(type)
+	if type=='mario':
+		marioPos={'x':pos.x,'y':pos.y}
+		return
+		pass
 	var g=constants.tilesAttribute[type].duplicate()
 	g.x=pos.x
 	g.y=pos.y
@@ -263,9 +273,11 @@ func getItemAttr(pos:Vector2):
 			var attr=constants.tilesAttribute[i.type]
 			_itemAttr.clearAttr()
 			for y in attr.keys():
-#				print(y)
 				_itemAttr.addAttr(y,i[y])
-			break			
+			#保存选中数据
+			selectedItem["x"]=indexX	
+			selectedItem["y"]=indexY
+			break
 	pass
 
 func addObj2Brick(obj):
@@ -653,7 +665,7 @@ func _input(event):
 					pass	
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and  event.pressed:
-				print(camera.get_local_mouse_position())
+#				print(camera.get_local_mouse_position())
 				if _tab.is_visible_in_tree()&& _tab.get_rect().has_point(camera.get_local_mouse_position()):
 					return
 				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
@@ -717,7 +729,12 @@ func _draw():
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
+#			elif i.type=='mario':
+#				if constants.mapTiles.has(i.type):
+#					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 			pass
+		if !marioPos.empty()	:
+			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
 	pass
 	
 	
@@ -758,9 +775,8 @@ func _on_FileDialog_confirmed():
 		save2File(_saveDialog.current_path)
 	pass # Replace with function body.
 
-
+#保存地图信息
 func _on_apply_pressed():
-	
 	pass # Replace with function body.
 
 
@@ -771,4 +787,16 @@ func _on_loadDialog_confirmed():
 	print(_loadDiaglog.current_path)
 	if file:
 		loadMapFile(dir+"/"+file)
+	pass # Replace with function body.
+
+#编辑属性
+func _on_edit_pressed():
+	for i in allTiles:
+		if i["x"]==selectedItem["x"]&&i["y"]==selectedItem["y"]:
+			for z in _itemAttr.list.get_children():
+				if z.key in ['x','y','spriteIndex']:
+					i[z.key]=int(z.getValue())
+				else:
+					i[z.key]=z.getValue()
+			break
 	pass # Replace with function body.

@@ -11,7 +11,6 @@ func addAttr(name,value):
 	var temp=attr.instance()
 	temp.key=str(name)
 	temp.value=str(value)
-	
 	list.add_child(temp)
 	pass
 
@@ -20,6 +19,6 @@ func clearAttr():
 		child.queue_free()
 	pass
 
-func _on_Button_pressed():
-	addAttr("1","2")
-	pass # Replace with function body.
+#func _on_Button_pressed():
+#	addAttr("1","2")
+#	pass # Replace with function body.

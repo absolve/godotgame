@@ -33,6 +33,8 @@ func addItem():
 
 func _on_list_item_selected(index):
 	var name=list.get_item_text(index)
-	var spriteIndex=constants.tilesAttribute[name]['spriteIndex']
+	var spriteIndex=0
+	if constants.tilesAttribute[name].has('spriteIndex'):
+		spriteIndex=constants.tilesAttribute[name]['spriteIndex']
 	emit_signal("itemSelect",spriteIndex,name)
 	pass # Replace with function body.

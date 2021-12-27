@@ -449,9 +449,165 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0
 	},
+	"bg21": {
+		"type": "bg",
+		"spriteIndex": 21,
+		"x": 0,
+		"y": 0
+	},
+	"bg22": {
+		"type": "bg",
+		"spriteIndex": 22,
+		"x": 0,
+		"y": 0
+	},
+	"bg23": {
+		"type": "bg",
+		"spriteIndex": 23,
+		"x": 0,
+		"y": 0
+	},
+	"bg24": {
+		"type": "bg",
+		"spriteIndex": 24,
+		"x": 0,
+		"y": 0
+	},
+		"bg25": {
+		"type": "bg",
+		"spriteIndex": 25,
+		"x": 0,
+		"y": 0
+	},
+		"bg26": {
+		"type": "bg",
+		"spriteIndex": 26,
+		"x": 0,
+		"y": 0
+	},
+		"bg27": {
+		"type": "bg",
+		"spriteIndex": 27,
+		"x": 0,
+		"y": 0
+	},
+		"bg28": {
+		"type": "bg",
+		"spriteIndex": 28,
+		"x": 0,
+		"y": 0
+	},
+		"bg29": {
+		"type": "bg",
+		"spriteIndex": 29,
+		"x": 0,
+		"y": 0
+	},
+		"bg30": {
+		"type": "bg",
+		"spriteIndex": 30,
+		"x": 0,
+		"y": 0
+	},
+		"bg31": {
+		"type": "bg",
+		"spriteIndex": 31,
+		"x": 0,
+		"y": 0
+	},
+		"bg32": {
+		"type": "bg",
+		"spriteIndex": 32,
+		"x": 0,
+		"y": 0
+	},
+		"bg33": {
+		"type": "bg",
+		"spriteIndex": 33,
+		"x": 0,
+		"y": 0
+	},
+		"bg34": {
+		"type": "bg",
+		"spriteIndex": 34,
+		"x": 0,
+		"y": 0
+	},
+		"bg35": {
+		"type": "bg",
+		"spriteIndex": 35,
+		"x": 0,
+		"y": 0
+	},
+		"bg36": {
+		"type": "bg",
+		"spriteIndex": 36,
+		"x": 0,
+		"y": 0
+	},
+		"bg37": {
+		"type": "bg",
+		"spriteIndex": 37,
+		"x": 0,
+		"y": 0
+	},
+		"bg38": {
+		"type": "bg",
+		"spriteIndex": 38,
+		"x": 0,
+		"y": 0
+	},
+		"bg39": {
+		"type": "bg",
+		"spriteIndex": 39,
+		"x": 0,
+		"y": 0
+	},
+		"bg40": {
+		"type": "bg",
+		"spriteIndex": 40,
+		"x": 0,
+		"y": 0
+	},
+		"bg41": {
+		"type": "bg",
+		"spriteIndex": 41,
+		"x": 0,
+		"y": 0
+	},
+		"bg42": {
+		"type": "bg",
+		"spriteIndex": 42,
+		"x": 0,
+		"y": 0
+	},
+		"bg43": {
+		"type": "bg",
+		"spriteIndex": 43,
+		"x": 0,
+		"y": 0
+	},
+		"bg44": {
+		"type": "bg",
+		"spriteIndex": 44,
+		"x": 0,
+		"y": 0
+	},
+		"bg45": {
+		"type": "bg",
+		"spriteIndex": 45,
+		"x": 0,
+		"y": 0
+	},
+		"bg46": {
+		"type": "bg",
+		"spriteIndex": 46,
+		"x": 0,
+		"y": 0
+	},
 }
 				
-var mapTiles={}
+var mapTiles={}  #每种图块的图片
 
 func _ready():
 	for i in constants.tilesType:

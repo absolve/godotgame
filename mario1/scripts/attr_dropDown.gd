@@ -4,6 +4,7 @@ export var key:String
 export var list:Array
 onready var option=$OptionButton
 var value=''
+#var selected=''
 
 func _ready():
 	$name.text=key
@@ -13,6 +14,16 @@ func _ready():
 		value=list[0]
 	pass
 
+func setValue(value:String):
+	for i in range(len(list)):
+		if list[i]==value:
+			self.value=value
+			option.text=value
+			option.selected=i
+			break
+	
+func getValue():
+	return value
 
 func _on_OptionButton_item_selected(index):
 	value=option.get_item_text(index)
