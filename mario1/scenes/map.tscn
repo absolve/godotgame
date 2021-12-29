@@ -13,7 +13,6 @@
 script = ExtResource( 1 )
 
 [node name="bg" type="ColorRect" parent="."]
-visible = false
 margin_right = 640.0
 margin_bottom = 480.0
 color = Color( 0, 0, 0, 1 )
@@ -266,4 +265,5 @@ __meta__ = {
 [connection signal="pressed" from="layer/Control/toolBtn" to="." method="_on_toolBtn_pressed"]
 [connection signal="confirmed" from="layer/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="layer/loadDialog" to="." method="_on_loadDialog_confirmed"]
+[connection signal="file_selected" from="layer/loadDialog" to="." method="_on_loadDialog_file_selected"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

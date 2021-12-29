@@ -83,7 +83,7 @@ var runAccel=8 #奔跑加速度
 var friction=9	#摩檫力
 var animation_speed=120	#动画速度
 var gravity=1100	#重力
-const gravityJump=600	#跳跃的时候重力
+const gravityJump=700	#跳跃的时候重力
 
 const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
@@ -95,7 +95,7 @@ const marioWalkMaxSpeed=140 #走的时候最大速度
 const marioRunMaxSpeed=400 #跑的时候最大速度
 const marioAniSpeed=150
 const marioGravity=2200 #重力
-const marioJumpGravity=900
+const marioJumpGravity=1000
 const marioJumpSpeed=600
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
@@ -154,7 +154,7 @@ const tilesAttribute={
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
-		"content": "mushroom",
+		"content": empty,
 		"visible": true
 	},
 	"box_blue": {
@@ -162,7 +162,7 @@ const tilesAttribute={
 		"spriteIndex": 1,
 		"x": 0,
 		"y": 0,
-		"content": "mushroom",
+		"content": empty,
 		"visible": true
 	},
 	"box_grey": {
@@ -170,7 +170,7 @@ const tilesAttribute={
 		"spriteIndex": 2,
 		"x": 0,
 		"y": 0,
-		"content": "mushroom",
+		"content": empty,
 		"visible": true
 	},
 	"box_default": {

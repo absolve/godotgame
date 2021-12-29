@@ -10,6 +10,7 @@ var brick=preload("res://scenes/brick.tscn")
 var box=preload("res://scenes/box1.tscn")
 var pipe=preload("res://scenes/pipe.tscn")
 var background=preload("res://scenes/bg.tscn")
+var mario=preload("res://scenes/mario1.tscn")
 
 #var map=[]
 var debug=true
@@ -62,12 +63,13 @@ func _ready():
 	Game.connect("stateFinish",self,'stateFinish')
 	
 	if mode=='edit':
+		_bg.hide()
 		_title.hide()
 		pass
 	elif mode=='game':
 		_tab.hide()
 		_toolBtn.hide()	
-		loadMapFile("res://levels/test.json")
+		loadMapFile("res://levels/1-1.json")
 		pass	
 	elif mode=='test':
 		
@@ -96,7 +98,15 @@ func loadMapFile(fileName:String):
 		_time.setValue(str(currentLevel['time']))
 		_background.setValue(str(currentLevel['bg']))
 		_music.setValue(str(currentLevel['music']))
-			
+		var pos = currentLevel['marioPos']
+		if !pos.empty()&&mode=='game':  #添加mario
+			var temp=mario.instance()
+			temp.position.x=pos['x']*blockSize
+			temp.position.y=pos['y']*blockSize
+			_marioList.add_child(temp)
+			marioPos=pos
+		if mode=='edit':
+			allTiles.clear()
 			
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
@@ -162,6 +172,7 @@ func loadMapFile(fileName:String):
 						print(obj,' has one ng')
 					else:	
 						_bgList.add_child(temp)
+		
 									
 		file.close()
 	else:
@@ -172,7 +183,6 @@ func loadMapFile(fileName:String):
 #保存到文件
 func save2File(fileName):
 	print(fileName)
-	print()
 	var data={
 		"mapSize":_mapWidth.getValue(),
 		"bg":_background.getValue(),
@@ -335,6 +345,8 @@ func _update(delta):
 					i.queue_free()
 				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
 					i.queue_free()	
+			
+		
 			
 			for i in _marioList.get_children():
 				i._update(delta)
@@ -630,7 +642,31 @@ func _update(delta):
 							i.setInvincible()
 						pass
 					pass
-				
+					
+			#照相机跟随mario
+			if _marioList.get_child_count()>0:
+				var mario1=_marioList.get_child(0)
+				if mario1.position.x-mario1.getSize()/2<camera.position.x:
+					mario1.position.x=camera.position.x+mario1.getSize()/2	
+				elif mario1.position.x+	mario1.getSize()/2>mapWidthSize*blockSize:
+					mario1.position.x=mapWidthSize*blockSize-mario1.getSize()/2
+				#前进
+				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
+					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
+						camera.position.x=mapWidthSize*blockSize-camera.offset.x*2
+						_bg.rect_position.x=camera.position.x
+					else:
+						camera.position.x=mario1.position.x-camera.offset.x
+						_bg.rect_position.x=camera.position.x
+				#后退		
+				if mario1.xVel<0 && mario1.position.x<camera.position.x+camera.offset.x/2:
+					if camera.position.x<=0:
+						camera.position.x=0
+						_bg.rect_position.x=0
+					else:
+						camera.position.x=mario1.position.x-camera.offset.x/2
+						_bg.rect_position.x=camera.position.x
+							
 			pass
 		elif state==constants.stateChange:
 			for i in _marioList.get_children():
@@ -799,4 +835,11 @@ func _on_edit_pressed():
 				else:
 					i[z.key]=z.getValue()
 			break
+	pass # Replace with function body.
+
+
+func _on_loadDialog_file_selected(path):
+	print(path)
+	if path:
+		loadMapFile(path)
 	pass # Replace with function body.

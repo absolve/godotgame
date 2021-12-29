@@ -97,7 +97,7 @@ func startBumped():
 
 #空的盒子
 func isDestructible():
-	if content==constants.empty&&spriteIndex in [0,1,2]:
+	if (content==constants.empty||content=='')&&spriteIndex in [0,1,2]:
 		return true
 	else:
 		return false
