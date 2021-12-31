@@ -9,7 +9,6 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and  event.pressed:
-			print('121')
 			if get_rect().has_point(get_viewport().get_mouse_position()):
 				drag=true
 				temp=get_viewport().get_mouse_position()
@@ -20,9 +19,7 @@ func _input(event):
 		pass
 	elif event is InputEventMouseMotion:
 		if drag:
-			print('111')
-			var pos=get_viewport().get_mouse_position()
-			print(pos)		
+			var pos=get_viewport().get_mouse_position()	
 			self.rect_position+=pos-temp
 			temp=pos
 			pass

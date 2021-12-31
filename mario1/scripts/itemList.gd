@@ -21,7 +21,7 @@ func addItem():
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)
-		elif type=='pipe':
+		elif type=='pipe'||type=='flag':
 			if constants.mapTiles.has(type):
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])

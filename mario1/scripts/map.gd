@@ -2,7 +2,7 @@ extends Node2D
 """
 地图显示砖块，箱子
 """
-const blockSize=32
+const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15
 
@@ -11,6 +11,8 @@ var box=preload("res://scenes/box1.tscn")
 var pipe=preload("res://scenes/pipe.tscn")
 var background=preload("res://scenes/bg.tscn")
 var mario=preload("res://scenes/mario1.tscn")
+var pole=preload("res://scenes/pole.tscn")
+var goomba=preload("res://scenes/goomba.tscn")
 
 #var map=[]
 var debug=true
@@ -22,6 +24,7 @@ var currentMapWidth=0 #当前地图的宽度
 var bg="overworld" #overworld   castle underwater
 var time=400 #时间
 var allTiles=[]  #所有方块的集合
+var bgTiles=[]   #单独背景方块
 var marioPos={} #mario地图出生地
 var selectItem='' #选择的item
 var state=constants.startState
@@ -51,11 +54,11 @@ onready var _enemyList=$enemy
 onready var _loadDiaglog=$layer/loadDialog
 onready var _title = $title
 onready var _bgList=$background
-
+onready var _pole=$pole
 
 func _ready():
-	print(camera.get_camera_position())
-	print(camera.get_camera_screen_center())
+#	print(camera.get_camera_position())
+#	print(camera.get_camera_screen_center())
 #	loadMapFile("res://levels/test.json")
 	_itemList.connect("itemSelect",self,'selectItem')
 	Game.setMap(self)
@@ -74,7 +77,7 @@ func _ready():
 	elif mode=='test':
 		
 		pass
-	print(camera.get_camera_position())	
+#	print(camera.get_camera_position())	
 	pass
 
 
@@ -85,7 +88,7 @@ func loadMapFile(fileName:String):
 		file.open(fileName, File.READ)
 		currentLevel= parse_json(file.get_as_text())
 		mapWidthSize=int(currentLevel['mapSize'])
-		print(currentLevel['time'])
+#		print(currentLevel['time'])
 		time =int(currentLevel['time'])
 		if currentLevel['bg']=="overworld":
 			_bg.color=Color(Game.backgroundcolor[0])
@@ -104,10 +107,12 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize
 			temp.position.y=pos['y']*blockSize
 			_marioList.add_child(temp)
-			marioPos=pos
+		marioPos=pos
 		if mode=='edit':
 			allTiles.clear()
+			bgTiles.clear()
 			
+#		print(currentLevel['data'])	
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
 				if mode=='edit':
@@ -138,13 +143,12 @@ func loadMapFile(fileName:String):
 						print(obj,' has one box')
 					else:
 						_brick.add_child(temp)
-				pass
-			elif i['type']=='goomba':	
-				
-				pass
-			elif i['type']=='koopa':
-				
-				pass
+			elif i['type']=='goomba' || i['type']=='koopa':	
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					enemyList.append(i)
+					pass	
 			elif i['type']=='pipe':
 				if mode=='edit':
 					allTiles.append(i)
@@ -158,10 +162,9 @@ func loadMapFile(fileName:String):
 						print(obj,' has one pipe')
 					else:
 						_brick.add_child(temp)
-#					_brick.add_child(temp)
 			elif i['type']=='bg':	
 				if mode=='edit':
-					allTiles.append(i)
+					bgTiles.append(i)
 				else:
 					var temp=background.instance()	
 					temp.spriteIndex=i['spriteIndex']
@@ -169,27 +172,39 @@ func loadMapFile(fileName:String):
 					temp.position.y=i['y']*blockSize+blockSize/2
 					var obj={"x":i['x'],"y":i['y']}
 					if checkTile(obj):
-						print(obj,' has one ng')
+						print(obj,' has one bg')
 					else:	
 						_bgList.add_child(temp)
-		
-									
+			elif  i['type']=='flag':  #旗杆
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					var temp = pole.instance()
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.poleLen=int(i['len'])
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one pole')
+					else:	
+						_brick.add_child(temp)									
 		file.close()
 	else:
 		print('文件不存在')	
 		pass
 	pass
 
+
 #保存到文件
 func save2File(fileName):
-	print(fileName)
+#	print(fileName)
 	var data={
 		"mapSize":_mapWidth.getValue(),
 		"bg":_background.getValue(),
 		"music":_music.getValue(),
 		'time':_time.getValue(),
 		'marioPos':marioPos,
-		'data':allTiles
+		'data':allTiles+bgTiles,
 	}
 	var file = File.new()
 	file.open(fileName, File.WRITE)
@@ -197,12 +212,19 @@ func save2File(fileName):
 	file.close()
 	pass
 
+#添加敌人
+func addEnemy(obj:Dictionary):
+	if obj.type==constants.goomba:
+		var temp =goomba.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		temp.dir=obj['dir']
+		_enemyList.add_child(temp)
+		pass
+	pass
+
 func checkTile(obj):
-#	if allTiles.bsearch_custom(obj,self,"checkXY")!=0:
-#		return true
-#	else:
-#		allTiles.append(obj)
-#		return false
 	var flag=false		
 	for i in allTiles:
 		if i["x"]==obj["x"]&&i["y"]==obj["y"]:	
@@ -213,9 +235,8 @@ func checkTile(obj):
 #func checkXY(a,b):
 #	return a["x"]==b["x"]&&a["y"]==b["y"]
 
-#检查点击的位置是否有这个方块
-func checkHasItem(pos):
-#	print('checkHasItem',pos)
+#检查点击的位置是否有这个方块 背景和其他物体可以重复
+func checkHasItem(pos,selectType):
 	var x = pos.x
 	var y=pos.y
 	var indexX = int(x)/(blockSize)
@@ -223,10 +244,22 @@ func checkHasItem(pos):
 #	var temp = {"x":indexX,"y":indexY}
 #	print(temp)
 	var flag=false
-	for i in allTiles:
-		if i["x"]==indexX&&i["y"]==indexY:
-			flag=true
-			break
+	if selectType=='bg':
+		for i in bgTiles:
+			if i["x"]==indexX&&i["y"]==indexY:
+				flag=true
+				break
+		pass
+	elif selectType=='del':
+		for i in bgTiles+allTiles:
+			if i["x"]==indexX&&i["y"]==indexY:
+				flag=true
+				break			
+	else:	
+		for i in allTiles:
+			if i["x"]==indexX&&i["y"]==indexY:
+				flag=true
+				break
 #	print(flag)		
 	return 	flag
 
@@ -236,7 +269,7 @@ func addItem(type,pos):
 	if not constants.tilesAttribute.has(type):
 		print('item type error ',type)
 		return	
-	print(type)
+#	print(type)
 	if type=='mario':
 		marioPos={'x':pos.x,'y':pos.y}
 		return
@@ -244,7 +277,11 @@ func addItem(type,pos):
 	var g=constants.tilesAttribute[type].duplicate()
 	g.x=pos.x
 	g.y=pos.y
-	allTiles.append(g)			
+	if type=='bg':
+		bgTiles.append(g)
+		pass		
+	else:	
+		allTiles.append(g)			
 
 
 #删除一个方块
@@ -256,7 +293,10 @@ func delItem(pos:Vector2):
 		if allTiles[i]["x"]==indexX&&allTiles[i]["y"]==indexY:
 			allTiles.remove(i)
 			break
-
+	for i in range(bgTiles.size()):
+		if bgTiles[i]["x"]==indexX&&bgTiles[i]["y"]==indexY:
+			bgTiles.remove(i)
+			break
 
 #选择方块
 func selectItem(index,itemName):
@@ -473,7 +513,6 @@ func _update(delta):
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
 					if rect1.intersects(rect2):
-	#					print(rect1,rect2)
 						if rect1.encloses(rect2):#完全叠一起
 								continue
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
@@ -554,7 +593,7 @@ func _update(delta):
 	#							i.yVel=8
 								pass
 							else:
-								i.yVel=-300
+								i.yVel=-150
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2+1#位置调整
 								if y.type==constants.koopa:
 									if dx<0:
@@ -666,6 +705,16 @@ func _update(delta):
 					else:
 						camera.position.x=mario1.position.x-camera.offset.x/2
 						_bg.rect_position.x=camera.position.x
+						
+				#根据摄像的移动判断前面位置是否需要添加敌人
+				for e in enemyList:
+					if e.x*blockSize>camera.position.x+camera.offset.x*2 && \
+						e.x*blockSize<camera.position.x+camera.offset.x*2+camera.offset.x/4:
+							addEnemy(e)
+							enemyList.erase(e)
+							pass
+				pass
+			
 							
 			pass
 		elif state==constants.stateChange:
@@ -673,7 +722,7 @@ func _update(delta):
 				i._update(delta)
 				if i.dead:
 					if i.position.y-i.getSizeY()/2>=camera.offset.y*2:
-						print(i.position.y)
+#						print(i.position.y)
 						i.queue_free()
 			pass
 	pass
@@ -701,12 +750,11 @@ func _input(event):
 					pass	
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and  event.pressed:
-#				print(camera.get_local_mouse_position())
 				if _tab.is_visible_in_tree()&& _tab.get_rect().has_point(camera.get_local_mouse_position()):
 					return
 				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
 					return
-				if checkHasItem(get_global_mouse_position()):
+				if checkHasItem(get_global_mouse_position(),selectItem):
 					if selectItem=='del':
 						delItem(get_global_mouse_position())
 					else:  #显示属性
@@ -715,7 +763,6 @@ func _input(event):
 					pass
 				else:	
 					var pos=getItemPos(get_global_mouse_position())	
-					print(pos)
 					addItem(selectItem,pos)
 				pass
 			elif !event.pressed:	
@@ -740,7 +787,7 @@ func _draw():
 		for i in range(mapWidthSize):
 			draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
 			Color.gray,0.5,true)	
-		for i in allTiles:
+		for i in bgTiles+allTiles:
 			if i.type=='goomba':
 				if constants.mapTiles.has(i.type):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
@@ -768,6 +815,14 @@ func _draw():
 #			elif i.type=='mario':
 #				if constants.mapTiles.has(i.type):
 #					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
+			elif i.type=='flag': #旗杆
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
+					for l in range(i.len):
+						draw_texture(constants.mapTiles['stick'][str(i.spriteIndex)],
+						Vector2(i.x*blockSize,i.y*blockSize+(l+1)*blockSize),Color(1,1,1,0.5))
+					pass
+				pass
 			pass
 		if !marioPos.empty()	:
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
@@ -800,7 +855,7 @@ func _on_Button_pressed():
 #	for i in _marioList.get_children():
 #		i.startDeathJump()
 	var baseDir=OS.get_executable_path().get_base_dir()
-	print(baseDir)
+#	print(baseDir)
 	_loadDiaglog.current_dir=baseDir
 	_loadDiaglog.popup_centered()	
 	pass # Replace with function body.
@@ -819,8 +874,8 @@ func _on_apply_pressed():
 func _on_loadDialog_confirmed():
 	var dir=_loadDiaglog.current_dir
 	var file=_loadDiaglog.current_file
-	print(dir,' ',file)
-	print(_loadDiaglog.current_path)
+#	print(dir,' ',file)
+#	print(_loadDiaglog.current_path)
 	if file:
 		loadMapFile(dir+"/"+file)
 	pass # Replace with function body.
@@ -839,7 +894,7 @@ func _on_edit_pressed():
 
 
 func _on_loadDialog_file_selected(path):
-	print(path)
+#	print(path)
 	if path:
 		loadMapFile(path)
 	pass # Replace with function body.

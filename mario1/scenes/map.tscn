@@ -34,6 +34,8 @@ position = Vector2( 0, -1 )
 
 [node name="item" type="Node2D" parent="."]
 
+[node name="pole" type="Node2D" parent="."]
+
 [node name="otherObj" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
