@@ -592,3 +592,8 @@ func _on_save_pressed():
 	_fileDiaglog.current_file="1992.json"
 	_fileDiaglog.popup_centered()
 	pass # Replace with function body.
+
+
+func _on_loadDialog_file_selected(path):
+	loadMap(path)
+	pass # Replace with function body.

@@ -417,3 +417,4 @@ current_path = "/godotgame/tank1/"
 [connection signal="pressed" from="tools/bricks/VBoxContainer/return" to="." method="_on_return_pressed"]
 [connection signal="confirmed" from="tools/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="tools/loadDialog" to="." method="_on_loadDialog_confirmed"]
+[connection signal="file_selected" from="tools/loadDialog" to="." method="_on_loadDialog_file_selected"]

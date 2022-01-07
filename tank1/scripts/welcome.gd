@@ -17,10 +17,14 @@ func _input(event):
 	if event is InputEventKey:
 		if event.is_pressed():
 			if (event as InputEventKey).scancode==KEY_DOWN:		
+				if _ani.get_current_animation()=="start":
+					return
 				if index<3:
 					index+=1
 					setMode(index)
 			elif (event as InputEventKey).scancode==KEY_UP:
+				if _ani.get_current_animation()=="start":
+					return
 				if index>0:
 					index-=1
 					setMode(index)
