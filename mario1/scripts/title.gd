@@ -48,7 +48,8 @@ func stopCoinAni()->void:
 func hide():
 	_hbox.hide()
 
-	
+func show():
+	_hbox.show()
 #func _process(delta):
 #	_update(delta)
 		

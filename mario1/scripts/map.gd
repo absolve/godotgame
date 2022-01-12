@@ -31,7 +31,7 @@ var state=constants.startState
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
 
 
-var mode="edit"  #game正常游戏  edit编辑  test测试
+var mode="game"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
@@ -72,6 +72,7 @@ func _ready():
 	elif mode=='game':
 		_tab.hide()
 		_toolBtn.hide()	
+		_title.show()
 		loadMapFile("res://levels/1-1.json")
 		pass	
 	elif mode=='test':
@@ -437,12 +438,18 @@ func _update(delta):
 							if dx<0:
 								if i.dir==constants.left:
 									i.xVel=0
+#									i.leftStop=true
+#									i.rightStop=false
 								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
 							else:
 								if i.dir==constants.right:
-									i.xVel=0	
+									i.xVel=0
+#									i.leftStop=false
+#									i.rightStop=true	
 								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 						else: #上下的碰撞
+#							i.leftStop=false
+#							i.rightStop=false
 							if dy<0:  #下方							
 #								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2-1
 								if !onFloor:
@@ -463,6 +470,8 @@ func _update(delta):
 							pass
 				i.isOnFloor=onFloor
 		
+#			for i in _marioList.get_children():
+#				i._update(delta)
 			
 			for i in _itemsList.get_children():  #物品的判断
 				for y in _brickList.get_children():

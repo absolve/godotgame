@@ -31,6 +31,9 @@ var hurtInvincibleEndime=700
 var dead=false
 var deadStartTime=0
 var deadEndTime=30
+var leftStop=false
+var rightStop=false
+
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -192,6 +195,8 @@ func walk(delta):
 		ani.speed_scale=1+xVel/constants.marioAniSpeed
 	elif xVel<0:
 		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+	else:
+		ani.speed_scale=1
 	
 	if Input.is_action_pressed("ui_action"):
 		acceleration=constants.runAcceleration
@@ -231,12 +236,10 @@ func walk(delta):
 		elif xVel<-maxXVel:
 			xVel+=acceleration
 	elif Input.is_action_pressed("ui_right"):
-#		faceRight=true
 		if xVel<0:
 			animation("slide")
 			acceleration=constants.slideFriction
 		else:
-#			faceRight=true
 			dir=constants.right
 			acceleration=constants.acceleration
 			animation('walk')
@@ -262,8 +265,8 @@ func walk(delta):
 				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
-					
-	position.x+=xVel*delta
+	if 	(xVel>0 && !rightStop)||(xVel<0&& !leftStop):			
+		position.x+=xVel*delta
 	position.y+=yVel*delta	
 	if !isOnFloor:
 		ani.stop()
