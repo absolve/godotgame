@@ -1,7 +1,5 @@
 extends Control
 
-
-
 #var color1="#fc361c"
 #var color2="#bfa080"
 
@@ -62,6 +60,10 @@ func _ready():
 	if Game.mode==1: #单人
 		p1Score.set_text("%d"%Game.playerScore["player1"])
 		p2Score.set_visible(false)
+		p2TypeA.set_visible(false)
+		p2TypeB.set_visible(false)
+		p2TypeC.set_visible(false)
+		p2TypeD.set_visible(false)
 		pass
 	else: #双人
 		p1Score.set_text("%d"%Game.playerScore["player1"])
@@ -114,33 +116,49 @@ func _process(delta):
 			SoundsUtil.playPoint()
 	elif state==1: #进入下一个分数
 		if index==0:
-			p1TypeA.set_visible(true)
+#			p1TypeA.set_visible(true)
 			p1TypeANum.set_visible(true)
+			p1TypeANum_.set_visible(true)
+			p1TypeAPoint.set_visible(true)
 			state=0	
 			if Game.mode==2:
-				p2TypeA.set_visible(true)
+#				p2TypeA.set_visible(true)
 				p2TypeANum.set_visible(true)
+				p2TypeANum_.set_visible(true)
+				p2TypeAPoint.set_visible(true)
 		elif index==1:
-			p1TypeB.set_visible(true)
+#			p1TypeB.set_visible(true)
 			p1TypeBNum.set_visible(true)
+			p1TypeBNum_.set_visible(true)
+			p1TypeBPoint.set_visible(true)
 			state=0	
 			if Game.mode==2:
-				p2TypeB.set_visible(true)
+#				p2TypeB.set_visible(true)
 				p2TypeBNum.set_visible(true)
+				p2TypeBNum_.set_visible(true)
+				p2TypeBPoint.set_visible(true)
 		elif index==2:
-			p1TypeC.set_visible(true)
+#			p1TypeC.set_visible(true)
 			p1TypeCNum.set_visible(true)	
+			p1TypeCNum_.set_visible(true)	
+			p1TypeCPoint.set_visible(true)
 			state=0	
 			if Game.mode==2:
-				p2TypeC.set_visible(true)
-				p2TypeCNum.set_visible(true)	
+#				p2TypeC.set_visible(true)
+				p2TypeCNum.set_visible(true)
+				p2TypeCNum_.set_visible(true)	
+				p2TypeCPoint.set_visible(true)	
 		elif index==3:
-			p1TypeD.set_visible(true)
+#			p1TypeD.set_visible(true)
 			p1TypeDNum.set_visible(true)	
+			p1TypeDNum_.set_visible(true)	
+			p1TypeDPoint.set_visible(true)
 			state=0	
 			if Game.mode==2:
-				p2TypeD.set_visible(true)
+#				p2TypeD.set_visible(true)
 				p2TypeDNum.set_visible(true)	
+				p2TypeDNum_.set_visible(true)	
+				p2TypeDPoint.set_visible(true)
 		else:
 			state=2		
 	elif state==2:

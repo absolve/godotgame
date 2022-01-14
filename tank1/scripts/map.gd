@@ -16,7 +16,7 @@ var brick=preload("res://scenes/brick.tscn")
 var cellSize=16	#每个格子的大小是16px
 #var mapDir="res://levels"
 export var debug=true
-var mode= 1 #0是正常游戏 1是编辑模式
+var mode= 0 #0是正常游戏 1是编辑模式
 export var playerNum=1	# 默认1个人
 
 var player1 = [Vector2(8,25),Vector2(9,25),Vector2(8,24),Vector2(9,24)]

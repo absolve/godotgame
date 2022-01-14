@@ -37,8 +37,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="HBoxContainer"]
 margin_right = 144.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "hi-score "
 uppercase = true
 
@@ -46,8 +46,8 @@ uppercase = true
 margin_left = 148.0
 margin_right = 164.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.572549, 0.360784, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "0"
 
 [node name="stage" type="Label" parent="."]
@@ -67,8 +67,8 @@ margin_left = 56.0
 margin_top = 120.0
 margin_right = 184.0
 margin_bottom = 136.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "I-player"
 uppercase = true
 __meta__ = {
@@ -80,8 +80,8 @@ margin_left = 312.0
 margin_top = 120.0
 margin_right = 456.0
 margin_bottom = 136.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "II-player"
 uppercase = true
 __meta__ = {
@@ -93,8 +93,8 @@ margin_left = 24.0
 margin_top = 150.0
 margin_right = 184.0
 margin_bottom = 166.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.572549, 0.360784, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "000000000"
 align = 2
 valign = 1
@@ -107,8 +107,8 @@ margin_left = 264.0
 margin_top = 150.0
 margin_right = 454.0
 margin_bottom = 166.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.572549, 0.360784, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "000"
 align = 2
 __meta__ = {
@@ -116,7 +116,6 @@ __meta__ = {
 }
 
 [node name="p1TypeA" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 48.0
 margin_top = 208.0
 margin_right = 176.0
@@ -127,6 +126,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p1TypeA"]
+visible = false
 margin_left = 60.0
 margin_right = 76.0
 margin_bottom = 16.0
@@ -143,7 +143,6 @@ text = "pts"
 uppercase = true
 
 [node name="p1TypeB" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 48.0
 margin_top = 248.0
 margin_right = 176.0
@@ -155,6 +154,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p1TypeB"]
+visible = false
 margin_left = 60.0
 margin_right = 76.0
 margin_bottom = 16.0
@@ -171,7 +171,6 @@ text = "pts"
 uppercase = true
 
 [node name="p1TypeC" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 48.0
 margin_top = 289.0
 margin_right = 176.0
@@ -183,6 +182,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p1TypeC"]
+visible = false
 margin_left = 60.0
 margin_right = 76.0
 margin_bottom = 16.0
@@ -199,7 +199,6 @@ text = "pts"
 uppercase = true
 
 [node name="p1TypeD" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 48.0
 margin_top = 335.0
 margin_right = 176.0
@@ -211,6 +210,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p1TypeD"]
+visible = false
 margin_left = 60.0
 margin_right = 76.0
 margin_bottom = 16.0
@@ -331,7 +331,6 @@ texture = ExtResource( 7 )
 stretch_mode = 4
 
 [node name="p2TypeA" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 332.0
 margin_top = 208.0
 margin_right = 452.0
@@ -343,6 +342,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p2TypeA"]
+visible = false
 margin_left = 52.0
 margin_right = 68.0
 margin_bottom = 16.0
@@ -359,7 +359,6 @@ text = "pts"
 uppercase = true
 
 [node name="p2TypeB" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 332.0
 margin_top = 248.0
 margin_right = 452.0
@@ -371,6 +370,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p2TypeB"]
+visible = false
 margin_left = 52.0
 margin_right = 68.0
 margin_bottom = 16.0
@@ -387,7 +387,6 @@ text = "pts"
 uppercase = true
 
 [node name="p2TypeC" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 332.0
 margin_top = 289.0
 margin_right = 452.0
@@ -399,6 +398,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p2TypeC"]
+visible = false
 margin_left = 52.0
 margin_right = 68.0
 margin_bottom = 16.0
@@ -415,7 +415,6 @@ text = "pts"
 uppercase = true
 
 [node name="p2TypeD" type="HBoxContainer" parent="."]
-visible = false
 margin_left = 330.0
 margin_top = 335.0
 margin_right = 450.0
@@ -427,6 +426,7 @@ __meta__ = {
 }
 
 [node name="num" type="Label" parent="p2TypeD"]
+visible = false
 margin_left = 52.0
 margin_right = 68.0
 margin_bottom = 16.0
@@ -633,8 +633,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="reward"]
 margin_right = 112.0
 margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.988235, 0.211765, 0.109804, 1 )
+custom_fonts/font = ExtResource( 2 )
 text = "bouns"
 align = 1
 uppercase = true
