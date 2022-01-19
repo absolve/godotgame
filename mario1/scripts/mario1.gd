@@ -156,22 +156,20 @@ func setHurtInvincible():
 	
 func stand(delta):
 	xVel=0
-	yVel+=gravity*delta
+	yVel=0
+#	yVel+=gravity*delta
 	if ani.animation in throw_animation&&throwAniFinish:	
 		animation("stand")
 	elif !(ani.animation  in throw_animation):
 		animation("stand")
 		
 	if Input.is_action_pressed("ui_left"):
-#		faceRight=false
 		dir=constants.left
 		status = constants.walk
 	elif Input.is_action_pressed("ui_right"):
-#		faceRight=true
 		dir=constants.right
 		status = constants.walk
 	elif Input.is_action_pressed("ui_jump"):	
-#		print('stand','ui_jump')
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
@@ -181,10 +179,12 @@ func stand(delta):
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball()
 		pass
-		
-	position.y+=yVel*delta	
+	
+	
 	if !isOnFloor:
+#		position.y+=yVel*delta	
 		status=constants.fall
+		
 	pass
 
 
@@ -214,7 +214,7 @@ func walk(delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
-		print('walk jump')
+#		print('walk jump')
 		return
 	
 	if Input.is_action_just_pressed("ui_down") &&big:
@@ -280,11 +280,10 @@ func jump(delta):
 	if yVel>0:
 		gravity=constants.marioGravity
 		status=constants.fall	
-		print('jump')
+#		print('jump')
 		return
 		
 	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
-		print(2121)
 		gravity=constants.marioGravity
 	
 	if Input.is_action_just_pressed("ui_action")&&fire:
@@ -317,7 +316,7 @@ func fall(delta):
 	
 	if isOnFloor:
 		status = constants.walk
-		print('fall end')			
+#		print('fall end')			
 	pass
 
 func startDeathJump():
@@ -418,7 +417,7 @@ func big2Fire():
 			elif ani=='crouch':
 				currentAnimation=crouch_animation
 	
-
+#变成发射火球的状态
 func fireState(delta):	
 	if big2FireTime%30==0:
 		FireAniIndex+=1
@@ -430,6 +429,7 @@ func fireState(delta):
 		status=preStatus
 		aniIndex=2
 		fire=true
+		Game.emit_signal('stateFinish')
 
 func big2Small():
 	preStatus=status
@@ -582,12 +582,13 @@ func _on_ani_animation_finished():
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		Game.emit_signal('stateFinish')
 	elif status==constants.big2small:
-		big=false
-		fire=false
-		ani.position.y= 0
-		aniIndex=0
-		position.y+=10
-		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
-		status=preStatus
+#		big=false
+#		fire=false
+#		ani.position.y= 0
+#		aniIndex=0
+#		position.y+=10
+#		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
+#		status=preStatus
 		Game.emit_signal('stateFinish')
+		pass
 	pass # Replace with function body.

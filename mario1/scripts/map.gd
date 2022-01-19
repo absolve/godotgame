@@ -73,12 +73,13 @@ func _ready():
 		_tab.hide()
 		_toolBtn.hide()	
 		_title.show()
-		loadMapFile("res://levels/1-1.json")
+		loadMapFile("res://levels/test1.json")
 		pass	
 	elif mode=='test':
 		
 		pass
 #	print(camera.get_camera_position())	
+	print(_marioList.get_children())
 	pass
 
 
@@ -358,6 +359,7 @@ func stateChange():
 	pass
 
 func stateFinish():
+	print("stateFinish")
 	state=constants.startState
 	for i in _itemsList.get_children():
 		i.resume()
@@ -369,8 +371,9 @@ func _update(delta):
 	elif mode=='game':
 		if state==constants.startState:
 			#清除超过屏幕的敌人
+			var pos=camera.get_camera_position()
+			var num=0
 			for i in _enemyList.get_children():
-				var pos=camera.get_camera_position()
 				if i.position.x+i.getSize()/2<=pos.x-camera.offset.x:
 					i.queue_free()
 				elif i.position.x-i.getSize()/2>=pos.x+camera.offset.x*3:
@@ -379,7 +382,7 @@ func _update(delta):
 					i.queue_free()		
 				pass
 			for i in _bulletList.get_children():
-				var pos=camera.get_camera_position()
+#				var pos=camera.get_camera_position()
 				if i.position.x+i.getSize()/2<=pos.x-camera.offset.x:
 					i.queue_free()
 				elif i.position.x-i.getSize()/2>=pos.x+camera.offset.x*3:
@@ -401,15 +404,21 @@ func _update(delta):
 				i._update(delta)
 			for i in _enemyList.get_children():
 				i._update(delta)
+		
 			
 			for i in _marioList.get_children():  #mario跟方块
 				var onFloor=false
-				for y in _brickList.get_children():
+				for y in _brickList.get_children(): #排除不在当前屏幕里的方块
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
+							continue
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
-					if rect1.encloses(rect2):#完全叠一起
-						continue
-					if rect1.intersects(rect2):		
+#					if rect1.encloses(rect2):#完全叠一起
+#						continue
+					if rect1.intersects(rect2,true):	#包括边缘
+						num+=1	
+						y.collisionShow=true
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
@@ -423,15 +432,16 @@ func _update(delta):
 #									i.xVel=0	
 								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 							if dy<0:
-								i.yVel=abs(i.yVel)-abs(i.yVel)/4
+#								print(" abs(abs(dx)-abs(dy)) dy<0")
+#								i.yVel=abs(i.yVel)-abs(i.yVel)/4
 #								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2
-								if !onFloor:
-									onFloor=false
+								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+									i.yVel=abs(i.yVel)-abs(i.yVel)/4
 							else:
 #								if i.yVel>0:
 #									i.yVel=0
 #								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-#								onFloor=true
+								onFloor=true
 								pass	
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
@@ -450,10 +460,9 @@ func _update(delta):
 						else: #上下的碰撞
 #							i.leftStop=false
 #							i.rightStop=false
-							if dy<0:  #下方							
+							if dy<0:  #下方	
+								print("else dy<0",dx)						
 #								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2-1
-								if !onFloor:
-									onFloor=false
 								if y.type==constants.box && i.yVel<0:
 									if y.status==constants.resting:
 										if y.isDestructible():
@@ -461,17 +470,22 @@ func _update(delta):
 											y.destroy()
 										else:	
 											y.startBumped()
-								i.yVel=abs(i.yVel)-abs(i.yVel)/4			
+								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
+								#这个是非常的接近边缘	
+								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+									i.yVel=abs(i.yVel)-abs(i.yVel)/4			
 							else:
+#								print("dy>0")
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								onFloor=true	
 							pass
-				i.isOnFloor=onFloor
-		
-#			for i in _marioList.get_children():
-#				i._update(delta)
+					else:
+						y.collisionShow=false
+				
+				i.isOnFloor=onFloor	
+#			print(num)
 			
 			for i in _itemsList.get_children():  #物品的判断
 				for y in _brickList.get_children():
@@ -481,14 +495,10 @@ func _update(delta):
 					var rect2=y.getRect()
 					if rect1.encloses(rect2):#完全叠一起
 						continue
-					if rect1.intersects(rect2):
+					if rect1.intersects(rect2,true):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-	#						if dx<0:
-	#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-	#						else:
-	#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 							if dy<0:
 								i.yVel=8
 							else:
@@ -521,7 +531,7 @@ func _update(delta):
 				for y in _brickList.get_children():
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
-					if rect1.intersects(rect2):
+					if rect1.intersects(rect2,true):
 						if rect1.encloses(rect2):#完全叠一起
 								continue
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
@@ -557,7 +567,7 @@ func _update(delta):
 								else:		
 									i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								
-			for i in _marioList.get_children():
+			for i in _marioList.get_children(): #mario跟敌人
 				for y in _enemyList.get_children():
 					if y.status==constants.dead||y.status==constants.deadJump:
 						continue
