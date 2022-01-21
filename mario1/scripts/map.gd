@@ -356,6 +356,8 @@ func stateChange():
 	state=constants.stateChange
 	for i in _itemsList.get_children():
 		i.pause()
+	for i in _enemyList.get_children():
+		i.pause()
 	pass
 
 func stateFinish():
@@ -363,6 +365,8 @@ func stateFinish():
 	state=constants.startState
 	for i in _itemsList.get_children():
 		i.resume()
+	for i in _enemyList.get_children():
+		i.resume()	
 	pass	
 	
 func _update(delta):
@@ -382,7 +386,6 @@ func _update(delta):
 					i.queue_free()		
 				pass
 			for i in _bulletList.get_children():
-#				var pos=camera.get_camera_position()
 				if i.position.x+i.getSize()/2<=pos.x-camera.offset.x:
 					i.queue_free()
 				elif i.position.x-i.getSize()/2>=pos.x+camera.offset.x*3:
@@ -412,57 +415,61 @@ func _update(delta):
 					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
 						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
 							continue
-					var rect1 = i.getRect()
-					var rect2=y.getRect()
+#					var rect1 = i.getRect()
+#					var rect2=y.getRect()
 #					if rect1.encloses(rect2):#完全叠一起
 #						continue
-					if rect1.intersects(rect2,true):	#包括边缘
+					if i.getRect().intersects(y.getRect(),true):	#包括边缘
 						num+=1	
 						y.collisionShow=true
+						
+#						var dx=y.position.x-i.position.x
+#						var dy=y.position.y-i.position.y
+#						if dx<=0: #mario在方块的右边
+#							if i.getBottom()>=y.getTop():	
+#								if i.yVel>=0:  #掉落的情况
+#									onFloor=true
+#								i.position.y=y.getTop()-i.getSizeY()/2
+#								pass
+#						else:
+#							if i.getBottom()>=y.getTop():
+#
+#								if i.yVel>=0:  #掉落的情况
+#									onFloor=true
+#								i.position.y=y.getTop()-i.getSizeY()/2
+#								pass		
+
+
+
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-#							print('abs(abs(dx)-abs(dy))')
+							if dx<0:
+								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+							else:
+								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+							if dy<0:
+								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+									i.yVel=abs(i.yVel)-abs(i.yVel)/4
+							else:
+								if dx<0:
+									i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+								else:
+									i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+								pass	
+							pass
+						elif abs(dx)>abs(dy): #左右的碰撞
 							if dx<0:
 #								if i.dir==constants.left:
 #									i.xVel=0
 								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
 							else:
 #								if i.dir==constants.right:
-#									i.xVel=0	
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
-							if dy<0:
-#								print(" abs(abs(dx)-abs(dy)) dy<0")
-#								i.yVel=abs(i.yVel)-abs(i.yVel)/4
-#								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2
-								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
-									i.yVel=abs(i.yVel)-abs(i.yVel)/4
-							else:
-#								if i.yVel>0:
-#									i.yVel=0
-#								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-								onFloor=true
-								pass	
-							pass
-						elif abs(dx)>abs(dy): #左右的碰撞
-							if dx<0:
-								if i.dir==constants.left:
-									i.xVel=0
-#									i.leftStop=true
-#									i.rightStop=false
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-							else:
-								if i.dir==constants.right:
-									i.xVel=0
-#									i.leftStop=false
-#									i.rightStop=true	
+#									i.xVel=0
 								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 						else: #上下的碰撞
-#							i.leftStop=false
-#							i.rightStop=false
 							if dy<0:  #下方	
 								print("else dy<0",dx)						
-#								i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2-1
 								if y.type==constants.box && i.yVel<0:
 									if y.status==constants.resting:
 										if y.isDestructible():
@@ -472,15 +479,15 @@ func _update(delta):
 											y.startBumped()
 								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
 								#这个是非常的接近边缘	
-								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=-1:
 									i.yVel=abs(i.yVel)-abs(i.yVel)/4			
 							else:
-#								print("dy>0")
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								onFloor=true	
-							pass
+#							pass
+						pass
 					else:
 						y.collisionShow=false
 				

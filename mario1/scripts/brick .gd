@@ -15,8 +15,5 @@ func _ready():
 		ani.play("0")	
 	pass 
 
-func _update(delta):
-	if debug:
-		update()
-	pass
+
 

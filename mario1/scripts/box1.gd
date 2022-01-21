@@ -17,7 +17,8 @@ func _ready():
 	gravity=constants.boxGravity
 	type=constants.box
 	debug=false
-	self.rect=Rect2(Vector2(-15,-15),Vector2(30,30))	
+	collisionShow=true
+	rect=Rect2(Vector2(-15,-15),Vector2(30,30))	
 	oldPos=position.y
 	ani.playing=true
 	if spriteIndex==0:

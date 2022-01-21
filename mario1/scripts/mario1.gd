@@ -103,7 +103,6 @@ func _update(delta):
 	elif status==constants.deadJump:
 		deathJump(delta)	
 	elif status==constants.poleSliding:
-		
 		pass
 	specialState(delta)
 	if debug:	
@@ -173,6 +172,7 @@ func stand(delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
+		print("stand jump")
 	if Input.is_action_just_pressed("ui_down") &&big:
 		startCrouch()
 		return

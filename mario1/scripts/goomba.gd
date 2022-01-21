@@ -2,6 +2,7 @@ extends "res://scripts/enemy.gd"
 
 
 onready var ani=$ani
+var preStatus
 
 func _ready():
 	debug=true
@@ -28,6 +29,8 @@ func _update(delta):
 		dead(delta)
 	elif status==constants.deadJump:
 		deathJump(delta)
+	elif status==constants.stop:
+		pass
 	pass
 
 	
@@ -52,7 +55,10 @@ func startDeathJump():
 	pass
 
 func pause():
+	preStatus=status
+	status=constants.stop
 	ani.stop()
 
 func resume():
 	ani.play()	
+	status=preStatus

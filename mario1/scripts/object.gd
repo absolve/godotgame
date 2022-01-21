@@ -34,3 +34,19 @@ func getSize():
 
 func getSizeY():
 	return rect.size.y
+
+func getLeft():
+	return position.x-rect.size.x/2
+
+func getRight():
+	return position.x+rect.size.x/2
+
+func getTop():
+	return position.y-rect.size.y/2
+
+func getBottom():
+	return position.y+rect.size.y/2
+
+func _update(delta):
+	if debug:
+		update()

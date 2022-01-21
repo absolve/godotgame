@@ -2,7 +2,7 @@ extends "res://scripts/enemy.gd"
 
 #const speed=40
 const slidingSpeed=110
-
+var preStatus
 onready var ani=$ani
 
 func _ready():
@@ -31,12 +31,13 @@ func _update(delta):
 		walking(delta)
 	elif status==constants.sliding:
 		shellSliding(delta)
-		pass
 	elif status==constants.dead:
 		dead(delta)
 	elif status==constants.deadJump:
 		deathJump(delta)
 	elif status==constants.shell:
+		pass
+	elif status==constants.stop:
 		pass
 	pass
 	
@@ -100,7 +101,10 @@ func changeDir():
 	pass
 
 func pause():
+	preStatus=status
+	status=constants.stop
 	ani.stop()
 
 func resume():
 	ani.play()	
+	status=preStatus
