@@ -68,6 +68,7 @@ onready var ani=$ani
 onready var shadow=$shadow
 
 func _ready():
+	type=constants.mario
 	debug=true
 	if big:
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
@@ -195,8 +196,8 @@ func walk(delta):
 		ani.speed_scale=1+xVel/constants.marioAniSpeed
 	elif xVel<0:
 		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
-	else:
-		ani.speed_scale=1
+#	else:
+#		ani.speed_scale=1
 	
 	if Input.is_action_pressed("ui_action"):
 		acceleration=constants.runAcceleration

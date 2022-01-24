@@ -1,6 +1,8 @@
 extends Node2D
+
 """
 地图显示砖块，箱子
+参考资料(关于碰撞) https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
 """
 const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
@@ -90,7 +92,6 @@ func loadMapFile(fileName:String):
 		file.open(fileName, File.READ)
 		currentLevel= parse_json(file.get_as_text())
 		mapWidthSize=int(currentLevel['mapSize'])
-#		print(currentLevel['time'])
 		time =int(currentLevel['time'])
 		if currentLevel['bg']=="overworld":
 			_bg.color=Color(Game.backgroundcolor[0])
@@ -351,6 +352,14 @@ func getBulletCount(id):
 			num+=1
 	return num
 
+#获取砖块
+func getBrick(x,y):
+	for i in _brick.get_children():
+		if i.position.x/blockSize==int(x/blockSize)\
+			&&i.position.y/blockSize==int(y/blockSize):
+			return i
+	pass
+
 func stateChange():
 	print('stateChange')
 	state=constants.stateChange
@@ -423,69 +432,75 @@ func _update(delta):
 						num+=1	
 						y.collisionShow=true
 						
-#						var dx=y.position.x-i.position.x
-#						var dy=y.position.y-i.position.y
-#						if dx<=0: #mario在方块的右边
-#							if i.getBottom()>=y.getTop():	
-#								if i.yVel>=0:  #掉落的情况
-#									onFloor=true
-#								i.position.y=y.getTop()-i.getSizeY()/2
-#								pass
-#						else:
-#							if i.getBottom()>=y.getTop():
-#
-#								if i.yVel>=0:  #掉落的情况
-#									onFloor=true
-#								i.position.y=y.getTop()-i.getSizeY()/2
-#								pass		
-
-
-
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
-						var dy=(y.position.y-i.position.y)/y.getSize()/2
+						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+							print('abs(abs(dx)-abs(dy))<.1')
 							if dx<0:
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+								i.position.x=y.getRight()+i.getSize()/2
 							else:
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+								i.position.x=y.getLeft()-i.getSize()/2
 							if dy<0:
-								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
-									i.yVel=abs(i.yVel)-abs(i.yVel)/4
+#								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+#									i.yVel=abs(i.yVel)-abs(i.yVel)/4
+								pass	
 							else:
 								if dx<0:
-									i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+									i.position.x=y.getRight()+i.getSize()/2
 								else:
-									i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+									i.position.x=y.getLeft()-i.getSize()/2
 								pass	
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
+#							print('abs(dx)>abs(dy)')
 							if dx<0:
-#								if i.dir==constants.left:
-#									i.xVel=0
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+								if i.dir==constants.left:
+									i.xVel=0
+								i.position.x=y.getRight()+i.getSize()/2
 							else:
-#								if i.dir==constants.right:
-#									i.xVel=0
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+								if i.dir==constants.right:
+									i.xVel=0
+								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
 							if dy<0:  #下方	
-								print("else dy<0",dx)						
-								if y.type==constants.box && i.yVel<0:
-									if y.status==constants.resting:
-										if y.isDestructible():
-											y.add4Brick()
-											y.destroy()
-										else:	
-											y.startBumped()
+								print("else dy<0 ",dx)						
+								
 								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
-								#这个是非常的接近边缘	
-								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=-1:
-									i.yVel=abs(i.yVel)-abs(i.yVel)/4			
-							else:
+								#这个非常的接近边缘就不判断	
+								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:
+									if y.type==constants.box && i.yVel<0:
+										if y.status==constants.resting:
+											if y.isDestructible():
+												y.add4Brick()
+												y.destroy()
+											else:	
+												y.startBumped()		
+									i.yVel=abs(i.yVel)-abs(i.yVel)/4				
+							else: #上方
 								if i.yVel>0:  #掉落的情况
-									i.yVel=0
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-								onFloor=true	
+									print('i.yVel>0')
+									if abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+										i.yVel=0
+										i.position.y=y.getTop()-i.getSizeY()/2	
+										onFloor=true	
+								elif i.yVel<0:
+#									onFloor=true
+									pass
+								else:
+									i.position.y=y.getTop()-i.getSizeY()/2	
+									onFloor=true		
+								#在x轴边缘的地方正好在方块的底部
+#								if abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:	
+#									if i.yVel>0:  #掉落的情况
+#										i.yVel=0
+#										i.position.y=y.getTop()-i.getSizeY()/2
+#										onFloor=true
+#									elif i.yVel<0: #跳跃的时候
+#										if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))<1:
+#											i.position.y=y.getTop()-i.getSizeY()/2
+#										pass		
+#									i.position.y=y.getTop()-i.getSizeY()/2
+#									onFloor=true	
 #							pass
 						pass
 					else:

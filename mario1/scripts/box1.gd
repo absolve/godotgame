@@ -77,7 +77,6 @@ func bumped(delta):
 	pass
 
 func opened(delta):
-	
 	pass
 	
 func startBumped():

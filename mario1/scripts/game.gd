@@ -39,6 +39,11 @@ func addObj2Bullet(pos,dir):
 func getPlayerBulletCount(id):
 	return map.getBulletCount(id)
 
+#获取地图中方块对象
+func getMapBrick(x,y):
+	
+	pass
+
 func printFont():
 	print("""
   _____ __ __  ____   ___  ____       ___ ___   ____  ____   ____  ___       ____   ____   ___   _____
