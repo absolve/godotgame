@@ -56,7 +56,8 @@ onready var _enemyList=$enemy
 onready var _loadDiaglog=$layer/loadDialog
 onready var _title = $title
 onready var _bgList=$background
-onready var _pole=$pole
+onready var _poleList=$pole
+onready var _fps=$layer/fps
 
 func _ready():
 #	print(camera.get_camera_position())
@@ -66,7 +67,7 @@ func _ready():
 	Game.setMap(self)
 	Game.connect("stateChange",self,'stateChange')
 	Game.connect("stateFinish",self,'stateFinish')
-	
+	Game.connect("flagEnd",self,"flagEnd")
 	if mode=='edit':
 		_bg.hide()
 		_title.hide()
@@ -75,7 +76,7 @@ func _ready():
 		_tab.hide()
 		_toolBtn.hide()	
 		_title.show()
-		loadMapFile("res://levels/test1.json")
+		loadMapFile("res://levels/test5.json")
 		pass	
 	elif mode=='test':
 		
@@ -115,7 +116,6 @@ func loadMapFile(fileName:String):
 			allTiles.clear()
 			bgTiles.clear()
 			
-#		print(currentLevel['data'])	
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
 				if mode=='edit':
@@ -190,7 +190,7 @@ func loadMapFile(fileName:String):
 					if checkTile(obj):
 						print(obj,' has one pole')
 					else:	
-						_brick.add_child(temp)									
+						_poleList.add_child(temp)									
 		file.close()
 	else:
 		print('文件不存在')	
@@ -200,7 +200,6 @@ func loadMapFile(fileName:String):
 
 #保存到文件
 func save2File(fileName):
-#	print(fileName)
 	var data={
 		"mapSize":_mapWidth.getValue(),
 		"bg":_background.getValue(),
@@ -370,12 +369,17 @@ func stateChange():
 	pass
 
 func stateFinish():
-	print("stateFinish")
-	state=constants.startState
+	print("stateFinish")	
 	for i in _itemsList.get_children():
 		i.resume()
 	for i in _enemyList.get_children():
 		i.resume()	
+	state=constants.startState	
+	pass	
+	
+func flagEnd():
+	for i in _marioList.get_children():
+		i.setSitBottom()
 	pass	
 	
 func _update(delta):
@@ -416,18 +420,17 @@ func _update(delta):
 				i._update(delta)
 			for i in _enemyList.get_children():
 				i._update(delta)
-		
-			
+			for i in _poleList.get_children():
+				i._update(delta)
+				
 			for i in _marioList.get_children():  #mario跟方块
 				var onFloor=false
 				for y in _brickList.get_children(): #排除不在当前屏幕里的方块
 					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
 						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
 							continue
-#					var rect1 = i.getRect()
-#					var rect2=y.getRect()
-#					if rect1.encloses(rect2):#完全叠一起
-#						continue
+					if i.getRect().encloses(y.getRect()):#完全叠一起
+						continue
 					if i.getRect().intersects(y.getRect(),true):	#包括边缘
 						num+=1	
 						y.collisionShow=true
@@ -437,18 +440,22 @@ func _update(delta):
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
 							print('abs(abs(dx)-abs(dy))<.1')
 							if dx<0:
+								if i.dir==constants.left:
+									i.xVel=0
 								i.position.x=y.getRight()+i.getSize()/2
 							else:
+								if i.dir==constants.right:
+									i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2
 							if dy<0:
 #								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
 #									i.yVel=abs(i.yVel)-abs(i.yVel)/4
 								pass	
 							else:
-								if dx<0:
-									i.position.x=y.getRight()+i.getSize()/2
-								else:
-									i.position.x=y.getLeft()-i.getSize()/2
+#								if dx<0:
+#									i.position.x=y.getRight()+i.getSize()/2
+#								else:
+#									i.position.x=y.getLeft()-i.getSize()/2
 								pass	
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
@@ -477,30 +484,33 @@ func _update(delta):
 												y.startBumped()		
 									i.yVel=abs(i.yVel)-abs(i.yVel)/4				
 							else: #上方
-								if i.yVel>0:  #掉落的情况
-									print('i.yVel>0')
-									if abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
+#								if y.type==constants.box:
+#									print(i.position,y.position)
+								if i.yVel>=0:  #掉落的情况
+									if y.type==constants.box:
+										print('box',i.getBottom()," ",y.getTop())	
+									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
+										if y.type==constants.box:
+											print( abs(i.getLeft()-y.getRight()))
+										i.yVel=0
+										i.position.y=y.getTop()-i.getSizeY()/2	
+										onFloor=true	
+									elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
+										if y.type==constants.box:
+											print(abs(i.getRight()-y.getLeft()))
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
 										onFloor=true	
 								elif i.yVel<0:
 #									onFloor=true
+									print('i.yVel<0')
 									pass
 								else:
+									print("else")
+									i.yVel=0
 									i.position.y=y.getTop()-i.getSizeY()/2	
 									onFloor=true		
-								#在x轴边缘的地方正好在方块的底部
-#								if abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:	
-#									if i.yVel>0:  #掉落的情况
-#										i.yVel=0
-#										i.position.y=y.getTop()-i.getSizeY()/2
-#										onFloor=true
-#									elif i.yVel<0: #跳跃的时候
-#										if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))<1:
-#											i.position.y=y.getTop()-i.getSizeY()/2
-#										pass		
-#									i.position.y=y.getTop()-i.getSizeY()/2
-#									onFloor=true	
+
 #							pass
 						pass
 					else:
@@ -559,10 +569,6 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-	#						if dx<0:
-	#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-	#						else:
-	#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 								
 							if dy<0:
 								i.yVel=8
@@ -610,7 +616,6 @@ func _update(delta):
 									y.status=constants.sliding
 									y.dir=constants.right
 							if dy<0:
-	#							i.yVel=8
 								pass
 							else:
 								if i.yVel>0:
@@ -654,7 +659,7 @@ func _update(delta):
 					var rect2=y.getRect()
 					if rect1.encloses(rect2):#完全叠一起
 						continue
-					if rect1.intersects(rect2):
+					if rect1.intersects(rect2,true):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
@@ -675,21 +680,12 @@ func _update(delta):
 									if i.type==constants.fireball&&i.status==constants.fly:
 										i.boom()		
 								pass
-	#						if dy<0:
-	#							i.yVel=8
-	#						else:
-	#							i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-	#							if i.status==constants.fly:
-	#								i.yVel=-i.speed
 						elif abs(dx)>abs(dy): #左右的碰撞
 							i.xVel=0
 							if dx<0:
-								#i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
 								if i.type==constants.fireball:
 									i.boom()
 							else:
-								#i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
-	#							i.turnLeft()
 								if i.type==constants.fireball:
 									i.boom()
 						else: #上下的碰撞
@@ -697,8 +693,6 @@ func _update(delta):
 								if i.status==constants.fly:
 									i.yVel=i.speed
 							else:
-	#							if i.yVel>0:  #掉落的情况
-	#								i.yVel=0
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								if i.status==constants.fly:
 									i.yVel=-i.speed
@@ -721,6 +715,23 @@ func _update(delta):
 							y.queue_free()
 							i.setInvincible()
 						pass
+					pass
+			
+			for i in _marioList.get_children():
+				for y in _poleList.get_children():
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
+							continue
+					if i.status==constants.poleSliding||\
+						i.status==constants.walkingToCastle||i.status==constants.sitBottomOfPole:
+						continue
+					if i.getRect().intersects(y.getRect(),true):
+						if i.position.x<y.position.x:
+							i.position.x=y.getLeft()-i.getSize()/2
+							i.startSliding(y.getSize())
+							y.startFall()
+#							state=constants.stateChange
+						pass		
 					pass
 					
 			#照相机跟随mario
@@ -759,19 +770,23 @@ func _update(delta):
 							
 			pass
 		elif state==constants.stateChange:
+			var pos=camera.get_camera_position()
 			for i in _marioList.get_children():
 				i._update(delta)
 				if i.dead:
 					if i.position.y-i.getSizeY()/2>=camera.offset.y*2:
 #						print(i.position.y)
 						i.queue_free()
-			pass
+			
+		
+			
 	pass
 
 
 func _process(delta):
 	if debug:
 		update()
+	_fps.set_text(str("fps:",Engine.get_frames_per_second()))	
 	_update(delta)
 	pass
 

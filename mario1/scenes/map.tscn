@@ -249,7 +249,22 @@ access = 2
 current_dir = "/godotgame/mario1"
 current_path = "/godotgame/mario1/"
 
+[node name="fps" type="Label" parent="layer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 28.0
+margin_top = -405.0
+margin_right = 68.0
+margin_bottom = -382.0
+theme = ExtResource( 4 )
+text = "fps:"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Button" type="Button" parent="."]
+visible = false
 margin_right = 12.0
 margin_bottom = 20.0
 text = "big2smal"

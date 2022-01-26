@@ -4,6 +4,7 @@ extends Node
 #游戏状态
 const stateChange='stateChange'
 const startState='startState'
+const freeze="freeze"
 const flagDown="flagDown"  #mario下降旗
 
 #方块状态
@@ -48,8 +49,9 @@ const small2big="small2big"
 const big2fire="big2fire"
 const big2small="big2small"
 const crouch="crouch"
-const poleSliding='poleSliding' #下降
-
+const poleSliding='poleSliding' #在旗杆上下降
+const walkingToCastle="walkingToCastle"#走到城堡里面
+const sitBottomOfPole="sitBottomOfPole" #旗已经到了底部
 
 
 #类型

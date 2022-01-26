@@ -54,7 +54,7 @@ func show():
 #	_update(delta)
 		
 	
-func _update(delta):
+func _update(_delta):
 	if status==constants.countDown:
 		tick+=1
 		if tick>=tickNum:

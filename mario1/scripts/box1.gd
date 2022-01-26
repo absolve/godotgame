@@ -18,7 +18,7 @@ func _ready():
 	type=constants.box
 	debug=false
 	collisionShow=true
-	rect=Rect2(Vector2(-15,-15),Vector2(30,30))	
+	rect=Rect2(Vector2(-15,-16),Vector2(30,32))	
 	oldPos=position.y
 	ani.playing=true
 	if spriteIndex==0:

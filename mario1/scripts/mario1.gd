@@ -33,6 +33,8 @@ var deadStartTime=0
 var deadEndTime=30
 var leftStop=false
 var rightStop=false
+var flagPoleTimer=0 #从旗杆上转身然后下来
+var poleLength=0 #旗杆右边位置
 
 
 var stand_small_animation=['stand_small','stand_small_green',
@@ -104,7 +106,15 @@ func _update(delta):
 	elif status==constants.deadJump:
 		deathJump(delta)	
 	elif status==constants.poleSliding:
+		poleSliding(delta)
 		pass
+	elif status==constants.walkingToCastle:
+		walkingToCastle(delta)
+		pass
+	elif status==constants.sitBottomOfPole:
+		sitBottomOfPole(delta)
+		pass
+		
 	specialState(delta)
 	if debug:	
 		update()	
@@ -268,7 +278,8 @@ func walk(delta):
 				status=constants.stand	
 	if 	(xVel>0 && !rightStop)||(xVel<0&& !leftStop):			
 		position.x+=xVel*delta
-	position.y+=yVel*delta	
+		
+#	position.y+=yVel*delta	
 	if !isOnFloor:
 		ani.stop()
 		status=constants.fall
@@ -440,15 +451,57 @@ func big2Small():
 	Game.emit_signal("stateChange")
 	pass
 
-func startSliding():
+#开始在旗杆上滑动
+func startSliding(poleLength=0):
 	status=constants.poleSliding
-	
+	animation("poleSliding")
+	ani.frame=0
+	ani.stop()
+	xVel=0
+	yVel=0
+	self.poleLength=poleLength
 	pass
 
 func poleSliding(delta):
-	yVel+=gravity*delta
+	yVel+=6
 	position.y+=yVel*delta
 	animation("poleSliding")
+	pass
+
+func setSitBottom():
+	ani.frame=0
+	ani.stop()
+	status=constants.sitBottomOfPole
+#	position.x=position.x+poleLength+getSize()
+#	ani.flip_h=true
+
+func sitBottomOfPole(_delta):
+	if flagPoleTimer==31:
+		position.x=position.x+poleLength+getSize()
+		ani.flip_h=true
+		pass
+	elif flagPoleTimer>80:
+		dir=constants.right
+		xVel=0
+		acceleration=constants.acceleration
+		status=constants.walkingToCastle
+		
+	flagPoleTimer+=1			
+	pass
+
+func walkingToCastle(delta):
+	xVel+=5
+	yVel+=gravity*delta
+	if xVel>0:
+		ani.speed_scale=1+xVel/constants.marioAniSpeed
+	elif xVel<0:
+		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+	if xVel>maxXVel:
+		xVel-=acceleration	
+	position.x+=xVel*delta
+	if !isOnFloor:
+		position.y+=yVel*delta
+	animation("walk")	
 	pass
 
 func animation(type):

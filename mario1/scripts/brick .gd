@@ -8,7 +8,7 @@ func _ready():
 	type=constants.brick
 	debug=true
 #	collisionShow=true
-	rect=Rect2(Vector2(-15,-15),Vector2(30,30))
+	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	if spriteIndex >=0&&spriteIndex<=13:
 		ani.play(str(spriteIndex))
 	else:

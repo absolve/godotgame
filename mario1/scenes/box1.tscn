@@ -18,30 +18,30 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 832, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=4]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 96, 0, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=10]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 128, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 96, 128, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=6]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 96, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 96, 128, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=9]
 flags = 4
@@ -55,14 +55,14 @@ animations = [ {
 "name": "default",
 "speed": 6.0
 }, {
-"frames": [ SubResource( 4 ) ],
-"loop": false,
-"name": "opened",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 10 ) ],
 "loop": false,
 "name": "box",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ) ],
+"loop": false,
+"name": "opened",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ) ],
@@ -70,14 +70,14 @@ animations = [ {
 "name": "box_grey",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ) ],
-"loop": false,
-"name": "opened_grey",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 6 ) ],
 "loop": false,
 "name": "opened_blue",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ) ],
+"loop": false,
+"name": "opened_grey",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 9 ) ],

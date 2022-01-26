@@ -8,8 +8,8 @@ func _ready():
 	$value.text=value
 	pass
 
-func setValue(value:String):
-	$value.text=value
+func setValue(values:String):
+	$value.text=values
 
 func getValue():
 	return $value.text
