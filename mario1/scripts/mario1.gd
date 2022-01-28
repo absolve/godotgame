@@ -120,7 +120,7 @@ func _update(delta):
 		update()	
 	pass
 	
-func specialState(delta):
+func specialState(_delta):
 	if invincible:
 		if invincibleEndime-invincibleStartTime>200:
 			if invincibleStartTime%6==0:
@@ -164,7 +164,7 @@ func setHurtInvincible():
 	hurtInvincibleStartTime=0
 	
 	
-func stand(delta):
+func stand(_delta):
 	xVel=0
 	yVel=0
 #	yVel+=gravity*delta
@@ -416,21 +416,21 @@ func big2Fire():
 	var animationList = ['stand_big','jump_big',
 						'walk_big','slide_big',
 						'crouch']
-	for ani in animationList:
-		if ani in name:
-			if ani =='stand_big':
+	for a in animationList:
+		if a in name:
+			if a =='stand_big':
 				currentAnimation = stand_big_animation
-			elif ani=='jump_big':
+			elif a=='jump_big':
 				currentAnimation=jump_big_animation
-			elif ani=='walk_big':
+			elif a=='walk_big':
 				currentAnimation=walk_big_animation
-			elif ani=='slide_big':
+			elif a=='slide_big':
 				currentAnimation=slide_big_animation
-			elif ani=='crouch':
+			elif a=='crouch':
 				currentAnimation=crouch_animation
 	
 #变成发射火球的状态
-func fireState(delta):	
+func fireState(_delta):	
 	if big2FireTime%30==0:
 		FireAniIndex+=1
 		if FireAniIndex>=big2FireAni.size():
@@ -452,18 +452,18 @@ func big2Small():
 	pass
 
 #开始在旗杆上滑动
-func startSliding(poleLength=0):
+func startSliding(length=0):
 	status=constants.poleSliding
 	animation("poleSliding")
 	ani.frame=0
 	ani.stop()
 	xVel=0
 	yVel=0
-	self.poleLength=poleLength
+	self.poleLength=length
 	pass
 
 func poleSliding(delta):
-	yVel+=6
+	yVel+=7
 	position.y+=yVel*delta
 	animation("poleSliding")
 	pass
@@ -476,32 +476,46 @@ func setSitBottom():
 #	ani.flip_h=true
 
 func sitBottomOfPole(_delta):
+#	if flagPoleTimer==31:
+#		position.x=position.x+poleLength+getSize()
+#		ani.flip_h=true
+#		pass
+#	elif flagPoleTimer>80:
+#		dir=constants.right
+#		xVel=0
+#		acceleration=constants.acceleration
+#		status=constants.walkingToCastle
+#
+#	flagPoleTimer+=1			
+	pass
+
+func setwalkingToCastle():
+	status=constants.walkingToCastle
+
+func walkingToCastle(delta):
 	if flagPoleTimer==31:
 		position.x=position.x+poleLength+getSize()
 		ani.flip_h=true
 		pass
-	elif flagPoleTimer>80:
+	elif flagPoleTimer<80:
 		dir=constants.right
 		xVel=0
 		acceleration=constants.acceleration
-		status=constants.walkingToCastle
-		
-	flagPoleTimer+=1			
-	pass
-
-func walkingToCastle(delta):
-	xVel+=5
-	yVel+=gravity*delta
-	if xVel>0:
-		ani.speed_scale=1+xVel/constants.marioAniSpeed
-	elif xVel<0:
-		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
-	if xVel>maxXVel:
-		xVel-=acceleration	
-	position.x+=xVel*delta
-	if !isOnFloor:
-		position.y+=yVel*delta
-	animation("walk")	
+#		status=constants.walkingToCastle
+	else:
+		xVel+=5
+		yVel+=gravity*delta
+		if xVel>0:
+			ani.speed_scale=1+xVel/constants.marioAniSpeed
+		elif xVel<0:
+			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+		if xVel>maxXVel:
+			xVel-=acceleration	
+		position.x+=xVel*delta
+		if !isOnFloor:
+			position.y+=yVel*delta
+		animation("walk")	
+	flagPoleTimer+=1	
 	pass
 
 func animation(type):

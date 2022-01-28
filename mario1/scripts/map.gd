@@ -15,6 +15,7 @@ var background=preload("res://scenes/bg.tscn")
 var mario=preload("res://scenes/mario1.tscn")
 var pole=preload("res://scenes/pole.tscn")
 var goomba=preload("res://scenes/goomba.tscn")
+var collision=preload("res://scenes/collision.tscn")
 
 #var map=[]
 var debug=true
@@ -58,6 +59,8 @@ onready var _title = $title
 onready var _bgList=$background
 onready var _poleList=$pole
 onready var _fps=$layer/fps
+onready var _collisionList=$collision
+
 
 func _ready():
 #	print(camera.get_camera_position())
@@ -77,6 +80,7 @@ func _ready():
 		_toolBtn.hide()	
 		_title.show()
 		loadMapFile("res://levels/test5.json")
+		_title.startCountDown()
 		pass	
 	elif mode=='test':
 		
@@ -190,7 +194,21 @@ func loadMapFile(fileName:String):
 					if checkTile(obj):
 						print(obj,' has one pole')
 					else:	
-						_poleList.add_child(temp)									
+						_poleList.add_child(temp)		
+			elif  i['type']=='collision':
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					var temp=collision.instance()
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.type=i['value']
+					var obj={"x":i['x'],"y":i['y']}
+					if checkTile(obj):
+						print(obj,' has one collision')
+					else:	
+						_collisionList.add_child(temp)	
+																
 		file.close()
 	else:
 		print('文件不存在')	
@@ -301,9 +319,9 @@ func delItem(pos:Vector2):
 			break
 
 #选择方块
-func selectItem(index,itemName):
+func selectItem(_index,itemName):
 #	print(index,itemName)
-	selectItem=itemName
+	self.selectItem=itemName
 
 
 func getItemPos(pos:Vector2):
@@ -317,14 +335,11 @@ func getItemPos(pos:Vector2):
 func getItemAttr(pos:Vector2):
 	var indexX = int(pos.x)/(blockSize)
 	var indexY=int(pos.y)/(blockSize)
-#	var temp = {"x":indexX,"y":indexY}
-#	var index = allTiles.bsearch_custom(temp,self,"checkXY")
-#	print('getItemAttr',index)
 	for i in allTiles:
 		if i["x"]==indexX&&i["y"]==indexY:
-			var attr=constants.tilesAttribute[i.type]
+#			var attr=constants.tilesAttribute[i.type]
 			_itemAttr.clearAttr()
-			for y in attr.keys():
+			for y in i.keys():
 				_itemAttr.addAttr(y,i[y])
 			#保存选中数据
 			selectedItem["x"]=indexX	
@@ -344,7 +359,7 @@ func addObj2Other(obj):
 func addObj2Bullet(obj):
 	_bulletList.add_child(obj)
 
-func getBulletCount(id):
+func getBulletCount(_id):
 	var num=0
 	for i in _bulletList.get_children():
 		if i.type==constants.fireball&&i.status==constants.fly:
@@ -379,7 +394,7 @@ func stateFinish():
 	
 func flagEnd():
 	for i in _marioList.get_children():
-		i.setSitBottom()
+		i.setwalkingToCastle()
 	pass	
 	
 func _update(delta):
@@ -406,7 +421,7 @@ func _update(delta):
 				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
 					i.queue_free()	
 			
-		
+			_title._update(delta)
 			
 			for i in _marioList.get_children():
 				i._update(delta)
@@ -422,6 +437,10 @@ func _update(delta):
 				i._update(delta)
 			for i in _poleList.get_children():
 				i._update(delta)
+			for i in _collisionList.get_children():
+				i._update(delta)
+			
+			
 				
 			for i in _marioList.get_children():  #mario跟方块
 				var onFloor=false
@@ -432,9 +451,10 @@ func _update(delta):
 					if i.getRect().encloses(y.getRect()):#完全叠一起
 						continue
 					if i.getRect().intersects(y.getRect(),true):	#包括边缘
-						num+=1	
+#						num+=1	
 						y.collisionShow=true
-						
+						if i.status==constants.poleSliding:
+							i.setSitBottom()
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
@@ -730,10 +750,23 @@ func _update(delta):
 							i.position.x=y.getLeft()-i.getSize()/2
 							i.startSliding(y.getSize())
 							y.startFall()
+							_title.stopCountDown()
 #							state=constants.stateChange
 						pass		
 					pass
-					
+			
+			for i in _marioList.get_children():
+				for y in _collisionList.get_children():
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
+							continue
+					if i.status!=constants.walkingToCastle:
+						continue
+					if i.getRect().intersects(y.getRect(),true):
+						i.queue_free()
+						state=constants.inCastle
+						_title.fastCountDown()
+						
 			#照相机跟随mario
 			if _marioList.get_child_count()>0:
 				var mario1=_marioList.get_child(0)
@@ -777,7 +810,13 @@ func _update(delta):
 					if i.position.y-i.getSizeY()/2>=camera.offset.y*2:
 #						print(i.position.y)
 						i.queue_free()
-			
+		elif state==constants.inCastle:
+			if _title.currentTime>0:
+				_title._update(delta)
+			else: #判断烟花
+				
+				pass	
+			pass	
 		
 			
 	pass
@@ -879,8 +918,11 @@ func _draw():
 						Vector2(i.x*blockSize,i.y*blockSize+(l+1)*blockSize),Color(1,1,1,0.5))
 					pass
 				pass
+			elif i.type=="collision":
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			pass
-		if !marioPos.empty()	:
+		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
 	pass
 	
@@ -949,8 +991,8 @@ func _on_edit_pressed():
 	pass # Replace with function body.
 
 
-func _on_loadDialog_file_selected(path):
+func _on_loadDialog_file_selected(_path):
 #	print(path)
-	if path:
-		loadMapFile(path)
+	if _path:
+		loadMapFile(_path)
 	pass # Replace with function body.

@@ -38,6 +38,9 @@ position = Vector2( 0, -1 )
 
 [node name="otherObj" type="Node2D" parent="."]
 
+[node name="collision" type="Node2D" parent="."]
+position = Vector2( 0, -1 )
+
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 320, 240 )
 current = true

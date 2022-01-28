@@ -6,6 +6,8 @@ const stateChange='stateChange'
 const startState='startState'
 const freeze="freeze"
 const flagDown="flagDown"  #mario下降旗
+const inCastle="inCastle" #在城堡里面
+const pause="pause"
 
 #方块状态
 const resting="resting"  #静止
@@ -72,6 +74,9 @@ const brickPiece="brickPiece"
 const pipe="pipe"
 const bg='background'
 const pole ='pole'
+const checkPoint="checkPoint" #死亡后的检查点
+const castlePos="castlePos"  #城堡大门
+
 
 #方向
 const right="right"
@@ -105,7 +110,7 @@ const deathJumpGravity=1000
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
-			,"coin","bg","box",'flag','stick']
+			,"coin","bg","box",'flag','stick',"collision"]
 
 #图块 所有的图块
 const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -145,6 +150,20 @@ const tilesAttribute={
 		"y": 0,
 		'dir': 'left'
 	},
+	"checkPoint":{
+		"type":"collision",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"value":"checkPoint",
+	},
+	"castlePos":{
+		"type":"collision",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"value":"castlePos",
+	},
 	"flag":{
 		"type": "flag",
 		"spriteIndex": 0,
@@ -173,7 +192,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": true
+		"visible": false
 	},
 	"box_grey": {
 		"type": "box",
@@ -618,7 +637,7 @@ const tilesAttribute={
 	
 }
 				
-var mapTiles={}  #根据图块类型区分 每种图块类型有多种图块
+var mapTiles={}  #每个图块对应的图片
 
 func _ready():
 	for i in constants.tilesType:

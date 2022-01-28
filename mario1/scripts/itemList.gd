@@ -11,23 +11,29 @@ func addItem():
 	for i in constants.tilesAttribute.keys():
 		var type=constants.tilesAttribute[i]['type']
 		if type=='mario'||type=='goomba'||type=='koopa'||type=='del'||type=='coin':
-			if constants.mapTiles.has(type):
+			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				list.add_item(i,constants.mapTiles[type]['0'])
 			else:
 				list.add_item(i,null)	
 		elif type=='box'||type=='brick'||type=='bg':
-			if constants.mapTiles.has(type):
+			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)
 		elif type=='pipe'||type=='flag':
-			if constants.mapTiles.has(type):
+			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)
-			pass		
+			pass
+		elif type=="collision":
+			if constants.mapTiles.has(type) &&!constants.mapTiles[type].empty():
+				var index=constants.tilesAttribute[i]['spriteIndex']
+				list.add_item(i,constants.mapTiles[type][str(index)])
+			else:
+				list.add_item(i)			
 	pass
 
 

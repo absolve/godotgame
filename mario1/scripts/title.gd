@@ -10,7 +10,7 @@ onready var _level=$hbox/world/level
 onready var _time=$hbox/timeLable/time
 
 var countDownStart=true
-var currentTime=400
+var currentTime=100  #时间
 var tick=0
 var tickNum=12
 var fastTickNum=1
@@ -18,7 +18,7 @@ var status=constants.empty
 
 
 func _ready():
-	_time.text=str(currentTime)
+	_time.text="%0*d"%[3,currentTime]
 	hide()
 	pass 
 
@@ -50,9 +50,16 @@ func hide():
 
 func show():
 	_hbox.show()
-#func _process(delta):
-#	_update(delta)
-		
+
+func startCountDown():
+	status=constants.countDown
+
+func fastCountDown():	
+	print("time",currentTime)	
+	status=constants.fastCountDown
+	
+func stopCountDown():	
+	status=constants.empty
 	
 func _update(_delta):
 	if status==constants.countDown:
@@ -62,7 +69,8 @@ func _update(_delta):
 			currentTime-=1
 			if currentTime<=0:
 				status=constants.empty
-			_time.text=str(currentTime)	
+				Game.emit_signal("timeOut")
+			_time.text="%0*d"%[3,currentTime]
 	elif status==constants.fastCountDown:	
 		if currentTime>0:
 			tick+=1
@@ -71,6 +79,6 @@ func _update(_delta):
 				currentTime-=1
 				if currentTime<=0:
 					status=constants.empty
-			_time.text=str(currentTime)	
+			_time.text="%0*d"%[3,currentTime]
 	pass	
 	
