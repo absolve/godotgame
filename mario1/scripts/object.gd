@@ -9,8 +9,8 @@ var type=constants.empty  #类型
 var gravity=0  #重力
 var xVel=0 #x轴速度
 var yVel=0 #y轴速度
-#var xStop=false
-#var yStop=false
+var offsetX=0
+var offsetY=0
 var collisionShow=false  #测试的时候显示是否碰撞
 
 func _ready():

@@ -16,6 +16,7 @@ var mario=preload("res://scenes/mario1.tscn")
 var pole=preload("res://scenes/pole.tscn")
 var goomba=preload("res://scenes/goomba.tscn")
 var collision=preload("res://scenes/collision.tscn")
+var plant=preload("res://scenes/plant.tscn")
 
 #var map=[]
 var debug=true
@@ -79,8 +80,9 @@ func _ready():
 		_tab.hide()
 		_toolBtn.hide()	
 		_title.show()
-		loadMapFile("res://levels/test5.json")
+		loadMapFile("res://levels/test6.json")
 		_title.startCountDown()
+		initEnemy()	#初始化当前画面的敌人
 		pass	
 	elif mode=='test':
 		
@@ -150,7 +152,8 @@ func loadMapFile(fileName:String):
 						print(obj,' has one box')
 					else:
 						_brick.add_child(temp)
-			elif i['type']=='goomba' || i['type']=='koopa':	
+			elif i['type']=='goomba' || i['type']=='koopa'||\
+					i['type']==constants.plant:	
 				if mode=='edit':
 					allTiles.append(i)
 				else:
@@ -232,16 +235,35 @@ func save2File(fileName):
 	file.close()
 	pass
 
+#初始化当前画面中的敌人
+func initEnemy():
+	for e in enemyList:
+		if e.x*blockSize>camera.position.x&& \
+			e.x*blockSize<camera.position.x+camera.offset.x*2:
+				addEnemy(e)
+				enemyList.erase(e)
+	pass
+
 #添加敌人
 func addEnemy(obj:Dictionary):
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=obj['offsetX']
+		temp.offsetY=obj['offsetY']
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
 		_enemyList.add_child(temp)
 		pass
+	elif obj.type==constants.plant:
+		var temp=plant.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=obj['offsetX']
+		temp.offsetY=obj['offsetY']
+		temp.spriteIndex=obj['spriteIndex']
+		_enemyList.add_child(temp)
 	pass
 
 func checkTile(obj):
@@ -252,8 +274,6 @@ func checkTile(obj):
 			break
 	return 	flag		
 		
-#func checkXY(a,b):
-#	return a["x"]==b["x"]&&a["y"]==b["y"]
 
 #检查点击的位置是否有这个方块 背景和其他物体可以重复
 func checkHasItem(pos,selectType):
@@ -583,6 +603,8 @@ func _update(delta):
 				for y in _brickList.get_children():
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
+					if i.type==constants.plant:
+						continue
 					if rect1.intersects(rect2,true):
 						if rect1.encloses(rect2):#完全叠一起
 								continue
@@ -890,7 +912,6 @@ func _draw():
 			elif i.type=='koopa':
 				if constants.mapTiles.has(i.type):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-#				draw_texture(koopaImg,Vector2(i.x*blockSize,i.y*blockSize-12),Color(1,1,1,0.5))	
 			elif i.type=='box':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
@@ -907,9 +928,6 @@ func _draw():
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-#			elif i.type=='mario':
-#				if constants.mapTiles.has(i.type):
-#					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 			elif i.type=='flag': #旗杆
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
@@ -921,7 +939,9 @@ func _draw():
 			elif i.type=="collision":
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			pass
+			elif i.type==constants.plant:
+				if constants.mapTiles.has(i.type):
+					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
 	pass

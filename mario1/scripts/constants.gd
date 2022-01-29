@@ -26,6 +26,8 @@ const dead="dead"
 const deadJump="deadJump"
 const sliding="sliding"
 const shell='shell'
+const plantOut="plantOut"
+const plantIn="plantIn"
 
 #子弹状态
 const fly='fly' 
@@ -76,7 +78,7 @@ const bg='background'
 const pole ='pole'
 const checkPoint="checkPoint" #死亡后的检查点
 const castlePos="castlePos"  #城堡大门
-
+const plant="plant"
 
 #方向
 const right="right"
@@ -110,7 +112,7 @@ const deathJumpGravity=1000
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
-			,"coin","bg","box",'flag','stick',"collision"]
+			,"coin","bg","box",'flag','stick',"collision","plant"]
 
 #图块 所有的图块
 const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -134,21 +136,27 @@ const tilesAttribute={
 	"mario": {
 		"type": "mario",
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"goomba": {
 		"type": "goomba",
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
-		'dir': 'left'
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"koopa": {
 		"type": "koopa",
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
-		'dir': 'left'
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"checkPoint":{
 		"type":"collision",
@@ -164,18 +172,30 @@ const tilesAttribute={
 		"y": 0,
 		"value":"castlePos",
 	},
+	"plant":{
+		"type":"plant",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":-6,
+	},
 	"flag":{
 		"type": "flag",
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
-		"len":2
+		"len":2,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"coin": {
 		"type": "coin",
 		"spriteIndex": 0,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	
 	"box": {
@@ -184,7 +204,9 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": true
+		"visible": true,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"box_blue": {
 		"type": "box",
@@ -192,7 +214,9 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": false
+		"visible": false,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"box_grey": {
 		"type": "box",
@@ -200,7 +224,9 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": true
+		"visible": true,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"box_default": {
 		"type": "box",
@@ -208,93 +234,123 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": "mushroom",
-		"visible": true
+		"visible": true,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick": {
 		"type": "brick",
 		"spriteIndex": 0,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick2": {
 		"type": "brick",
 		"spriteIndex": 1,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick3": {
 		"type": "brick",
 		"spriteIndex": 2,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick4": {
 		"type": "brick",
 		"spriteIndex": 3,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick5": {
 		"type": "brick",
 		"spriteIndex": 4,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick6": {
 		"type": "brick",
 		"spriteIndex": 5,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick7": {
 		"type": "brick",
 		"spriteIndex": 6,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick8": {
 		"type": "brick",
 		"spriteIndex": 7,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick9": {
 		"type": "brick",
 		"spriteIndex": 8,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick10": {
 		"type": "brick",
 		"spriteIndex": 9,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick11": {
 		"type": "brick",
 		"spriteIndex": 10,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"brick12": {
 		"type": "brick",
 		"spriteIndex": 11,
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 	},
 	"pipe": {
 	"type": "pipe",
 	"spriteIndex": 0,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"offsetX":0,
+	"offsetY":0,
 	},
 	"pipe1": {
 	"type": "pipe",
 	"spriteIndex": 1,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"offsetX":0,
+		"offsetY":0,
 	},
 	"pipe2": {
 	"type": "pipe",

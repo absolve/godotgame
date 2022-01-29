@@ -37,6 +37,9 @@ func dead(delta):
 		queue_free()
 		pass
 	pass
+
+func destory():
+	queue_free()
 	
 func turnLeft():
 	xVel=-abs(xVel)
