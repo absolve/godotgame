@@ -17,6 +17,8 @@ var pole=preload("res://scenes/pole.tscn")
 var goomba=preload("res://scenes/goomba.tscn")
 var collision=preload("res://scenes/collision.tscn")
 var plant=preload("res://scenes/plant.tscn")
+var score=preload("res://scenes/score.tscn")
+var koopa=preload("res://scenes/koopa.tscn")
 
 #var map=[]
 var debug=true
@@ -33,6 +35,7 @@ var marioPos={} #mario地图出生地
 var selectItem='' #选择的item
 var state=constants.startState
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
+var delList=[] #删除列表
 
 
 var mode="game"  #game正常游戏  edit编辑  test测试
@@ -80,14 +83,15 @@ func _ready():
 		_tab.hide()
 		_toolBtn.hide()	
 		_title.show()
-		loadMapFile("res://levels/test6.json")
+		_title.setTime(400)
+		loadMapFile("res://levels/1-1.json")
 		_title.startCountDown()
 		initEnemy()	#初始化当前画面的敌人
 		pass	
 	elif mode=='test':
 		
 		pass
-#	print(camera.get_camera_position())	
+	print(camera.get_camera_position().y)	
 	print(_marioList.get_children())
 	pass
 
@@ -237,21 +241,26 @@ func save2File(fileName):
 
 #初始化当前画面中的敌人
 func initEnemy():
-	for e in enemyList:
-		if e.x*blockSize>camera.position.x&& \
-			e.x*blockSize<camera.position.x+camera.offset.x*2:
-				addEnemy(e)
-				enemyList.erase(e)
+	print(camera.position.x+camera.offset.x*2)
+	var del=[]
+	for e in range(enemyList.size()):
+		if enemyList[e].x*blockSize>camera.position.x&& \
+			enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2:
+				addEnemy(enemyList[e])
+				del.append(e)
+	for  i in del:
+		enemyList.remove(i)
 	pass
 
 #添加敌人
 func addEnemy(obj:Dictionary):
+	print("addEnemy",obj)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
-		temp.offsetX=obj['offsetX']
-		temp.offsetY=obj['offsetY']
+#		temp.offsetX=obj['offsetX']
+#		temp.offsetY=obj['offsetY']
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
 		_enemyList.add_child(temp)
@@ -263,6 +272,13 @@ func addEnemy(obj:Dictionary):
 		temp.offsetX=obj['offsetX']
 		temp.offsetY=obj['offsetY']
 		temp.spriteIndex=obj['spriteIndex']
+		_enemyList.add_child(temp)
+	elif obj.type==constants.koopa:
+		var temp =koopa.instance()	
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		temp.dir=obj['dir']
 		_enemyList.add_child(temp)
 	pass
 
@@ -281,8 +297,6 @@ func checkHasItem(pos,selectType):
 	var y=pos.y
 	var indexX = int(x)/(blockSize)
 	var indexY=int(y)/(blockSize)
-#	var temp = {"x":indexX,"y":indexY}
-#	print(temp)
 	var flag=false
 	if selectType=='bg':
 		for i in bgTiles:
@@ -299,8 +313,7 @@ func checkHasItem(pos,selectType):
 		for i in allTiles:
 			if i["x"]==indexX&&i["y"]==indexY:
 				flag=true
-				break
-#	print(flag)		
+				break	
 	return 	flag
 
 
@@ -417,6 +430,51 @@ func flagEnd():
 		i.setwalkingToCastle()
 	pass	
 	
+func marioAndEnemy(m,e):
+	if m.hurtInvincible:
+		pass
+	elif m.invincible:
+		if m.xVel>=0:	
+			e.startDeathJump(constants.right)
+		else:
+			e.startDeathJump(constants.left)	
+		addScore(m)	
+		pass
+	elif m.big:
+		if e.type==constants.koopa && e.status==constants.shell:
+#			e.status=constants.sliding
+#			if e.dir==constants.left:
+#				e.dir=constants.right
+#			else:
+#				e.dir=constants.left	
+			
+			if m.position.x>e.position.x:
+				e.position.x=m.getLeft()-e.getSize()-1
+			else:
+				e.position.x=m.getRight()+e.getSize()+1	
+			e.startSliding()	
+		else:	
+			m.big2Small()
+	else:
+		m.startDeathJump()		
+	pass
+
+func marioJumpOnEnemy(m,e):
+	
+	pass
+
+#添加分数
+func addScore(m,_score=100):
+	var temp=score.instance()
+	temp.setPos(Vector2(m.position.x,m.position.y-45))
+	temp.setScore(_score)
+	_title.addScore(_score)
+	_otherobjList.add_child(temp)
+	pass	
+
+func addCoin(m,_coin=1):
+	_title.addCoin(_coin)
+	
 func _update(delta):
 	if mode=='edit':
 		pass
@@ -430,7 +488,7 @@ func _update(delta):
 					i.queue_free()
 				elif i.position.x-i.getSize()/2>=pos.x+camera.offset.x*3:
 					i.queue_free()
-				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
+				if i.position.y-i.getSizeY()/2>camera.offset.y*2:
 					i.queue_free()		
 				pass
 			for i in _bulletList.get_children():
@@ -478,25 +536,22 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-							print('abs(abs(dx)-abs(dy))<.1')
+#							print('abs(abs(dx)-abs(dy))<.1')
 							if dx<0:
-								if i.dir==constants.left:
-									i.xVel=0
+#								if i.dir==constants.left:
+#									i.xVel=0
 								i.position.x=y.getRight()+i.getSize()/2
 							else:
-								if i.dir==constants.right:
-									i.xVel=0
-								i.position.x=y.getLeft()-i.getSize()/2
-							if dy<0:
-#								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>1:
-#									i.yVel=abs(i.yVel)-abs(i.yVel)/4
-								pass	
-							else:
-#								if dx<0:
-#									i.position.x=y.getRight()+i.getSize()/2
-#								else:
-#									i.position.x=y.getLeft()-i.getSize()/2
-								pass	
+#								if i.dir==constants.right:
+#									i.xVel=0
+								i.position.x=y.getLeft()-i.getSize()/2	
+								
+							if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))>=1:
+								if i.status==constants.jump:
+									if i.dir==constants.left:
+										i.xVel=0
+									elif i.dir==constants.right:
+										i.xVel=0		
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 #							print('abs(dx)>abs(dy)')
@@ -510,14 +565,13 @@ func _update(delta):
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
 							if dy<0:  #下方	
-								print("else dy<0 ",dx)						
-								
-								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
+#								print("else dy<0 ",dx)						
+#								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
 								#这个非常的接近边缘就不判断	
 								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:
 									if y.type==constants.box && i.yVel<0:
 										if y.status==constants.resting:
-											if y.isDestructible():
+											if y.isDestructible() && i.big:
 												y.add4Brick()
 												y.destroy()
 											else:	
@@ -527,26 +581,26 @@ func _update(delta):
 #								if y.type==constants.box:
 #									print(i.position,y.position)
 								if i.yVel>=0:  #掉落的情况
-									if y.type==constants.box:
-										print('box',i.getBottom()," ",y.getTop())	
+#									if y.type==constants.box:
+#										print('box',i.getBottom()," ",y.getTop())	
 									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
-										if y.type==constants.box:
-											print( abs(i.getLeft()-y.getRight()))
+#										if y.type==constants.box:
+#											print( abs(i.getLeft()-y.getRight()))
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
 										onFloor=true	
 									elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
-										if y.type==constants.box:
-											print(abs(i.getRight()-y.getLeft()))
+#										if y.type==constants.box:
+#											print(abs(i.getRight()-y.getLeft()))
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
 										onFloor=true	
 								elif i.yVel<0:
 #									onFloor=true
-									print('i.yVel<0')
+#									print('i.yVel<0')
 									pass
 								else:
-									print("else")
+#									print("else")
 									i.yVel=0
 									i.position.y=y.getTop()-i.getSizeY()/2	
 									onFloor=true		
@@ -561,6 +615,9 @@ func _update(delta):
 			
 			for i in _itemsList.get_children():  #物品的判断
 				for y in _brickList.get_children():
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
+							continue
 					if i.status==constants.growing: #排除在增长的状态
 						continue
 					var rect1 = i.getRect()
@@ -587,13 +644,23 @@ func _update(delta):
 								i.turnLeft()
 						else: #上下的碰撞
 							if dy<0:  #下方
-								i.yVel=8
+#								i.yVel=8
+								pass
 							else:
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+								if y.type==constants.box && y.status==constants.bumped\
+									&& i.type==constants.mushroom:
+									if i.position.x<=y.position.x && i.xVel>0:
+										i.xVel=-abs(i.xVel)
+										i.yVel=-80
+									elif i.position.x>y.position.x && i.xVel<0:
+										i.xVel=abs(i.xVel)
+										i.yVel=-80
 								if i.status==constants.jumping:
 									i.yVel=-i.jumpSpeed
+									
 				pass
 				
 			
@@ -601,41 +668,61 @@ func _update(delta):
 				if i.status==constants.dead||i.status==constants.deadJump:
 					continue
 				for y in _brickList.get_children():
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*3:
+							continue
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
 					if i.type==constants.plant:
 						continue
 					if rect1.intersects(rect2,true):
-						if rect1.encloses(rect2):#完全叠一起
-								continue
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
-						var dy=(y.position.y-i.position.y)/y.getSize()/2
-						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-								
-							if dy<0:
-								i.yVel=8
-							else:
-								if i.yVel>0:
-									i.yVel=0
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-						elif abs(dx)>abs(dy): #左右的碰撞
-							if dx<0:
-								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-								i.turnRight()
-							else:
-								i.turnLeft()
-								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
-						else: #上下的碰撞
+						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
+						if abs(abs(dx)-abs(dy))<.1:  #两边重叠	
 							if dy<0:  #下方
-								i.yVel=8
-	#							i.position.y=y.position.y+y.getSize()/2+i.getSizeY()/2+1
+								if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:	
+									i.yVel=0
+									i.position.y=y.getTop()-i.getSizeY()/2	
+								elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
+									i.yVel=0
+									i.position.y=y.getTop()-i.getSizeY()/2	
 							else:
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
 								if y.type==constants.box&& y.status==constants.bumped:
 									i.startDeathJump()
 								else:		
-									i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
+							pass
+						elif abs(dx)>abs(dy): #左右的碰撞
+#							if dx<0:
+#								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
+#								i.turnRight()
+#							else:
+#								i.turnLeft()
+#								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+							if dx<0:
+								i.turnRight()
+								i.position.x=y.getRight()+i.getSize()/2
+							else:
+								i.turnLeft()
+								i.position.x=y.getLeft()-i.getSize()/2
+						else: #上下的碰撞
+							if dy<0:  #下方
+								if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:	
+									i.yVel=0
+									i.position.y=y.getTop()-i.getSizeY()/2	
+								elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
+									i.yVel=0
+									i.position.y=y.getTop()-i.getSizeY()/2	
+							else:
+								if i.yVel>0:  #掉落的情况
+									i.yVel=0
+								if y.type==constants.box&& y.status==constants.bumped:
+									i.startDeathJump()
+								else:		
+									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
+
 								
 			for i in _marioList.get_children(): #mario跟敌人
 				for y in _enemyList.get_children():
@@ -643,58 +730,134 @@ func _update(delta):
 						continue
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
-					if rect1.encloses(rect2):#完全叠一起
-						continue
 					if rect1.intersects(rect2):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
-						var dy=(y.position.y-i.position.y)/y.getSize()/2
+						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-							if dx<0:
-								if y.type==constants.koopa && y.status==constants.shell:
-									y.status=constants.sliding
-									y.dir=constants.left
-							else:
-								if y.type==constants.koopa && y.status==constants.shell:
-									y.status=constants.sliding
-									y.dir=constants.right
-							if dy<0:
-								pass
-							else:
-								if i.yVel>0:
-									i.yVel=0
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+#							if dx<0:
+#								if y.type==constants.koopa && y.status==constants.shell:
+#									y.status=constants.sliding
+#									y.dir=constants.left
+#							else:
+#								if y.type==constants.koopa && y.status==constants.shell:
+#									y.status=constants.sliding
+#									y.dir=constants.right
+#							if dy<0:
+#								pass
+#							else:
+#								if i.yVel>0:
+#									i.yVel=0
+#								i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
-							if dx<0:
-	#							i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-								if y.type==constants.koopa && y.status==constants.shell:
-									y.status=constants.sliding
-									y.dir=constants.left
-							else:
-								if y.type==constants.koopa && y.status==constants.shell:
-									y.status=constants.sliding
-									y.dir=constants.right
-	#							i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
+							marioAndEnemy(i,y)	
 							pass	
 						else: #上下的碰撞
 							if dy<0:  #下方
-	#							i.yVel=8
+								marioAndEnemy(i,y)	
 								pass
 							else:
-								i.yVel=-150
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2+1#位置调整
-								if y.type==constants.koopa:
-									if dx<0:
-										y.dir=constants.right
+								if i.invincible:
+									if dx>0:	
+										y.startDeathJump(constants.right)
 									else:
-										y.dir=constants.left
-									pass		
-								y.jumpedOn()	
+										y.startDeathJump(constants.left)	
+									addScore(i)		
+								else:
+									if i.yVel>=0:
+										i.yVel=-220
+										if i.xVel>0:
+											i.xVel+=10
+										else:
+											i.xVel-=10	
+										i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2+1#位置调整
+#										if y.type==constants.koopa:
+#											i.yVel=-220
+#											if dx<0:
+#												y.dir=constants.right
+#											else:
+#												y.dir=constants.left
+#											pass		
+										y.jumpedOn()
+										addScore(i)	
 				pass
 			
+			for i in _enemyList.get_children():  #敌人之间的碰撞
+				for y in _enemyList.get_children():
+					if i==y:
+						continue
+					var rect1 = i.getRect()
+					var rect2=y.getRect()	
+					if rect1.intersects(rect2):
+						var dx=(y.position.x-i.position.x)/y.getSize()/2
+						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
+						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
+							print("eeee")
+							pass
+						elif abs(dx)>abs(dy): #左右的碰撞					
+							if i.status!=constants.dead&&i.status!=constants.deadJump\
+								&&y.status!=constants.dead&&y.status!=constants.deadJump:
+								if i.status==constants.sliding || y.status==constants.sliding:
+									if y.status!=constants.sliding:
+										if i.xVel>0:
+											y.startDeathJump(constants.right)
+										else:
+											y.startDeathJump(constants.left)
+										addScore(y)		
+									elif y.status==constants.sliding:
+										if i.xVel>0:
+											i.startDeathJump(constants.left)
+										else:
+											i.startDeathJump(constants.right)				
+										addScore(i)		
+									else:
+										if i.xVel>0:
+											i.startDeathJump(constants.left)
+										else:
+											i.startDeathJump(constants.right)	
+										if y.xVel>0:
+											y.startDeathJump(constants.left)
+										else:
+											y.startDeathJump(constants.right)	
+										addScore(i)		
+										addScore(y)		
+									pass
+								else:
+									if dx<0:
+										i.position.x=y.getRight()+i.getSize()/2
+										if i.xVel<0:
+											i.turnDir()	
+										if y.xVel>0:
+											y.turnDir()		
+									else:
+										i.position.x=y.getLeft()-i.getSize()/2
+										if i.xVel>0:
+											i.turnDir()
+										if y.xVel<0:
+											y.turnDir()		
+#									i.turnDir()
+							pass	
+						else:
+							if i.status!=constants.dead&&i.status!=constants.deadJump\
+								&&y.status!=constants.dead&&y.status!=constants.deadJump:
+								if i.status==constants.sliding:
+									if y.status!=constants.sliding:
+										if i.xVel>0:
+											y.startDeathJump(constants.right)
+										else:
+											y.startDeathJump(constants.left)
+										addScore(y)
+#							if dy<0:  #下方
+#								pass
+#							else: #上方
+#								pass		
+					pass
 			
 			for i in _bulletList.get_children():
 				for y in _brickList.get_children():
+					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
+						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
+							continue
 					if i.status==constants.boom: #排除在增长的状态
 						continue
 					var rect1 = i.getRect()
@@ -740,8 +903,25 @@ func _update(delta):
 									i.yVel=-i.speed
 				pass
 			
+			for i in _bulletList.get_children():  #子弹跟敌人
+				for y in _enemyList.get_children():
+					if i.type==constants.fireball && i.status==constants.boom: #排除在增长的状态
+						continue
+					if y.status==constants.dead||y.status==constants.deadJump:
+						continue
+					var rect1 = i.getRect()
+					var rect2=y.getRect()
+					if rect1.intersects(rect2):
+						i.boom()
+						if i.xVel>0:
+							y.startDeathJump(constants.right)
+						else:
+							y.startDeathJump(constants.left)	
+						addScore(y)
+						pass	
+					pass
 			
-			for i in _marioList.get_children():
+			for i in _marioList.get_children():  #mario跟物品
 				for y in _itemsList.get_children():
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
@@ -749,13 +929,18 @@ func _update(delta):
 						if y.type==constants.mushroom:
 							y.queue_free()
 							i.small2Big()
+							addScore(i,5000)
 						elif y.type==constants.fireflower:
 							y.queue_free()
-							i.big2Fire()
-							pass
+							if i.big:
+								i.big2Fire()
+							else:
+								i.small2Big()	
+							addScore(i,5000)
 						elif y.type==constants.star:
 							y.queue_free()
 							i.setInvincible()
+							addScore(i,5000)
 						pass
 					pass
 			
@@ -794,8 +979,12 @@ func _update(delta):
 				var mario1=_marioList.get_child(0)
 				if mario1.position.x-mario1.getSize()/2<camera.position.x:
 					mario1.position.x=camera.position.x+mario1.getSize()/2	
+					if mario1.dir==constants.left:
+						mario1.xVel=0
 				elif mario1.position.x+	mario1.getSize()/2>mapWidthSize*blockSize:
 					mario1.position.x=mapWidthSize*blockSize-mario1.getSize()/2
+					if mario1.dir==constants.right:
+						mario1.xVel=0
 				#前进
 				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
 					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
@@ -814,15 +1003,16 @@ func _update(delta):
 						_bg.rect_position.x=camera.position.x
 						
 				#根据摄像的移动判断前面位置是否需要添加敌人
-				for e in enemyList:
-					if e.x*blockSize>camera.position.x+camera.offset.x*2 && \
-						e.x*blockSize<camera.position.x+camera.offset.x*2+camera.offset.x/4:
-							addEnemy(e)
-							enemyList.erase(e)
-							pass
-				pass
-			
+				delList.clear()
+				for e in range(enemyList.size()):
+					if enemyList[e].x*blockSize>camera.position.x+camera.offset.x*2 && \
+						enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2+camera.offset.x/4:
+							addEnemy(enemyList[e])
+							delList.append(e)
 							
+				for  i in delList:
+					enemyList.remove(i)
+								
 			pass
 		elif state==constants.stateChange:
 			var pos=camera.get_camera_position()

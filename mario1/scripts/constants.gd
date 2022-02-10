@@ -28,6 +28,8 @@ const sliding="sliding"
 const shell='shell'
 const plantOut="plantOut"
 const plantIn="plantIn"
+const revive="revive"
+
 
 #子弹状态
 const fly='fly' 
@@ -97,15 +99,17 @@ const gravityJump=700	#跳跃的时候重力
 const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
 
+const enemyGravity=1900
+
 const slideFriction=14 #滑行的加速度
 const acceleration=5	#移动加速度
 const runAcceleration=10 #跑的加速度
 const marioWalkMaxSpeed=150 #走的时候最大速度
-const marioRunMaxSpeed=400 #跑的时候最大速度
+const marioRunMaxSpeed=280 #跑的时候最大速度
 const marioAniSpeed=145
 const marioGravity=2100 #重力
 const marioJumpGravity=1000
-const marioJumpSpeed=550
+const marioJumpSpeed=580
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000

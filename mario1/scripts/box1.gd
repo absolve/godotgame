@@ -63,6 +63,10 @@ func bumped(delta):
 				if coin6Num<6:
 					status=constants.resting	
 					return	
+			elif content==constants.empty || content=='':
+				status=constants.resting	
+				return		
+				
 			if spriteIndex==0:
 				ani.play("opened")
 			elif spriteIndex==1:
@@ -93,6 +97,7 @@ func startBumped():
 		temp.position=position
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj2Other(temp)
+		
 	pass		
 
 #空的盒子
@@ -110,22 +115,22 @@ func add4Brick():
 	var temp1 = brick.instance()
 	temp1.position=Vector2(position.x-8,position.y-8)
 	temp1.spriteIndex=spriteIndex
-	temp1.yVel=-400
+	temp1.yVel=-600
 	Game.addObj2Other(temp1)
 	var temp2=brick.instance()
 	temp2.position=Vector2(position.x-8,position.y+8)
 	temp2.spriteIndex=spriteIndex
-	temp2.yVel=-300
+	temp2.yVel=-500
 	Game.addObj2Other(temp2)
 	var temp3=brick.instance()
 	temp3.position=Vector2(position.x+8,position.y-8)
 	temp3.dir=constants.right
 	temp3.spriteIndex=spriteIndex
-	temp3.yVel=-400
+	temp3.yVel=-600
 	Game.addObj2Other(temp3)
 	var temp4=brick.instance()
 	temp4.position=Vector2(position.x+8,position.y+8)
 	temp4.dir=constants.right
 	temp4.spriteIndex=spriteIndex
-	temp4.yVel=-300
+	temp4.yVel=-500
 	Game.addObj2Other(temp4)

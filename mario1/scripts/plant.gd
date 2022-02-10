@@ -20,6 +20,10 @@ func _ready():
 	print(oldYPos,":",position.y)
 	pass
 
+
+func startDeathJump(_dir=constants.left):
+	destory()
+
 func _update(delta):
 	if status==constants.stop:
 		pass
@@ -38,8 +42,8 @@ func _update(delta):
 		pass
 	elif status==constants.plantIn:
 		yVel=speed
-		if position.y>=oldYPos+getSizeY():
-			position.y=oldYPos+getSizeY()
+		if position.y>=oldYPos+getSizeY()+5:
+			position.y=oldYPos+getSizeY()+5
 		else:
 			position.y+=yVel*delta	
 		if timer<plantOutTime:

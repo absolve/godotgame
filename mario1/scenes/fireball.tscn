@@ -16,7 +16,7 @@ animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 5 ), ExtResource( 4 ) ],
 "loop": false,
 "name": "boom",
-"speed": 10.0
+"speed": 12.0
 } ]
 
 [node name="fireball" type="Node2D"]

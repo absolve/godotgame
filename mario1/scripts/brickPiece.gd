@@ -6,7 +6,7 @@ onready var ani=$ani
 var spriteIndex=0
 
 func _ready():
-	gravity=constants.marioGravity
+	gravity=constants.enemyGravity
 	type=constants.brickPiece
 	debug=true
 	if dir==constants.right:

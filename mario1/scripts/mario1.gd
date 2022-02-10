@@ -3,7 +3,7 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=0
-var big = true #是否变大
+var big = false #是否变大
 #var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
@@ -27,7 +27,7 @@ var invincibleAnimationTimer=0
 var shadowIndex=0
 var hurtInvincible=false
 var hurtInvincibleStartTime=0
-var hurtInvincibleEndime=700
+var hurtInvincibleEndime=420
 var dead=false
 var deadStartTime=0
 var deadEndTime=30
@@ -114,8 +114,9 @@ func _update(delta):
 	elif status==constants.sitBottomOfPole:
 		sitBottomOfPole(delta)
 		pass
-		
-	specialState(delta)
+	if status!=constants.big2small&&status!=constants.big2fire&&\
+		status!=constants.small2big:	
+		specialState(delta)
 	if debug:	
 		update()	
 	pass
@@ -150,6 +151,7 @@ func specialState(_delta):
 				modulate.a=1
 		else:
 			hurtInvincible=false
+			hurtInvincibleStartTime=0
 			modulate.a=1
 		hurtInvincibleStartTime+=1
 		pass
@@ -190,7 +192,6 @@ func stand(_delta):
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball()
 		pass
-	
 	
 	if !isOnFloor:
 #		position.y+=yVel*delta	
@@ -396,6 +397,8 @@ func crouch(delta):
 func small2Big():
 	if big:
 		return
+	if hurtInvincible:
+		modulate.a=1
 	preStatus=status
 	status=constants.small2big
 	ani.play("small2big")
@@ -407,15 +410,19 @@ func small2Big():
 func big2Fire():
 	if fire:
 		return
+	if hurtInvincible:
+		modulate.a=1	
 	preStatus=status
 	status=constants.big2fire
 	Game.emit_signal("stateChange")
 	ani.stop()
 	var name=ani.animation
-	print(name)
+#	print(name)
 	var animationList = ['stand_big','jump_big',
 						'walk_big','slide_big',
 						'crouch']
+	if invincible:
+		shadow.visible=false
 	for a in animationList:
 		if a in name:
 			if a =='stand_big':
@@ -428,7 +435,7 @@ func big2Fire():
 				currentAnimation=slide_big_animation
 			elif a=='crouch':
 				currentAnimation=crouch_animation
-	
+
 #变成发射火球的状态
 func fireState(_delta):	
 	if big2FireTime%30==0:
@@ -441,6 +448,8 @@ func fireState(_delta):
 		status=preStatus
 		aniIndex=2
 		fire=true
+		if invincible:
+			shadow.visible=true
 		Game.emit_signal('stateFinish')
 
 func big2Small():
@@ -650,13 +659,13 @@ func _on_ani_animation_finished():
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		Game.emit_signal('stateFinish')
 	elif status==constants.big2small:
-#		big=false
-#		fire=false
-#		ani.position.y= 0
-#		aniIndex=0
-#		position.y+=10
-#		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
-#		status=preStatus
+		hurtInvincible=true
+		status=preStatus
+		big=false
+		fire=false
+		position.y+=15
+		aniIndex=0
+		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 		Game.emit_signal('stateFinish')
 		pass
 	pass # Replace with function body.

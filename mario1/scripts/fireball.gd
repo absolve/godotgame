@@ -34,5 +34,6 @@ func _update(delta):
 func boom():
 	status=constants.boom
 	ani.play('boom')
+	z_index=2
 	yield(ani,"animation_finished")
 	queue_free()

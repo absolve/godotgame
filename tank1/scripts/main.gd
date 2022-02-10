@@ -585,9 +585,9 @@ func hitPlayer(id):
 	elif Game.mode==2:		
 		if Game.playerLive[0]<=0 and Game.playerLive[1]<=0:
 			gameOver()
-		if Game.playerLive[0]<=0:
+		if Game.playerLive[0]==0:
 			_p1Over.startHideTimer()
-		elif Game.playerLive[1]<0:
+		elif Game.playerLive[1]==0:
 			_p2Over.startHideTimer()	
 	if id==1 and Game.playerLive[0]>0:
 		Game.playerLive[0]-=1

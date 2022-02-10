@@ -37,6 +37,7 @@ position = Vector2( 0, -1 )
 [node name="pole" type="Node2D" parent="."]
 
 [node name="otherObj" type="Node2D" parent="."]
+z_index = 3
 
 [node name="collision" type="Node2D" parent="."]
 position = Vector2( 0, -1 )

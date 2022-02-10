@@ -12,20 +12,41 @@ onready var _time=$hbox/timeLable/time
 var countDownStart=true
 var currentTime=100  #时间
 var tick=0
-var tickNum=12
+var tickNum=17
 var fastTickNum=1
 var status=constants.empty
-
+var score=0
+var coinNum=0  #硬币的数量
 
 func _ready():
 	_time.text="%0*d"%[3,currentTime]
+	_coinNum.text="%0*d"%[2,coinNum]
 	hide()
 	pass 
 
+func setScore(s):
+	score=s
+	_score.text="%0*d"%[9,score]
+
+func setTime(t):
+	currentTime=t
+	
+	
 #添加分数
-func addScore(score):
+func addScore(s):
+	score+=s
+	_score.text="%0*d"%[9,score]
 	pass
 
+
+func addCoin(c=1):
+	coinNum+=c
+	
+	if coinNum>=100:
+		coinNum=0
+		pass
+	_coinNum.text="%0*d"%[2,coinNum]	
+	
 #隐藏时间	
 func hideTime()->void:
 	_time.hide()

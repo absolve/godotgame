@@ -3,16 +3,18 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var preStatus
+const speed=55
 
 func _ready():
 	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	gravity=constants.marioGravity
+	gravity=constants.enemyGravity
 	type=constants.goomba
+#	status=constants.stop
 	if dir==constants.left:
-		xVel=-50
+		xVel=-speed
 	else:
-		xVel=50
+		xVel=speed
 		
 	if spriteIndex==0:
 		ani.play("walk")
@@ -45,7 +47,8 @@ func jumpedOn():
 	pass
 
 
-func startDeathJump():
+func startDeathJump(_dir=constants.left):
+	dir=_dir
 	.startDeathJump()
 	ani.playing=false
 	ani.flip_v=true

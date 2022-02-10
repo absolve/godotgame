@@ -23,11 +23,11 @@ func jumpedOn():
 	pass	
 
 func startDeathJump():
-	yVel=-180
+	yVel=-190
 	if dir==constants.left:
-		xVel=-40
+		xVel=-45
 	else:
-		xVel=40	
+		xVel=45
 	gravity=constants.deathJumpGravity
 	pass
 
@@ -48,3 +48,10 @@ func turnLeft():
 func turnRight():
 	xVel=abs(xVel)
 	pass	
+
+func turnDir():
+	if xVel>0:
+		xVel=-abs(xVel)
+	else:
+		xVel=abs(xVel)	
+	pass
