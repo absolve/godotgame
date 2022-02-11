@@ -13,6 +13,7 @@
 script = ExtResource( 1 )
 
 [node name="bg" type="ColorRect" parent="."]
+show_behind_parent = true
 margin_right = 640.0
 margin_bottom = 480.0
 color = Color( 0, 0, 0, 1 )

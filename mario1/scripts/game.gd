@@ -51,6 +51,8 @@ func addCoin(m,_coin=1):
 func getPlayerBulletCount(id):
 	return map.getBulletCount(id)
 
+func getMario():
+	return map.getMario()
 
 #获取地图中方块对象
 func getMapBrick(x,y):

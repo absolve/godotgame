@@ -1,4 +1,7 @@
 extends "res://scripts/object.gd"
+"""
+箱子会出现各种道具 如果是花会判断mario的大小变成蘑菇
+"""
 
 var status=constants.resting
 var oldPos=0
@@ -58,6 +61,10 @@ func bumped(delta):
 				var temp=item.instance()
 				temp.position=position
 				temp.type=content
+				if content==constants.fireflower:
+					if Game.getMario().size()>0:
+						if !Game.getMario()[0].big:
+							temp.type=constants.mushroom
 				Game.addObj2Item(temp)
 			elif content==constants.coins6:
 				if coin6Num<6:

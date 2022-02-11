@@ -83,7 +83,7 @@ __meta__ = {
 [node name="coin" type="AnimatedSprite" parent="hbox/Label5/Label4"]
 position = Vector2( -12, 3 )
 frames = SubResource( 1 )
-frame = 3
+frame = 4
 playing = true
 centered = false
 

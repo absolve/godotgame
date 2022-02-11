@@ -21,7 +21,7 @@ var coinNum=0  #硬币的数量
 func _ready():
 	_time.text="%0*d"%[3,currentTime]
 	_coinNum.text="%0*d"%[2,coinNum]
-	hide()
+#	hide()
 	pass 
 
 func setScore(s):
@@ -38,7 +38,10 @@ func addScore(s):
 	_score.text="%0*d"%[9,score]
 	pass
 
-
+func setCoin(c=0):
+	coinNum=c
+	_coinNum.text="%0*d"%[2,coinNum]	
+	
 func addCoin(c=1):
 	coinNum+=c
 	

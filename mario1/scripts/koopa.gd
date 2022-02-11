@@ -100,7 +100,7 @@ func startDeathJump(_dir=constants.left):
 	ani.flip_v=true
 	ani.frame=0
 	z_index=2
-	status=constants.deadJump
+#	status=constants.deadJump
 	pass	
 
 

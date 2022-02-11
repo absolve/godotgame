@@ -6,7 +6,7 @@ var preStatus
 const speed=55
 
 func _ready():
-	debug=true
+#	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	gravity=constants.enemyGravity
 	type=constants.goomba
@@ -54,7 +54,7 @@ func startDeathJump(_dir=constants.left):
 	ani.flip_v=true
 	ani.frame=0
 	z_index=2
-	status=constants.deadJump
+#	status=constants.deadJump
 	pass
 
 func pause():

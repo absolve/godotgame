@@ -161,6 +161,7 @@ func loadMapFile(fileName:String):
 				if mode=='edit':
 					allTiles.append(i)
 				else:
+					i['init']=false
 					enemyList.append(i)
 					pass	
 			elif i['type']=='pipe':
@@ -241,20 +242,24 @@ func save2File(fileName):
 
 #初始化当前画面中的敌人
 func initEnemy():
-	print(camera.position.x+camera.offset.x*2)
-	var del=[]
+#	print(camera.position.x+camera.offset.x*2)
+#	var del=[]
 	for e in range(enemyList.size()):
+		if enemyList[e]['init']:
+			continue
 		if enemyList[e].x*blockSize>camera.position.x&& \
 			enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2:
+				enemyList[e]['init']=true
 				addEnemy(enemyList[e])
-				del.append(e)
-	for  i in del:
-		enemyList.remove(i)
+#				del.append(e)
+#	for  i in del:
+#		enemyList.remove(i)
 	pass
 
 #添加敌人
 func addEnemy(obj:Dictionary):
 	print("addEnemy",obj)
+#	return
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -429,6 +434,11 @@ func flagEnd():
 	for i in _marioList.get_children():
 		i.setwalkingToCastle()
 	pass	
+
+#游戏结束	
+func gameEnd():
+	print("gameEnd")
+	pass	
 	
 func marioAndEnemy(m,e):
 	if m.hurtInvincible:
@@ -474,6 +484,10 @@ func addScore(m,_score=100):
 
 func addCoin(m,_coin=1):
 	_title.addCoin(_coin)
+
+func getMario():
+	return _marioList.get_children()
+	pass
 	
 func _update(delta):
 	if mode=='edit':
@@ -498,6 +512,12 @@ func _update(delta):
 					i.queue_free()
 				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
 					i.queue_free()	
+			
+			for i in _marioList.get_children():
+				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
+					i.dead=true
+					i.status=constants.stop
+					state=constants.stateChange
 			
 			_title._update(delta)
 			
@@ -720,6 +740,7 @@ func _update(delta):
 									i.yVel=0
 								if y.type==constants.box&& y.status==constants.bumped:
 									i.startDeathJump()
+									addScore(i)
 								else:		
 									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
 
@@ -792,7 +813,7 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-							print("eeee")
+#							print("eeee")
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞					
 							if i.status!=constants.dead&&i.status!=constants.deadJump\
@@ -1003,15 +1024,18 @@ func _update(delta):
 						_bg.rect_position.x=camera.position.x
 						
 				#根据摄像的移动判断前面位置是否需要添加敌人
-				delList.clear()
+#				delList.clear()
 				for e in range(enemyList.size()):
+					if enemyList[e]['init']:
+						continue
 					if enemyList[e].x*blockSize>camera.position.x+camera.offset.x*2 && \
 						enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2+camera.offset.x/4:
 							addEnemy(enemyList[e])
-							delList.append(e)
+							enemyList[e]['init']=true
+#							delList.append(e)
 							
-				for  i in delList:
-					enemyList.remove(i)
+#				for  i in delList:
+#					enemyList.remove(i)
 								
 			pass
 		elif state==constants.stateChange:
@@ -1019,9 +1043,10 @@ func _update(delta):
 			for i in _marioList.get_children():
 				i._update(delta)
 				if i.dead:
-					if i.position.y-i.getSizeY()/2>=camera.offset.y*2:
-#						print(i.position.y)
+					if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
 						i.queue_free()
+						state=constants.gameEnd
+						gameEnd()
 		elif state==constants.inCastle:
 			if _title.currentTime>0:
 				_title._update(delta)
@@ -1029,13 +1054,15 @@ func _update(delta):
 				
 				pass	
 			pass	
-		
-			
+		elif state==constants.gameEnd:
+			pass
+		elif state==constants.nextLevel:
+			pass	
 	pass
 
 
 func _process(delta):
-	if debug:
+	if debug && mode=="edit": 
 		update()
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))	
 	_update(delta)
@@ -1083,7 +1110,7 @@ func _input(event):
 	pass
 
 func _draw():
-	if debug:
+	if mode=="edit":
 		for i in range(mapWidthSize+1):
 			if i%20==0:
 				draw_line(Vector2(i*blockSize,0),Vector2(i*blockSize,blockSize*heightNun)

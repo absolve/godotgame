@@ -2,7 +2,7 @@ extends "res://scripts/object.gd"
 
 
 var maxXVel=constants.marioWalkMaxSpeed
-var maxYVel=0
+var maxYVel=constants.marioMaxYVel
 var big = false #是否变大
 #var faceRight=true
 var fire = false #是否能发射子弹
@@ -114,6 +114,8 @@ func _update(delta):
 	elif status==constants.sitBottomOfPole:
 		sitBottomOfPole(delta)
 		pass
+	elif status==constants.stop:
+		pass	
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
 		specialState(delta)
@@ -146,7 +148,7 @@ func specialState(_delta):
 	if hurtInvincible:
 		if hurtInvincibleEndime-hurtInvincibleStartTime>=0:
 			if hurtInvincibleStartTime%3==0:
-				modulate.a=0
+				modulate.a=0.1
 			else:
 				modulate.a=1
 		else:
@@ -185,7 +187,7 @@ func stand(_delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
-		print("stand jump")
+#		print("stand jump")
 	if Input.is_action_just_pressed("ui_down") &&big:
 		startCrouch()
 		return
@@ -202,7 +204,7 @@ func stand(_delta):
 
 
 func walk(delta):
-	yVel+=gravity*delta
+#	yVel+=gravity*delta
 	if xVel>0:
 		ani.speed_scale=1+xVel/constants.marioAniSpeed
 	elif xVel<0:
@@ -314,7 +316,8 @@ func jump(delta):
 	pass
 
 func fall(delta):
-	yVel+=gravity*delta
+	if yVel<maxYVel:
+		yVel+=gravity*delta
 	animation("fall")
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
@@ -472,7 +475,7 @@ func startSliding(length=0):
 	pass
 
 func poleSliding(delta):
-	yVel+=7
+	yVel=150
 	position.y+=yVel*delta
 	animation("poleSliding")
 	pass
@@ -500,6 +503,8 @@ func sitBottomOfPole(_delta):
 
 func setwalkingToCastle():
 	status=constants.walkingToCastle
+	acceleration=constants.acceleration
+	maxXVel=constants.marioWalkMaxSpeed	
 
 func walkingToCastle(delta):
 	if flagPoleTimer==31:
@@ -631,7 +636,7 @@ func shootFireball(play=true):
 
 func _on_ani_frame_changed():
 	if status==constants.small2big:
-		print(ani.frame)
+#		print(ani.frame)
 		if ani.frame in [0,2,4]:
 			ani.position.y= 0
 		else:
