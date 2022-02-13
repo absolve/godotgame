@@ -60,8 +60,8 @@ func setName(name)->void:
 	_name.text=name
 
 #设置关卡
-func setLevel(num1:String,num2:String)->void:
-	_level.text=num1+"-"+num2
+func setLevel(l:String)->void:
+	_level.text=l
 
 #停驶硬币动画	
 func stopCoinAni()->void:

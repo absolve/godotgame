@@ -32,6 +32,9 @@ func _ready():
 		ani.play("box_grey")
 	elif spriteIndex==3:	
 		ani.play("default")
+	if _visible==false:
+		visible=false
+#	visible=false	
 	pass
 
 func _update(delta):
@@ -51,6 +54,7 @@ func bumped(delta):
 
 	if position.y>oldPos:
 		position.y=oldPos
+		
 		if content==constants.empty&&spriteIndex==3: #变成打开状态
 			status=constants.opened	
 			ani.play("opened")	
@@ -93,6 +97,10 @@ func opened(delta):
 func startBumped():
 	yVel=-280
 	status=constants.bumped
+	if !_visible:
+		ani.play("opened")
+		_visible=true
+		visible=true
 	if content==constants.coin:
 		var temp=coin.instance()
 		temp.position=position

@@ -19,6 +19,7 @@ var collision=preload("res://scenes/collision.tscn")
 var plant=preload("res://scenes/plant.tscn")
 var score=preload("res://scenes/score.tscn")
 var koopa=preload("res://scenes/koopa.tscn")
+var menu=preload("res://scenes/menu.tscn")
 
 #var map=[]
 var debug=true
@@ -36,6 +37,9 @@ var selectItem='' #选择的item
 var state=constants.startState
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
 var delList=[] #删除列表
+var timer=0
+var tick=2*60
+var nextStatus=constants.empty
 
 
 var mode="game"  #game正常游戏  edit编辑  test测试
@@ -84,8 +88,11 @@ func _ready():
 		_toolBtn.hide()	
 		_title.show()
 		_title.setTime(400)
-		loadMapFile("res://levels/1-1.json")
+		loadMapFile("res://levels/test5.json")
 		_title.startCountDown()
+		_title.setScore(Game.playerData['score'])
+		_title.setCoin(Game.playerData['coin'])
+		_title.setLevel(Game.playerData['level'])
 		initEnemy()	#初始化当前画面的敌人
 		pass	
 	elif mode=='test':
@@ -151,6 +158,11 @@ func loadMapFile(fileName:String):
 					temp.position.y=i['y']*blockSize+blockSize/2
 					temp.content=i['content']
 					temp._visible=i['visible']
+					if i['visible']=='false':
+						temp._visible=false
+					else:
+						temp._visible=true
+					print(temp._visible)
 					var obj={"x":i['x'],"y":i['y']}
 					if checkTile(obj):
 						print(obj,' has one box')
@@ -439,6 +451,29 @@ func flagEnd():
 func gameEnd():
 	print("gameEnd")
 	pass	
+
+#重新开始
+func gameRestart():
+	print("gameRestart")
+	Game.playerData['score']=_title.score
+	Game.playerData['coin']=_title.coinNum
+	Game.playerData['lives']-=1
+	
+	var temp=menu.instance()
+	queue_free()
+	set_process_input(false)
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
+	pass
+
+func gameNextLevel():
+	print("gameNextLevel")
+	var temp=menu.instance()
+	temp.isgameover=false
+	queue_free()
+	set_process_input(false)
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
 	
 func marioAndEnemy(m,e):
 	if m.hurtInvincible:
@@ -482,6 +517,13 @@ func addScore(m,_score=100):
 	_otherobjList.add_child(temp)
 	pass	
 
+func addLive(m,_live="1up"):
+	var temp=score.instance()
+	temp.setPos(Vector2(m.position.x,m.position.y-45))
+	temp.setScore(_live)
+	Game.playerData['lives']+=1
+	_otherobjList.add_child(temp)
+
 func addCoin(m,_coin=1):
 	_title.addCoin(_coin)
 
@@ -514,9 +556,9 @@ func _update(delta):
 					i.queue_free()	
 			
 			for i in _marioList.get_children():
-				if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
+				if i.position.y>camera.offset.y*2+i.getSizeY()/2:
 					i.dead=true
-					i.status=constants.stop
+#					i.status=constants.stop
 					state=constants.stateChange
 			
 			_title._update(delta)
@@ -557,6 +599,8 @@ func _update(delta):
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
 #							print('abs(abs(dx)-abs(dy))<.1')
+							if y.type==constants.box && !y._visible:
+								continue
 							if dx<0:
 #								if i.dir==constants.left:
 #									i.xVel=0
@@ -575,6 +619,8 @@ func _update(delta):
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 #							print('abs(dx)>abs(dy)')
+							if y.type==constants.box && !y._visible:
+								continue
 							if dx<0:
 								if i.dir==constants.left:
 									i.xVel=0
@@ -585,6 +631,7 @@ func _update(delta):
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
 							if dy<0:  #下方	
+								
 #								print("else dy<0 ",dx)						
 #								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
 								#这个非常的接近边缘就不判断	
@@ -600,6 +647,8 @@ func _update(delta):
 							else: #上方
 #								if y.type==constants.box:
 #									print(i.position,y.position)
+								if y.type==constants.box && !y._visible:
+									continue
 								if i.yVel>=0:  #掉落的情况
 #									if y.type==constants.box:
 #										print('box',i.getBottom()," ",y.getTop())	
@@ -962,6 +1011,9 @@ func _update(delta):
 							y.queue_free()
 							i.setInvincible()
 							addScore(i,5000)
+						elif y.type==constants.mushroom1up:	
+							y.queue_free()
+							addLive(i)
 						pass
 					pass
 			
@@ -995,9 +1047,11 @@ func _update(delta):
 						state=constants.inCastle
 						_title.fastCountDown()
 						
+						
 			#照相机跟随mario
 			if _marioList.get_child_count()>0:
 				var mario1=_marioList.get_child(0)
+				
 				if mario1.position.x-mario1.getSize()/2<camera.position.x:
 					mario1.position.x=camera.position.x+mario1.getSize()/2	
 					if mario1.dir==constants.left:
@@ -1006,6 +1060,9 @@ func _update(delta):
 					mario1.position.x=mapWidthSize*blockSize-mario1.getSize()/2
 					if mario1.dir==constants.right:
 						mario1.xVel=0
+				
+#				if mario1.status==constants.walkingToCastle:
+#					return
 				#前进
 				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
 					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
@@ -1043,10 +1100,12 @@ func _update(delta):
 			for i in _marioList.get_children():
 				i._update(delta)
 				if i.dead:
-					if i.position.y+i.getSizeY()/2>=camera.offset.y*2:
+					if i.position.y>camera.offset.y*2+i.getSizeY()/2:
 						i.queue_free()
-						state=constants.gameEnd
-						gameEnd()
+						state=constants.gameIdle
+						nextStatus=constants.gameEnd
+						timer=0
+#						gameRestart()
 		elif state==constants.inCastle:
 			if _title.currentTime>0:
 				_title._update(delta)
@@ -1057,7 +1116,15 @@ func _update(delta):
 		elif state==constants.gameEnd:
 			pass
 		elif state==constants.nextLevel:
-			pass	
+			pass
+		elif state==constants.gameIdle:		
+			timer+=1
+			if timer>tick:
+				if nextStatus==constants.gameEnd:
+					gameRestart()
+				elif nextStatus==constants.constants.nextLevel:	
+					gameNextLevel()
+			pass
 	pass
 
 

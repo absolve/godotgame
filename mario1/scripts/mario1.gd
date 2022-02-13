@@ -279,8 +279,8 @@ func walk(delta):
 				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
-	if 	(xVel>0 && !rightStop)||(xVel<0&& !leftStop):			
-		position.x+=xVel*delta
+		
+	position.x+=xVel*delta
 		
 #	position.y+=yVel*delta	
 	if !isOnFloor:

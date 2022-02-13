@@ -10,7 +10,7 @@ const inCastle="inCastle" #在城堡里面
 const pause="pause"
 const gameEnd="gameEnd"
 const nextLevel="nextLevel"
-
+const gameIdle="gameIdle"
 
 #方块状态
 const resting="resting"  #静止
@@ -109,7 +109,7 @@ const enemyMaxVel=1900
 const slideFriction=14 #滑行的加速度
 const acceleration=5	#移动加速度
 const runAcceleration=10 #跑的加速度
-const marioWalkMaxSpeed=150 #走的时候最大速度
+const marioWalkMaxSpeed=149 #走的时候最大速度
 const marioRunMaxSpeed=330 #跑的时候最大速度
 const marioAniSpeed=145
 const marioGravity=2100 #重力
