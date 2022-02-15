@@ -92,8 +92,8 @@ func _ready():
 	elif mode=='game':
 		_tab.hide()
 		_toolBtn.hide()	
-		loadMapFile("res://levels/test5.json")
-		_title.setTime(120)
+		loadMapFile("res://levels/1-1.json")
+		_title.setTime(400)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
 		_title.setCoin(Game.playerData['coin'])
@@ -164,11 +164,15 @@ func loadMapFile(fileName:String):
 					temp.position.y=i['y']*blockSize+blockSize/2
 					temp.content=i['content']
 #					temp._visible=i['visible']
-					if i['visible']=='false':
-						temp._visible=false
-					else:
-						temp._visible=true
-					print(temp._visible)
+					
+					if typeof(i['visible'])==TYPE_BOOL:
+						temp._visible=i['visible']
+					elif typeof(i['visible'])==TYPE_STRING:
+						if i['visible']=="false":
+							temp._visible=false
+						else:	
+							temp._visible=true
+#					print(temp._visible)
 					var obj={"x":i['x'],"y":i['y']}
 					if checkTile(obj):
 						print(obj,' has one box')
@@ -571,6 +575,7 @@ func updateFlagAndFireworks():
 		pass
 	timer=0	
 	state=constants.gameIdle
+	nextStatus=constants.nextLevel
 	pass
 
 #超时
@@ -791,7 +796,7 @@ func _update(delta):
 					var rect2=y.getRect()
 					if i.type==constants.plant:
 						continue
-					if rect1.intersects(rect2,true):
+					if rect1.intersects(rect2):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠	

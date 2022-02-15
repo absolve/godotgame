@@ -29,14 +29,17 @@ z_index = 1
 
 [node name="enemy" type="Node2D" parent="."]
 position = Vector2( 0, -1 )
+z_index = 1
 
 [node name="brick" type="Node2D" parent="."]
 
 [node name="bullet" type="Node2D" parent="."]
+z_index = 1
 
 [node name="item" type="Node2D" parent="."]
 
 [node name="pole" type="Node2D" parent="."]
+z_index = 1
 
 [node name="otherObj" type="Node2D" parent="."]
 z_index = 3
