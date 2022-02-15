@@ -15,5 +15,5 @@ func _ready():
 		ani.play("0")	
 	pass 
 
-
+#	set_process(false)
 

@@ -17,6 +17,7 @@ var fastTickNum=1
 var status=constants.empty
 var score=0
 var coinNum=0  #硬币的数量
+var lastTime=0
 
 func _ready():
 	_time.text="%0*d"%[3,currentTime]
@@ -84,6 +85,9 @@ func fastCountDown():
 	
 func stopCountDown():	
 	status=constants.empty
+
+func recordLastTime():
+	lastTime=currentTime
 	
 func _update(_delta):
 	if status==constants.countDown:
@@ -91,6 +95,8 @@ func _update(_delta):
 		if tick>=tickNum:
 			tick=0
 			currentTime-=1
+			if currentTime==100:
+				Game.emit_signal("hurryup")
 			if currentTime<=0:
 				status=constants.empty
 				Game.emit_signal("timeOut")
@@ -101,6 +107,7 @@ func _update(_delta):
 			if tick>=fastTickNum:	
 				tick=0
 				currentTime-=1
+				addScore(1)
 				if currentTime<=0:
 					status=constants.empty
 			_time.text="%0*d"%[3,currentTime]

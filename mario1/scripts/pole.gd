@@ -2,16 +2,21 @@ extends "res://scripts/object.gd"
 
 onready var flag=$flag
 onready var lens=$len
+onready var score=$score  #用来显示拉旗的分数
 var poleLen=10
 var poleImg=preload("res://sprites/flag1.png")
 var status=constants.empty
 var speed=160
+
 
 func _ready():
 	debug=true
 	addPoleLen()
 	type=constants.pole
 	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32+16))	
+#	showScore(2000)
+#	startFall()
+	set_process(false)
 	pass
 
 
@@ -27,12 +32,22 @@ func addPoleLen():
 func startFall():
 	status=constants.flagLanding
 
+func showScore(s):
+	score.text=str(s)
+	score.rect_position.y=poleLen*32
+	score.visible=true
+	pass
+
+
 func _update(delta):
 	if status==constants.flagLanding:
 		flag.position.y+=speed*delta
+		score.rect_position.y-=speed*delta
 		if flag.position.y>=poleLen*32:
 			status=constants.empty
 			Game.emit_signal("flagEnd")
 		pass
 	pass
 
+#func _process(delta):
+#	_update(delta)

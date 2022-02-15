@@ -14,7 +14,7 @@ func _ready():
 #	animation("shell")
 	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	gravity=constants.enemyGravity
+#	gravity=constants.enemyGravity
 	type=constants.koopa
 	if dir==constants.left:
 		xVel=-speed

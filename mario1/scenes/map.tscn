@@ -23,6 +23,7 @@ __meta__ = {
 
 [node name="background" type="Node2D" parent="."]
 position = Vector2( 0, -1 )
+z_index = 1
 
 [node name="mario" type="Node2D" parent="."]
 

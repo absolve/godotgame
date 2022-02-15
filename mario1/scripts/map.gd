@@ -20,6 +20,8 @@ var plant=preload("res://scenes/plant.tscn")
 var score=preload("res://scenes/score.tscn")
 var koopa=preload("res://scenes/koopa.tscn")
 var menu=preload("res://scenes/menu.tscn")
+var firework=preload("res://scenes/firework.tscn")
+var castleFlag=preload("res://scenes/flag.tscn")
 
 #var map=[]
 var debug=true
@@ -33,14 +35,16 @@ var time=400 #时间
 var allTiles=[]  #所有方块的集合
 var bgTiles=[]   #单独背景方块
 var marioPos={} #mario地图出生地
-var selectItem='' #选择的item
-var state=constants.startState
+var selectItem='' #选择的item 名字
+var selectItemType='' #选择的item类型'
+var state=constants.empty
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
 var delList=[] #删除列表
 var timer=0
 var tick=2*60
 var nextStatus=constants.empty
-
+var lastMarioXPos=0  #用来标记mario进入城堡是x位置
+var castleFlagObj=null #城堡旗帜  只有一个
 
 var mode="game"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
@@ -79,6 +83,8 @@ func _ready():
 	Game.connect("stateChange",self,'stateChange')
 	Game.connect("stateFinish",self,'stateFinish')
 	Game.connect("flagEnd",self,"flagEnd")
+	Game.connect("timeOut",self,"timeOut")
+	Game.connect("hurryup",self,"hurryup")
 	if mode=='edit':
 		_bg.hide()
 		_title.hide()
@@ -86,14 +92,14 @@ func _ready():
 	elif mode=='game':
 		_tab.hide()
 		_toolBtn.hide()	
-		_title.show()
-		_title.setTime(400)
 		loadMapFile("res://levels/test5.json")
+		_title.setTime(120)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
 		_title.setCoin(Game.playerData['coin'])
 		_title.setLevel(Game.playerData['level'])
 		initEnemy()	#初始化当前画面的敌人
+		state=constants.startState
 		pass	
 	elif mode=='test':
 		
@@ -125,8 +131,8 @@ func loadMapFile(fileName:String):
 		var pos = currentLevel['marioPos']
 		if !pos.empty()&&mode=='game':  #添加mario
 			var temp=mario.instance()
-			temp.position.x=pos['x']*blockSize
-			temp.position.y=pos['y']*blockSize
+			temp.position.x=pos['x']*blockSize+blockSize/2
+			temp.position.y=pos['y']*blockSize+blockSize/2
 			_marioList.add_child(temp)
 		marioPos=pos
 		if mode=='edit':
@@ -157,7 +163,7 @@ func loadMapFile(fileName:String):
 					temp.position.x=i['x']*blockSize+blockSize/2
 					temp.position.y=i['y']*blockSize+blockSize/2
 					temp.content=i['content']
-					temp._visible=i['visible']
+#					temp._visible=i['visible']
 					if i['visible']=='false':
 						temp._visible=false
 					else:
@@ -228,7 +234,20 @@ func loadMapFile(fileName:String):
 						print(obj,' has one collision')
 					else:	
 						_collisionList.add_child(temp)	
-																
+			elif i['type']=='castleFlag':	
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					if castleFlagObj==null:
+						var temp=castleFlag.instance()
+						temp.position.x=i['x']*blockSize+blockSize/2
+						temp.position.y=i['y']*blockSize+blockSize/2
+						var obj={"x":i['x'],"y":i['y']}
+						if checkTile(obj):
+							print(obj,' has one castleFlag')
+						else:	
+							castleFlagObj=temp
+							_collisionList.add_child(temp)													
 		file.close()
 	else:
 		print('文件不存在')	
@@ -339,11 +358,9 @@ func addItem(type,pos):
 	if not constants.tilesAttribute.has(type):
 		print('item type error ',type)
 		return	
-#	print(type)
 	if type=='mario':
 		marioPos={'x':pos.x,'y':pos.y}
 		return
-		pass
 	var g=constants.tilesAttribute[type].duplicate()
 	g.x=pos.x
 	g.y=pos.y
@@ -369,9 +386,10 @@ func delItem(pos:Vector2):
 			break
 
 #选择方块
-func selectItem(_index,itemName):
+func selectItem(type,itemName):
 #	print(index,itemName)
-	self.selectItem=itemName
+	selectItemType=type
+	selectItem=itemName
 
 
 func getItemPos(pos:Vector2):
@@ -469,7 +487,7 @@ func gameRestart():
 func gameNextLevel():
 	print("gameNextLevel")
 	var temp=menu.instance()
-	temp.isgameover=false
+	temp.isgameover=true
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
@@ -530,6 +548,40 @@ func addCoin(m,_coin=1):
 func getMario():
 	return _marioList.get_children()
 	pass
+	
+#更新旗帜和烟花	
+func updateFlagAndFireworks():
+	if castleFlagObj!=null:
+		castleFlagObj.rising()
+		yield(Game,"flagRising")
+	var num=str(_title.lastTime)
+	var digits=num[num.length()-1]
+	print(digits)
+	digits="5"
+	if digits in ["1","3","5"]: #放烟花个数
+		for i in range(digits.to_int()):
+			var temp=firework.instance()
+			temp.position.x=lastMarioXPos
+			_otherobjList.add_child(temp)
+			yield(temp.ani,"animation_finished")
+			_title.addScore(200)  #每朵烟花200
+			for y in range(15):
+				yield(get_tree(),"idle_frame")
+			pass
+		pass
+	timer=0	
+	state=constants.gameIdle
+	pass
+
+#超时
+func timeOut():
+	for i in _marioList.get_children():
+		i.startDeathJump()
+	pass
+
+func hurryup():
+	print("hurryup")
+	pass	
 	
 func _update(delta):
 	if mode=='edit':
@@ -602,19 +654,15 @@ func _update(delta):
 							if y.type==constants.box && !y._visible:
 								continue
 							if dx<0:
-#								if i.dir==constants.left:
-#									i.xVel=0
 								i.position.x=y.getRight()+i.getSize()/2
 							else:
-#								if i.dir==constants.right:
-#									i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2	
 								
 							if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))>=1:
 								if i.status==constants.jump:
-									if i.dir==constants.left:
+									if dx<0 && i.dir==constants.left:
 										i.xVel=0
-									elif i.dir==constants.right:
+									elif dx>0 && i.dir==constants.right:
 										i.xVel=0		
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
@@ -630,8 +678,7 @@ func _update(delta):
 									i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
-							if dy<0:  #下方	
-								
+							if dy<0:  #下方			
 #								print("else dy<0 ",dx)						
 #								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
 								#这个非常的接近边缘就不判断	
@@ -639,10 +686,10 @@ func _update(delta):
 									if y.type==constants.box && i.yVel<0:
 										if y.status==constants.resting:
 											if y.isDestructible() && i.big:
-												y.add4Brick()
-												y.destroy()
-											else:	
-												y.startBumped()		
+#												y.add4Brick()
+#												y.destroy()
+												y.destroy=true	
+											y.startBumped()		
 									i.yVel=abs(i.yVel)-abs(i.yVel)/4				
 							else: #上方
 #								if y.type==constants.box:
@@ -1030,7 +1077,25 @@ func _update(delta):
 							i.position.x=y.getLeft()-i.getSize()/2
 							i.startSliding(y.getSize())
 							y.startFall()
+							if abs(i.position.y-y.position.y)<=50:
+								y.showScore(5000)
+								_title.addScore(5000)
+							elif abs(i.position.y-y.position.y)<=100:
+								y.showScore(2000)
+								_title.addScore(2000)	
+							elif abs(i.position.y-y.position.y)<=150:	
+								y.showScore(1000)
+								_title.addScore(1000)
+							elif abs(i.position.y-y.position.y)<=200:
+								y.showScore(500)
+								_title.addScore(500)	
+							else:
+								y.showScore(200)
+								_title.addScore(200)		
 							_title.stopCountDown()
+							tick=30
+							state=constants.gameIdle
+							nextStatus=constants.startState
 #							state=constants.stateChange
 						pass		
 					pass
@@ -1043,9 +1108,12 @@ func _update(delta):
 					if i.status!=constants.walkingToCastle:
 						continue
 					if i.getRect().intersects(y.getRect(),true):
-						i.queue_free()
-						state=constants.inCastle
-						_title.fastCountDown()
+						if y.type==constants.castlePos:
+							i.queue_free()
+							state=constants.inCastle
+							lastMarioXPos=y.position.x #保存当时的x位置
+							_title.recordLastTime()
+							_title.fastCountDown()
 						
 						
 			#照相机跟随mario
@@ -1109,21 +1177,29 @@ func _update(delta):
 		elif state==constants.inCastle:
 			if _title.currentTime>0:
 				_title._update(delta)
-			else: #判断烟花
-				
+			else: #升旗 烟花
+				state=constants.nextLevel
+				updateFlagAndFireworks()
 				pass	
 			pass	
 		elif state==constants.gameEnd:
 			pass
 		elif state==constants.nextLevel:
+			for i in _collisionList.get_children():
+				i._update(delta)
 			pass
 		elif state==constants.gameIdle:		
 			timer+=1
 			if timer>tick:
 				if nextStatus==constants.gameEnd:
 					gameRestart()
-				elif nextStatus==constants.constants.nextLevel:	
+				elif nextStatus==constants.nextLevel:	
 					gameNextLevel()
+				elif nextStatus==constants.startState:
+					state=constants.startState
+			pass
+		elif state==constants.pause:	
+			
 			pass
 	pass
 
@@ -1155,8 +1231,8 @@ func _input(event):
 					return
 				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
 					return
-				if checkHasItem(get_global_mouse_position(),selectItem):
-					if selectItem=='del':
+				if checkHasItem(get_global_mouse_position(),selectItemType):
+					if selectItemType=='del':
 						delItem(get_global_mouse_position())
 					else:  #显示属性
 						getItemAttr(get_global_mouse_position())
@@ -1202,7 +1278,6 @@ func _draw():
 			elif i.type=='brick':	
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-#				draw_texture(brickImg,Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type=='coin':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
@@ -1220,7 +1295,7 @@ func _draw():
 						Vector2(i.x*blockSize,i.y*blockSize+(l+1)*blockSize),Color(1,1,1,0.5))
 					pass
 				pass
-			elif i.type=="collision":
+			elif i.type=="collision"||i.type=="castleFlag":
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type==constants.plant:

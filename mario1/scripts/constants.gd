@@ -45,6 +45,9 @@ const flagLanding="flagLanding"
 const countDown="countDown"
 const fastCountDown="fastCountDown"
 
+#旗子的状态
+const rising="rising"
+
 #其他的状态
 const spin="spin"
 
@@ -122,7 +125,7 @@ const marioMaxYVel=1900 #最大y速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
-			,"coin","bg","box",'flag','stick',"collision","plant"]
+			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag"]
 
 #图块 所有的图块
 const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -181,6 +184,12 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"castlePos",
+	},
+	"castleFlag":{
+		"type":"castleFlag",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
 	},
 	"plant":{
 		"type":"plant",

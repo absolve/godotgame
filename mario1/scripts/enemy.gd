@@ -7,6 +7,9 @@ var time=0
 var delTime=140  #删除时间 140帧
 var maxYVel=constants.enemyMaxVel
 
+func _ready():
+	gravity=constants.enemyGravity
+
 func walking(delta):
 	if yVel<maxYVel:
 		yVel+=gravity*delta	
@@ -25,7 +28,7 @@ func jumpedOn():
 	pass	
 
 func startDeathJump():
-	yVel=-220
+	yVel=-350
 	if dir==constants.left:
 		xVel=-45
 	else:

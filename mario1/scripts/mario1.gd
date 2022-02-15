@@ -74,6 +74,7 @@ func _ready():
 	debug=true
 	if big:
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		position.y-=14
 	else:	
 		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 	gravity=constants.marioGravity
@@ -471,11 +472,13 @@ func startSliding(length=0):
 	ani.stop()
 	xVel=0
 	yVel=0
+	dir=constants.right
+#	ani.flip_h=true
 	self.poleLength=length
 	pass
 
 func poleSliding(delta):
-	yVel=150
+	yVel=220
 	position.y+=yVel*delta
 	animation("poleSliding")
 	pass
@@ -502,6 +505,8 @@ func sitBottomOfPole(_delta):
 	pass
 
 func setwalkingToCastle():
+	ani.frame=0
+	ani.stop()
 	status=constants.walkingToCastle
 	acceleration=constants.acceleration
 	maxXVel=constants.marioWalkMaxSpeed	

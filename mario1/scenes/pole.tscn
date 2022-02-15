@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/pole.gd" type="Script" id=1]
 [ext_resource path="res://sprites/flag.png" type="Texture" id=2]
 [ext_resource path="res://sprites/end0_flag.png" type="Texture" id=3]
+[ext_resource path="res://scenes/score.tscn" type="PackedScene" id=4]
 
 [node name="pole" type="Node2D"]
 position = Vector2( 15, 0 )
@@ -16,3 +17,9 @@ texture = ExtResource( 2 )
 [node name="flag" type="Sprite" parent="."]
 position = Vector2( -20, 35 )
 texture = ExtResource( 3 )
+
+[node name="score" parent="." instance=ExtResource( 4 )]
+visible = false
+margin_left = 12.0
+margin_right = 12.0
+margin_bottom = 16.0

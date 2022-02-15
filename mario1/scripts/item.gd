@@ -49,7 +49,7 @@ func growing(delta):
 		if type==constants.fireflower:
 			status=constants.stop
 		elif type==constants.star:
-			yVel=-jumpSpeed/2
+			yVel=-jumpSpeed
 			status=constants.jumping	
 	else:	
 		position.y+=yVel*delta	

@@ -10,6 +10,7 @@ var content=constants.empty  #里面的内容
 var spriteIndex=0  #打开后的颜色 0 是普通颜色 1 蓝色 2灰色  3金币盒子
 var _visible=true #是否可见
 var coin6Num=1  #多个硬币的数量 最大6
+var destroy=false #没有东西的时候是否被摧毁
 
 onready var ani=$ani
 var brick=preload("res://scenes/brickPiece.tscn")
@@ -76,6 +77,9 @@ func bumped(delta):
 					return	
 			elif content==constants.empty || content=='':
 				status=constants.resting	
+#				if destroy:
+#					destroy()
+#					add4Brick()
 				return		
 				
 			if spriteIndex==0:
@@ -88,6 +92,10 @@ func bumped(delta):
 				ani.play("opened")	
 			status=constants.opened	
 	else:
+		if destroy:
+			if abs(oldPos-position.y)>3:
+				destroy()
+				add4Brick()
 		position.y+=yVel*delta		
 	pass
 
@@ -106,13 +114,14 @@ func startBumped():
 		temp.position=position
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj2Other(temp)
-	elif content==constants.coins6 && coin6Num<6:	
+		Game.addCoin(self,1)
+	elif content==constants.coins6 && coin6Num<=6:	
 		coin6Num+=1
 		var temp=coin.instance()
 		temp.position=position
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj2Other(temp)
-		
+		Game.addCoin(self,1)
 	pass		
 
 #空的盒子
