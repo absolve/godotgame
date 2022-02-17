@@ -23,8 +23,9 @@ var menu=preload("res://scenes/menu.tscn")
 var firework=preload("res://scenes/firework.tscn")
 var castleFlag=preload("res://scenes/flag.tscn")
 
-#var map=[]
+
 var debug=true
+var isPress=false #编辑时是否按下鼠标
 var mapWidthSize=20  #地图宽度 
 var enemyList=[] #敌人列表
 var currentLevel  #文件数据
@@ -39,12 +40,15 @@ var selectItem='' #选择的item 名字
 var selectItemType='' #选择的item类型'
 var state=constants.empty
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
-var delList=[] #删除列表
+#var delList=[] #删除列表
 var timer=0
 var tick=2*60
 var nextStatus=constants.empty
 var lastMarioXPos=0  #用来标记mario进入城堡是x位置
 var castleFlagObj=null #城堡旗帜  只有一个
+var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
+var marioDeathPos={'x':-1,'y':-1} #保存死亡时的出生地
+
 
 var mode="game"  #game正常游戏  edit编辑  test测试
 onready var _brick=$brick
@@ -98,7 +102,28 @@ func _ready():
 		_title.setScore(Game.playerData['score'])
 		_title.setCoin(Game.playerData['coin'])
 		_title.setLevel(Game.playerData['level'])
-		initEnemy()	#初始化当前画面的敌人
+		
+		if marioDeathPos['x']!=-1:
+			checkPoint.sort_custom(self,'sort')
+			var temp=null
+			for i in checkPoint:
+				if marioDeathPos['x']>=i['x']:
+					temp=i
+					continue
+			if temp!=null: #设置复活点
+				for i in _marioList.get_children():
+					i.position.x=temp['x']
+					i.position.y=temp['y']
+					pass
+				#设置摄像机位置
+				camera.position.x=temp['x']
+				camera.position.x-=camera.offset.x/2
+				_bg.rect_position.x=camera.position.x
+				initEnemy()	#初始化当前画面的敌人
+			pass
+		else:
+			initEnemy()	#初始化当前画面的敌人	
+		print(checkPoint)	
 		state=constants.startState
 		pass	
 	elif mode=='test':
@@ -133,6 +158,7 @@ func loadMapFile(fileName:String):
 			var temp=mario.instance()
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
+			
 			_marioList.add_child(temp)
 		marioPos=pos
 		if mode=='edit':
@@ -229,15 +255,20 @@ func loadMapFile(fileName:String):
 				if mode=='edit':
 					allTiles.append(i)
 				else:
-					var temp=collision.instance()
-					temp.position.x=i['x']*blockSize+blockSize/2
-					temp.position.y=i['y']*blockSize+blockSize/2
-					temp.type=i['value']
-					var obj={"x":i['x'],"y":i['y']}
-					if checkTile(obj):
-						print(obj,' has one collision')
+					if i['value']=='checkPoint':
+						checkPoint.append({"x":i['x']*blockSize+blockSize/2
+									,"y":i['y']*blockSize+blockSize/2})
+						pass
 					else:	
-						_collisionList.add_child(temp)	
+						var temp=collision.instance()
+						temp.position.x=i['x']*blockSize+blockSize/2
+						temp.position.y=i['y']*blockSize+blockSize/2
+						temp.type=i['value']
+						var obj={"x":i['x'],"y":i['y']}
+						if checkTile(obj):
+							print(obj,' has one collision')
+						else:
+							_collisionList.add_child(temp)	
 			elif i['type']=='castleFlag':	
 				if mode=='edit':
 					allTiles.append(i)
@@ -286,15 +317,11 @@ func initEnemy():
 			enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2:
 				enemyList[e]['init']=true
 				addEnemy(enemyList[e])
-#				del.append(e)
-#	for  i in del:
-#		enemyList.remove(i)
 	pass
 
 #添加敌人
 func addEnemy(obj:Dictionary):
-	print("addEnemy",obj)
-#	return
+#	print("addEnemy",obj)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -333,6 +360,7 @@ func checkTile(obj):
 
 #检查点击的位置是否有这个方块 背景和其他物体可以重复
 func checkHasItem(pos,selectType):
+	print(selectType)
 	var x = pos.x
 	var y=pos.y
 	var indexX = int(x)/(blockSize)
@@ -354,23 +382,24 @@ func checkHasItem(pos,selectType):
 			if i["x"]==indexX&&i["y"]==indexY:
 				flag=true
 				break	
+	print(flag)
 	return 	flag
 
 
 #添加方块信息
-func addItem(type,pos):
-	if not constants.tilesAttribute.has(type):
-		print('item type error ',type)
+func addItem(type,key,pos):
+	if not constants.tilesAttribute.has(key):
+		print('item type error ',key)
 		return	
-	if type=='mario':
+	if key=='mario':
 		marioPos={'x':pos.x,'y':pos.y}
 		return
-	var g=constants.tilesAttribute[type].duplicate()
+	var g=constants.tilesAttribute[key].duplicate()
 	g.x=pos.x
 	g.y=pos.y
+	print(type,key,pos)
 	if type=='bg':
-		bgTiles.append(g)
-		pass		
+		bgTiles.append(g)	
 	else:	
 		allTiles.append(g)			
 
@@ -482,6 +511,8 @@ func gameRestart():
 	Game.playerData['lives']-=1
 	
 	var temp=menu.instance()
+	temp.marioDeathPos=marioDeathPos
+	temp.status=constants.gameRestart
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
@@ -498,7 +529,7 @@ func gameNextLevel():
 	set_process_input(true)
 	
 func marioAndEnemy(m,e):
-	if m.hurtInvincible:
+	if m.hurtInvincible:	
 		pass
 	elif m.invincible:
 		if m.xVel>=0:	
@@ -508,13 +539,11 @@ func marioAndEnemy(m,e):
 		addScore(m)	
 		pass
 	elif m.big:
-		if e.type==constants.koopa && e.status==constants.shell:
-#			e.status=constants.sliding
-#			if e.dir==constants.left:
-#				e.dir=constants.right
-#			else:
-#				e.dir=constants.left	
-			
+		if e.status==constants.shell||e.status==constants.revive:
+			if m.xVel<0:
+				e.dir=constants.left
+			else:
+				e.dir=constants.right
 			if m.position.x>e.position.x:
 				e.position.x=m.getLeft()-e.getSize()-1
 			else:
@@ -523,7 +552,18 @@ func marioAndEnemy(m,e):
 		else:	
 			m.big2Small()
 	else:
-		m.startDeathJump()		
+		if  e.status==constants.shell||e.status==constants.revive:
+			if m.xVel<0:
+				e.dir=constants.left
+			else:
+				e.dir=constants.right
+			if 	m.position.x>e.position.x:
+				e.position.x=m.getLeft()-e.getSize()-1
+			else:
+				e.position.x=m.getRight()+e.getSize()+1		
+			e.startSliding()	
+		else:	
+			m.startDeathJump()		
 	pass
 
 func marioJumpOnEnemy(m,e):
@@ -558,22 +598,25 @@ func updateFlagAndFireworks():
 	if castleFlagObj!=null:
 		castleFlagObj.rising()
 		yield(Game,"flagRising")
+		for y in range(20):
+			yield(get_tree(),"idle_frame")
 	var num=str(_title.lastTime)
 	var digits=num[num.length()-1]
 	print(digits)
-	digits="5"
-	if digits in ["1","3","5"]: #放烟花个数
+#	digits="5"
+	if digits in ["1","3","6"]: #放烟花个数
 		for i in range(digits.to_int()):
 			var temp=firework.instance()
 			temp.position.x=lastMarioXPos
 			_otherobjList.add_child(temp)
 			yield(temp.ani,"animation_finished")
-			_title.addScore(200)  #每朵烟花200
+			_title.addScore(300)  #每朵烟花200
 			for y in range(15):
 				yield(get_tree(),"idle_frame")
 			pass
 		pass
 	timer=0	
+	tick=150
 	state=constants.gameIdle
 	nextStatus=constants.nextLevel
 	pass
@@ -581,12 +624,27 @@ func updateFlagAndFireworks():
 #超时
 func timeOut():
 	for i in _marioList.get_children():
+		if i.status==constants.poleSliding||i.status==constants.sitBottomOfPole\
+			||i.status==constants.walkingToCastle:
+				continue
 		i.startDeathJump()
 	pass
 
 func hurryup():
 	print("hurryup")
 	pass	
+
+#游戏暂停	
+func gamePause():
+	
+	pass	
+
+func sort(a,b):
+	if a['x']>b['x']:
+		return true
+	else:
+		return false
+	pass
 	
 func _update(delta):
 	if mode=='edit':
@@ -671,7 +729,6 @@ func _update(delta):
 										i.xVel=0		
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
-#							print('abs(dx)>abs(dy)')
 							if y.type==constants.box && !y._visible:
 								continue
 							if dx<0:
@@ -812,16 +869,11 @@ func _update(delta):
 									i.yVel=0
 								if y.type==constants.box&& y.status==constants.bumped:
 									i.startDeathJump()
+									addScore(i)
 								else:		
 									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
-#							if dx<0:
-#								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
-#								i.turnRight()
-#							else:
-#								i.turnLeft()
-#								i.position.x=y.position.x-y.getSize()/2-i.getSize()/2
 							if dx<0:
 								i.turnRight()
 								i.position.x=y.getRight()+i.getSize()/2
@@ -856,20 +908,7 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-#							if dx<0:
-#								if y.type==constants.koopa && y.status==constants.shell:
-#									y.status=constants.sliding
-#									y.dir=constants.left
-#							else:
-#								if y.type==constants.koopa && y.status==constants.shell:
-#									y.status=constants.sliding
-#									y.dir=constants.right
-#							if dy<0:
-#								pass
-#							else:
-#								if i.yVel>0:
-#									i.yVel=0
-#								i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
+							marioAndEnemy(i,y)	
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							marioAndEnemy(i,y)	
@@ -1133,9 +1172,6 @@ func _update(delta):
 					mario1.position.x=mapWidthSize*blockSize-mario1.getSize()/2
 					if mario1.dir==constants.right:
 						mario1.xVel=0
-				
-#				if mario1.status==constants.walkingToCastle:
-#					return
 				#前进
 				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
 					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
@@ -1154,7 +1190,6 @@ func _update(delta):
 						_bg.rect_position.x=camera.position.x
 						
 				#根据摄像的移动判断前面位置是否需要添加敌人
-#				delList.clear()
 				for e in range(enemyList.size()):
 					if enemyList[e]['init']:
 						continue
@@ -1162,10 +1197,6 @@ func _update(delta):
 						enemyList[e].x*blockSize<camera.position.x+camera.offset.x*2+camera.offset.x/4:
 							addEnemy(enemyList[e])
 							enemyList[e]['init']=true
-#							delList.append(e)
-							
-#				for  i in delList:
-#					enemyList.remove(i)
 								
 			pass
 		elif state==constants.stateChange:
@@ -1174,6 +1205,8 @@ func _update(delta):
 				i._update(delta)
 				if i.dead:
 					if i.position.y>camera.offset.y*2+i.getSizeY()/2:
+						marioDeathPos['x']=i.position.x
+						marioDeathPos['x']
 						i.queue_free()
 						state=constants.gameIdle
 						nextStatus=constants.gameEnd
@@ -1236,6 +1269,7 @@ func _input(event):
 					return
 				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
 					return
+				isPress=true
 				if checkHasItem(get_global_mouse_position(),selectItemType):
 					if selectItemType=='del':
 						delItem(get_global_mouse_position())
@@ -1245,15 +1279,22 @@ func _input(event):
 					pass
 				else:	
 					var pos=getItemPos(get_global_mouse_position())	
-					addItem(selectItem,pos)
+					addItem(selectItemType,selectItem,pos)
 				pass
 			elif !event.pressed:	
-				
+				isPress=false
 				pass	
 			pass
 		elif event is InputEventMouseMotion:	#移动
-			
-			pass	
+			if isPress:
+				if checkHasItem(get_global_mouse_position(),selectItemType):
+					if selectItemType=='del':
+						delItem(get_global_mouse_position())
+					else:  #显示属性
+						getItemAttr(get_global_mouse_position())
+				else:	
+					var pos=getItemPos(get_global_mouse_position())	
+					addItem(selectItemType,selectItem,pos)
 		pass
 	pass
 

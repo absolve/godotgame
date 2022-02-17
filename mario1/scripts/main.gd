@@ -3,8 +3,10 @@ extends Node2D
 
 var player=1	#默认选择1玩家
 onready var _indicator=$indicator
+onready var _title=$title
 
 func _ready():
+	
 	pass 
 
 func _process(delta):
@@ -18,9 +20,15 @@ func _process(delta):
 			_indicator.position.y=280
 	elif Input.is_action_just_pressed("ui_accept"):
 		print("开始游戏")
-		var scene=load("res://scenes/map.tscn")
+		var scene=load("res://scenes/menu.tscn")
 		var temp=scene.instance()
-		temp.mode="game"
+		Game.playerData['score']=0
+		Game.playerData['level']="1-1"
+		Game.playerData['lives']=3
+		Game.playerData['coin']=0
+		Game.playerData['mario']['big']=false
+		Game.playerData['mario']['fire']=false
+		
 		queue_free()
 		set_process_input(false)
 		get_tree().get_root().add_child(temp)

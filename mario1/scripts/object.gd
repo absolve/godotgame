@@ -18,12 +18,7 @@ func _ready():
 	set_physics_process(false)
 	pass 
 
-func _draw():
-	if debug:
-		draw_rect(rect,Color.white,false,1)
-		if collisionShow:
-			draw_rect(rect,Color(1,0,0,0.3))	
-	pass
+
 
 func getRect():
 	var temp =rect
@@ -51,3 +46,10 @@ func getBottom():
 func _update(delta):
 	if debug:
 		update()
+
+func _draw():
+	if debug:
+		draw_rect(rect,Color.white,false,1)
+		if collisionShow:
+			draw_rect(rect,Color(1,0,0,0.3))	
+	pass

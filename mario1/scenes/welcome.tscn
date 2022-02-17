@@ -200,7 +200,7 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 script = ExtResource( 4 )
 
 [node name="bg" type="ColorRect" parent="."]
-margin_right = 600.0
+margin_right = 640.0
 margin_bottom = 480.0
 rect_pivot_offset = Vector2( 240, 30 )
 color = Color( 0.360784, 0.580392, 0.988235, 1 )

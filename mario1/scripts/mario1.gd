@@ -27,7 +27,7 @@ var invincibleAnimationTimer=0
 var shadowIndex=0
 var hurtInvincible=false
 var hurtInvincibleStartTime=0
-var hurtInvincibleEndime=420
+var hurtInvincibleEndime=300
 var dead=false
 var deadStartTime=0
 var deadEndTime=30
@@ -71,7 +71,7 @@ onready var shadow=$shadow
 
 func _ready():
 	type=constants.mario
-	debug=true
+#	debug=true
 	if big:
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		position.y-=14
@@ -505,7 +505,7 @@ func sitBottomOfPole(_delta):
 	pass
 
 func setwalkingToCastle():
-	ani.frame=0
+#	ani.frame=0
 	ani.stop()
 	status=constants.walkingToCastle
 	acceleration=constants.acceleration

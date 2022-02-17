@@ -11,7 +11,7 @@ onready var ani=$ani
 
 func _ready():
 #	type=constants.mushroom
-	debug=true
+#	debug=true
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 	gravity=constants.enemyGravity
 	oldPos=position.y

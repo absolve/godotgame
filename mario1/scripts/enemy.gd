@@ -9,10 +9,11 @@ var maxYVel=constants.enemyMaxVel
 
 func _ready():
 	gravity=constants.enemyGravity
-
+	
+	
 func walking(delta):
 	if yVel<maxYVel:
-		yVel+=gravity*delta	
+		yVel+=gravity*delta			
 	position.x+=xVel*delta
 	position.y+=yVel*delta
 	
@@ -48,10 +49,12 @@ func destory():
 	queue_free()
 	
 func turnLeft():
+	dir=constants.left
 	xVel=-abs(xVel)
 	pass	
 
 func turnRight():
+	dir=constants.right
 	xVel=abs(xVel)
 	pass	
 

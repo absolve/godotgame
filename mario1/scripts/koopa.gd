@@ -1,7 +1,7 @@
 extends "res://scripts/enemy.gd"
 
 #const speed=40
-const slidingSpeed=260
+const slidingSpeed=330
 var preStatus
 onready var ani=$ani
 const speed=55
@@ -12,7 +12,7 @@ var reviveTime=600 #变成壳然后变回乌龟的时间
 func _ready():
 #	status=constants.shell
 #	animation("shell")
-	debug=true
+#	debug=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
 	type=constants.koopa
@@ -64,18 +64,6 @@ func jumpedOn():
 	else:
 		dir=constants.left	
 		
-#	if spriteIndex==0:
-#		ani.play("shell")
-#	elif spriteIndex==1:
-#		ani.play("shell_blue")	
-#	elif spriteIndex==2:	
-#		ani.play("shell_grey")	
-#	elif spriteIndex==3:
-#		ani.play("shell_red")	
-#	if dir==constants.left:
-#		xVel=slidingSpeed
-#	else:
-#		xVel=-slidingSpeed	
 	reviveStartTime=0
 	status=constants.shell
 	ani.position.y=0	
@@ -105,14 +93,19 @@ func startDeathJump(_dir=constants.left):
 
 
 func startSliding():
-	if dir==constants.left:
-		xVel=slidingSpeed
-	else:
-		xVel=-slidingSpeed	
+#	if dir==constants.left:
+#		xVel=-slidingSpeed
+#	else:
+#		xVel=slidingSpeed	
+	animation("shell")
 	status=constants.sliding	
 
 func shellSliding(delta):
 	yVel+=gravity*delta
+	if dir==constants.left:
+		xVel=-slidingSpeed
+	else:
+		xVel=slidingSpeed	
 	position.x+=xVel*delta
 	position.y+=yVel*delta
 	pass
