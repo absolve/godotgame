@@ -3,10 +3,15 @@ extends Node2D
 
 var player=1	#默认选择1玩家
 onready var _indicator=$indicator
-onready var _title=$title
+var path="res://levels/show.json"
 
 func _ready():
-	
+	var scene=load("res://scenes/map.tscn").instance()
+	scene.mode='show'
+	add_child(scene)
+	scene.loadMapFile(path)
+	scene.show_behind_parent=true
+	scene.set_process_input(false)
 	pass 
 
 func _process(delta):

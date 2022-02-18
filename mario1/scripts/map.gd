@@ -30,6 +30,7 @@ var mapWidthSize=20  #地图宽度
 var enemyList=[] #敌人列表
 var currentLevel  #文件数据
 var path="res://levels/1-1.json"
+var mapDir="res://levels"	#内置地图路径
 var currentMapWidth=0 #当前地图的宽度
 var bg="overworld" #overworld   castle underwater
 var time=400 #时间
@@ -47,10 +48,10 @@ var nextStatus=constants.empty
 var lastMarioXPos=0  #用来标记mario进入城堡是x位置
 var castleFlagObj=null #城堡旗帜  只有一个
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
-var marioDeathPos={'x':-1,'y':-1} #保存死亡时的出生地
+var marioDeathPos={'x':-1,'y':-1} #保存死亡时的位置
 
 
-var mode="game"  #game正常游戏  edit编辑  test测试
+var mode="edit"  #game正常游戏  edit编辑  test测试  show展示
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
@@ -94,10 +95,12 @@ func _ready():
 		_title.hide()
 		pass
 	elif mode=='game':
+		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-		loadMapFile("res://levels/1-1.json")
-		_title.setTime(400)
+#		loadMapFile("res://levels/1-1.json")
+		findMapFile()
+		_title.setTime(time)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
 		_title.setCoin(Game.playerData['coin'])
@@ -127,12 +130,26 @@ func _ready():
 		state=constants.startState
 		pass	
 	elif mode=='test':
-		
+		pass
+	elif mode=='show':	
+		_bg.show()
+		_tab.hide()
+		_toolBtn.hide()	
+		_title.hideTime()
 		pass
 	print(camera.get_camera_position().y)	
 	print(_marioList.get_children())
+#	findMapFile()
 	pass
 
+func findMapFile():
+	var dir = Directory.new()
+	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+		print("ok")
+		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+	else:
+		print("文件不存在")
+	pass
 
 #载入文件
 func loadMapFile(fileName:String):
@@ -154,12 +171,13 @@ func loadMapFile(fileName:String):
 		_background.setValue(str(currentLevel['bg']))
 		_music.setValue(str(currentLevel['music']))
 		var pos = currentLevel['marioPos']
-		if !pos.empty()&&mode=='game':  #添加mario
-			var temp=mario.instance()
-			temp.position.x=pos['x']*blockSize+blockSize/2
-			temp.position.y=pos['y']*blockSize+blockSize/2
-			
-			_marioList.add_child(temp)
+		if !pos.empty():  #添加mario
+			if mode=='game' ||  mode=='show':
+				var temp=mario.instance()
+				temp.position.x=pos['x']*blockSize+blockSize/2
+				temp.position.y=pos['y']*blockSize+blockSize/2
+				_marioList.add_child(temp)
+		
 		marioPos=pos
 		if mode=='edit':
 			allTiles.clear()
@@ -169,7 +187,7 @@ func loadMapFile(fileName:String):
 			if i['type'] =='brick':
 				if mode=='edit':
 					allTiles.append(i)
-				elif mode=='game':	
+				else:	
 					var temp=brick.instance()
 					temp.spriteIndex=i['spriteIndex']
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -300,6 +318,7 @@ func save2File(fileName):
 		'marioPos':marioPos,
 		'data':allTiles+bgTiles,
 	}
+#	print(data)
 	var file = File.new()
 	file.open(fileName, File.WRITE)
 	file.store_string(to_json(data))
@@ -1239,6 +1258,8 @@ func _update(delta):
 		elif state==constants.pause:	
 			
 			pass
+	elif mode=='show':
+		pass
 	pass
 
 
@@ -1363,7 +1384,7 @@ func _on_hide_pressed():
 func _on_save_pressed():
 	var baseDir=OS.get_executable_path().get_base_dir()
 	_saveDialog.current_dir=baseDir
-	_saveDialog.current_file="1-1.json"
+#	_saveDialog.current_file="1-1.json"
 	_saveDialog.popup_centered()
 	pass # Replace with function body.
 
@@ -1385,8 +1406,10 @@ func _on_Button_pressed():
 
 
 func _on_FileDialog_confirmed():
-	if _saveDialog.current_file:
+	if _saveDialog.current_path:
 		save2File(_saveDialog.current_path)
+	else:
+		print("没有当前文件")
 	pass # Replace with function body.
 
 #保存地图信息
