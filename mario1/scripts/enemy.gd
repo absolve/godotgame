@@ -35,6 +35,7 @@ func startDeathJump():
 	else:
 		xVel=45
 #	gravity=constants.deathJumpGravity
+	z_index=3
 	status=constants.deadJump
 	pass
 

@@ -1,0 +1,73 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=1]
+[ext_resource path="res://sounds/lowtime.ogg" type="AudioStream" id=2]
+[ext_resource path="res://sounds/overworld.ogg" type="AudioStream" id=3]
+[ext_resource path="res://sounds/overworld-fast.ogg" type="AudioStream" id=4]
+[ext_resource path="res://sounds/starmusic-fast.ogg" type="AudioStream" id=5]
+[ext_resource path="res://sounds/starmusic.ogg" type="AudioStream" id=6]
+[ext_resource path="res://sounds/konami.ogg" type="AudioStream" id=7]
+[ext_resource path="res://sounds/blockbreak.ogg" type="AudioStream" id=8]
+[ext_resource path="res://sounds/blockhit.ogg" type="AudioStream" id=9]
+[ext_resource path="res://sounds/coin.ogg" type="AudioStream" id=10]
+[ext_resource path="res://sounds/mushroomappear.ogg" type="AudioStream" id=11]
+[ext_resource path="res://sounds/oneup.ogg" type="AudioStream" id=12]
+[ext_resource path="res://sounds/mushroomeat.ogg" type="AudioStream" id=13]
+[ext_resource path="res://sounds/boom.ogg" type="AudioStream" id=14]
+[ext_resource path="res://sounds/shot.ogg" type="AudioStream" id=15]
+[ext_resource path="res://sounds/stomp.ogg" type="AudioStream" id=16]
+[ext_resource path="res://sounds/shrink.ogg" type="AudioStream" id=17]
+
+[node name="soundsUtil" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="overworld" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="overworld_fast" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+
+[node name="lowtime" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="star" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="star_fast" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="flag" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="konami" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="brick" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
+
+[node name="brickhit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+
+[node name="coin" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+
+[node name="item" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+
+[node name="item1up" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 12 )
+
+[node name="mushroom" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+
+[node name="boom" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+
+[node name="shoot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 15 )
+
+[node name="stomp" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 16 )
+
+[node name="big2small" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 17 )

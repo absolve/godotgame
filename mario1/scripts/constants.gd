@@ -112,13 +112,14 @@ const enemyMaxVel=1700
 
 const slideFriction=14 #滑行的加速度
 const acceleration=5	#移动加速度
+const crouchFriction=10 #蹲下去时加速度
 const runAcceleration=10 #跑的加速度
 const marioWalkMaxSpeed=149 #走的时候最大速度
 const marioRunMaxSpeed=330 #跑的时候最大速度
-const marioAniSpeed=145
+const marioAniSpeed=100
 const marioGravity=2100 #重力
 const marioJumpGravity=1000
-const marioJumpSpeed=570
+const marioJumpSpeed=550
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
@@ -224,7 +225,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": true,
+		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
 	},
@@ -234,7 +235,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": false,
+		"visible": "f",
 		"offsetX":0,
 		"offsetY":0,
 	},
@@ -244,7 +245,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": true,
+		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
 	},
@@ -254,7 +255,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": "mushroom",
-		"visible": true,
+		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
 	},

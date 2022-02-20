@@ -3,7 +3,7 @@ extends "res://scripts/object.gd"
 var status=constants.growing
 var dir=constants.right
 var oldPos=0
-const speed=90  #速度
+const speed=100  #速度
 const jumpSpeed=460
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容

@@ -3,9 +3,9 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=constants.marioMaxYVel
-var big = false #是否变大
+var big = true #是否变大
 #var faceRight=true
-var fire = false #是否能发射子弹
+var fire = true #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
 var isOnFloor=false #是否在地面上
@@ -35,7 +35,7 @@ var leftStop=false
 var rightStop=false
 var flagPoleTimer=0 #从旗杆上转身然后下来
 var poleLength=0 #旗杆右边位置
-
+var isCrouch=false 	#是否蹲下
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -68,10 +68,13 @@ var death_jump_animation=['death','death_green',
 var aniIndex=0	#动画索引					
 onready var ani=$ani
 onready var shadow=$shadow
+onready var jump=$jump
+onready var bigjump=$bigjump
+onready var fireball=$fireball
 
 func _ready():
 	type=constants.mario
-#	debug=true
+	debug=true
 	if big:
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
 		position.y-=14
@@ -82,6 +85,12 @@ func _ready():
 		aniIndex=2
 	animation("stand")
 	shadowIndex=aniIndex
+	var jump1=jump.stream as AudioStreamOGGVorbis
+	jump1.set_loop(false)
+	var bigjump1=bigjump.stream as AudioStreamOGGVorbis
+	bigjump1.set_loop(false)
+	var fireball1=fireball.stream as AudioStreamOGGVorbis
+	fireball1.set_loop(false)
 	pass 
 
 
@@ -188,6 +197,7 @@ func stand(_delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
+		playJumpSound()
 #		print("stand jump")
 	if Input.is_action_just_pressed("ui_down") &&big:
 		startCrouch()
@@ -206,12 +216,14 @@ func stand(_delta):
 
 func walk(delta):
 #	yVel+=gravity*delta
-	if xVel>0:
-		ani.speed_scale=1+xVel/constants.marioAniSpeed
-	elif xVel<0:
-		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+#	if xVel>0:
+#		ani.speed_scale=1+xVel/constants.marioAniSpeed
+#	elif xVel<0:
+#		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
 #	else:
 #		ani.speed_scale=1
+	if xVel>0 || xVel<0:
+		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
 	
 	if Input.is_action_pressed("ui_action"):
 		acceleration=constants.runAcceleration
@@ -229,12 +241,18 @@ func walk(delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
+		playJumpSound()
 #		print('walk jump')
 		return
 	
-	if Input.is_action_just_pressed("ui_down") &&big:
+	if Input.is_action_pressed("ui_down") &&big:
 		startCrouch()
 		return
+	elif isCrouch and big:
+		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		position.y-=14
+		ani.position.y=0
+		isCrouch=false
 	
 	if Input.is_action_pressed("ui_left"):
 		if xVel>0: #反方向
@@ -291,7 +309,11 @@ func walk(delta):
 
 func jump(delta):
 	yVel+=gravity*delta
-	animation("jump")
+	
+	if isCrouch:
+		animation("crouch")
+	else:
+		animation("jump")	
 #	print(yVel)
 	if yVel>0:
 		gravity=constants.marioGravity
@@ -357,11 +379,12 @@ func deathJump(delta):
 
 func startCrouch():
 	status=constants.crouch	
-	rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
-	position.y+=15  #不能到边界
-#	position.y+=16
-#	rect.size.y-=32
-	ani.position.y-=15
+	if !isCrouch:
+		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
+		position.y+=14  #
+		ani.position.y-=9
+	acceleration=constants.crouchFriction	
+	isCrouch=true
 	
 func crouch(delta):
 	yVel+=gravity*delta
@@ -372,15 +395,16 @@ func crouch(delta):
 	if Input.is_action_just_released("ui_down"):
 		status=constants.walk	
 		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
-		position.y-=15
-#		rect.size.y+=32
+		position.y-=14
 		ani.position.y=0
+		isCrouch=false
 		pass
 	elif Input.is_action_pressed("ui_jump"):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
 		pass
+	
 		
 	if dir==constants.right:
 		if	xVel>0:
@@ -636,8 +660,14 @@ func shootFireball(play=true):
 			if play:
 				animation("fire")
 			Game.addObj2Bullet(position,dir)
+			fireball.play()
 			
-
+#播放声音			
+func playJumpSound():
+	if big:
+		bigjump.play()
+	else:
+		jump.play()
 
 func _on_ani_frame_changed():
 	if status==constants.small2big:

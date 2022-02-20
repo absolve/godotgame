@@ -5,7 +5,7 @@ extends "res://scripts/object.gd"
 """
 
 var status=constants.empty
-const speed=50
+const speed=80
 var oldYpos=0
 var spriteIndex=0
 

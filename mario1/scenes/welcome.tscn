@@ -28,7 +28,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="1p" type="Label" parent="."]
+[node name="p1" type="Label" parent="."]
 margin_left = 220.0
 margin_top = 280.0
 margin_right = 428.0
@@ -40,7 +40,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="2p" type="Label" parent="."]
+[node name="p2" type="Label" parent="."]
 margin_left = 220.0
 margin_top = 320.0
 margin_right = 428.0

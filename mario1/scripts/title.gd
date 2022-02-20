@@ -12,7 +12,7 @@ onready var _time=$hbox/timeLable/time
 var countDownStart=true
 var currentTime=100  #时间
 var tick=0
-var tickNum=17
+var tickNum=21
 var fastTickNum=1
 var status=constants.empty
 var score=0
@@ -107,7 +107,7 @@ func _update(_delta):
 			if tick>=fastTickNum:	
 				tick=0
 				currentTime-=1
-				addScore(1)
+				addScore(100)
 				if currentTime<=0:
 					status=constants.empty
 			_time.text="%0*d"%[3,currentTime]

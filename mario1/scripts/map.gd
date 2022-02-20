@@ -49,9 +49,10 @@ var lastMarioXPos=0  #用来标记mario进入城堡是x位置
 var castleFlagObj=null #城堡旗帜  只有一个
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
 var marioDeathPos={'x':-1,'y':-1} #保存死亡时的位置
+var music="" #背景影月
 
 
-var mode="edit"  #game正常游戏  edit编辑  test测试  show展示
+var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
@@ -98,7 +99,7 @@ func _ready():
 		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-#		loadMapFile("res://levels/1-1.json")
+#		loadMapFile("res://levels/test5.json")
 		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
@@ -128,6 +129,7 @@ func _ready():
 			initEnemy()	#初始化当前画面的敌人	
 		print(checkPoint)	
 		state=constants.startState
+		SoundsUtil.playBgm()
 		pass	
 	elif mode=='test':
 		pass
@@ -170,6 +172,10 @@ func loadMapFile(fileName:String):
 		_time.setValue(str(currentLevel['time']))
 		_background.setValue(str(currentLevel['bg']))
 		_music.setValue(str(currentLevel['music']))
+		music=str(currentLevel['music'])
+		SoundsUtil.bgm=music
+		SoundsUtil.isLowTime=false
+		
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
 			if mode=='game' ||  mode=='show':
@@ -212,7 +218,7 @@ func loadMapFile(fileName:String):
 					if typeof(i['visible'])==TYPE_BOOL:
 						temp._visible=i['visible']
 					elif typeof(i['visible'])==TYPE_STRING:
-						if i['visible']=="false":
+						if i['visible']=="false"||i['visible']=="f":
 							temp._visible=false
 						else:	
 							temp._visible=true
@@ -252,7 +258,7 @@ func loadMapFile(fileName:String):
 					temp.position.x=i['x']*blockSize+blockSize/2
 					temp.position.y=i['y']*blockSize+blockSize/2
 					var obj={"x":i['x'],"y":i['y']}
-					if checkTile(obj):
+					if checkBgTile(obj):
 						print(obj,' has one bg')
 					else:	
 						_bgList.add_child(temp)
@@ -376,6 +382,13 @@ func checkTile(obj):
 			break
 	return 	flag		
 		
+func checkBgTile(obj):
+	var flag=false		
+	for i in bgTiles:
+		if i["x"]==obj["x"]&&i["y"]==obj["y"]:	
+			flag=true
+			break
+	return 	flag	
 
 #检查点击的位置是否有这个方块 背景和其他物体可以重复
 func checkHasItem(pos,selectType):
@@ -556,6 +569,7 @@ func marioAndEnemy(m,e):
 		else:
 			e.startDeathJump(constants.left)	
 		addScore(m)	
+		SoundsUtil.playShoot()
 		pass
 	elif m.big:
 		if e.status==constants.shell||e.status==constants.revive:
@@ -567,9 +581,11 @@ func marioAndEnemy(m,e):
 				e.position.x=m.getLeft()-e.getSize()-1
 			else:
 				e.position.x=m.getRight()+e.getSize()+1	
-			e.startSliding()	
+			e.startSliding()
+			SoundsUtil.playShoot()	
 		else:	
 			m.big2Small()
+			SoundsUtil.playBig2small()
 	else:
 		if  e.status==constants.shell||e.status==constants.revive:
 			if m.xVel<0:
@@ -581,12 +597,56 @@ func marioAndEnemy(m,e):
 			else:
 				e.position.x=m.getRight()+e.getSize()+1		
 			e.startSliding()	
-		else:	
+			SoundsUtil.playShoot()
+		else:
+			SoundsUtil.stopBgm()	
 			m.startDeathJump()		
 	pass
 
 func marioJumpOnEnemy(m,e):
-	
+	if m.invincible:
+		if m.position.x<e.position.x:	
+			e.startDeathJump(constants.right)
+		else:
+			e.startDeathJump(constants.left)	
+		addScore(m)	
+		SoundsUtil.playStomp()	
+	else:
+		if m.yVel>=0:
+			m.yVel=-220
+			if m.xVel>0:
+				m.xVel+=10
+			else:
+				m.xVel-=10	
+			m.position.y=e.position.y-e.getSizeY()/2-m.getSizeY()/2+1#位置调整		
+			e.jumpedOn()
+			addScore(m)
+			SoundsUtil.playStomp()	
+	pass
+
+#mario跟物品
+func marioAndItem(m,i):
+	if i.type==constants.mushroom:
+		i.queue_free()
+		m.small2Big()
+		SoundsUtil.playMushroom()
+		addScore(m,5000)
+	elif i.type==constants.fireflower:
+		i.queue_free()
+		if m.big:
+			m.big2Fire()
+		else:
+			m.small2Big()	
+		addScore(m,5000)
+		SoundsUtil.playMushroom()
+	elif i.type==constants.star:
+		i.queue_free()
+		m.setInvincible()
+		addScore(m,5000)
+	elif i.type==constants.mushroom1up:	
+		i.queue_free()
+		addLive(m)
+		SoundsUtil.playItem1up()
 	pass
 
 #添加分数
@@ -672,7 +732,7 @@ func _update(delta):
 		if state==constants.startState:
 			#清除超过屏幕的敌人
 			var pos=camera.get_camera_position()
-			var num=0
+#			var num=0
 			for i in _enemyList.get_children():
 				if i.position.x+i.getSize()/2<=pos.x-camera.offset.x:
 					i.queue_free()
@@ -759,9 +819,7 @@ func _update(delta):
 									i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
-							if dy<0:  #下方			
-#								print("else dy<0 ",dx)						
-#								print(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))			
+							if dy<0:  #下方					
 								#这个非常的接近边缘就不判断	
 								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:
 									if y.type==constants.box && i.yVel<0:
@@ -773,36 +831,23 @@ func _update(delta):
 											y.startBumped()		
 									i.yVel=abs(i.yVel)-abs(i.yVel)/4				
 							else: #上方
-#								if y.type==constants.box:
-#									print(i.position,y.position)
 								if y.type==constants.box && !y._visible:
 									continue
 								if i.yVel>=0:  #掉落的情况
-#									if y.type==constants.box:
-#										print('box',i.getBottom()," ",y.getTop())	
 									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
-#										if y.type==constants.box:
-#											print( abs(i.getLeft()-y.getRight()))
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
 										onFloor=true	
 									elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
-#										if y.type==constants.box:
-#											print(abs(i.getRight()-y.getLeft()))
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
 										onFloor=true	
 								elif i.yVel<0:
-#									onFloor=true
-#									print('i.yVel<0')
 									pass
 								else:
-#									print("else")
 									i.yVel=0
 									i.position.y=y.getTop()-i.getSizeY()/2	
 									onFloor=true		
-
-#							pass
 						pass
 					else:
 						y.collisionShow=false
@@ -937,29 +982,24 @@ func _update(delta):
 								marioAndEnemy(i,y)	
 								pass
 							else:
-								if i.invincible:
-									if dx>0:	
-										y.startDeathJump(constants.right)
-									else:
-										y.startDeathJump(constants.left)	
-									addScore(i)		
-								else:
-									if i.yVel>=0:
-										i.yVel=-220
-										if i.xVel>0:
-											i.xVel+=10
-										else:
-											i.xVel-=10	
-										i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2+1#位置调整
-#										if y.type==constants.koopa:
-#											i.yVel=-220
-#											if dx<0:
-#												y.dir=constants.right
-#											else:
-#												y.dir=constants.left
-#											pass		
-										y.jumpedOn()
-										addScore(i)	
+								marioJumpOnEnemy(i,y)
+#								if i.invincible:
+#									if dx>0:	
+#										y.startDeathJump(constants.right)
+#									else:
+#										y.startDeathJump(constants.left)	
+#									addScore(i)	
+#									SoundsUtil.playShoot()	
+#								else:
+#									if i.yVel>=0:
+#										i.yVel=-220
+#										if i.xVel>0:
+#											i.xVel+=10
+#										else:
+#											i.xVel-=10	
+#										i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2+1#位置调整		
+#										y.jumpedOn()
+#										addScore(i)	
 				pass
 			
 			for i in _enemyList.get_children():  #敌人之间的碰撞
@@ -1033,7 +1073,7 @@ func _update(delta):
 #								pass		
 					pass
 			
-			for i in _bulletList.get_children():
+			for i in _bulletList.get_children():	#子弹跟方块
 				for y in _brickList.get_children():
 					if y.position.x+y.getSize()/2<pos.x-camera.offset.x ||\
 						y.position.x-y.getSize()/2>pos.x+camera.offset.x*2:
@@ -1055,7 +1095,8 @@ func _update(delta):
 										i.yVel=-i.speed	
 								else:
 									if i.type==constants.fireball &&i.status==constants.fly:
-										i.boom()		
+										i.boom()
+										SoundsUtil.playBoom()		
 							else:
 								if dy>=0:
 									i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
@@ -1063,7 +1104,8 @@ func _update(delta):
 										i.yVel=-i.speed	
 								else:
 									if i.type==constants.fireball&&i.status==constants.fly:
-										i.boom()		
+										i.boom()
+										SoundsUtil.playBoom()			
 								pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							i.xVel=0
@@ -1073,6 +1115,7 @@ func _update(delta):
 							else:
 								if i.type==constants.fireball:
 									i.boom()
+							SoundsUtil.playBoom()			
 						else: #上下的碰撞
 							if dy<0:  #下方
 								if i.status==constants.fly:
@@ -1098,6 +1141,7 @@ func _update(delta):
 						else:
 							y.startDeathJump(constants.left)	
 						addScore(y)
+						SoundsUtil.playShoot()
 						pass	
 					pass
 			
@@ -1106,24 +1150,25 @@ func _update(delta):
 					var rect1 = i.getRect()
 					var rect2=y.getRect()
 					if rect1.intersects(rect2):
-						if y.type==constants.mushroom:
-							y.queue_free()
-							i.small2Big()
-							addScore(i,5000)
-						elif y.type==constants.fireflower:
-							y.queue_free()
-							if i.big:
-								i.big2Fire()
-							else:
-								i.small2Big()	
-							addScore(i,5000)
-						elif y.type==constants.star:
-							y.queue_free()
-							i.setInvincible()
-							addScore(i,5000)
-						elif y.type==constants.mushroom1up:	
-							y.queue_free()
-							addLive(i)
+						marioAndItem(i,y)
+#						if y.type==constants.mushroom:
+#							y.queue_free()
+#							i.small2Big()
+#							addScore(i,5000)
+#						elif y.type==constants.fireflower:
+#							y.queue_free()
+#							if i.big:
+#								i.big2Fire()
+#							else:
+#								i.small2Big()	
+#							addScore(i,5000)
+#						elif y.type==constants.star:
+#							y.queue_free()
+#							i.setInvincible()
+#							addScore(i,5000)
+#						elif y.type==constants.mushroom1up:	
+#							y.queue_free()
+#							addLive(i)
 						pass
 					pass
 			
@@ -1192,12 +1237,12 @@ func _update(delta):
 					if mario1.dir==constants.right:
 						mario1.xVel=0
 				#前进
-				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
+				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x+30:
 					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
 						camera.position.x=mapWidthSize*blockSize-camera.offset.x*2
 						_bg.rect_position.x=camera.position.x
 					else:
-						camera.position.x=mario1.position.x-camera.offset.x
+						camera.position.x=mario1.position.x-camera.offset.x-30
 						_bg.rect_position.x=camera.position.x
 				#后退		
 				if mario1.xVel<0 && mario1.position.x<camera.position.x+camera.offset.x/2:
@@ -1224,6 +1269,7 @@ func _update(delta):
 				i._update(delta)
 				if i.dead:
 					if i.position.y>camera.offset.y*2+i.getSizeY()/2:
+						SoundsUtil.stopBgm()
 						marioDeathPos['x']=i.position.x
 						marioDeathPos['x']
 						i.queue_free()

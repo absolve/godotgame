@@ -33,11 +33,13 @@ position = Vector2( 0, -1 )
 z_index = 1
 
 [node name="brick" type="Node2D" parent="."]
+z_index = 2
 
 [node name="bullet" type="Node2D" parent="."]
 z_index = 1
 
 [node name="item" type="Node2D" parent="."]
+z_index = 1
 
 [node name="pole" type="Node2D" parent="."]
 z_index = 1
@@ -87,7 +89,7 @@ size_flags_vertical = 3
 margin_right = 220.0
 margin_bottom = 39.0
 key = "mapWidth"
-value = "19"
+value = "20"
 
 [node name="time" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
 margin_top = 43.0

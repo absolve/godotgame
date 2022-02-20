@@ -71,15 +71,13 @@ func bumped(delta):
 						if !Game.getMario()[0].big:
 							temp.type=constants.mushroom
 				Game.addObj2Item(temp)
+#				SoundsUtil.playItem()
 			elif content==constants.coins6:
 				if coin6Num<6:
 					status=constants.resting	
 					return	
 			elif content==constants.empty || content=='':
 				status=constants.resting	
-#				if destroy:
-#					destroy()
-#					add4Brick()
 				return		
 				
 			if spriteIndex==0:
@@ -96,6 +94,7 @@ func bumped(delta):
 			if abs(oldPos-position.y)>3:
 				destroy()
 				add4Brick()
+				SoundsUtil.playBrickBreak()
 		position.y+=yVel*delta		
 	pass
 
@@ -115,6 +114,7 @@ func startBumped():
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj2Other(temp)
 		Game.addCoin(self,1)
+		SoundsUtil.playCoin()
 	elif content==constants.coins6 && coin6Num<=6:	
 		coin6Num+=1
 		var temp=coin.instance()
@@ -122,6 +122,10 @@ func startBumped():
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj2Other(temp)
 		Game.addCoin(self,1)
+		SoundsUtil.playCoin()
+	elif content==constants.mushroom||content==constants.mushroom1up||\
+			content==constants.star||content==constants.fireflower:	
+			SoundsUtil.playItem()	
 	pass		
 
 #空的盒子

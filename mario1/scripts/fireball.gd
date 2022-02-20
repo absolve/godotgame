@@ -33,6 +33,7 @@ func _update(delta):
 
 func boom():
 	status=constants.boom
+#	SoundsUtil.playBoom()
 	ani.play('boom')
 	z_index=2
 	yield(ani,"animation_finished")
