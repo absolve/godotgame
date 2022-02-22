@@ -139,8 +139,8 @@ func _ready():
 		_toolBtn.hide()	
 		_title.hideTime()
 		pass
-	print(camera.get_camera_position().y)	
-	print(_marioList.get_children())
+#	print(camera.get_camera_position().y)	
+#	print(_marioList.get_children())
 #	findMapFile()
 	pass
 
@@ -601,6 +601,7 @@ func marioAndEnemy(m,e):
 		else:
 			SoundsUtil.stopBgm()	
 			m.startDeathJump()		
+			SoundsUtil.playDeath()
 	pass
 
 func marioJumpOnEnemy(m,e):
@@ -649,6 +650,20 @@ func marioAndItem(m,i):
 		SoundsUtil.playItem1up()
 	pass
 
+#mario掉出屏幕
+func marioOutYPos():
+#	stateChange()
+	for i in _itemsList.get_children():
+		i.pause()
+	for i in _enemyList.get_children():
+		i.pause()
+	state=constants.empty	
+	SoundsUtil.stopBgm()
+	SoundsUtil.playDeath()
+	yield(SoundsUtil.death,"finished")
+	state=constants.stateChange
+	pass
+
 #添加分数
 func addScore(m,_score=100):
 	var temp=score.instance()
@@ -685,6 +700,7 @@ func updateFlagAndFireworks():
 #	digits="5"
 	if digits in ["1","3","6"]: #放烟花个数
 		for i in range(digits.to_int()):
+			SoundsUtil.playBoom()
 			var temp=firework.instance()
 			temp.position.x=lastMarioXPos
 			_otherobjList.add_child(temp)
@@ -707,10 +723,12 @@ func timeOut():
 			||i.status==constants.walkingToCastle:
 				continue
 		i.startDeathJump()
+	SoundsUtil.stopBgm()	
 	pass
 
 func hurryup():
 	print("hurryup")
+	SoundsUtil.playLowTime()
 	pass	
 
 #游戏暂停	
@@ -753,8 +771,12 @@ func _update(delta):
 				if i.position.y>camera.offset.y*2+i.getSizeY()/2:
 					i.dead=true
 #					i.status=constants.stop
-					state=constants.stateChange
-			
+#					state=constants.stateChange
+					marioOutYPos()
+#					stateChange()
+#					SoundsUtil.stopBgm()
+#					SoundsUtil.playDeath()
+					
 			_title._update(delta)
 			
 			for i in _marioList.get_children():
@@ -1269,7 +1291,7 @@ func _update(delta):
 				i._update(delta)
 				if i.dead:
 					if i.position.y>camera.offset.y*2+i.getSizeY()/2:
-						SoundsUtil.stopBgm()
+#						SoundsUtil.stopBgm()
 						marioDeathPos['x']=i.position.x
 						marioDeathPos['x']
 						i.queue_free()

@@ -1,16 +1,11 @@
 extends "res://scripts/tank.gd"
 
 
-#var rect=Rect2(Vector2(-14,-14),Vector2(28,28))
 var vec=Vector2.ZERO
 var keymap={"up":0,"down":0,"left":0,"right":0,'fire':0}
 var level=0 #坦克的级别	0最小 1中等 2是大  3是最大
-#var dir=0 # 0上 1下 2左 3右
 var shootTime=0	
 var shootDelay=90
-#var bullets=[]
-#var bulletMax=1	#发射最大子弹数
-#var bullet=Game.bullet
 var isInit=false
 var state=Game.tank_state.IDLE
 var initStartTime=0
@@ -18,9 +13,7 @@ var initTime=1200  #ms
 var isInvincible=false #无敌
 var invincibleStartTime=0
 var invincibleTime=8000
-#var isStop=false#是否停止
 var playId=2  #1=1p 2=2p
-#var life=1  #生命默认1
 var speed = 70 #移动速度
 var bulletPower=Game.bulletPower.normal
 var hasShip=false	#是否有船
@@ -45,9 +38,9 @@ func _ready():
 	shot.set_loop(false)
 	var hit=_hit.stream as AudioStreamOGGVorbis
 	hit.set_loop(false)
-	get_children()
+#	get_children()
 	_ani.play("flash")
-	_ani.playing=true
+#	_ani.playing=true
 	_invincibleTimer.connect("timeout",self,"invincibleTimerEnd")
 	_initTimer.connect("timeout",self,"initEnd")
 	_initTimer.start()
@@ -91,22 +84,12 @@ func setOnIce(isOnIce):
 	 
 func setKeyMap(playerId:int):
 	if playerId==1:
-#		keymap["up"]=Game.player1["up"]
-#		keymap["down"]=Game.player1["down"]
-#		keymap["left"]=Game.player1["left"]
-#		keymap["right"]=Game.player1["right"]
-#		keymap["fire"]=Game.player1["fire"]
 		keymap["up"]="p1_up"
 		keymap["down"]="p1_down"
 		keymap["left"]="p1_left"
 		keymap["right"]="p1_right"
 		keymap["fire"]="p1_fire"
 	elif playerId==2:
-#		keymap["up"]=Game.player2["up"]
-#		keymap["down"]=Game.player2["down"]
-#		keymap["left"]=Game.player2["left"]
-#		keymap["right"]=Game.player2["right"]
-#		keymap["fire"]=Game.player2["fire"]	
 		keymap["up"]="p2_up"
 		keymap["down"]="p2_down"
 		keymap["left"]="p2_left"

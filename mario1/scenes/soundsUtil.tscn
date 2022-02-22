@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=1]
 [ext_resource path="res://sounds/lowtime.ogg" type="AudioStream" id=2]
@@ -17,6 +17,9 @@
 [ext_resource path="res://sounds/shot.ogg" type="AudioStream" id=15]
 [ext_resource path="res://sounds/stomp.ogg" type="AudioStream" id=16]
 [ext_resource path="res://sounds/shrink.ogg" type="AudioStream" id=17]
+[ext_resource path="res://sounds/scorering.ogg" type="AudioStream" id=18]
+[ext_resource path="res://sounds/gameover.ogg" type="AudioStream" id=19]
+[ext_resource path="res://sounds/death.ogg" type="AudioStream" id=20]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 1 )
@@ -71,3 +74,12 @@ stream = ExtResource( 16 )
 
 [node name="big2small" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 17 )
+
+[node name="score" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 18 )
+
+[node name="gameover" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 19 )
+
+[node name="death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 20 )

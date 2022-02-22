@@ -11,7 +11,7 @@ func _ready():
 	debug=true
 	type=constants.fireball
 	rect=Rect2(Vector2(-4,-4),Vector2(8,8))
-	gravity=constants.marioGravity
+	gravity=constants.enemyGravity
 	if dir==constants.left:
 		xVel=-400
 	else:

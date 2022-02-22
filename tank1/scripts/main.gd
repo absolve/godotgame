@@ -110,7 +110,7 @@ func _process(delta):
 							if i.hasShip():
 								continue
 					
-					if rect.intersects(rect1):  #碰撞  判断是否被包围住
+					if rect.intersects(rect1):  #碰撞  只判断坦克前进的方向是否有物体
 						if rect1.encloses(rect):#完全叠一起
 							continue
 
@@ -136,7 +136,6 @@ func _process(delta):
 							else:
 								isStop=false	
 			i.setStop(isStop)
-#			print(isOnIce)	
 			if i.get_class()=='player':
 				i.setOnIce(isOnIce)				
 					
@@ -622,41 +621,3 @@ func gamePause():
 	SoundsUtil.playPause()
 	pass
 
-#func _on_Button_pressed():
-#	Game.changeScene("res://scenes/menu.tscn")
-#	pass # Replace with function body.
-#
-#
-#func _on_Button2_pressed():
-#	for i in _bonus.get_children():
-#		_bonus.remove_child(i)
-#	var temp = bonus.instance()
-#	temp.setPos(Vector2(8*26,10*26))
-#	temp.setType(7)
-#	_bonus.add_child(temp)
-##	_map.addBonus()
-#	pass # Replace with function body.
-#
-#
-#func _on_Button3_pressed():
-#	#_map.addEnemy(basePos)	#添加敌人
-#	addEnemy()
-#	pass # Replace with function body.
-#
-#
-#func _on_Button4_pressed():
-#	_map.changeBasePlaceBrickType(Game.brickType.brickWall)
-#	pass # Replace with function body.
-#
-#
-#func _on_Button5_pressed():
-#	var list=_map.clearEnemyTank()
-#	Game.p1Score['typeA']+=list['typeA']
-#	Game.p1Score['typeB']+=list['typeB']
-#	Game.p1Score['typeC']+=list['typeC']
-#	Game.p1Score['typeD']+=list['typeD']
-#	#addEnemyDelay()
-##	if _addEnemy.is_stopped():#添加新坦克
-##		_addEnemy.start()
-#	#SoundsUtil.playBomb()
-#	pass # Replace with function body.

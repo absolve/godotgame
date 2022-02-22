@@ -51,6 +51,11 @@ func _input(event):
 		elif Input.is_action_just_pressed("ui_accept"):
 			print("开始游戏")
 			status=constants.startState
+			if player==1:
+				_1p.visible=false		
+			elif player==2:
+				_2p.visible=false
+					
 			set_process_input(false)
 			SoundsUtil.playKonamiMusic()
 			yield(SoundsUtil.konami,"finished")

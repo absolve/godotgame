@@ -108,22 +108,22 @@ const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
 const enemyGravity=1900
-const enemyMaxVel=1700
+const enemyMaxVel=1500
 
-const slideFriction=14 #滑行的加速度
-const acceleration=5	#移动加速度
-const crouchFriction=10 #蹲下去时加速度
-const runAcceleration=10 #跑的加速度
-const marioWalkMaxSpeed=149 #走的时候最大速度
-const marioRunMaxSpeed=330 #跑的时候最大速度
+const slideFriction=550 #滑行的加速度
+const acceleration=300	#移动加速度
+const crouchFriction=450 #蹲下去时加速度
+const runAcceleration=500 #跑的加速度
+const marioWalkMaxSpeed=155 #走的时候最大速度
+const marioRunMaxSpeed=340 #跑的时候最大速度
 const marioAniSpeed=100
-const marioGravity=2100 #重力
+const marioGravity=2600 #重力
 const marioJumpGravity=1000
 const marioJumpSpeed=550
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
-const marioMaxYVel=1700 #最大y速度
+const marioMaxYVel=1200 #最大y速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"

@@ -17,6 +17,9 @@ onready var boom=$boom
 onready var shoot=$shoot
 onready var stomp=$stomp
 onready var big2small=$big2small
+onready var score=$score
+onready var gameover=$gameover
+onready var death=$death
 
 var bgm="overworld"
 var isLowTime=false
@@ -57,6 +60,15 @@ func _ready():
 	
 	var big2small1=big2small.stream as AudioStreamOGGVorbis
 	big2small1.set_loop(false)
+	
+	var score1=score.stream as AudioStreamOGGVorbis
+	score1.set_loop(false)
+	
+	var gameover1=gameover.stream as AudioStreamOGGVorbis
+	gameover1.set_loop(false)
+	
+	var death1=death.stream as AudioStreamOGGVorbis
+	death1.set_loop(false)
 	pass # Replace with function body.
 
 func playBgm():
@@ -121,3 +133,12 @@ func playStomp():
 
 func playBig2small():
 	big2small.play()
+
+func playScore():
+	score.play()
+
+func playGameover():
+	gameover.play()
+
+func playDeath():
+	death.play()

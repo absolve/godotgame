@@ -108,6 +108,7 @@ func _update(_delta):
 				tick=0
 				currentTime-=1
 				addScore(100)
+				SoundsUtil.playScore()
 				if currentTime<=0:
 					status=constants.empty
 			_time.text="%0*d"%[3,currentTime]

@@ -2,16 +2,16 @@ extends "res://scripts/object.gd"
 
 
 var maxXVel=constants.marioWalkMaxSpeed
-var maxYVel=constants.marioMaxYVel
-var big = true #是否变大
+var maxYVel=constants.marioMaxYVel #y轴最大速度
+var big = false #是否变大
 #var faceRight=true
-var fire = true #是否能发射子弹
+var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
 var isOnFloor=false #是否在地面上
 var dir=constants.right
 var throwAniFinish=false
-var playerId=1
+var playerId=1  #玩家id
 var shootDelay=200 #发射延迟
 var shootStart=0
 var allowShoot=false
@@ -22,17 +22,17 @@ var currentAnimation  #当前动画
 var preStatus   #之前状态
 var invincible=false #无敌
 var invincibleStartTime=0
-var invincibleEndime=720
+var invincibleEndime=720	#无敌持续时间
 var invincibleAnimationTimer=0
-var shadowIndex=0
+var shadowIndex=0  #另一个动画的索引
 var hurtInvincible=false
 var hurtInvincibleStartTime=0
 var hurtInvincibleEndime=300
-var dead=false
+var dead=false  #是否死亡
 var deadStartTime=0
 var deadEndTime=30
-var leftStop=false
-var rightStop=false
+#var leftStop=false
+#var rightStop=false
 var flagPoleTimer=0 #从旗杆上转身然后下来
 var poleLength=0 #旗杆右边位置
 var isCrouch=false 	#是否蹲下
@@ -76,7 +76,7 @@ func _ready():
 	type=constants.mario
 	debug=true
 	if big:
-		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
 	else:	
 		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
@@ -107,23 +107,18 @@ func _update(delta):
 		pass
 	elif status==constants.big2fire:
 		fireState(delta)
-		pass
 	elif status==constants.big2small:
 		pass
 	elif status==constants.crouch:
 		crouch(delta)
-		pass
 	elif status==constants.deadJump:
 		deathJump(delta)	
 	elif status==constants.poleSliding:
 		poleSliding(delta)
-		pass
 	elif status==constants.walkingToCastle:
 		walkingToCastle(delta)
-		pass
 	elif status==constants.sitBottomOfPole:
 		sitBottomOfPole(delta)
-		pass
 	elif status==constants.stop:
 		pass	
 	if status!=constants.big2small&&status!=constants.big2fire&&\
@@ -168,11 +163,13 @@ func specialState(_delta):
 		hurtInvincibleStartTime+=1
 		pass
 
+#设置无敌
 func setInvincible():
 	invincible=true
 	invincibleStartTime=0
 	shadow.visible=true
 
+#设置受伤无敌
 func setHurtInvincible():
 	hurtInvincible=true
 	hurtInvincibleStartTime=0
@@ -209,9 +206,6 @@ func stand(_delta):
 	if !isOnFloor:
 #		position.y+=yVel*delta	
 		status=constants.fall
-		
-	pass
-
 
 
 func walk(delta):
@@ -249,7 +243,7 @@ func walk(delta):
 		startCrouch()
 		return
 	elif isCrouch and big:
-		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
 		ani.position.y=0
 		isCrouch=false
@@ -260,14 +254,13 @@ func walk(delta):
 			acceleration=constants.slideFriction
 		else:
 			acceleration=constants.acceleration
-#			faceRight=false
 			dir=constants.left
 			animation('walk')
 			
 		if xVel>-maxXVel:
-			xVel-=acceleration
+			xVel-=acceleration*delta
 		elif xVel<-maxXVel:
-			xVel+=acceleration
+			xVel+=acceleration*delta
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<0:
 			animation("slide")
@@ -278,24 +271,24 @@ func walk(delta):
 			animation('walk')
 			
 		if xVel<maxXVel:
-			xVel+=acceleration
+			xVel+=acceleration*delta
 		elif xVel>maxXVel:
-			xVel-=acceleration
+			xVel-=acceleration*delta
 	else:
 		if dir==constants.right:
 			if	xVel>0:
-				xVel-=acceleration
+				xVel-=acceleration*delta
 				animation("walk")
 			else:
-				xVel=0
+#				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
 		else:
 			if xVel<0:
-				xVel+=acceleration
+				xVel+=acceleration*delta
 				animation("walk")
 			else:
-				xVel=0
+#				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
 		
@@ -314,7 +307,6 @@ func jump(delta):
 		animation("crouch")
 	else:
 		animation("jump")	
-#	print(yVel)
 	if yVel>0:
 		gravity=constants.marioGravity
 		status=constants.fall	
@@ -329,14 +321,13 @@ func jump(delta):
 	
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
-			xVel-=acceleration
+			xVel-=acceleration*delta
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<maxXVel:
-			xVel+=acceleration
+			xVel+=acceleration*delta
 		
 	position.x+=xVel*delta
 	position.y+=yVel*delta	
-	pass
 
 func fall(delta):
 	if yVel<maxYVel:
@@ -344,20 +335,20 @@ func fall(delta):
 	animation("fall")
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
-			xVel-=acceleration
+			xVel-=acceleration*delta
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<maxXVel:
-			xVel+=acceleration	
+			xVel+=acceleration*delta
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball(false)		
 	position.x+=xVel*delta
 	position.y+=yVel*delta	
 	
 	if isOnFloor:
-		status = constants.walk
-#		print('fall end')			
-	pass
+		status = constants.walk		
 
+
+#开始死亡跳跃
 func startDeathJump():
 	status=constants.deadJump
 	dead=true
@@ -377,10 +368,11 @@ func deathJump(delta):
 		deadStartTime+=1
 	pass
 
+#开始蹲下
 func startCrouch():
 	status=constants.crouch	
 	if !isCrouch:
-		rect=Rect2(Vector2(-10,-15),Vector2(20,30))	
+		rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
 		position.y+=14  #
 		ani.position.y-=9
 	acceleration=constants.crouchFriction	
@@ -394,7 +386,7 @@ func crouch(delta):
 		
 	if Input.is_action_just_released("ui_down"):
 		status=constants.walk	
-		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
 		ani.position.y=0
 		isCrouch=false
@@ -408,13 +400,13 @@ func crouch(delta):
 		
 	if dir==constants.right:
 		if	xVel>0:
-			xVel-=acceleration
+			xVel-=acceleration*delta
 		else:
 			xVel=0
 			ani.speed_scale=1
 	else:
 		if xVel<0:
-			xVel+=acceleration
+			xVel+=acceleration*delta
 		else:
 			xVel=0
 			ani.speed_scale=1		
@@ -422,6 +414,7 @@ func crouch(delta):
 	position.y+=yVel*delta
 	pass
 
+#变大
 func small2Big():
 	if big:
 		return
@@ -434,7 +427,7 @@ func small2Big():
 	Game.emit_signal("stateChange")
 	pass
 
-
+#变成开火状态
 func big2Fire():
 	if fire:
 		return
@@ -445,7 +438,6 @@ func big2Fire():
 	Game.emit_signal("stateChange")
 	ani.stop()
 	var name=ani.animation
-#	print(name)
 	var animationList = ['stand_big','jump_big',
 						'walk_big','slide_big',
 						'crouch']
@@ -480,6 +472,7 @@ func fireState(_delta):
 			shadow.visible=true
 		Game.emit_signal('stateFinish')
 
+#变小
 func big2Small():
 	preStatus=status
 	status=constants.big2small
@@ -507,6 +500,7 @@ func poleSliding(delta):
 	animation("poleSliding")
 	pass
 
+#这个是在旗杆的底部位置
 func setSitBottom():
 	ani.frame=0
 	ani.stop()
@@ -515,19 +509,10 @@ func setSitBottom():
 #	ani.flip_h=true
 
 func sitBottomOfPole(_delta):
-#	if flagPoleTimer==31:
-#		position.x=position.x+poleLength+getSize()
-#		ani.flip_h=true
-#		pass
-#	elif flagPoleTimer>80:
-#		dir=constants.right
-#		xVel=0
-#		acceleration=constants.acceleration
-#		status=constants.walkingToCastle
-#
-#	flagPoleTimer+=1			
+			
 	pass
 
+#设置走到城堡里面
 func setwalkingToCastle():
 #	ani.frame=0
 	ani.stop()
@@ -540,7 +525,7 @@ func walkingToCastle(delta):
 		position.x=position.x+poleLength+getSize()
 		ani.flip_h=true
 		pass
-	elif flagPoleTimer<80:
+	elif flagPoleTimer<80: #更换到旗杆的另一个侧
 		dir=constants.right
 		xVel=0
 		acceleration=constants.acceleration
@@ -561,6 +546,7 @@ func walkingToCastle(delta):
 	flagPoleTimer+=1	
 	pass
 
+#动画
 func animation(type):
 	if type=='stand':
 		if big:
@@ -629,6 +615,7 @@ func animation(type):
 		shadow.position.y=ani.position.y
 	pass
 
+#获取掉落的之前的动画列表
 func getFallAni():
 	if ani.animation in stand_big_animation:
 		return stand_big_animation
@@ -653,6 +640,7 @@ func getFallAni():
 	else:
 		return []	
 
+#发射火球
 func shootFireball(play=true):
 	if OS.get_system_time_msecs()-shootStart>shootDelay:
 		if Game.getPlayerBulletCount(playerId)<2:
@@ -662,7 +650,7 @@ func shootFireball(play=true):
 			Game.addObj2Bullet(position,dir)
 			fireball.play()
 			
-#播放声音			
+#播放跳跃声音			
 func playJumpSound():
 	if big:
 		bigjump.play()
@@ -675,7 +663,7 @@ func _on_ani_frame_changed():
 		if ani.frame in [0,2,4]:
 			ani.position.y= 0
 		else:
-			ani.position.y=-20
+			ani.position.y=-18
 	elif ani.animation in throw_animation:
 		throwAniFinish=true
 	elif status	==constants.big2small:
@@ -696,7 +684,7 @@ func _on_ani_animation_finished():
 		big=true
 		ani.position.y= 0
 		status=preStatus
-		rect=Rect2(Vector2(-10,-30),Vector2(20,60))	
+		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		Game.emit_signal('stateFinish')
 	elif status==constants.big2small:
 		hurtInvincible=true
@@ -707,5 +695,4 @@ func _on_ani_animation_finished():
 		aniIndex=0
 		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 		Game.emit_signal('stateFinish')
-		pass
 	pass # Replace with function body.
