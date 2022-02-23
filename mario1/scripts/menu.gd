@@ -41,7 +41,7 @@ func _ready():
 		_img.hide()
 		_gameover.show()
 		status=constants.gameEnd
-
+		gameEnd()
 	
 func setData()->void:
 	
@@ -52,7 +52,16 @@ func startLevel()->void:
 	
 	pass
 
-
+func gameEnd():
+	SoundsUtil.playGameover()
+	yield(SoundsUtil.gameover,"finished")
+	var scene=load("res://scenes/welcome.tscn")
+	var temp=scene.instance()
+	queue_free()
+	set_process_input(false)
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
+	pass
 
 func _process(delta):
 	if status==constants.nextLevel:
@@ -68,15 +77,15 @@ func _process(delta):
 			status=constants.empty
 		pass
 	elif status==constants.gameEnd:
-		timer+=1
-		if timer>gameEndTime:
-			var scene=load("res://scenes/welcome.tscn")
-			var temp=scene.instance()
-			queue_free()
-			set_process_input(false)
-			get_tree().get_root().add_child(temp)
-			set_process_input(true)
-			status=constants.empty
+#		timer+=1
+#		if timer>gameEndTime:
+#			var scene=load("res://scenes/welcome.tscn")
+#			var temp=scene.instance()
+#			queue_free()
+#			set_process_input(false)
+#			get_tree().get_root().add_child(temp)
+#			set_process_input(true)
+#			status=constants.empty
 		pass
 	elif status==constants.gameRestart:
 		timer+=1

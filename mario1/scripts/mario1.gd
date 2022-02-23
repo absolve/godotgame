@@ -74,7 +74,7 @@ onready var fireball=$fireball
 
 func _ready():
 	type=constants.mario
-	debug=true
+#	debug=true
 	if big:
 		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
@@ -143,6 +143,7 @@ func specialState(_delta):
 				else:
 					shadowIndex+=1
 		else:
+			Game.emit_signal("invincibleFinish")
 			invincible=false
 			shadow.visible=false
 			if fire:
@@ -374,7 +375,7 @@ func startCrouch():
 	if !isCrouch:
 		rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
 		position.y+=14  #
-		ani.position.y-=9
+		ani.position.y-=15
 	acceleration=constants.crouchFriction	
 	isCrouch=true
 	
@@ -533,12 +534,14 @@ func walkingToCastle(delta):
 	else:
 		xVel+=5
 		yVel+=gravity*delta
-		if xVel>0:
-			ani.speed_scale=1+xVel/constants.marioAniSpeed
-		elif xVel<0:
-			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+		if xVel>0 || xVel<0:
+			ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
+#		if xVel>0:
+#			ani.speed_scale=1+xVel/constants.marioAniSpeed
+#		elif xVel<0:
+#			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
 		if xVel>maxXVel:
-			xVel-=acceleration	
+			xVel-=acceleration*delta
 		position.x+=xVel*delta
 		if !isOnFloor:
 			position.y+=yVel*delta

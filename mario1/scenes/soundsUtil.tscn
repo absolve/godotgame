@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=1]
 [ext_resource path="res://sounds/lowtime.ogg" type="AudioStream" id=2]
@@ -20,6 +20,7 @@
 [ext_resource path="res://sounds/scorering.ogg" type="AudioStream" id=18]
 [ext_resource path="res://sounds/gameover.ogg" type="AudioStream" id=19]
 [ext_resource path="res://sounds/death.ogg" type="AudioStream" id=20]
+[ext_resource path="res://sounds/levelend.ogg" type="AudioStream" id=21]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 1 )
@@ -83,3 +84,6 @@ stream = ExtResource( 19 )
 
 [node name="death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 20 )
+
+[node name="levelend" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 21 )

@@ -9,7 +9,7 @@ onready var _2p=$p2
 var player=1	#默认选择1玩家
 var path="res://levels/show.json"
 var timer=0
-var tick=24
+var tick=22
 var status=constants.empty
 
 func _ready():

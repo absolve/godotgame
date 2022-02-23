@@ -34,7 +34,7 @@ func startFall():
 
 func showScore(s):
 	score.text=str(s)
-	score.rect_position.y=poleLen*32
+	score.rect_position.y=poleLen*32-20
 	score.visible=true
 	pass
 

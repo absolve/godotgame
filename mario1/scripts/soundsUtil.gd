@@ -20,6 +20,7 @@ onready var big2small=$big2small
 onready var score=$score
 onready var gameover=$gameover
 onready var death=$death
+onready var levelend=$levelend
 
 var bgm="overworld"
 var isLowTime=false
@@ -69,6 +70,9 @@ func _ready():
 	
 	var death1=death.stream as AudioStreamOGGVorbis
 	death1.set_loop(false)
+	
+	var levelend1=levelend.stream as AudioStreamOGGVorbis
+	levelend1.set_loop(false)
 	pass # Replace with function body.
 
 func playBgm():
@@ -142,3 +146,6 @@ func playGameover():
 
 func playDeath():
 	death.play()
+
+func playLevelend():
+	levelend.play()

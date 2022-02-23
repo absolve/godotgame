@@ -7,6 +7,7 @@ signal flagEnd  #旗到了底部
 signal timeOut #时间到
 signal hurryup #时间快到了 
 signal flagRising #旗在城堡升起来
+signal invincibleFinish #无敌时间结束
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',

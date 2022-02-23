@@ -81,9 +81,6 @@ onready var _collisionList=$collision
 
 
 func _ready():
-#	print(camera.get_camera_position())
-#	print(camera.get_camera_screen_center())
-#	loadMapFile("res://levels/test.json")
 	_itemList.connect("itemSelect",self,'selectItem')
 	Game.setMap(self)
 	Game.connect("stateChange",self,'stateChange')
@@ -91,6 +88,8 @@ func _ready():
 	Game.connect("flagEnd",self,"flagEnd")
 	Game.connect("timeOut",self,"timeOut")
 	Game.connect("hurryup",self,"hurryup")
+	Game.connect("invincibleFinish",self,"invincibleFinish")
+	
 	if mode=='edit':
 		_bg.hide()
 		_title.hide()
@@ -414,7 +413,7 @@ func checkHasItem(pos,selectType):
 			if i["x"]==indexX&&i["y"]==indexY:
 				flag=true
 				break	
-	print(flag)
+#	print(flag)
 	return 	flag
 
 
@@ -555,6 +554,9 @@ func gameNextLevel():
 	print("gameNextLevel")
 	var temp=menu.instance()
 	temp.isgameover=true
+	Game.playerData['score']=_title.score
+	Game.playerData['coin']=_title.coinNum
+	Game.playerData['lives']-=1
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
@@ -600,6 +602,7 @@ func marioAndEnemy(m,e):
 			SoundsUtil.playShoot()
 		else:
 			SoundsUtil.stopBgm()	
+			SoundsUtil.stopSpecialBgm()
 			m.startDeathJump()		
 			SoundsUtil.playDeath()
 	pass
@@ -644,6 +647,8 @@ func marioAndItem(m,i):
 		i.queue_free()
 		m.setInvincible()
 		addScore(m,5000)
+		SoundsUtil.stopBgm()
+		SoundsUtil.playSpecialBgm()
 	elif i.type==constants.mushroom1up:	
 		i.queue_free()
 		addLive(m)
@@ -659,6 +664,7 @@ func marioOutYPos():
 		i.pause()
 	state=constants.empty	
 	SoundsUtil.stopBgm()
+	SoundsUtil.stopSpecialBgm()
 	SoundsUtil.playDeath()
 	yield(SoundsUtil.death,"finished")
 	state=constants.stateChange
@@ -723,7 +729,8 @@ func timeOut():
 			||i.status==constants.walkingToCastle:
 				continue
 		i.startDeathJump()
-	SoundsUtil.stopBgm()	
+	SoundsUtil.stopBgm()
+	SoundsUtil.stopSpecialBgm()
 	pass
 
 func hurryup():
@@ -735,6 +742,14 @@ func hurryup():
 func gamePause():
 	
 	pass	
+
+func playLevelEnd():
+	SoundsUtil.playLevelend()
+	pass
+
+func invincibleFinish():
+	SoundsUtil.stopSpecialBgm()
+	SoundsUtil.playBgm()
 
 func sort(a,b):
 	if a['x']>b['x']:
@@ -770,12 +785,8 @@ func _update(delta):
 			for i in _marioList.get_children():
 				if i.position.y>camera.offset.y*2+i.getSizeY()/2:
 					i.dead=true
-#					i.status=constants.stop
-#					state=constants.stateChange
 					marioOutYPos()
-#					stateChange()
-#					SoundsUtil.stopBgm()
-#					SoundsUtil.playDeath()
+
 					
 			_title._update(delta)
 			
@@ -822,12 +833,12 @@ func _update(delta):
 							else:
 								i.position.x=y.getLeft()-i.getSize()/2	
 								
-							if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))>=1:
-								if i.status==constants.jump:
-									if dx<0 && i.dir==constants.left:
-										i.xVel=0
-									elif dx>0 && i.dir==constants.right:
-										i.xVel=0		
+#							if abs(abs(y.position.y-i.position.y)-(y.getSizeY()/2+i.getSizeY()/2))>=1:
+#								if i.status==constants.jump:
+#									if dx<0 && i.dir==constants.left:
+#										i.xVel=0
+#									elif dx>0 && i.dir==constants.right:
+#										i.xVel=0		
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							if y.type==constants.box && !y._visible:
@@ -847,9 +858,9 @@ func _update(delta):
 									if y.type==constants.box && i.yVel<0:
 										if y.status==constants.resting:
 											if y.isDestructible() && i.big:
-#												y.add4Brick()
-#												y.destroy()
 												y.destroy=true	
+											elif y.isDestructible():
+												SoundsUtil.playBrickHit()	
 											y.startBumped()		
 									i.yVel=abs(i.yVel)-abs(i.yVel)/4				
 							else: #上方
@@ -1045,13 +1056,15 @@ func _update(delta):
 											y.startDeathJump(constants.right)
 										else:
 											y.startDeathJump(constants.left)
-										addScore(y)		
+										addScore(y)	
+										SoundsUtil.playShoot()	
 									elif y.status==constants.sliding:
 										if i.xVel>0:
 											i.startDeathJump(constants.left)
 										else:
 											i.startDeathJump(constants.right)				
-										addScore(i)		
+										addScore(i)	
+										SoundsUtil.playShoot()		
 									else:
 										if i.xVel>0:
 											i.startDeathJump(constants.left)
@@ -1062,7 +1075,8 @@ func _update(delta):
 										else:
 											y.startDeathJump(constants.right)	
 										addScore(i)		
-										addScore(y)		
+										addScore(y)	
+										SoundsUtil.playShoot()		
 									pass
 								else:
 									if dx<0:
@@ -1089,6 +1103,7 @@ func _update(delta):
 										else:
 											y.startDeathJump(constants.left)
 										addScore(y)
+										SoundsUtil.playShoot()	
 #							if dy<0:  #下方
 #								pass
 #							else: #上方
@@ -1173,24 +1188,6 @@ func _update(delta):
 					var rect2=y.getRect()
 					if rect1.intersects(rect2):
 						marioAndItem(i,y)
-#						if y.type==constants.mushroom:
-#							y.queue_free()
-#							i.small2Big()
-#							addScore(i,5000)
-#						elif y.type==constants.fireflower:
-#							y.queue_free()
-#							if i.big:
-#								i.big2Fire()
-#							else:
-#								i.small2Big()	
-#							addScore(i,5000)
-#						elif y.type==constants.star:
-#							y.queue_free()
-#							i.setInvincible()
-#							addScore(i,5000)
-#						elif y.type==constants.mushroom1up:	
-#							y.queue_free()
-#							addLive(i)
 						pass
 					pass
 			
@@ -1207,6 +1204,8 @@ func _update(delta):
 							i.position.x=y.getLeft()-i.getSize()/2
 							i.startSliding(y.getSize())
 							y.startFall()
+							SoundsUtil.stopBgm()
+							SoundsUtil.stopSpecialBgm()
 							if abs(i.position.y-y.position.y)<=50:
 								y.showScore(5000)
 								_title.addScore(5000)
@@ -1259,12 +1258,12 @@ func _update(delta):
 					if mario1.dir==constants.right:
 						mario1.xVel=0
 				#前进
-				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x+30:
+				if mario1.xVel>0 && mario1.position.x>camera.position.x+camera.offset.x:
 					if camera.position.x >=mapWidthSize*blockSize-camera.offset.x*2:
 						camera.position.x=mapWidthSize*blockSize-camera.offset.x*2
 						_bg.rect_position.x=camera.position.x
 					else:
-						camera.position.x=mario1.position.x-camera.offset.x-30
+						camera.position.x=mario1.position.x-camera.offset.x
 						_bg.rect_position.x=camera.position.x
 				#后退		
 				if mario1.xVel<0 && mario1.position.x<camera.position.x+camera.offset.x/2:
@@ -1322,6 +1321,7 @@ func _update(delta):
 					gameNextLevel()
 				elif nextStatus==constants.startState:
 					state=constants.startState
+					playLevelEnd()
 			pass
 		elif state==constants.pause:	
 			
