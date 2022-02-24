@@ -51,7 +51,7 @@ z_index = 3
 position = Vector2( 0, -1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2( 320, 240 )
+anchor_mode = 0
 current = true
 
 [node name="layer" type="CanvasLayer" parent="."]

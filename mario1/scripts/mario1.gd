@@ -258,10 +258,13 @@ func walk(delta):
 			dir=constants.left
 			animation('walk')
 			
-		if xVel>-maxXVel:
+#		if xVel>-maxXVel:
+#			xVel-=acceleration*delta
+#		elif xVel<-maxXVel:
+#			xVel+=acceleration*delta
+		if 	xVel>-maxXVel:
 			xVel-=acceleration*delta
-		elif xVel<-maxXVel:
-			xVel+=acceleration*delta
+			
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<0:
 			animation("slide")
@@ -271,10 +274,12 @@ func walk(delta):
 			acceleration=constants.acceleration
 			animation('walk')
 			
-		if xVel<maxXVel:
+#		if xVel<maxXVel:
+#			xVel+=acceleration*delta
+#		elif xVel>maxXVel:
+#			xVel-=acceleration*delta
+		if 	xVel<maxXVel:
 			xVel+=acceleration*delta
-		elif xVel>maxXVel:
-			xVel-=acceleration*delta
 	else:
 		if dir==constants.right:
 			if	xVel>0:
@@ -532,7 +537,7 @@ func walkingToCastle(delta):
 		acceleration=constants.acceleration
 #		status=constants.walkingToCastle
 	else:
-		xVel+=5
+#		xVel+=5
 		yVel+=gravity*delta
 		if xVel>0 || xVel<0:
 			ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
@@ -540,8 +545,8 @@ func walkingToCastle(delta):
 #			ani.speed_scale=1+xVel/constants.marioAniSpeed
 #		elif xVel<0:
 #			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
-		if xVel>maxXVel:
-			xVel-=acceleration*delta
+		if xVel<maxXVel:
+			xVel+=5
 		position.x+=xVel*delta
 		if !isOnFloor:
 			position.y+=yVel*delta

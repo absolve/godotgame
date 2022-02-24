@@ -3,11 +3,6 @@
 [ext_resource path="res://scripts/goomba.gd" type="Script" id=1]
 [ext_resource path="res://sprites/enemies50x8.png" type="Texture" id=2]
 
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 64, 32, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
 atlas = ExtResource( 2 )
@@ -18,15 +13,15 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 32, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 64, 32, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 160, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 64, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -48,26 +43,26 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 32, 160, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 64, 96, 32, 32 )
+
 [sub_resource type="SpriteFrames" id=10]
 animations = [ {
-"frames": [ SubResource( 7 ) ],
-"loop": false,
-"name": "dead",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 8 ), SubResource( 9 ) ],
 "loop": true,
 "name": "walk",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 7 ) ],
+"loop": false,
+"name": "dead",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 4 ) ],
 "loop": false,
 "name": "dead_grey",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 3 ) ],
-"loop": false,
-"name": "dead_blue",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
@@ -78,6 +73,11 @@ animations = [ {
 "frames": [ SubResource( 5 ), SubResource( 6 ) ],
 "loop": true,
 "name": "walk_grey",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 3 ) ],
+"loop": false,
+"name": "dead_blue",
 "speed": 5.0
 } ]
 
