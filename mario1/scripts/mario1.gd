@@ -3,12 +3,12 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=constants.marioMaxYVel #y轴最大速度
-var big = false #是否变大
+var big = true #是否变大
 #var faceRight=true
-var fire = false #是否能发射子弹
+var fire = true #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
-var isOnFloor=false #是否在地面上
+var isOnFloor=true #是否在地面上
 var dir=constants.right
 var throwAniFinish=false
 var playerId=1  #玩家id
@@ -73,6 +73,7 @@ onready var bigjump=$bigjump
 onready var fireball=$fireball
 
 func _ready():
+#	status=constants.stop
 	type=constants.mario
 #	debug=true
 	if big:
@@ -143,7 +144,9 @@ func specialState(_delta):
 				else:
 					shadowIndex+=1
 		else:
-			Game.emit_signal("invincibleFinish")
+			if status!=constants.poleSliding&&status!=constants.walkingToCastle\
+				&&status!=constants.sitBottomOfPole&&status!=constants.deadJump:
+				Game.emit_signal("invincibleFinish")
 			invincible=false
 			shadow.visible=false
 			if fire:
@@ -204,9 +207,9 @@ func stand(_delta):
 		shootFireball()
 		pass
 	
-	if !isOnFloor:
-#		position.y+=yVel*delta	
-		status=constants.fall
+#	if !isOnFloor:
+##		position.y+=yVel*delta	
+#		status=constants.fall
 
 
 func walk(delta):
@@ -380,7 +383,7 @@ func startCrouch():
 	if !isCrouch:
 		rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
 		position.y+=14  #
-		ani.position.y-=15
+		ani.position.y-=9
 	acceleration=constants.crouchFriction	
 	isCrouch=true
 	

@@ -31,6 +31,7 @@ func jumpedOn():
 	pass	
 
 func startDeathJump():
+	status=constants.deadJump
 	yVel=-350
 	if dir==constants.left:
 		xVel=-45
@@ -38,7 +39,6 @@ func startDeathJump():
 		xVel=45
 #	gravity=constants.deathJumpGravity
 	z_index=3
-	status=constants.deadJump
 	pass
 
 func dead(delta):

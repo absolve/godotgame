@@ -35,6 +35,6 @@ func boom():
 	status=constants.boom
 #	SoundsUtil.playBoom()
 	ani.play('boom')
-	z_index=2
+	z_index=3
 	yield(ani,"animation_finished")
 	queue_free()

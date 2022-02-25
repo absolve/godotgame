@@ -4,11 +4,6 @@
 [ext_resource path="res://sprites/enemies50x8.png" type="Texture" id=2]
 [ext_resource path="res://sprites/shell.png" type="Texture" id=3]
 
-[sub_resource type="AtlasTexture" id=13]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 0, 32, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=18]
 flags = 4
 atlas = ExtResource( 3 )
@@ -28,6 +23,11 @@ region = Rect2( 256, 0, 32, 64 )
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 288, 0, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=13]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -49,16 +49,6 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 288, 128, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=3]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 192, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=4]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 224, 64, 32, 64 )
-
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
 atlas = ExtResource( 2 )
@@ -69,25 +59,25 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 224, 192, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=24]
+[sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 256, 192, 32, 64 )
+region = Rect2( 192, 64, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=25]
+[sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 288, 192, 32, 64 )
+region = Rect2( 224, 64, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=12]
+[sub_resource type="AtlasTexture" id=7]
 flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 0, 96, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 192, 128, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=10]
+[sub_resource type="AtlasTexture" id=8]
 flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 0, 160, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 224, 128, 32, 64 )
 
 [sub_resource type="AtlasTexture" id=16]
 flags = 4
@@ -109,15 +99,15 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 288, 64, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=7]
+[sub_resource type="AtlasTexture" id=20]
 flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 192, 128, 32, 64 )
+atlas = ExtResource( 3 )
+region = Rect2( 0, 96, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=8]
+[sub_resource type="AtlasTexture" id=21]
 flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 224, 128, 32, 64 )
+atlas = ExtResource( 3 )
+region = Rect2( 32, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=11]
 flags = 4
@@ -134,23 +124,28 @@ flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 32, 160, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=20]
+[sub_resource type="AtlasTexture" id=12]
 flags = 4
 atlas = ExtResource( 3 )
 region = Rect2( 0, 96, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=21]
+[sub_resource type="AtlasTexture" id=10]
 flags = 4
 atlas = ExtResource( 3 )
-region = Rect2( 32, 96, 32, 32 )
+region = Rect2( 0, 160, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=24]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 256, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=25]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 288, 192, 32, 64 )
 
 [sub_resource type="SpriteFrames" id=9]
 animations = [ {
-"frames": [ SubResource( 13 ) ],
-"loop": true,
-"name": "shell",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "revive",
@@ -159,6 +154,11 @@ animations = [ {
 "frames": [ SubResource( 22 ), SubResource( 23 ) ],
 "loop": true,
 "name": "fly",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 13 ) ],
+"loop": true,
+"name": "shell",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
@@ -171,29 +171,19 @@ animations = [ {
 "name": "fly_red",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 3 ), SubResource( 4 ) ],
-"loop": true,
-"name": "walk_blue",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 5 ), SubResource( 6 ) ],
 "loop": true,
 "name": "walk_grey",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 24 ), SubResource( 25 ) ],
+"frames": [ SubResource( 3 ), SubResource( 4 ) ],
 "loop": true,
-"name": "fly_grey",
+"name": "walk_blue",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 12 ) ],
+"frames": [ SubResource( 7 ), SubResource( 8 ) ],
 "loop": true,
-"name": "shell_blue",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 10 ) ],
-"loop": true,
-"name": "shell_red",
+"name": "walk_red",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 16 ), SubResource( 17 ) ],
@@ -206,9 +196,9 @@ animations = [ {
 "name": "fly_blue",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ), SubResource( 8 ) ],
+"frames": [ SubResource( 20 ), SubResource( 21 ) ],
 "loop": true,
-"name": "walk_red",
+"name": "revive_blue",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 11 ) ],
@@ -221,9 +211,19 @@ animations = [ {
 "name": "revive_red",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 20 ), SubResource( 21 ) ],
+"frames": [ SubResource( 12 ) ],
 "loop": true,
-"name": "revive_blue",
+"name": "shell_blue",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 10 ) ],
+"loop": true,
+"name": "shell_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 24 ), SubResource( 25 ) ],
+"loop": true,
+"name": "fly_grey",
 "speed": 5.0
 } ]
 

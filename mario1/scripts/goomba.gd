@@ -59,10 +59,12 @@ func startDeathJump(_dir=constants.left):
 	pass
 
 func pause():
-	preStatus=status
-	status=constants.stop
+#	preStatus=status
+#	status=constants.stop
 	ani.stop()
 
 func resume():
-	ani.play()	
-	status=preStatus
+#	if status!=constants.dead&&status!=constants.deadJump:
+#		status=preStatus
+	if status!=constants.dead&&status!=constants.deadJump:
+		ani.play()	

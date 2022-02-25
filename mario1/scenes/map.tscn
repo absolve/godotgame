@@ -254,7 +254,7 @@ current_path = "/godotgame/mario1/"
 margin_right = 376.0
 margin_bottom = 300.0
 popup_exclusive = true
-window_title = "打开文件"
+window_title = "Open a File"
 resizable = true
 mode = 0
 access = 2
@@ -288,7 +288,6 @@ __meta__ = {
 }
 
 [node name="title" parent="." instance=ExtResource( 8 )]
-
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox2/apply" to="." method="_on_apply_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox/hide" to="." method="_on_hide_pressed"]

@@ -132,13 +132,14 @@ func changeDir():
 	pass
 
 func pause():
-	preStatus=status
-	status=constants.stop
+#	preStatus=status
+#	status=constants.stop
 	ani.stop()
 
 func resume():
-	ani.play()	
-	status=preStatus
+	if status!=constants.dead&&status!=constants.deadJump:
+		ani.play()	
+#	status=preStatus
 
 func animation(type):
 	if type=="walk":
