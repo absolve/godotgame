@@ -14,8 +14,8 @@ var offsetY=0
 var collisionShow=false  #测试的时候显示是否碰撞
 
 func _ready():
-	set_process(false)
-	set_physics_process(false)
+#	set_process(false)
+#	set_physics_process(false)
 	pass 
 
 

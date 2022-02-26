@@ -6,7 +6,9 @@ var spriteIndex=0 #0普通颜色 1蓝色 2灰色
 var time=0
 var delTime=140  #删除时间 140帧
 var maxYVel=constants.enemyMaxVel
-var init=false
+#var init=false
+var isOnFloor=true #是否在地面上
+
 
 func _ready():
 	._ready()
@@ -17,7 +19,8 @@ func walking(delta):
 	if yVel<maxYVel:
 		yVel+=gravity*delta			
 	position.x+=xVel*delta
-	position.y+=yVel*delta
+	if !isOnFloor:	
+		position.y+=yVel*delta
 	
 
 func deathJump(delta):

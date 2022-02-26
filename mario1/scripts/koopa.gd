@@ -101,13 +101,15 @@ func startSliding():
 	status=constants.sliding	
 
 func shellSliding(delta):
-	yVel+=gravity*delta
+	if yVel<maxYVel:
+		yVel+=gravity*delta
 	if dir==constants.left:
 		xVel=-slidingSpeed
 	else:
 		xVel=slidingSpeed	
 	position.x+=xVel*delta
-	position.y+=yVel*delta
+	if !isOnFloor:
+		position.y+=yVel*delta
 	pass
 
 func turnLeft():

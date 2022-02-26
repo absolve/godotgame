@@ -107,7 +107,7 @@ const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=1900
+const enemyGravity=1800
 const enemyMaxVel=1500
 
 const slideFriction=550 #滑行的加速度

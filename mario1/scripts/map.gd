@@ -145,7 +145,7 @@ func _ready():
 #	findMapFile()
 	print(get_viewport().size.x)
 	print(camera.get_camera_screen_center().x)
-	set_physics_process(false)
+#	set_physics_process(false)
 	pass
 
 func findMapFile():
@@ -625,11 +625,11 @@ func marioJumpOnEnemy(m,e):
 		SoundsUtil.playStomp()	
 	else:
 		if m.yVel>=0:
-			m.yVel=-220
+			m.yVel=-240
 			if m.xVel>0:
-				m.xVel+=10
+				m.xVel+=20
 			else:
-				m.xVel-=10	
+				m.xVel-=20	
 			m.position.y=e.position.y-e.getSizeY()/2-m.getSizeY()/2+1#位置调整		
 			e.jumpedOn()
 			addScore(m)
@@ -859,12 +859,12 @@ func _update(delta):
 							if y.type==constants.box && !y._visible:
 								continue
 							if dx<0:
-								if i.dir==constants.left:
-									i.xVel=0
+#								if i.dir==constants.left:
+								i.xVel=0
 								i.position.x=y.getRight()+i.getSize()/2
 							else:
-								if i.dir==constants.right:
-									i.xVel=0
+#								if i.dir==constants.right:
+								i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
 							if dy<0:  #下方					
@@ -948,6 +948,7 @@ func _update(delta):
 			for i in _enemyList.get_children():  #敌人跟方块
 				if i.status==constants.dead||i.status==constants.deadJump:
 					continue
+				var onFloor=false	
 				for y in screenbrick:
 					if i.type==constants.plant:
 						continue
@@ -963,8 +964,9 @@ func _update(delta):
 									i.yVel=0
 									i.position.y=y.getTop()-i.getSizeY()/2	
 							else:
-								if i.yVel>0:  #掉落的情况
+								if i.yVel>=0:  #掉落的情况
 									i.yVel=0
+									onFloor=true
 								if y.type==constants.box&& y.status==constants.bumped:
 									i.startDeathJump()
 									addScore(i)
@@ -987,14 +989,15 @@ func _update(delta):
 									i.yVel=0
 									i.position.y=y.getTop()-i.getSizeY()/2	
 							else:
-								if i.yVel>0:  #掉落的情况
+								if i.yVel>=0:  #掉落的情况
 									i.yVel=0
+									onFloor=true
 								if y.type==constants.box&& y.status==constants.bumped:
 									i.startDeathJump()
 									addScore(i)
 								else:		
 									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
-
+				i.isOnFloor=onFloor	
 								
 			for i in _marioList.get_children(): #mario跟敌人
 				for y in _enemyList.get_children():
@@ -1005,16 +1008,14 @@ func _update(delta):
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
 							marioAndEnemy(i,y)	
-							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
-							marioAndEnemy(i,y)	
-							pass	
+							marioAndEnemy(i,y)		
 						else: #上下的碰撞
 							if dy<0:  #下方
 								marioAndEnemy(i,y)	
 							else:
 								marioJumpOnEnemy(i,y)
-				pass
+				
 
 			for i in _enemyList.get_children():  #敌人之间的碰撞
 				for y in _enemyList.get_children():
@@ -1068,8 +1069,7 @@ func _update(delta):
 										if i.xVel>0:
 											i.turnDir()
 										if y.xVel<0:
-											y.turnDir()		
-							pass	
+											y.turnDir()			
 						else:
 							if i.status!=constants.dead&&i.status!=constants.deadJump\
 								&&y.status!=constants.dead&&y.status!=constants.deadJump:
@@ -1081,7 +1081,7 @@ func _update(delta):
 											y.startDeathJump(constants.left)
 										addScore(y)
 										SoundsUtil.playShoot()		
-					pass
+					
 			
 			for i in _bulletList.get_children():	#子弹跟方块
 				for y in screenbrick:
@@ -1129,7 +1129,7 @@ func _update(delta):
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								if i.status==constants.fly:
 									i.yVel=-i.speed
-				pass
+				
 			
 			for i in _bulletList.get_children():  #子弹跟敌人
 				for y in _enemyList.get_children():
@@ -1137,8 +1137,6 @@ func _update(delta):
 						continue
 					if y.status==constants.dead||y.status==constants.deadJump:
 						continue
-#					var rect1 = i.getRect()
-#					var rect2=y.getRect()
 					if i.getRect().intersects(y.getRect()):
 						i.boom()
 						if i.xVel>0:
@@ -1147,15 +1145,12 @@ func _update(delta):
 							y.startDeathJump(constants.left)	
 						addScore(y)
 						SoundsUtil.playShoot()
-						pass	
-					pass
+
 
 			for i in _marioList.get_children():  #mario跟物品
 				for y in _itemsList.get_children():
 					if i.getRect().intersects(y.getRect()):
 						marioAndItem(i,y)
-						pass
-					pass
 
 			for i in _marioList.get_children(): #mario跟旗杆
 				for y in _poleList.get_children():
@@ -1221,15 +1216,18 @@ func _update(delta):
 				#前进
 				if mario1.xVel>0 && mario1.position.x>camera.get_camera_screen_center().x&&\
 						camera.position.x <mapWidthSize*blockSize-winWidth:
-
-					camera.position.x+=abs(mario1.position.x-camera.get_camera_screen_center().x)
+					
+					camera.position.x+=int(abs(mario1.position.x-camera.get_camera_screen_center().x))
 					_bg.rect_position.x=int(camera.position.x)
 #					print(camera.position.x)
 
 				#后退		
 				if mario1.xVel<0 && mario1.position.x<camera.get_camera_screen_center().x-80&&\
 					camera.position.x>0:
-					camera.position.x-=abs(mario1.position.x-camera.get_camera_screen_center().x+80)
+					if camera.position.x<0:
+						camera.position.x=0
+						_bg.rect_position.x=0	
+					camera.position.x-=int(abs(mario1.position.x-camera.get_camera_screen_center().x+80))
 					_bg.rect_position.x=int(camera.position.x)	
 					
 				#根据摄像的移动判断前面位置是否需要添加敌人

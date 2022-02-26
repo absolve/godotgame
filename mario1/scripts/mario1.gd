@@ -3,9 +3,9 @@ extends "res://scripts/object.gd"
 
 var maxXVel=constants.marioWalkMaxSpeed
 var maxYVel=constants.marioMaxYVel #y轴最大速度
-var big = true #是否变大
+var big = false #是否变大
 #var faceRight=true
-var fire = true #是否能发射子弹
+var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
 var isOnFloor=true #是否在地面上
@@ -75,7 +75,7 @@ onready var fireball=$fireball
 func _ready():
 #	status=constants.stop
 	type=constants.mario
-#	debug=true
+	debug=true
 	if big:
 		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
@@ -383,7 +383,7 @@ func startCrouch():
 	if !isCrouch:
 		rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
 		position.y+=14  #
-		ani.position.y-=9
+		ani.position.y-=8
 	acceleration=constants.crouchFriction	
 	isCrouch=true
 	
@@ -404,6 +404,7 @@ func crouch(delta):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
+		playJumpSound()
 		pass
 	
 		
@@ -517,8 +518,7 @@ func setSitBottom():
 #	position.x=position.x+poleLength+getSize()
 #	ani.flip_h=true
 
-func sitBottomOfPole(_delta):
-			
+func sitBottomOfPole(_delta):		
 	pass
 
 #设置走到城堡里面
@@ -693,7 +693,7 @@ func _on_ani_frame_changed():
 func _on_ani_animation_finished():
 	if status==constants.small2big:
 		big=true
-		ani.position.y= 0
+		ani.position.y=0
 		status=preStatus
 		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		Game.emit_signal('stateFinish')
@@ -706,4 +706,5 @@ func _on_ani_animation_finished():
 		aniIndex=0
 		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 		Game.emit_signal('stateFinish')
+	
 	pass # Replace with function body.
