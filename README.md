@@ -37,3 +37,5 @@ TODO
 mario1文件夹里面就是超级马里奥的程序，游戏当前只有1-1的关卡，缺少一些加分的功能和进入到水管的功能，  
 这个只能后面完善。  
 wsad 移动 z加速 x跳跃  
+  
+<img src="https://github.com/absolve/godotgame/blob/master/mario1.png" />  
