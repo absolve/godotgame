@@ -875,7 +875,8 @@ func _update(delta):
 								i.xVel=0
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
-							if dy<0:  #下方					
+							if dy<0:  #下方	
+				
 								#这个非常的接近边缘就不判断	
 								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:
 									if y.type==constants.box && i.yVel<0:
@@ -885,7 +886,7 @@ func _update(delta):
 											elif y.isDestructible():
 												SoundsUtil.playBrickHit()	
 											y.startBumped()		
-									i.yVel=100			
+										i.yVel=100			
 							else: #上方
 								if y.type==constants.box && !y._visible:
 									continue
