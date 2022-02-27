@@ -52,6 +52,7 @@ var marioDeathPos={'x':-1,'y':-1} #保存死亡时的位置
 var music="" #背景音乐
 var screenbrick=[] #当前屏幕方块
 var winWidth  #窗体大小
+var winHeight
 
 var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 onready var _brick=$brick
@@ -90,7 +91,9 @@ func _ready():
 	Game.connect("timeOut",self,"timeOut")
 	Game.connect("hurryup",self,"hurryup")
 	Game.connect("invincibleFinish",self,"invincibleFinish")
-	winWidth=get_viewport().size.x
+	winWidth= ProjectSettings.get_setting("display/window/size/width")
+	winHeight=ProjectSettings.get_setting("display/window/size/height")
+	print("winHeight",winHeight)
 	
 	if mode=='edit':
 		_bg.hide()
@@ -100,7 +103,7 @@ func _ready():
 		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-#		loadMapFile("res://levels/test6.json")
+#		loadMapFile("res://levels/test5.json")
 		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
@@ -109,6 +112,7 @@ func _ready():
 		_title.setLevel(Game.playerData['level'])
 		
 		if marioDeathPos['x']!=-1:
+			print("marioDeathPos['x']",marioDeathPos['x'])
 			checkPoint.sort_custom(self,'sort')
 			var temp=null
 			for i in checkPoint:
@@ -121,15 +125,17 @@ func _ready():
 					i.position.y=temp['y']
 					pass
 				#设置摄像机位置
+				print("temp['x']",temp['x'])
 				camera.position.x=temp['x']
-				camera.position.x-=camera.get_camera_screen_center().x
+				camera.position.x-=winWidth/2
 				_bg.rect_position.x=camera.position.x
 				initEnemy()	#初始化当前画面的敌人
-			pass
 		else:
 			initEnemy()	#初始化当前画面的敌人	
-		print(checkPoint)	
+		print("checkPoint",checkPoint)	
 		state=constants.startState
+		if time<100:
+			SoundsUtil.isLowTime=true
 		SoundsUtil.playBgm()
 		pass	
 	elif mode=='test':
@@ -143,7 +149,7 @@ func _ready():
 #	print(camera.get_camera_position().y)	
 #	print(_marioList.get_children())
 #	findMapFile()
-	print(get_viewport().size.x)
+#	print(get_viewport().size.x)
 	print(camera.get_camera_screen_center().x)
 #	set_physics_process(false)
 	pass
@@ -340,11 +346,12 @@ func save2File(fileName):
 func initEnemy():
 #	print(camera.position.x+camera.offset.x*2)
 #	var del=[]
+	print(camera.position.x)
 	for e in range(enemyList.size()):
 		if enemyList[e]['init']:
 			continue
-		if enemyList[e].x*blockSize>camera.position.x&& \
-			enemyList[e].x*blockSize<camera.position.x+get_viewport().size.x:
+		if enemyList[e].x*blockSize+blockSize/2>camera.position.x&& \
+			enemyList[e].x*blockSize+blockSize/2<camera.position.x+winWidth:
 				enemyList[e]['init']=true
 				addEnemy(enemyList[e])
 	pass
@@ -352,6 +359,7 @@ func initEnemy():
 #添加敌人
 func addEnemy(obj:Dictionary):
 	print("addEnemy",obj)
+	print("camera ",camera.position.x)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -628,7 +636,7 @@ func marioJumpOnEnemy(m,e):
 			m.yVel=-240
 			if m.xVel>0:
 				m.xVel+=20
-			else:
+			elif m.xVel<0:
 				m.xVel-=20	
 			m.position.y=e.position.y-e.getSizeY()/2-m.getSizeY()/2+1#位置调整		
 			e.jumpedOn()
@@ -739,6 +747,7 @@ func timeOut():
 		i.startDeathJump()
 	SoundsUtil.stopBgm()
 	SoundsUtil.stopSpecialBgm()
+	SoundsUtil.playDeath()
 	pass
 
 func hurryup():
@@ -783,13 +792,12 @@ func _update(delta):
 		if state==constants.startState:
 			#清除超过屏幕的敌人
 #			var pos=camera.get_camera_position()
-
 			for i in _enemyList.get_children():
 				if i.position.x+i.getSize()/2<=camera.position.x:
 					i.queue_free()
-				elif i.position.x-i.getSize()/2>camera.position.x+get_viewport().size.x*1.6:
+				elif i.position.x-i.getSize()/2>camera.position.x+winWidth*1.6:
 					i.queue_free()
-				if i.position.y-i.getSizeY()/2>get_viewport().size.y:
+				if i.position.y-i.getSizeY()/2>winHeight:
 					i.queue_free()		
 
 			for i in _bulletList.get_children():
@@ -797,11 +805,11 @@ func _update(delta):
 					i.queue_free()
 				elif i.position.x-i.getSize()/2>camera.position.x+winWidth:
 					i.queue_free()
-				if i.position.y+i.getSizeY()/2>=get_viewport().size.y:
+				if i.position.y+i.getSizeY()/2>=winHeight:
 					i.queue_free()	
 			
 			for i in _marioList.get_children():
-				if i.position.y>get_viewport().size.y+i.getSizeY()/2:
+				if i.position.y>winHeight+i.getSizeY()/2:
 					i.dead=true
 					marioOutYPos()
 			_title._update(delta)
@@ -1016,7 +1024,6 @@ func _update(delta):
 							else:
 								marioJumpOnEnemy(i,y)
 				
-
 			for i in _enemyList.get_children():  #敌人之间的碰撞
 				for y in _enemyList.get_children():
 					if i==y:
@@ -1081,8 +1088,7 @@ func _update(delta):
 											y.startDeathJump(constants.left)
 										addScore(y)
 										SoundsUtil.playShoot()		
-					
-			
+							
 			for i in _bulletList.get_children():	#子弹跟方块
 				for y in screenbrick:
 					if i.status==constants.boom: #排除在增长的状态
@@ -1155,7 +1161,7 @@ func _update(delta):
 			for i in _marioList.get_children(): #mario跟旗杆
 				for y in _poleList.get_children():
 					if y.position.x+y.getSize()/2<camera.position.x ||\
-						y.position.x-y.getSize()/2>camera.position.x+get_viewport().size.x:
+						y.position.x-y.getSize()/2>camera.position.x+winWidth:
 							continue
 					if i.status==constants.poleSliding||\
 						i.status==constants.walkingToCastle||i.status==constants.sitBottomOfPole:
@@ -1190,7 +1196,7 @@ func _update(delta):
 			for i in _marioList.get_children(): #mario跟碰撞体
 				for y in _collisionList.get_children():
 					if y.position.x+y.getSize()/2<camera.position.x ||\
-						y.position.x-y.getSize()/2>camera.position.x+get_viewport().size.x:
+						y.position.x-y.getSize()/2>camera.position.x+winWidth:
 							continue
 					if i.getRect().intersects(y.getRect(),true):
 						if y.type==constants.castlePos:
@@ -1214,28 +1220,32 @@ func _update(delta):
 					if mario1.dir==constants.right:
 						mario1.xVel=0
 				#前进
-				if mario1.xVel>0 && mario1.position.x>camera.get_camera_screen_center().x&&\
+				if mario1.xVel>=0 && mario1.position.x>camera.get_camera_screen_center().x+20&&\
 						camera.position.x <mapWidthSize*blockSize-winWidth:
-					
-					camera.position.x+=int(abs(mario1.position.x-camera.get_camera_screen_center().x))
-					_bg.rect_position.x=int(camera.position.x)
+					if camera.position.x>mapWidthSize*blockSize-winWidth:
+						camera.position.x=mapWidthSize*blockSize-winWidth
+						_bg.rect_position.x=camera
+					else:
+						camera.position.x+=int(abs(mario1.position.x-camera.get_camera_screen_center().x-20))
+						_bg.rect_position.x=int(camera.position.x)
 #					print(camera.position.x)
 
 				#后退		
-				if mario1.xVel<0 && mario1.position.x<camera.get_camera_screen_center().x-80&&\
+				if mario1.xVel<0 && mario1.position.x<camera.get_camera_screen_center().x-40&&\
 					camera.position.x>0:
 					if camera.position.x<0:
 						camera.position.x=0
-						_bg.rect_position.x=0	
-					camera.position.x-=int(abs(mario1.position.x-camera.get_camera_screen_center().x+80))
-					_bg.rect_position.x=int(camera.position.x)	
+						_bg.rect_position.x=0
+					else:		
+						camera.position.x-=int(abs(mario1.position.x-camera.get_camera_screen_center().x+40))
+						_bg.rect_position.x=int(camera.position.x)	
 					
 				#根据摄像的移动判断前面位置是否需要添加敌人
 				for e in enemyList:
 					if e['init']:
 						continue
-					if e.x*blockSize>camera.position.x+winWidth && \
-						e.x*blockSize<camera.position.x+winWidth*1.2:
+					if e.x*blockSize+blockSize/2>=camera.position.x+winWidth && \
+						e.x*blockSize+blockSize/2<=camera.position.x+winWidth*1.2:
 							addEnemy(e)
 							e['init']=true
 
@@ -1246,7 +1256,7 @@ func _update(delta):
 			for i in _marioList.get_children():
 				i._update(delta)
 				if i.dead:
-					if i.position.y>get_viewport().size.y+i.getSizeY()/2:
+					if i.position.y>winHeight+i.getSizeY()/2:
 #						SoundsUtil.stopBgm()
 						marioDeathPos['x']=i.position.x
 						marioDeathPos['x']

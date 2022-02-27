@@ -75,7 +75,7 @@ onready var fireball=$fireball
 func _ready():
 #	status=constants.stop
 	type=constants.mario
-	debug=true
+#	debug=true
 	if big:
 		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
