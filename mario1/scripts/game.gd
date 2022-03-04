@@ -17,7 +17,7 @@ var score =preload("res://scenes/score.tscn")
 var fireball=preload("res://scenes/fireball.tscn")
 
 #保存的数据
-var playerData={"score":0,"coin":0,"lives":3,"level":"1-1",
+var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'',
 				"mario":{"big":false,"fire":false}}
 
 

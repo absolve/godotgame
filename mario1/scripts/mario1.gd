@@ -122,6 +122,24 @@ func _update(delta):
 		sitBottomOfPole(delta)
 	elif status==constants.stop:
 		pass	
+	elif status==constants.pipeIn:
+#		yVel=40
+#		position.y+=yVel*delta	
+		pipeIn(delta)
+		pass	
+	elif status==constants.walkInPipe:
+		walkIntoPipe(delta)
+#		if dir==constants.left:
+#			xVel=-50
+#		elif dir==constants.right:
+#			xVel=50
+#		animation('walk')	
+#		position.x+=xVel*delta
+		pass
+	elif status==constants.pipeOut:
+#		yVel=-40
+#		position.y+=yVel*delta	
+		pipeOut(delta)	
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
 		specialState(delta)
@@ -207,9 +225,9 @@ func stand(_delta):
 		shootFireball()
 		pass
 	
-#	if !isOnFloor:
-##		position.y+=yVel*delta	
-#		status=constants.fall
+	if !isOnFloor:
+#		position.y+=yVel*delta	
+		status=constants.fall
 
 
 func walk(delta):
@@ -423,6 +441,24 @@ func crouch(delta):
 	position.x+=xVel*delta
 	position.y+=yVel*delta
 	pass
+
+func pipeIn(delta):
+	yVel=40
+	position.y+=yVel*delta	
+	pass
+
+func pipeOut(delta):
+	yVel=-40
+	position.y+=yVel*delta
+	pass
+
+func walkIntoPipe(delta):
+	if dir==constants.left:
+			xVel=-50
+	elif dir==constants.right:
+		xVel=50
+	animation('walk')	
+	position.x+=xVel*delta
 
 #变大
 func small2Big():

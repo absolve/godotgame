@@ -22,12 +22,13 @@ var koopa=preload("res://scenes/koopa.tscn")
 var menu=preload("res://scenes/menu.tscn")
 var firework=preload("res://scenes/firework.tscn")
 var castleFlag=preload("res://scenes/flag.tscn")
-
+var bigCoin=preload("res://scenes/bigCoin.tscn")
 
 var debug=true
 var isPress=false #编辑时是否按下鼠标
 var mapWidthSize=20  #地图宽度 
 var enemyList=[] #敌人列表
+var specialEntrance=[] #特殊入口 水管和树的入口
 var currentLevel  #文件数据
 var path="res://levels/1-1.json"
 var mapDir="res://levels"	#内置地图路径
@@ -53,6 +54,9 @@ var music="" #背景音乐
 var screenbrick=[] #当前屏幕方块
 var winWidth  #窗体大小
 var winHeight
+var subLevel="" #子关卡 是否从水管或者树里面出来
+var pipeIndex=0 #当前水管入口的索引
+
 
 var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 onready var _brick=$brick
@@ -103,15 +107,16 @@ func _ready():
 		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-#		loadMapFile("res://levels/test5.json")
+#		loadMapFile("res://levels/1-1-1.json")
 		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
 		_title.setCoin(Game.playerData['coin'])
 		_title.setLevel(Game.playerData['level'])
+		subLevel=Game.playerData['subLevel']
 		
-		if marioDeathPos['x']!=-1:
+		if subLevel=='' && marioDeathPos['x']!=-1:
 			print("marioDeathPos['x']",marioDeathPos['x'])
 			checkPoint.sort_custom(self,'sort')
 			var temp=null
@@ -130,10 +135,33 @@ func _ready():
 				camera.position.x-=winWidth/2
 				_bg.rect_position.x=camera.position.x
 				initEnemy()	#初始化当前画面的敌人
+				state=constants.startState
 		else:
-			initEnemy()	#初始化当前画面的敌人	
+			if subLevel!='':
+				for i in range(specialEntrance.size()): #找到这个特殊出口
+					if specialEntrance[i]['pipeNo']==subLevel:
+						pipeIndex=i
+						break
+				if specialEntrance[pipeIndex].pipeType==constants.pipeOut:
+					for i in _marioList.get_children():
+						i.position.x=specialEntrance[pipeIndex]['x']*blockSize
+						i.position.y=specialEntrance[pipeIndex]['y']*blockSize+\
+								blockSize+i.getSizeY()/2
+						i.status=constants.pipeOut
+#						print(i.position.y)
+#				print(specialEntrance[pipeIndex]['y']*blockSize+blockSize)				
+				camera.position.x=specialEntrance[pipeIndex]['x']*blockSize
+				camera.position.x-=int(winWidth/3)
+				_bg.rect_position.x=camera.position.x
+				initEnemy()	#初始化当前画面的敌人
+				state=constants.loadSublevel
+				pass
+			else:	
+				initEnemy()	#初始化当前画面的敌人	
+				state=constants.startState
 		print("checkPoint",checkPoint)	
-		state=constants.startState
+#		state=constants.startState
+		
 		if time<100:
 			SoundsUtil.isLowTime=true
 		SoundsUtil.playBgm()
@@ -255,10 +283,19 @@ func loadMapFile(fileName:String):
 					temp.spriteIndex=i['spriteIndex']
 					temp.position.x=i['x']*blockSize+blockSize/2
 					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.rotate=int(i['rotate'])
+					if i.has('pipeType'):
+						temp.pipeType=i['pipeType']
+					if i.has('pipeNo'):	
+						temp.pipeNo=i['pipeNo']
+					if i.has("dir"):
+						temp.dir=i['dir']
 					var obj={"x":i['x'],"y":i['y']}
 					if checkTile(obj):
 						print(obj,' has one pipe')
 					else:
+						if i.has('pipeType')&&i['pipeType']!=constants.empty&&i['pipeType']!='':
+							specialEntrance.append(i)
 						_brick.add_child(temp)
 			elif i['type']=='bg':	
 				if mode=='edit':
@@ -317,7 +354,19 @@ func loadMapFile(fileName:String):
 							print(obj,' has one castleFlag')
 						else:	
 							castleFlagObj=temp
-							_collisionList.add_child(temp)													
+							_collisionList.add_child(temp)		
+			elif i['type']=='coin':
+				if mode=='edit':
+					allTiles.append(i)
+				else:
+					var temp=bigCoin.instance()
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					var obj={"x":i['x'],"y":i['y']}		
+					if checkTile(obj):
+						print(obj,' has one coin')
+					else:	
+						_itemsList.add_child(temp)												
 		file.close()
 	else:
 		print('文件不存在')	
@@ -385,6 +434,7 @@ func addEnemy(obj:Dictionary):
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
 		_enemyList.add_child(temp)
+
 	pass
 
 func checkTile(obj):
@@ -433,6 +483,8 @@ func checkHasItem(pos,selectType):
 
 #添加方块信息
 func addItem(type,key,pos):
+	if type=='del':
+		return
 	if not constants.tilesAttribute.has(key):
 		print('item type error ',key)
 		return	
@@ -572,7 +624,7 @@ func gameNextLevel():
 	temp.isgameover=true
 	Game.playerData['score']=_title.score
 	Game.playerData['coin']=_title.coinNum
-	Game.playerData['lives']-=1
+#	Game.playerData['lives']-=1
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
@@ -669,6 +721,10 @@ func marioAndItem(m,i):
 		i.queue_free()
 		addLive(m)
 		SoundsUtil.playItem1up()
+	elif i.type==constants.bigCoin:
+		i.queue_free()
+		SoundsUtil.playCoin()
+		addCoin(m)	
 	pass
 
 #mario掉出屏幕
@@ -775,7 +831,7 @@ func sort(a,b):
 		return false
 	pass
 
-#获取当前屏幕中方块前后两个屏幕	
+#获取当前屏幕中方块和后一个屏幕	
 func getScreenBrick():
 	var list=[]
 #	screenbrick=[]
@@ -784,6 +840,55 @@ func getScreenBrick():
 		  i.position.x<camera.position.x+winWidth*2:
 			list.append(i)
 	return list
+
+#载入地图到子关卡
+func loadSubLevelMap(level,subLevel):
+	Game.playerData['score']=_title.score
+	Game.playerData['coin']=_title.coinNum
+	Game.playerData['level']=level
+	Game.playerData['subLevel']=subLevel
+	get_tree().reload_current_scene()
+	pass
+
+#判断mario在水管上是否按下按键	
+func checkInputInPipe(p):
+	var flag=false
+#	print(p.dir)
+	if p.dir==constants.down:
+		if Input.is_action_pressed("ui_down"):
+			flag=true		
+	elif p.dir==constants.left:
+		if Input.is_action_just_pressed("ui_left"):
+			flag=true
+	elif p.dir==constants.right:
+		if Input.is_action_just_pressed("ui_right"):
+			flag=true
+	return flag
+
+func marioEnterPipe(m,p):
+	state=constants.nextSublevel
+	for i in range(specialEntrance.size()):
+		if specialEntrance[i]['pipeNo']==p['pipeNo']:
+			pipeIndex=i
+			break
+	if p.dir==constants.down:
+		m.status=constants.pipeIn
+	elif p.dir==constants.left||p.dir==constants.right:
+		m.status=constants.walkInPipe
+		m.dir=p.dir
+	print("marioEnterPipe")	
+
+#检查水管的位置判断是否可以进入
+func checkPipePos(m,p):
+	if p.dir==constants.left||p.dir==constants.right:
+		return true
+	var x=p.position.x-blockSize/2
+	if m.position.x<x+blockSize/3 && m.position.x>x-blockSize/3:
+		return true
+	else:
+		return false	
+	pass
+
 	
 func _update(delta):
 	if mode=='edit':
@@ -866,6 +971,10 @@ func _update(delta):
 						elif abs(dx)>abs(dy): #左右的碰撞
 							if y.type==constants.box && !y._visible:
 								continue
+							if y.type==constants.pipe && y.pipeType==constants.pipeIn:
+								if checkInputInPipe(y) && checkPipePos(i,y):
+									marioEnterPipe(i,y)
+									pass	
 							if dx<0:
 #								if i.dir==constants.left:
 								i.xVel=0
@@ -876,7 +985,6 @@ func _update(delta):
 								i.position.x=y.getLeft()-i.getSize()/2
 						else: #上下的碰撞
 							if dy<0:  #下方	
-				
 								#这个非常的接近边缘就不判断	
 								if 	abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>=1:
 									if y.type==constants.box && i.yVel<0:
@@ -890,6 +998,10 @@ func _update(delta):
 							else: #上方
 								if y.type==constants.box && !y._visible:
 									continue
+								if y.type==constants.pipe && y.pipeType==constants.pipeIn:
+									if checkInputInPipe(y) && checkPipePos(i,y):
+										marioEnterPipe(i,y)
+										pass
 								if i.yVel>=0:  #掉落的情况
 									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
 										i.yVel=0
@@ -940,14 +1052,19 @@ func _update(delta):
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
-								if y.type==constants.box && y.status==constants.bumped\
-									&& i.type==constants.mushroom:
-									if i.position.x<=y.position.x && i.xVel>0:
-										i.xVel=-abs(i.xVel)
-										i.yVel=-80
-									elif i.position.x>y.position.x && i.xVel<0:
-										i.xVel=abs(i.xVel)
-										i.yVel=-80
+								if y.type==constants.box && y.status==constants.bumped:
+									if i.type==constants.mushroom:	
+										if i.position.x<=y.position.x && i.xVel>0:
+											i.xVel=-abs(i.xVel)
+											i.yVel=-80
+										elif i.position.x>y.position.x && i.xVel<0:
+											i.xVel=abs(i.xVel)
+											i.yVel=-80
+									elif i.type==constants.bigCoin:
+										SoundsUtil.playCoin()
+										addCoin(i)
+										y.queue_free()
+										pass
 								if i.status==constants.jumping:
 									i.yVel=-i.jumpSpeed
 
@@ -1253,7 +1370,7 @@ func _update(delta):
 								
 			pass
 		elif state==constants.stateChange:
-			var pos=camera.get_camera_position()
+#			var pos=camera.get_camera_position()
 			for i in _marioList.get_children():
 				i._update(delta)
 				if i.dead:
@@ -1290,10 +1407,40 @@ func _update(delta):
 				elif nextStatus==constants.startState:
 					state=constants.startState
 					playLevelEnd()
+				elif nextStatus==constants.nextSublevel:
+					state=constants.empty
+					loadSubLevelMap(specialEntrance[pipeIndex]['level'],
+					specialEntrance[pipeIndex]['subLevel'])	
 			pass
 		elif state==constants.pause:	
-			
 			pass
+		elif state==constants.nextSublevel:	#mario进入子关卡	
+			for i in _marioList.get_children():
+				i._update(delta)
+				if specialEntrance[pipeIndex].dir==constants.down &&\
+					 i.getTop()>specialEntrance[pipeIndex].y*blockSize:
+					tick=40
+					state=constants.gameIdle
+					nextStatus=constants.nextSublevel
+				elif specialEntrance[pipeIndex].dir==constants.left &&\
+					i.getLeft()<specialEntrance[pipeIndex].x*blockSize:
+						tick=40
+						state=constants.gameIdle
+						nextStatus=constants.nextSublevel
+				elif specialEntrance[pipeIndex].dir==constants.right &&	\
+					i.getLeft()>specialEntrance[pipeIndex].x*blockSize:
+						tick=40
+						state=constants.gameIdle
+						nextStatus=constants.nextSublevel
+			pass
+		elif state==constants.loadSublevel: #从水管或者树里面出现
+			for i in _marioList.get_children():
+				i._update(delta)
+				if specialEntrance[pipeIndex].pipeType==constants.pipeOut:
+					if i.getBottom()<specialEntrance[pipeIndex].y*blockSize:
+						state=constants.startState
+						i.status=constants.stand
+			pass	
 	elif mode=='show':
 		pass
 	pass
@@ -1386,7 +1533,9 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type=='pipe':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+#					draw_set_transform(Vector2.ZERO,deg2rad(int(i.rotate)),Vector2(1,1))
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
+#					draw_set_transform(Vector2.ZERO,0,Vector2(1,1))
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))

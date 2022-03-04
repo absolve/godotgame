@@ -21,6 +21,8 @@ onready var score=$score
 onready var gameover=$gameover
 onready var death=$death
 onready var levelend=$levelend
+onready var underground=$underground
+onready var undergroundFast=$underground_fast
 
 var bgm="overworld"
 var isLowTime=false
@@ -81,12 +83,20 @@ func playBgm():
 			overworldFast.play()
 		else:	
 			overworld.play()
+	elif  bgm=='underground':
+		if isLowTime:
+			undergroundFast.play()
+		else:
+			underground.play()
 	pass
 
 func stopBgm():
 	if bgm=="overworld":
 		overworldFast.stop()
 		overworld.stop()
+	elif bgm=='underground':
+		undergroundFast.stop()
+		underground.stop()
 
 func playSpecialBgm():
 	if isLowTime:

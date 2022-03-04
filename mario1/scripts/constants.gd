@@ -1,6 +1,9 @@
 extends Node
 #保存所有的常量
 
+#游戏中分数
+const scoreList=[100,200,400,500,800,1000,2000,4000.5000,8000]
+
 #游戏状态
 const stateChange='stateChange'
 const startState='startState'
@@ -12,6 +15,8 @@ const gameEnd="gameEnd"
 const nextLevel="nextLevel"
 const gameIdle="gameIdle"
 const gameRestart="gameRestart"
+const nextSublevel="nextSublevel" #mario从水管或者树里面进入
+const loadSublevel="loadSublevel" #mario从水管或者树里面出现
 
 #方块状态
 const resting="resting"  #静止
@@ -32,7 +37,7 @@ const sliding="sliding"
 const shell='shell'
 const plantOut="plantOut"
 const plantIn="plantIn"
-const revive="revive"
+const revive="revive" #复活
 
 
 #子弹状态
@@ -65,7 +70,9 @@ const crouch="crouch"
 const poleSliding='poleSliding' #在旗杆上下降
 const walkingToCastle="walkingToCastle"#走到城堡里面
 const sitBottomOfPole="sitBottomOfPole" #旗已经到了底部
-
+#const pipeIn='pipeIn'
+#const pipeOut='pipeOut'
+const walkInPipe="walkInPipe"
 
 #类型
 const empty="empty"
@@ -88,10 +95,15 @@ const pole ='pole'
 const checkPoint="checkPoint" #死亡后的检查点
 const castlePos="castlePos"  #城堡大门
 const plant="plant"
+const pipeIn="pipeIn"  #水管进入
+const pipeOut="pipeOut" #水管出去
+const bigCoin='bigCoin'
 
 #方向
 const right="right"
 const left="left"
+const down="down"
+const up="up"
 
 #mario 数据
 var mario_speed=180
@@ -235,7 +247,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": empty,
-		"visible": "f",
+		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
 	},
@@ -363,6 +375,11 @@ const tilesAttribute={
 	"rotate":0,
 	"offsetX":0,
 	"offsetY":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe1": {
 	"type": "pipe",
@@ -372,62 +389,108 @@ const tilesAttribute={
 	"rotate":0,
 	"offsetX":0,
 		"offsetY":0,
+		"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe2": {
 	"type": "pipe",
 	"spriteIndex": 2,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe3": {
 	"type": "pipe",
 	"spriteIndex": 3,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe4": {
 	"type": "pipe",
 	"spriteIndex": 4,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe5": {
 	"type": "pipe",
 	"spriteIndex": 5,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
+	
 	},
 	"pipe6": {
 	"type": "pipe",
 	"spriteIndex": 6,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe7": {
 	"type": "pipe",
 	"spriteIndex": 7,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe8": {
 	"type": "pipe",
 	"spriteIndex": 8,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"pipe9": {
 	"type": "pipe",
 	"spriteIndex": 9,
 	"x": 0,
 	"y": 0,
-	"rotate":0
+	"rotate":0,
+	"pipeType":empty,
+	"pipeNo":0,
+	"level":"",
+	"subLevel":"",
+	"dir":down,
 	},
 	"bg": {
 		"type": "bg",
@@ -720,6 +783,7 @@ func _ready():
 	for i in constants.tilesType:
 		mapTiles[i]={}
 	loadIcon()	
+
 	pass
 
 

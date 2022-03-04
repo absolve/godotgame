@@ -114,7 +114,7 @@ margin_top = 113.0
 margin_right = 220.0
 margin_bottom = 136.0
 key = "music"
-list = [ "overworld", "castle", "underwater" ]
+list = [ "overworld", "castle", "underwater", "underground" ]
 
 [node name="spriteset" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 visible = false
