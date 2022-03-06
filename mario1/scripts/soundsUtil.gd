@@ -23,6 +23,7 @@ onready var death=$death
 onready var levelend=$levelend
 onready var underground=$underground
 onready var undergroundFast=$underground_fast
+onready var pipe=$pipe
 
 var bgm="overworld"
 var isLowTime=false
@@ -75,6 +76,9 @@ func _ready():
 	
 	var levelend1=levelend.stream as AudioStreamOGGVorbis
 	levelend1.set_loop(false)
+	
+	var pipe1=pipe.stream as AudioStreamOGGVorbis
+	pipe1.set_loop(false)
 	pass # Replace with function body.
 
 func playBgm():
@@ -159,3 +163,9 @@ func playDeath():
 
 func playLevelend():
 	levelend.play()
+
+func playPipe():
+	pipe.play()
+
+		
+	

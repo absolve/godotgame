@@ -13,7 +13,7 @@ signal invincibleFinish #无敌时间结束
 var  backgroundcolor = ['#5C94FC',
 						'#000',
 						'#2038EC']
-var score =preload("res://scenes/score.tscn")
+#var score =preload("res://scenes/score.tscn")
 var fireball=preload("res://scenes/fireball.tscn")
 
 #保存的数据

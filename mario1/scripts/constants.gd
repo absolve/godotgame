@@ -122,7 +122,7 @@ const jumpSpeed=400	#跳跃高度
 const enemyGravity=1800
 const enemyMaxVel=1500
 
-const slideFriction=550 #滑行的加速度
+const slideFriction=590 #滑行的加速度
 const acceleration=300	#移动加速度
 const crouchFriction=450 #蹲下去时加速度
 const runAcceleration=550 #跑的加速度
@@ -139,7 +139,8 @@ const marioMaxYVel=1200 #最大y速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
-			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag"]
+			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
+			"pipeIn"]
 
 #图块 所有的图块
 const tiles=['del',"mario","goomba","koopa","brick","pipe"

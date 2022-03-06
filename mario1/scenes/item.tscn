@@ -8,20 +8,20 @@
 [ext_resource path="res://sprites/Star.png" type="Texture" id=6]
 [ext_resource path="res://sprites/mushroom_1up.png" type="Texture" id=7]
 
-[sub_resource type="AtlasTexture" id=4]
+[sub_resource type="AtlasTexture" id=2]
 flags = 4
 atlas = ExtResource( 6 )
-region = Rect2( 64, 0, 32, 32 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 6 )
 region = Rect2( 32, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=2]
+[sub_resource type="AtlasTexture" id=4]
 flags = 4
 atlas = ExtResource( 6 )
-region = Rect2( 0, 0, 32, 32 )
+region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
@@ -30,10 +30,10 @@ region = Rect2( 96, 0, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ SubResource( 4 ), SubResource( 3 ), SubResource( 2 ), SubResource( 5 ) ],
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
 "loop": true,
 "name": "star",
-"speed": 13.0
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 2 ) ],
 "loop": true,

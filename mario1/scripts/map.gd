@@ -154,7 +154,7 @@ func _ready():
 				camera.position.x-=int(winWidth/3)
 				_bg.rect_position.x=camera.position.x
 				initEnemy()	#初始化当前画面的敌人
-				state=constants.loadSublevel
+				state=constants.startState
 				pass
 			else:	
 				initEnemy()	#初始化当前画面的敌人	
@@ -220,6 +220,8 @@ func loadMapFile(fileName:String):
 				var temp=mario.instance()
 				temp.position.x=pos['x']*blockSize+blockSize/2
 				temp.position.y=pos['y']*blockSize+blockSize/2
+				temp.big=Game.playerData['mario']['big']
+				temp.fire=Game.playerData['mario']['fire']
 				_marioList.add_child(temp)
 		
 		marioPos=pos
@@ -608,7 +610,9 @@ func gameRestart():
 	Game.playerData['score']=_title.score
 	Game.playerData['coin']=_title.coinNum
 	Game.playerData['lives']-=1
-	
+	Game.playerData['subLevel']=''
+	Game.playerData['mario']['big']=false
+	Game.playerData['mario']['fire']=false
 	var temp=menu.instance()
 	temp.marioDeathPos=marioDeathPos
 	temp.status=constants.gameRestart
@@ -624,6 +628,7 @@ func gameNextLevel():
 	temp.isgameover=true
 	Game.playerData['score']=_title.score
 	Game.playerData['coin']=_title.coinNum
+	Game.playerData['subLevel']=''
 #	Game.playerData['lives']-=1
 	queue_free()
 	set_process_input(false)
@@ -847,7 +852,18 @@ func loadSubLevelMap(level,subLevel):
 	Game.playerData['coin']=_title.coinNum
 	Game.playerData['level']=level
 	Game.playerData['subLevel']=subLevel
-	get_tree().reload_current_scene()
+	for i in _marioList.get_children(): #保存mario的信息
+		saveMarioInfo(i)
+	SoundsUtil.stopBgm()
+	SoundsUtil.stopSpecialBgm()
+#	get_tree().reload_current_scene()
+	var scene=load("res://scenes/map.tscn")
+	var temp=scene.instance()
+	temp.mode="game"
+	queue_free()
+	set_process_input(false)
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
 	pass
 
 #判断mario在水管上是否按下按键	
@@ -865,7 +881,9 @@ func checkInputInPipe(p):
 			flag=true
 	return flag
 
+#mario进入水管
 func marioEnterPipe(m,p):
+	SoundsUtil.playPipe()
 	state=constants.nextSublevel
 	for i in range(specialEntrance.size()):
 		if specialEntrance[i]['pipeNo']==p['pipeNo']:
@@ -889,6 +907,11 @@ func checkPipePos(m,p):
 		return false	
 	pass
 
+#保存mario的状态
+func saveMarioInfo(m):
+	print("保存数据")
+	Game.playerData['mario']['big']=m.big
+	Game.playerData['mario']['fire']=m.fire
 	
 func _update(delta):
 	if mode=='edit':
@@ -940,6 +963,12 @@ func _update(delta):
 				
 			for i in _marioList.get_children():  #mario跟方块
 				var onFloor=false
+				if i.status==constants.pipeOut: #从水管里面出来
+					if specialEntrance[pipeIndex].pipeType==constants.pipeOut:
+						if i.getBottom()<specialEntrance[pipeIndex].y*blockSize:
+#							state=constants.startState
+							i.status=constants.stand
+					continue		
 				for y in screenbrick: #排除不在当前屏幕里的方块
 #					if y.position.x+y.getSize()/2<pos.x ||\
 #						y.position.x-y.getSize()/2>pos.x+get_viewport().size.x:
@@ -949,7 +978,7 @@ func _update(delta):
 					if i.getRect().intersects(y.getRect(),true):	#包括边缘
 						y.collisionShow=true
 						if i.status==constants.poleSliding:
-							i.setSitBottom()
+							i.setSitBottom()	
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
@@ -1317,7 +1346,8 @@ func _update(delta):
 						y.position.x-y.getSize()/2>camera.position.x+winWidth:
 							continue
 					if i.getRect().intersects(y.getRect(),true):
-						if y.type==constants.castlePos:
+						if y.type==constants.castlePos: #正好到了城堡的门口
+							saveMarioInfo(i) #保存一下数据
 							i.queue_free()
 							state=constants.inCastle
 							lastMarioXPos=y.position.x #保存当时的x位置
@@ -1418,28 +1448,28 @@ func _update(delta):
 			for i in _marioList.get_children():
 				i._update(delta)
 				if specialEntrance[pipeIndex].dir==constants.down &&\
-					 i.getTop()>specialEntrance[pipeIndex].y*blockSize:
+					 i.getTop()>specialEntrance[pipeIndex].y*blockSize+15:
 					tick=40
 					state=constants.gameIdle
 					nextStatus=constants.nextSublevel
 				elif specialEntrance[pipeIndex].dir==constants.left &&\
-					i.getLeft()<specialEntrance[pipeIndex].x*blockSize:
+					i.getLeft()<specialEntrance[pipeIndex].x*blockSize-15:
 						tick=40
 						state=constants.gameIdle
 						nextStatus=constants.nextSublevel
 				elif specialEntrance[pipeIndex].dir==constants.right &&	\
-					i.getLeft()>specialEntrance[pipeIndex].x*blockSize:
+					i.getLeft()>specialEntrance[pipeIndex].x*blockSize+15:
 						tick=40
 						state=constants.gameIdle
 						nextStatus=constants.nextSublevel
 			pass
 		elif state==constants.loadSublevel: #从水管或者树里面出现
-			for i in _marioList.get_children():
-				i._update(delta)
-				if specialEntrance[pipeIndex].pipeType==constants.pipeOut:
-					if i.getBottom()<specialEntrance[pipeIndex].y*blockSize:
-						state=constants.startState
-						i.status=constants.stand
+#			for i in _marioList.get_children():
+#				i._update(delta)
+#				if specialEntrance[pipeIndex].pipeType==constants.pipeOut:
+#					if i.getBottom()<specialEntrance[pipeIndex].y*blockSize:
+#						state=constants.startState
+#						i.status=constants.stand
 			pass	
 	elif mode=='show':
 		pass
@@ -1533,9 +1563,9 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type=='pipe':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-#					draw_set_transform(Vector2.ZERO,deg2rad(int(i.rotate)),Vector2(1,1))
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-#					draw_set_transform(Vector2.ZERO,0,Vector2(1,1))
+					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
+						draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
@@ -1556,8 +1586,6 @@ func _draw():
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
 	pass
-	
-	
 
 
 func _on_hide_pressed():
