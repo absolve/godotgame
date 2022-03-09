@@ -10,7 +10,7 @@ var speed=160
 
 
 func _ready():
-	debug=true
+#	debug=true
 	addPoleLen()
 	type=constants.pole
 	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32+16))	
