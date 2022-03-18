@@ -8,20 +8,25 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=7]
+[sub_resource type="AtlasTexture" id=12]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 0, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=6]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 32, 160, 32, 32 )
+region = Rect2( 0, 160, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=13]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 160, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 32, 160, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
@@ -33,20 +38,15 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 128, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=10]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 64, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=4]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 0, 32, 32, 32 )
-
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 64, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=9]
 flags = 4
@@ -58,10 +58,10 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 32, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=12]
+[sub_resource type="AtlasTexture" id=7]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 0, 160, 32, 32 )
+region = Rect2( 0, 96, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -70,19 +70,24 @@ animations = [ {
 "name": "0",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ) ],
+"frames": [ SubResource( 12 ) ],
 "loop": true,
-"name": "5",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 6 ) ],
-"loop": true,
-"name": "10",
+"name": "9",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 13 ) ],
 "loop": true,
 "name": "11",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ) ],
+"loop": false,
+"name": "1",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 6 ) ],
+"loop": true,
+"name": "10",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ) ],
@@ -95,19 +100,14 @@ animations = [ {
 "name": "8",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 10 ) ],
-"loop": true,
-"name": "7",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 4 ) ],
-"loop": false,
-"name": "1",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 3 ) ],
 "loop": false,
 "name": "3",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 10 ) ],
+"loop": true,
+"name": "7",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 9 ) ],
@@ -120,9 +120,9 @@ animations = [ {
 "name": "2",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 12 ) ],
+"frames": [ SubResource( 7 ) ],
 "loop": true,
-"name": "9",
+"name": "5",
 "speed": 5.0
 } ]
 
@@ -132,4 +132,4 @@ script = ExtResource( 1 )
 [node name="ani" type="AnimatedSprite" parent="."]
 show_behind_parent = true
 frames = SubResource( 1 )
-animation = "11"
+animation = "0"

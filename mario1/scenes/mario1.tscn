@@ -61,55 +61,10 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 128, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=1]
+[sub_resource type="AtlasTexture" id=44]
 flags = 4
-atlas = ExtResource( 6 )
+atlas = ExtResource( 9 )
 region = Rect2( 96, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=36]
-flags = 4
-atlas = ExtResource( 7 )
-region = Rect2( 128, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=2]
-flags = 4
-atlas = ExtResource( 4 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=35]
-flags = 4
-atlas = ExtResource( 5 )
-region = Rect2( 192, 0, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=30]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 0, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=31]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 32, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=13]
-flags = 4
-atlas = ExtResource( 7 )
-region = Rect2( 192, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=37]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 0, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=38]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 32, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=39]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 64, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=21]
 flags = 4
@@ -156,15 +111,20 @@ flags = 4
 atlas = ExtResource( 9 )
 region = Rect2( 64, 64, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=40]
+[sub_resource type="AtlasTexture" id=30]
 flags = 4
-atlas = ExtResource( 4 )
-region = Rect2( 0, 96, 32, 32 )
+atlas = ExtResource( 8 )
+region = Rect2( 0, 192, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=41]
+[sub_resource type="AtlasTexture" id=31]
+flags = 4
+atlas = ExtResource( 8 )
+region = Rect2( 32, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=2]
 flags = 4
 atlas = ExtResource( 4 )
-region = Rect2( 32, 96, 32, 32 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=10]
 flags = 4
@@ -181,60 +141,75 @@ flags = 4
 atlas = ExtResource( 8 )
 region = Rect2( 64, 64, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=44]
+[sub_resource type="AtlasTexture" id=36]
 flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 96, 64, 32, 64 )
+atlas = ExtResource( 7 )
+region = Rect2( 128, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=32]
+[sub_resource type="AtlasTexture" id=35]
 flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 0, 64, 32, 64 )
+atlas = ExtResource( 5 )
+region = Rect2( 192, 0, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=33]
+[sub_resource type="AtlasTexture" id=13]
 flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 32, 64, 32, 64 )
+atlas = ExtResource( 7 )
+region = Rect2( 192, 0, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=34]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 64, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=15]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 0, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=16]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 32, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=17]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 64, 64, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=18]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 96, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 0, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=8]
-flags = 4
-atlas = ExtResource( 9 )
-region = Rect2( 32, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=9]
+[sub_resource type="AtlasTexture" id=61]
 flags = 4
 atlas = ExtResource( 8 )
-region = Rect2( 64, 0, 32, 64 )
+region = Rect2( 96, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=63]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 96, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=56]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 0, 0, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=70]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=71]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 32, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 96, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=37]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=38]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=39]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 64, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=40]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=41]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 32, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
@@ -251,46 +226,6 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=19]
-flags = 4
-atlas = ExtResource( 23 )
-region = Rect2( 0, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=20]
-flags = 4
-atlas = ExtResource( 23 )
-region = Rect2( 32, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=42]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 0, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=43]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 32, 192, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=62]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 64, 0, 32, 64 )
-
-[sub_resource type="AtlasTexture" id=63]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 96, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=54]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=56]
-flags = 4
-atlas = ExtResource( 6 )
-region = Rect2( 0, 0, 32, 64 )
-
 [sub_resource type="AtlasTexture" id=65]
 flags = 4
 atlas = ExtResource( 5 )
@@ -306,10 +241,50 @@ flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 64, 0, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=52]
+[sub_resource type="AtlasTexture" id=7]
 flags = 4
 atlas = ExtResource( 9 )
-region = Rect2( 64, 0, 32, 64 )
+region = Rect2( 0, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 32, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=15]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 0, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=16]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 32, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=17]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 64, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=42]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 0, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=43]
+flags = 4
+atlas = ExtResource( 6 )
+region = Rect2( 32, 192, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=19]
+flags = 4
+atlas = ExtResource( 23 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=20]
+flags = 4
+atlas = ExtResource( 23 )
+region = Rect2( 32, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=51]
 flags = 4
@@ -326,26 +301,6 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 32, 96, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=46]
-flags = 4
-atlas = ExtResource( 7 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=55]
-flags = 4
-atlas = ExtResource( 4 )
-region = Rect2( 96, 32, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=14]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=61]
-flags = 4
-atlas = ExtResource( 8 )
-region = Rect2( 96, 64, 32, 64 )
-
 [sub_resource type="AtlasTexture" id=48]
 flags = 4
 atlas = ExtResource( 4 )
@@ -361,35 +316,75 @@ flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 64, 32, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=70]
+[sub_resource type="AtlasTexture" id=54]
 flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 0, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=71]
-flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 32, 96, 32, 32 )
+atlas = ExtResource( 2 )
+region = Rect2( 64, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=64]
 flags = 4
 atlas = ExtResource( 8 )
 region = Rect2( 0, 0, 32, 64 )
 
-[sub_resource type="AtlasTexture" id=53]
+[sub_resource type="AtlasTexture" id=62]
 flags = 4
-atlas = ExtResource( 3 )
-region = Rect2( 64, 0, 32, 32 )
+atlas = ExtResource( 6 )
+region = Rect2( 64, 0, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=14]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=57]
 flags = 4
 atlas = ExtResource( 9 )
 region = Rect2( 0, 0, 32, 64 )
 
+[sub_resource type="AtlasTexture" id=55]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 96, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=18]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 96, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=46]
+flags = 4
+atlas = ExtResource( 7 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=53]
+flags = 4
+atlas = ExtResource( 3 )
+region = Rect2( 64, 0, 32, 32 )
+
 [sub_resource type="AtlasTexture" id=47]
 flags = 4
 atlas = ExtResource( 4 )
 region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=32]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 0, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=33]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 32, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=34]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 64, 64, 32, 64 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 8 )
+region = Rect2( 64, 0, 32, 64 )
 
 [sub_resource type="AtlasTexture" id=58]
 flags = 4
@@ -406,8 +401,18 @@ flags = 4
 atlas = ExtResource( 7 )
 region = Rect2( 64, 0, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=52]
+flags = 4
+atlas = ExtResource( 9 )
+region = Rect2( 64, 0, 32, 64 )
+
 [sub_resource type="SpriteFrames" id=79]
 animations = [ {
+"frames": [ ExtResource( 30 ) ],
+"loop": false,
+"name": "crouch",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 75 ), SubResource( 76 ), SubResource( 75 ), SubResource( 76 ), SubResource( 75 ), SubResource( 76 ), SubResource( 77 ), SubResource( 76 ), SubResource( 77 ), SubResource( 76 ), SubResource( 77 ), SubResource( 76 ), SubResource( 77 ) ],
 "loop": false,
 "name": "small2big",
@@ -418,94 +423,9 @@ animations = [ {
 "name": "big2small",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 30 ) ],
-"loop": false,
-"name": "crouch",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 18 ) ],
 "loop": true,
 "name": "death",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 1 ) ],
-"loop": true,
-"name": "slide_big_black",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 13 ) ],
-"loop": true,
-"name": "jump_big_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 36 ) ],
-"loop": true,
-"name": "jump_small_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 2 ) ],
-"loop": false,
-"name": "stand_small_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 16 ) ],
-"loop": false,
-"name": "throw_green",
-"speed": 8.0
-}, {
-"frames": [ ExtResource( 24 ), ExtResource( 22 ) ],
-"loop": true,
-"name": "landing_big_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 35 ) ],
-"loop": false,
-"name": "stand_big_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 30 ), SubResource( 31 ) ],
-"loop": true,
-"name": "landing_big_green",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 13 ) ],
-"loop": false,
-"name": "stand_small_red",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 19 ) ],
-"loop": true,
-"name": "death_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ],
-"loop": true,
-"name": "walk_small_black",
-"speed": 6.0
-}, {
-"frames": [ SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ), SubResource( 29 ) ],
-"loop": true,
-"name": "test",
-"speed": 30.0
-}, {
-"frames": [ SubResource( 40 ), SubResource( 41 ) ],
-"loop": true,
-"name": "landing_small_green",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
-"loop": true,
-"name": "walk_big_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 29 ) ],
-"loop": false,
-"name": "crouch_green",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 20 ) ],
-"loop": true,
-"name": "death_green",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 44 ) ],
@@ -513,109 +433,49 @@ animations = [ {
 "name": "slide_big",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ) ],
+"frames": [ SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ), SubResource( 29 ) ],
 "loop": true,
-"name": "walk_big",
+"name": "test",
+"speed": 30.0
+}, {
+"frames": [ SubResource( 30 ), SubResource( 31 ) ],
+"loop": true,
+"name": "landing_big_green",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ) ],
+"frames": [ ExtResource( 19 ) ],
 "loop": true,
-"name": "walk_big_black",
+"name": "death_red",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 18 ) ],
-"loop": true,
-"name": "slide_small_black",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 7 ), SubResource( 8 ) ],
-"loop": true,
-"name": "landing_big",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 9 ) ],
-"loop": true,
-"name": "jump_big_green",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
-"loop": true,
-"name": "walk_small",
-"speed": 6.0
-}, {
-"frames": [ SubResource( 19 ), SubResource( 20 ) ],
-"loop": true,
-"name": "landing_small_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 42 ), SubResource( 43 ) ],
-"loop": true,
-"name": "landing_big_black",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 28 ) ],
+"frames": [ SubResource( 2 ) ],
 "loop": false,
-"name": "crouch_black",
+"name": "stand_small_green",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 62 ) ],
+"frames": [ SubResource( 10 ), SubResource( 11 ), SubResource( 12 ) ],
 "loop": true,
-"name": "jump_big_black",
+"name": "walk_big_green",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 63 ) ],
+"frames": [ SubResource( 36 ) ],
 "loop": true,
-"name": "slide_small",
+"name": "jump_small_red",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 54 ) ],
-"loop": true,
-"name": "jump_small",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 14 ) ],
+"frames": [ SubResource( 35 ) ],
 "loop": false,
-"name": "throw",
-"speed": 8.0
+"name": "stand_big_red",
+"speed": 5.0
 }, {
-"frames": [ SubResource( 56 ) ],
+"frames": [ ExtResource( 29 ) ],
 "loop": false,
-"name": "stand_big_black",
+"name": "crouch_green",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 65 ), SubResource( 66 ), SubResource( 67 ) ],
-"loop": true,
-"name": "walk_big_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 52 ) ],
-"loop": true,
-"name": "jump_big",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 11 ) ],
+"frames": [ SubResource( 13 ) ],
 "loop": false,
-"name": "crouch_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 51 ) ],
-"loop": false,
-"name": "stand_small_black",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 21 ) ],
-"loop": true,
-"name": "death_black",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 68 ), SubResource( 69 ) ],
-"loop": true,
-"name": "landing_small",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 46 ) ],
-"loop": true,
-"name": "slide_small_red",
+"name": "stand_small_red",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 15 ) ],
@@ -623,24 +483,109 @@ animations = [ {
 "name": "throw_red",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 12 ) ],
-"loop": true,
-"name": "slide_big_red",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 55 ) ],
-"loop": true,
-"name": "slide_small_green",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 14 ) ],
+"frames": [ ExtResource( 16 ) ],
 "loop": false,
-"name": "stand_small",
-"speed": 5.0
+"name": "throw_green",
+"speed": 8.0
 }, {
 "frames": [ SubResource( 61 ) ],
 "loop": true,
 "name": "slide_big_green",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 63 ) ],
+"loop": true,
+"name": "slide_small",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 56 ) ],
+"loop": false,
+"name": "stand_big_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 70 ), SubResource( 71 ) ],
+"loop": true,
+"name": "landing_small_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "slide_big_black",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 24 ), ExtResource( 22 ) ],
+"loop": true,
+"name": "landing_big_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 37 ), SubResource( 38 ), SubResource( 39 ) ],
+"loop": true,
+"name": "walk_small_black",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 40 ), SubResource( 41 ) ],
+"loop": true,
+"name": "landing_small_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 20 ) ],
+"loop": true,
+"name": "death_green",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": true,
+"name": "jump_big_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "walk_small",
+"speed": 6.0
+}, {
+"frames": [ SubResource( 65 ), SubResource( 66 ), SubResource( 67 ) ],
+"loop": true,
+"name": "walk_big_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ) ],
+"loop": true,
+"name": "landing_big",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ) ],
+"loop": true,
+"name": "walk_big_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 42 ), SubResource( 43 ) ],
+"loop": true,
+"name": "landing_big_black",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ) ],
+"loop": false,
+"name": "throw",
+"speed": 8.0
+}, {
+"frames": [ SubResource( 19 ), SubResource( 20 ) ],
+"loop": true,
+"name": "landing_small_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 51 ) ],
+"loop": false,
+"name": "stand_small_black",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ) ],
+"loop": false,
+"name": "throw_black",
+"speed": 8.0
+}, {
+"frames": [ SubResource( 68 ), SubResource( 69 ) ],
+"loop": true,
+"name": "landing_small",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 48 ), SubResource( 49 ), SubResource( 50 ) ],
@@ -648,14 +593,9 @@ animations = [ {
 "name": "walk_small_green",
 "speed": 6.0
 }, {
-"frames": [ ExtResource( 17 ) ],
-"loop": false,
-"name": "throw_black",
-"speed": 8.0
-}, {
-"frames": [ SubResource( 70 ), SubResource( 71 ) ],
+"frames": [ SubResource( 54 ) ],
 "loop": true,
-"name": "landing_small_black",
+"name": "jump_small",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 64 ) ],
@@ -663,9 +603,29 @@ animations = [ {
 "name": "stand_big_green",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 53 ) ],
+"frames": [ ExtResource( 12 ) ],
 "loop": true,
-"name": "jump_small_black",
+"name": "slide_big_red",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 21 ) ],
+"loop": true,
+"name": "death_black",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 11 ) ],
+"loop": false,
+"name": "crouch_red",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 62 ) ],
+"loop": true,
+"name": "jump_big_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 14 ) ],
+"loop": false,
+"name": "stand_small",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 57 ) ],
@@ -673,19 +633,59 @@ animations = [ {
 "name": "stand_big",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 55 ) ],
+"loop": true,
+"name": "slide_small_green",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 18 ) ],
+"loop": true,
+"name": "slide_small_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 46 ) ],
+"loop": true,
+"name": "slide_small_red",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 28 ) ],
+"loop": false,
+"name": "crouch_black",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 53 ) ],
+"loop": true,
+"name": "jump_small_black",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 47 ) ],
 "loop": true,
 "name": "jump_small_green",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ) ],
+"loop": true,
+"name": "walk_big",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 9 ) ],
+"loop": true,
+"name": "jump_big_green",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 58 ), SubResource( 59 ), SubResource( 60 ) ],
 "loop": true,
 "name": "walk_small_red",
 "speed": 6.0
+}, {
+"frames": [ SubResource( 52 ) ],
+"loop": true,
+"name": "jump_big",
+"speed": 5.0
 } ]
 
 [node name="mario1" type="Node2D"]
-z_index = 2
+z_index = 3
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

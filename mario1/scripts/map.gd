@@ -107,7 +107,7 @@ func _ready():
 		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-#		loadMapFile("res://levels/1-1-1.json")
+#		loadMapFile("res://levels/test7.json")
 		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
