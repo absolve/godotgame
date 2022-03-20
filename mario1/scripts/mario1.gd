@@ -75,7 +75,7 @@ onready var fireball=$fireball
 func _ready():
 #	status=constants.stop
 	type=constants.mario
-#	debug=true
+	debug=true
 	if big:
 		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 		position.y-=14
@@ -285,6 +285,8 @@ func walk(delta):
 #			xVel+=acceleration*delta
 		if 	xVel>-maxXVel:
 			xVel-=acceleration*delta
+		else:
+			xVel=-maxXVel
 			
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<0:
@@ -301,6 +303,8 @@ func walk(delta):
 #			xVel-=acceleration*delta
 		if 	xVel<maxXVel:
 			xVel+=acceleration*delta
+		else:
+			xVel=maxXVel
 	else:
 		if dir==constants.right:
 			if	xVel>0:

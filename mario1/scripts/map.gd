@@ -729,6 +729,7 @@ func marioAndItem(m,i):
 	elif i.type==constants.bigCoin:
 		i.queue_free()
 		SoundsUtil.playCoin()
+		_title.addScore(200)
 		addCoin(m)	
 	pass
 
@@ -869,7 +870,6 @@ func loadSubLevelMap(level,subLevel):
 #判断mario在水管上是否按下按键	
 func checkInputInPipe(p):
 	var flag=false
-#	print(p.dir)
 	if p.dir==constants.down:
 		if Input.is_action_pressed("ui_down"):
 			flag=true		

@@ -20,27 +20,27 @@ func _ready():
 
 
 
-func getRect():
+func getRect()->Rect2:
 	var temp =rect
 	temp.position+=position
 	return temp
 
-func getSize():
+func getSize()->float:
 	return rect.size.x
 
-func getSizeY():
+func getSizeY()->float:
 	return rect.size.y
 
-func getLeft():
+func getLeft()->float:
 	return position.x-rect.size.x/2
 
-func getRight():
+func getRight()->float:
 	return position.x+rect.size.x/2
 
-func getTop():
+func getTop()->float:
 	return position.y-rect.size.y/2
 
-func getBottom():
+func getBottom()->float:
 	return position.y+rect.size.y/2
 
 func _update(delta):
