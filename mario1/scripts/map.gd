@@ -135,7 +135,7 @@ func _ready():
 				camera.position.x-=winWidth/2
 				_bg.rect_position.x=camera.position.x
 				initEnemy()	#初始化当前画面的敌人
-				state=constants.startState
+#				state=constants.startState
 		else:
 			if subLevel!='':
 				for i in range(specialEntrance.size()): #找到这个特殊出口
@@ -154,13 +154,13 @@ func _ready():
 				camera.position.x-=int(winWidth/3)
 				_bg.rect_position.x=camera.position.x
 				initEnemy()	#初始化当前画面的敌人
-				state=constants.startState
+#				state=constants.startState
 				pass
 			else:	
 				initEnemy()	#初始化当前画面的敌人	
-				state=constants.startState
+#				state=constants.startState
 		print("checkPoint",checkPoint)	
-#		state=constants.startState
+		state=constants.startState
 		
 		if time<100:
 			SoundsUtil.isLowTime=true
@@ -838,7 +838,7 @@ func sort(a,b):
 	pass
 
 #获取当前屏幕中方块和后一个屏幕	
-func getScreenBrick():
+func getScreenBrick()->Array:
 	var list=[]
 #	screenbrick=[]
 	for i in _brickList.get_children():	
