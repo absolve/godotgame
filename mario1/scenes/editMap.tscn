@@ -279,15 +279,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
-visible = false
-margin_right = 12.0
-margin_bottom = 20.0
-text = "big2smal"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="title" parent="." instance=ExtResource( 8 )]
 
 [connection signal="pressed" from="layer/Control/tab/common/VBoxContainer/hbox2/apply" to="." method="_on_apply_pressed"]
@@ -299,4 +290,3 @@ __meta__ = {
 [connection signal="confirmed" from="layer/FileDialog" to="." method="_on_FileDialog_confirmed"]
 [connection signal="confirmed" from="layer/loadDialog" to="." method="_on_loadDialog_confirmed"]
 [connection signal="file_selected" from="layer/loadDialog" to="." method="_on_loadDialog_file_selected"]
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
