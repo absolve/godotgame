@@ -88,11 +88,11 @@ onready var _fps=$layer/fps
 
 func _ready():
 	_itemList.connect("itemSelect",self,'selectItem')
-	Game.setMap(self)
-	winWidth= ProjectSettings.get_setting("display/window/size/width")
-	winHeight=ProjectSettings.get_setting("display/window/size/height")
-	print("winHeight",winHeight)
-	
+#	Game.setMap(self)
+#	winWidth= ProjectSettings.get_setting("display/window/size/width")
+#	winHeight=ProjectSettings.get_setting("display/window/size/height")
+#	print("winHeight",winHeight)
+	_mapWidth.valueObj.connect("text_changed",self,"text_changed")
 	if mode=='edit':
 		_bg.hide()
 		_title.hide()
@@ -325,6 +325,10 @@ func sort(a,b):
 		return false
 	pass
 
+func text_changed(str1):
+	print(str1)
+	mapWidthSize=int(str1)
+	pass
 	
 func _update(delta):
 #	if mode=='edit':
@@ -516,4 +520,14 @@ func _on_loadDialog_file_selected(_path):
 #	print(path)
 	if _path:
 		loadMapFile(_path)
+	pass # Replace with function body.
+
+
+func _on_return_pressed():
+	set_process_input(false)
+	var scene=load("res://scenes/welcome.tscn")
+	var temp=scene.instance()
+	queue_free()
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
 	pass # Replace with function body.

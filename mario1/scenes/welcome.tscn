@@ -48,21 +48,24 @@ margin_bottom = 336.0
 custom_fonts/font = ExtResource( 5 )
 text = "2 player game"
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="editmap" type="Label" parent="."]
+margin_left = 220.0
+margin_top = 360.0
+margin_right = 428.0
+margin_bottom = 376.0
+custom_fonts/font = ExtResource( 5 )
+text = "  edit map"
+uppercase = true
 
 [node name="Label" type="Label" parent="."]
 margin_left = 230.0
-margin_top = 370.0
+margin_top = 390.0
 margin_right = 422.0
-margin_bottom = 386.0
+margin_bottom = 406.0
 custom_fonts/font = ExtResource( 5 )
 text = "top - 000000"
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="indicator" type="Sprite" parent="."]
 position = Vector2( 180, 280 )
