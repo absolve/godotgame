@@ -107,8 +107,8 @@ func _ready():
 		_bg.show()
 		_tab.hide()
 		_toolBtn.hide()	
-#		loadMapFile("res://levels/test7.json")
-		findMapFile()
+		loadMapFile("res://levels/test7.json")
+#		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
@@ -707,19 +707,19 @@ func marioAndItem(m,i):
 		i.queue_free()
 		m.small2Big()
 		SoundsUtil.playMushroom()
-		addScore(m,5000)
+		addScore(m,1000)
 	elif i.type==constants.fireflower:
 		i.queue_free()
 		if m.big:
 			m.big2Fire()
 		else:
 			m.small2Big()	
-		addScore(m,5000)
+		addScore(m,1000)
 		SoundsUtil.playMushroom()
 	elif i.type==constants.star:
 		i.queue_free()
 		m.setInvincible()
-		addScore(m,5000)
+		addScore(m,1000)
 		SoundsUtil.stopBgm()
 		SoundsUtil.playSpecialBgm()
 	elif i.type==constants.mushroom1up:	
