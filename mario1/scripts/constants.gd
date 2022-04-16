@@ -57,6 +57,10 @@ const rising="rising"
 #其他的状态
 const spin="spin"
 
+#平台的状态
+const moveUp="moveUp"
+const moveDown="moveDown"
+
 #mario的状态
 const idle="idle"
 const stand="stand"
@@ -72,7 +76,7 @@ const walkingToCastle="walkingToCastle"#走到城堡里面
 const sitBottomOfPole="sitBottomOfPole" #旗已经到了底部
 #const pipeIn='pipeIn'
 #const pipeOut='pipeOut'
-const walkInPipe="walkInPipe"
+const walkInPipe="walkInPipe" #走到水管里
 
 #类型
 const empty="empty"
@@ -98,6 +102,7 @@ const plant="plant"
 const pipeIn="pipeIn"  #水管进入
 const pipeOut="pipeOut" #水管出去
 const bigCoin='bigCoin'
+const platform="platform"
 
 #方向
 const right="right"
