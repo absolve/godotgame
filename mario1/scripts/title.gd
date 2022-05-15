@@ -31,7 +31,9 @@ func setScore(s):
 
 func setTime(t):
 	currentTime=t
-	
+
+func getTime():
+	return 	currentTime
 	
 #添加分数
 func addScore(s):

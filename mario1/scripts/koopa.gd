@@ -72,14 +72,6 @@ func jumpedOn():
 
 
 func startDeathJump(_dir=constants.left):
-#	.startDeathJump()
-#	ani.playing=false
-#	if spriteIndex==0:
-#		ani.play()
-#
-#	ani.frame=0
-#	z_index=2
-	#status=constants.deadJump
 	dir=_dir
 	ani.position.y=0
 	animation("shell")

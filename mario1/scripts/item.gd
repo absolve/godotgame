@@ -8,6 +8,8 @@ const jumpSpeed=460
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容
 onready var ani=$ani
+var isOnFloor=true #是否在地面上
+
 
 func _ready():
 #	type=constants.mushroom
@@ -20,6 +22,7 @@ func _ready():
 		xVel=-speed
 	else:
 		xVel=speed
+#	xVel=-speed	
 #	ani.playing=true
 	if type==constants.mushroom:
 		ani.play("mush_room")
@@ -57,13 +60,10 @@ func growing(delta):
 	
 func moving(delta):
 	yVel+=gravity*delta
-#	if dir==constants.left:
-#		xVel=-speed
-#		pass
-#	else:
-#		xVel=speed
+
 	position.x+=xVel*delta
-	position.y+=yVel*delta		
+	if !isOnFloor:	
+		position.y+=yVel*delta		
 	pass
 
 func stop(delta):

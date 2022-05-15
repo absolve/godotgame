@@ -2,7 +2,7 @@ extends Node
 #保存所有的常量
 
 #游戏中分数
-const scoreList=[100,200,400,500,800,1000,2000,4000.5000,8000]
+const scoreList=[100,200,400,500,800,1000,2000,4000,5000,8000]
 
 #游戏状态
 const stateChange='stateChange'
@@ -124,17 +124,17 @@ const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=1800
+const enemyGravity=2100
 const enemyMaxVel=1500
 
 const slideFriction=590 #滑行的加速度
-const acceleration=300	#移动加速度
-const crouchFriction=450 #蹲下去时加速度
+const crouchFriction=440 #蹲下去时加速度
+const acceleration=370	#移动加速度
 const runAcceleration=550 #跑的加速度
-const marioWalkMaxSpeed=150 #走的时候最大速度
-const marioRunMaxSpeed=310 #跑的时候最大速度
+const marioWalkMaxSpeed=180 #走的时候最大速度
+const marioRunMaxSpeed=300 #跑的时候最大速度
 const marioAniSpeed=100
-const marioGravity=2250 #重力
+const marioGravity=2280 #重力
 const marioJumpGravity=1000
 const marioJumpSpeed=520
 const marioDeathGravity=1000
@@ -145,11 +145,11 @@ const marioMaxYVel=1200 #最大y速度
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
-			"pipeIn"]
+			"pipeIn",'platform']
 
 #图块 所有的图块
-const tiles=['del',"mario","goomba","koopa","brick","pipe"
-			,"coin","bg","box","box_blue",'box_grey','box_default']
+#const tiles=['del',"mario","goomba","koopa","brick","pipe"
+#			,"coin","bg","box","box_blue",'box_grey','box_default']
 			
 const allTitle=[{'name':'del','type':'del'},
 {'name':"mario",'type':'mario'},{'name':"koopa",'type':'koopa'},
@@ -236,7 +236,16 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 	},
-	
+	'platform':{
+		"type": "platform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':1,
+		'platformType':""
+	},
 	"box": {
 		"type": "box",
 		"spriteIndex": 0,

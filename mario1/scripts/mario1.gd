@@ -77,10 +77,12 @@ func _ready():
 	type=constants.mario
 #	debug=true
 	if big:
-		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
+#		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
+		adjustBigRect()
 		position.y-=14
 	else:	
-		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+#		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+		adjustSmallRect()
 	gravity=constants.marioGravity
 	if big && fire:
 		aniIndex=2
@@ -231,13 +233,6 @@ func stand(_delta):
 
 
 func walk(delta):
-#	yVel+=gravity*delta
-#	if xVel>0:
-#		ani.speed_scale=1+xVel/constants.marioAniSpeed
-#	elif xVel<0:
-#		ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
-#	else:
-#		ani.speed_scale=1
 	if xVel>0 || xVel<0:
 		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
 	
@@ -265,7 +260,8 @@ func walk(delta):
 		startCrouch()
 		return
 	elif isCrouch and big:
-		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
+#		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
+		adjustBigRect()
 		position.y-=14
 		ani.position.y=0
 		isCrouch=false
@@ -327,7 +323,8 @@ func walk(delta):
 		
 #	position.y+=yVel*delta	
 	if !isOnFloor:
-		ani.stop()
+#		ani.stop()
+		ani.speed_scale=1
 		status=constants.fall
 	pass
 
@@ -378,6 +375,15 @@ func fall(delta):
 	if isOnFloor:
 		status = constants.walk		
 
+#调整变大的矩形大小
+func adjustBigRect():
+	rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
+
+func adjustSmallRect():
+	rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+
+func adjustCrouchlRect():
+	rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
 
 #开始死亡跳跃
 func startDeathJump():
@@ -403,7 +409,8 @@ func deathJump(delta):
 func startCrouch():
 	status=constants.crouch	
 	if !isCrouch:
-		rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
+#		rect=Rect2(Vector2(-12,-15),Vector2(24,30))	
+		adjustCrouchlRect()
 		position.y+=14  #
 		ani.position.y-=8
 	acceleration=constants.crouchFriction	
@@ -417,7 +424,8 @@ func crouch(delta):
 		
 	if Input.is_action_just_released("ui_down"):
 		status=constants.walk	
-		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
+#		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
+		adjustBigRect()
 		position.y-=14
 		ani.position.y=0
 		isCrouch=false
@@ -735,7 +743,8 @@ func _on_ani_animation_finished():
 		big=true
 		ani.position.y=0
 		status=preStatus
-		rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
+#		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
+		adjustBigRect()
 		Game.emit_signal('stateFinish')
 	elif status==constants.big2small:
 		hurtInvincible=true
@@ -744,7 +753,8 @@ func _on_ani_animation_finished():
 		fire=false
 		position.y+=15
 		aniIndex=0
-		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+#		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+		adjustSmallRect()
 		Game.emit_signal('stateFinish')
 	
 	pass # Replace with function body.

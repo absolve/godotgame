@@ -10,9 +10,6 @@ margin_right = -456.0
 margin_bottom = -200.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="list" type="ItemList" parent="."]
 margin_right = 184.0

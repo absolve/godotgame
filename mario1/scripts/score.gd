@@ -3,7 +3,7 @@ extends Label
 
 var yVel=-80 #y轴速度
 var maxHeight
-var score=0 #显示分号
+var score=0 #显示分数
 
 func _ready():
 	maxHeight=rect_position.y-90

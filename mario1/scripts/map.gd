@@ -23,6 +23,7 @@ var menu=preload("res://scenes/menu.tscn")
 var firework=preload("res://scenes/firework.tscn")
 var castleFlag=preload("res://scenes/flag.tscn")
 var bigCoin=preload("res://scenes/bigCoin.tscn")
+var platform=preload("res://scenes/platform.tscn")
 
 var debug=true
 var isPress=false #编辑时是否按下鼠标
@@ -56,29 +57,21 @@ var winWidth  #窗体大小
 var winHeight
 var subLevel="" #子关卡 是否从水管或者树里面出来
 var pipeIndex=0 #当前水管入口的索引
-
+var lastScoreTime=0 #上一次获取分数的时间 （游戏中的时间）
+var scoreTick=5  #5s间隔
+var scoreIndex=0 #分数列表索引值
 
 var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 onready var _brick=$brick
 onready var _bg=$bg
 onready var camera=$Camera2D
-onready var _itemList=$layer/Control/tab/map/vbox/itemList
-onready var _tab=$layer/Control/tab
-onready var _itemAttr=$layer/Control/tab/map/vbox/attribute
-onready var _toolBtn=$layer/Control/toolBtn
-onready var _saveDialog=$layer/FileDialog
-onready var _mapWidth=$layer/Control/tab/common/vbox/mapWidth
-onready var _time=$layer/Control/tab/common/vbox/time
-onready var _background=$layer/Control/tab/common/vbox/background
-onready var _music=$layer/Control/tab/common/vbox/music
-onready var _spriteSet=$layer/Control/tab/common/vbox/spriteset
+
 onready var _marioList=$mario
 onready var _brickList=$brick
 onready var _bulletList=$bullet
 onready var _itemsList=$item
 onready var _otherobjList=$otherObj
 onready var _enemyList=$enemy
-onready var _loadDiaglog=$layer/loadDialog
 onready var _title = $title
 onready var _bgList=$background
 onready var _poleList=$pole
@@ -87,7 +80,7 @@ onready var _collisionList=$collision
 
 
 func _ready():
-	_itemList.connect("itemSelect",self,'selectItem')
+#	_itemList.connect("itemSelect",self,'selectItem')
 	Game.setMap(self)
 	Game.connect("stateChange",self,'stateChange')
 	Game.connect("stateFinish",self,'stateFinish')
@@ -105,10 +98,10 @@ func _ready():
 		pass
 	elif mode=='game':
 		_bg.show()
-		_tab.hide()
-		_toolBtn.hide()	
-		loadMapFile("res://levels/test7.json")
-#		findMapFile()
+#		_tab.hide()
+#		_toolBtn.hide()	
+#		loadMapFile("res://levels/test9.json")
+		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
 		_title.setScore(Game.playerData['score'])
@@ -168,12 +161,12 @@ func _ready():
 		pass	
 	elif mode=='test':
 		pass
-	elif mode=='show':	
-		_bg.show()
-		_tab.hide()
-		_toolBtn.hide()	
-		_title.hideTime()
-		pass
+#	elif mode=='show':	
+#		_bg.show()
+#		_tab.hide()
+#		_toolBtn.hide()	
+#		_title.hideTime()
+#		pass
 #	print(camera.get_camera_position().y)	
 #	print(_marioList.get_children())
 #	findMapFile()
@@ -197,6 +190,7 @@ func loadMapFile(fileName:String):
 	if file.file_exists(fileName):
 		file.open(fileName, File.READ)
 		currentLevel= parse_json(file.get_as_text())
+#		print(currentLevel)
 		mapWidthSize=int(currentLevel['mapSize'])
 		time =int(currentLevel['time'])
 		if currentLevel['bg']=="overworld":
@@ -206,10 +200,10 @@ func loadMapFile(fileName:String):
 		elif currentLevel['bg']=="underwater":	
 			_bg.color=Color(Game.backgroundcolor[2])
 		
-		_mapWidth.setValue(str(mapWidthSize))
-		_time.setValue(str(currentLevel['time']))
-		_background.setValue(str(currentLevel['bg']))
-		_music.setValue(str(currentLevel['music']))
+#		_mapWidth.setValue(str(mapWidthSize))
+#		_time.setValue(str(currentLevel['time']))
+#		_background.setValue(str(currentLevel['bg']))
+#		_music.setValue(str(currentLevel['music']))
 		music=str(currentLevel['music'])
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
@@ -368,30 +362,20 @@ func loadMapFile(fileName:String):
 					if checkTile(obj):
 						print(obj,' has one coin')
 					else:	
-						_itemsList.add_child(temp)												
+						_itemsList.add_child(temp)	
+			elif i['type']=="platform":
+				var temp=platform.instance()
+				temp.spriteIndex=i['spriteIndex']
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2	
+				temp.lens=int(i['lens'])
+				_brick.add_child(temp)										
 		file.close()
 	else:
 		print('文件不存在')	
 		pass
 	pass
 
-
-#保存到文件
-func save2File(fileName):
-	var data={
-		"mapSize":_mapWidth.getValue(),
-		"bg":_background.getValue(),
-		"music":_music.getValue(),
-		'time':_time.getValue(),
-		'marioPos':marioPos,
-		'data':allTiles+bgTiles,
-	}
-#	print(data)
-	var file = File.new()
-	file.open(fileName, File.WRITE)
-	file.store_string(to_json(data))
-	file.close()
-	pass
 
 #初始化当前画面中的敌人
 func initEnemy():
@@ -455,97 +439,6 @@ func checkBgTile(obj):
 			break
 	return 	flag	
 
-#检查点击的位置是否有这个方块 背景和其他物体可以重复
-func checkHasItem(pos,selectType):
-	print(selectType)
-	var x = pos.x
-	var y=pos.y
-	var indexX = int(x)/(blockSize)
-	var indexY=int(y)/(blockSize)
-	var flag=false
-	if selectType=='bg':
-		for i in bgTiles:
-			if i["x"]==indexX&&i["y"]==indexY:
-				flag=true
-				break
-		pass
-	elif selectType=='del':
-		for i in bgTiles+allTiles:
-			if i["x"]==indexX&&i["y"]==indexY:
-				flag=true
-				break			
-	else:	
-		for i in allTiles:
-			if i["x"]==indexX&&i["y"]==indexY:
-				flag=true
-				break	
-#	print(flag)
-	return 	flag
-
-
-#添加方块信息
-func addItem(type,key,pos):
-	if type=='del':
-		return
-	if not constants.tilesAttribute.has(key):
-		print('item type error ',key)
-		return	
-	if key=='mario':
-		marioPos={'x':pos.x,'y':pos.y}
-		return
-	var g=constants.tilesAttribute[key].duplicate()
-	g.x=pos.x
-	g.y=pos.y
-	print(type,key,pos)
-	if type=='bg':
-		bgTiles.append(g)	
-	else:	
-		allTiles.append(g)			
-
-
-#删除一个方块
-func delItem(pos:Vector2):
-	var indexX = int(pos.x)/(blockSize)
-	var indexY=int(pos.y)/(blockSize)
-	var temp = {"x":indexX,"y":indexY}
-	for i in range(allTiles.size()):
-		if allTiles[i]["x"]==indexX&&allTiles[i]["y"]==indexY:
-			allTiles.remove(i)
-			break
-	for i in range(bgTiles.size()):
-		if bgTiles[i]["x"]==indexX&&bgTiles[i]["y"]==indexY:
-			bgTiles.remove(i)
-			break
-
-#选择方块
-func selectItem(type,itemName):
-#	print(index,itemName)
-	selectItemType=type
-	selectItem=itemName
-
-
-func getItemPos(pos:Vector2):
-	return {
-		'x':int(pos.x)/blockSize,
-		'y':int(pos.y)/blockSize
-	}
-
-
-#获取属性
-func getItemAttr(pos:Vector2):
-	var indexX = int(pos.x)/(blockSize)
-	var indexY=int(pos.y)/(blockSize)
-	for i in allTiles:
-		if i["x"]==indexX&&i["y"]==indexY:
-#			var attr=constants.tilesAttribute[i.type]
-			_itemAttr.clearAttr()
-			for y in i.keys():
-				_itemAttr.addAttr(y,i[y])
-			#保存选中数据
-			selectedItem["x"]=indexX	
-			selectedItem["y"]=indexY
-			break
-	pass
 
 func addObj2Brick(obj):
 	_brickList.add_child(obj)
@@ -629,7 +522,6 @@ func gameNextLevel():
 	Game.playerData['score']=_title.score
 	Game.playerData['coin']=_title.coinNum
 	Game.playerData['subLevel']=''
-#	Game.playerData['lives']-=1
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
@@ -637,6 +529,18 @@ func gameNextLevel():
 	
 func marioAndEnemy(m,e):
 	if m.hurtInvincible:	
+		if e.status==constants.shell||e.status==constants.revive:
+			if m.xVel<0:
+				e.dir=constants.left
+			else:
+				e.dir=constants.right
+			if m.position.x>e.position.x:
+				e.position.x=m.getLeft()-e.getSize()-1
+			else:
+				e.position.x=m.getRight()+e.getSize()+1	
+			e.startSliding()
+			SoundsUtil.playShoot()	
+			addScore(m,100,true,3)
 		pass
 	elif m.invincible:
 		if m.xVel>=0:	
@@ -658,7 +562,8 @@ func marioAndEnemy(m,e):
 				e.position.x=m.getRight()+e.getSize()+1	
 			e.startSliding()
 			SoundsUtil.playShoot()	
-		else:	
+			addScore(m,100,true,3)
+		else:
 			m.big2Small()
 			SoundsUtil.playBig2small()
 	else:
@@ -673,6 +578,7 @@ func marioAndEnemy(m,e):
 				e.position.x=m.getRight()+e.getSize()+1		
 			e.startSliding()	
 			SoundsUtil.playShoot()
+			addScore(m,100,true,3)
 		else:
 			SoundsUtil.stopBgm()	
 			SoundsUtil.stopSpecialBgm()
@@ -680,13 +586,14 @@ func marioAndEnemy(m,e):
 			SoundsUtil.playDeath()
 	pass
 
+#mario踩在敌人上
 func marioJumpOnEnemy(m,e):
 	if m.invincible:
 		if m.position.x<e.position.x:	
 			e.startDeathJump(constants.right)
 		else:
 			e.startDeathJump(constants.left)	
-		addScore(m)	
+		addScore(m,100,true)	
 		SoundsUtil.playStomp()	
 	else:
 		if m.yVel>=0:
@@ -696,8 +603,12 @@ func marioJumpOnEnemy(m,e):
 			elif m.xVel<0:
 				m.xVel-=20	
 			m.position.y=e.position.y-e.getSizeY()/2-m.getSizeY()/2+1#位置调整		
+			
+			if e.status==constants.shell: #踩到乌龟壳 500分
+				addScore(m,100,true,3)
+			else:	
+				addScore(m,100,true)	
 			e.jumpedOn()
-			addScore(m)
 			SoundsUtil.playStomp()	
 	pass
 
@@ -733,6 +644,7 @@ func marioAndItem(m,i):
 		addCoin(m)	
 	pass
 
+
 #mario掉出屏幕
 func marioOutYPos():
 #	stateChange()
@@ -749,11 +661,34 @@ func marioOutYPos():
 	pass
 
 #添加分数
-func addScore(m,_score=100):
+func addScore(m,_score=100,isCumulative=false,_scoreIndex=0):
 	var temp=score.instance()
 	temp.setPos(Vector2(m.position.x,m.position.y-45))
-	temp.setScore(_score)
-	_title.addScore(_score)
+	if isCumulative: #分数累加
+		if abs(_title.getTime()-lastScoreTime)>scoreTick:
+			if _scoreIndex!=0:
+				scoreIndex=_scoreIndex
+			else:	
+				scoreIndex=0
+			print(constants.scoreList[scoreIndex])
+			temp.setScore(constants.scoreList[scoreIndex])
+			lastScoreTime=_title.getTime()
+			_title.addScore(constants.scoreList[scoreIndex])
+		else:
+			if _scoreIndex!=0:
+				scoreIndex=_scoreIndex
+			else:	
+				scoreIndex+=1
+			if scoreIndex>=constants.scoreList.size():
+				temp.setScore("1up")
+				Game.playerData['lives']+=1
+				SoundsUtil.playItem1up()
+			else:
+				temp.setScore(constants.scoreList[scoreIndex])	
+				_title.addScore(constants.scoreList[scoreIndex])
+	else:	
+		temp.setScore(_score)
+		_title.addScore(_score)
 	_otherobjList.add_child(temp)
 	pass	
 
@@ -840,7 +775,6 @@ func sort(a,b):
 #获取当前屏幕中方块和后一个屏幕	
 func getScreenBrick()->Array:
 	var list=[]
-#	screenbrick=[]
 	for i in _brickList.get_children():	
 		if i.position.x>camera.position.x-i.getSize() &&\
 		  i.position.x<camera.position.x+winWidth*2:
@@ -969,12 +903,7 @@ func _update(delta):
 #							state=constants.startState
 							i.status=constants.stand
 					continue		
-				for y in screenbrick: #排除不在当前屏幕里的方块
-#					if y.position.x+y.getSize()/2<pos.x ||\
-#						y.position.x-y.getSize()/2>pos.x+get_viewport().size.x:
-#							continue
-#					if i.getRect().encloses(y.getRect()):#完全叠一起
-#						continue
+				for y in screenbrick:
 					if i.getRect().intersects(y.getRect(),true):	#包括边缘
 						y.collisionShow=true
 						if i.status==constants.poleSliding:
@@ -995,7 +924,8 @@ func _update(delta):
 #									if dx<0 && i.dir==constants.left:
 #										i.xVel=0
 #									elif dx>0 && i.dir==constants.right:
-#										i.xVel=0		
+#										i.xVel=0
+		
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							if y.type==constants.box && !y._visible:
@@ -1032,29 +962,36 @@ func _update(delta):
 										marioEnterPipe(i,y)
 										pass
 								if i.yVel>=0:  #掉落的情况
-									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
+									if abs(abs(y.position.x-i.position.x)-(y.getSize()/2+i.getSize()/2))>5:
 										i.yVel=0
 										i.position.y=y.getTop()-i.getSizeY()/2	
-										onFloor=true	
-									elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
-										i.yVel=0
-										i.position.y=y.getTop()-i.getSizeY()/2	
-										onFloor=true	
+										onFloor=true
+#									if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:
+#										i.yVel=0
+#										i.position.y=y.getTop()-i.getSizeY()/2	
+#										onFloor=true	
+#									elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
+#										i.yVel=0
+#										i.position.y=y.getTop()-i.getSizeY()/2	
+#										onFloor=true	
 								elif i.yVel<0:
 									pass
-								else:
-									i.yVel=0
-									i.position.y=y.getTop()-i.getSizeY()/2	
-									onFloor=true		
+#								else:
+#									i.yVel=0
+#									i.position.y=y.getTop()-i.getSizeY()/2	
+#									onFloor=true		
 					else:
 						y.collisionShow=false
+				if !onFloor && i.yVel==0:
+					i.yVel+=150
 				i.isOnFloor=onFloor	
 
 			
 			for i in _itemsList.get_children():  #物品的判断
+				var onFloor=false	
+				if i.status==constants.growing: #排除在增长的状态
+					continue
 				for y in screenbrick:
-					if i.status==constants.growing: #排除在增长的状态
-						continue
 					if i.getRect().intersects(y.getRect(),true):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSize()/2
@@ -1064,9 +1001,8 @@ func _update(delta):
 							else:
 								if i.yVel>0:
 									i.yVel=0
-								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
+								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2	
 						elif abs(dx)>abs(dy): #左右的碰撞
-							i.xVel=0
 							if dx<0:
 								i.position.x=y.position.x+y.getSize()/2+i.getSize()/2
 								i.turnRight()
@@ -1080,6 +1016,7 @@ func _update(delta):
 							else:
 								if i.yVel>0:  #掉落的情况
 									i.yVel=0
+									onFloor=true
 								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2
 								if y.type==constants.box && y.status==constants.bumped:
 									if i.type==constants.mushroom:	
@@ -1096,7 +1033,9 @@ func _update(delta):
 										pass
 								if i.status==constants.jumping:
 									i.yVel=-i.jumpSpeed
-
+				if !onFloor && i.yVel==0:
+					i.yVel+=140
+				i.isOnFloor=onFloor
 				pass
 				
 			
@@ -1111,22 +1050,28 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠	
-							if dy<0:  #下方
-								if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:	
-									i.yVel=0
-									i.position.y=y.getTop()-i.getSizeY()/2	
-								elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
-									i.yVel=0
-									i.position.y=y.getTop()-i.getSizeY()/2	
-							else:
-								if i.yVel>=0:  #掉落的情况
-									i.yVel=0
-									onFloor=true
-								if y.type==constants.box&& y.status==constants.bumped:
-									i.startDeathJump()
-									addScore(i)
-								else:		
-									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
+#							if dy<0:
+#								i.yVel=8
+#							else:
+#								if i.yVel>0:
+#									i.yVel=0
+#								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2	
+#							if dy<0:  #下方
+#								if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:	
+#									i.yVel=0
+#									i.position.y=y.getTop()-i.getSizeY()/2	
+#								elif i.position.x<y.position.x && abs(i.getRight()-y.getLeft())>=4:
+#									i.yVel=0
+#									i.position.y=y.getTop()-i.getSizeY()/2	
+#							else:
+#								if i.yVel>=0:  #掉落的情况
+#									i.yVel=0
+#									onFloor=true
+#								if y.type==constants.box&& y.status==constants.bumped:
+#									i.startDeathJump()
+#									addScore(i)
+#								else:		
+#									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
 							pass
 						elif abs(dx)>abs(dy): #左右的碰撞
 							if dx<0:
@@ -1152,6 +1097,8 @@ func _update(delta):
 									addScore(i)
 								else:		
 									i.position.y=y.position.y-y.getSizeY()/2-i.getSizeY()/2
+				if !onFloor && i.yVel==0:
+					i.yVel+=140
 				i.isOnFloor=onFloor	
 								
 			for i in _marioList.get_children(): #mario跟敌人
@@ -1162,7 +1109,8 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠
-							marioAndEnemy(i,y)	
+							if dy<0:  #下方
+								marioAndEnemy(i,y)	
 						elif abs(dx)>abs(dy): #左右的碰撞
 							marioAndEnemy(i,y)		
 						else: #上下的碰撞
@@ -1189,14 +1137,14 @@ func _update(delta):
 											y.startDeathJump(constants.right)
 										else:
 											y.startDeathJump(constants.left)
-										addScore(y)	
+										addScore(y,100,true)	
 										SoundsUtil.playShoot()	
 									elif y.status==constants.sliding:
 										if i.xVel>0:
 											i.startDeathJump(constants.left)
 										else:
 											i.startDeathJump(constants.right)				
-										addScore(i)	
+										addScore(i,100,true)	
 										SoundsUtil.playShoot()		
 									else:
 										if i.xVel>0:
@@ -1207,8 +1155,8 @@ func _update(delta):
 											y.startDeathJump(constants.left)
 										else:
 											y.startDeathJump(constants.right)	
-										addScore(i)		
-										addScore(y)	
+										addScore(i,100,true)		
+										addScore(y,100,true)	
 										SoundsUtil.playShoot()		
 									pass
 								else:
@@ -1233,7 +1181,7 @@ func _update(delta):
 											y.startDeathJump(constants.right)
 										else:
 											y.startDeathJump(constants.left)
-										addScore(y)
+										addScore(y,100,true)
 										SoundsUtil.playShoot()		
 							
 			for i in _bulletList.get_children():	#子弹跟方块
@@ -1484,176 +1432,8 @@ func _process(delta):
 	pass
 
 func _input(event):
-	if mode=='edit':
-		if _saveDialog.visible||_loadDiaglog.visible:
-			return
-		if event is InputEventKey:
-			if event.is_pressed():
-				if (event as InputEventKey).scancode==KEY_LEFT:	
-					if camera.position.x>-minWidthNum/2*blockSize:  #前后一半屏幕
-						camera.position.x-=10
-					pass
-				elif (event as InputEventKey).scancode==KEY_RIGHT:	
-					if camera.position.x<mapWidthSize*blockSize-minWidthNum/2*blockSize:
-						camera.position.x+=10
-					pass	
-		elif event is InputEventMouseButton:
-			if event.button_index == BUTTON_LEFT and  event.pressed:
-				if _tab.is_visible_in_tree()&& _tab.get_rect().has_point(camera.get_local_mouse_position()):
-					return
-				if _toolBtn.is_visible_in_tree()&&_toolBtn.get_rect().has_point(camera.get_local_mouse_position()):
-					return
-				isPress=true
-				if checkHasItem(get_global_mouse_position(),selectItemType):
-					if selectItemType=='del':
-						delItem(get_global_mouse_position())
-					else:  #显示属性
-						getItemAttr(get_global_mouse_position())
-						pass
-					pass
-				else:	
-					var pos=getItemPos(get_global_mouse_position())	
-					addItem(selectItemType,selectItem,pos)
-				pass
-			elif !event.pressed:	
-				isPress=false
-				pass	
-			pass
-		elif event is InputEventMouseMotion:	#移动
-			if isPress:
-				if checkHasItem(get_global_mouse_position(),selectItemType):
-					if selectItemType=='del':
-						delItem(get_global_mouse_position())
-					else:  #显示属性
-						getItemAttr(get_global_mouse_position())
-				else:	
-					var pos=getItemPos(get_global_mouse_position())	
-					addItem(selectItemType,selectItem,pos)
-		pass
 	pass
 
 func _draw():
-	if mode=="edit":
-		for i in range(mapWidthSize+1):
-			if i%20==0:
-				draw_line(Vector2(i*blockSize,0),Vector2(i*blockSize,blockSize*heightNun)
-			,Color.red,1.2,true)
-			else:
-				draw_line(Vector2(i*blockSize,0),Vector2(i*blockSize,blockSize*heightNun)
-			,Color.gray,0.5,true)
-		for i in range(mapWidthSize):
-			draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
-			Color.gray,0.5,true)	
-		for i in bgTiles+allTiles:
-			if i.type=='goomba':
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-				pass
-			elif i.type=='koopa':
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-			elif i.type=='box':
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			elif i.type=='brick':	
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			elif i.type=='coin':
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			elif i.type=='pipe':
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
-						draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
-			elif i.type=='bg':
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-			elif i.type=='flag': #旗杆
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-					for l in range(i.len):
-						draw_texture(constants.mapTiles['stick'][str(i.spriteIndex)],
-						Vector2(i.x*blockSize,i.y*blockSize+(l+1)*blockSize),Color(1,1,1,0.5))
-					pass
-				pass
-			elif i.type=="collision"||i.type=="castleFlag":
-				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			elif i.type==constants.plant:
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-		if !marioPos.empty():
-			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.5))
 	pass
 
-
-func _on_hide_pressed():
-	_toolBtn.show()
-	_tab.hide()
-	pass # Replace with function body.
-
-
-func _on_save_pressed():
-	var baseDir=OS.get_executable_path().get_base_dir()
-	_saveDialog.current_dir=baseDir
-#	_saveDialog.current_file="1-1.json"
-	_saveDialog.popup_centered()
-	pass # Replace with function body.
-
-
-func _on_toolBtn_pressed():
-	_toolBtn.hide()
-	_tab.show()
-	pass # Replace with function body.
-
-
-func _on_Button_pressed():
-#	for i in _marioList.get_children():
-#		i.startDeathJump()
-	var baseDir=OS.get_executable_path().get_base_dir()
-#	print(baseDir)
-	_loadDiaglog.current_dir=baseDir
-	_loadDiaglog.popup_centered()	
-	pass # Replace with function body.
-
-
-func _on_FileDialog_confirmed():
-	if _saveDialog.current_path:
-		save2File(_saveDialog.current_path)
-	else:
-		print("没有当前文件")
-	pass # Replace with function body.
-
-#保存地图信息
-func _on_apply_pressed():
-	pass # Replace with function body.
-
-
-func _on_loadDialog_confirmed():
-	var dir=_loadDiaglog.current_dir
-	var file=_loadDiaglog.current_file
-#	print(dir,' ',file)
-#	print(_loadDiaglog.current_path)
-	if file:
-		loadMapFile(dir+"/"+file)
-	pass # Replace with function body.
-
-#编辑属性
-func _on_edit_pressed():
-	for i in allTiles:
-		if i["x"]==selectedItem["x"]&&i["y"]==selectedItem["y"]:
-			for z in _itemAttr.list.get_children():
-				if z.key in ['x','y','spriteIndex']:
-					i[z.key]=int(z.getValue())
-				else:
-					i[z.key]=z.getValue()
-			break
-	pass # Replace with function body.
-
-
-func _on_loadDialog_file_selected(_path):
-#	print(path)
-	if _path:
-		loadMapFile(_path)
-	pass # Replace with function body.

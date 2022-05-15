@@ -7,22 +7,22 @@ extends Node2D
 const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15
-
-var brick=preload("res://scenes/brick.tscn")
-var box=preload("res://scenes/box1.tscn")
-var pipe=preload("res://scenes/pipe.tscn")
-var background=preload("res://scenes/bg.tscn")
-var mario=preload("res://scenes/mario1.tscn")
-var pole=preload("res://scenes/pole.tscn")
-var goomba=preload("res://scenes/goomba.tscn")
-var collision=preload("res://scenes/collision.tscn")
-var plant=preload("res://scenes/plant.tscn")
-var score=preload("res://scenes/score.tscn")
-var koopa=preload("res://scenes/koopa.tscn")
-var menu=preload("res://scenes/menu.tscn")
-var firework=preload("res://scenes/firework.tscn")
-var castleFlag=preload("res://scenes/flag.tscn")
-var bigCoin=preload("res://scenes/bigCoin.tscn")
+#
+#var brick=preload("res://scenes/brick.tscn")
+#var box=preload("res://scenes/box1.tscn")
+#var pipe=preload("res://scenes/pipe.tscn")
+#var background=preload("res://scenes/bg.tscn")
+#var mario=preload("res://scenes/mario1.tscn")
+#var pole=preload("res://scenes/pole.tscn")
+#var goomba=preload("res://scenes/goomba.tscn")
+#var collision=preload("res://scenes/collision.tscn")
+#var plant=preload("res://scenes/plant.tscn")
+#var score=preload("res://scenes/score.tscn")
+#var koopa=preload("res://scenes/koopa.tscn")
+#var menu=preload("res://scenes/menu.tscn")
+#var firework=preload("res://scenes/firework.tscn")
+#var castleFlag=preload("res://scenes/flag.tscn")
+#var bigCoin=preload("res://scenes/bigCoin.tscn")
 
 var debug=true
 var isPress=false #编辑时是否按下鼠标
@@ -81,7 +81,7 @@ onready var _spriteSet=$layer/Control/tab/common/vbox/spriteset
 onready var _loadDiaglog=$layer/loadDialog
 onready var _title = $title
 #onready var _bgList=$background
-onready var _poleList=$pole
+#onready var _poleList=$pole
 onready var _fps=$layer/fps
 #onready var _collisionList=$collision
 
@@ -108,15 +108,15 @@ func _ready():
 		_title.hideTime()
 		pass
 	pass
-
-func findMapFile():
-	var dir = Directory.new()
-	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-		print("ok")
-		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-	else:
-		printerr("文件不存在")
-	pass
+#
+#func findMapFile():
+#	var dir = Directory.new()
+#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+#		print("ok")
+#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+#	else:
+#		printerr("文件不存在")
+#	pass
 
 #载入文件
 func loadMapFile(fileName:String):
@@ -141,7 +141,7 @@ func loadMapFile(fileName:String):
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
 		
-#		var pos = currentLevel['marioPos']
+		var pos = currentLevel['marioPos']
 #		if !pos.empty():  #添加mario
 #			if mode=='game' ||  mode=='show':
 #				var temp=mario.instance()
@@ -151,41 +151,43 @@ func loadMapFile(fileName:String):
 #				temp.fire=Game.playerData['mario']['fire']
 #				_marioList.add_child(temp)
 		
-#		marioPos=pos
+		marioPos=pos
 		if mode=='edit':
 			allTiles.clear()
 			bgTiles.clear()
 			
 		for i in currentLevel['data']:
-			if i['type'] =='brick':
-				if mode=='edit':
-					allTiles.append(i)
-				pass
-			elif i['type']=='box':
-				if mode=='edit':
-					allTiles.append(i)
-			elif i['type']=='goomba' || i['type']=='koopa'||\
-					i['type']==constants.plant:	
-				if mode=='edit':
-					allTiles.append(i)	
-			elif i['type']=='pipe':
-				if mode=='edit':
-					allTiles.append(i)
-			elif i['type']=='bg':	
-				if mode=='edit':
-					bgTiles.append(i)
-			elif  i['type']=='flag':  #旗杆
-				if mode=='edit':
-					allTiles.append(i)		
-			elif  i['type']=='collision':
-				if mode=='edit':
-					allTiles.append(i)
-			elif i['type']=='castleFlag':	
-				if mode=='edit':
-					allTiles.append(i)	
-			elif i['type']=='coin':
-				if mode=='edit':
-					allTiles.append(i)											
+			if mode=='edit':
+				allTiles.append(i)
+#			if i['type'] =='brick':
+#				if mode=='edit':
+#					allTiles.append(i)
+#				pass
+#			elif i['type']=='box':
+#				if mode=='edit':
+#					allTiles.append(i)
+#			elif i['type']=='goomba' || i['type']=='koopa'||\
+#					i['type']==constants.plant:	
+#				if mode=='edit':
+#					allTiles.append(i)	
+#			elif i['type']=='pipe':
+#				if mode=='edit':
+#					allTiles.append(i)
+#			elif i['type']=='bg':	
+#				if mode=='edit':
+#					bgTiles.append(i)
+#			elif  i['type']=='flag':  #旗杆
+#				if mode=='edit':
+#					allTiles.append(i)		
+#			elif  i['type']=='collision':
+#				if mode=='edit':
+#					allTiles.append(i)
+#			elif i['type']=='castleFlag':	
+#				if mode=='edit':
+#					allTiles.append(i)	
+#			elif i['type']=='coin':
+#				if mode=='edit':
+#					allTiles.append(i)												
 		file.close()
 	else:
 		print('文件不存在')	
@@ -289,7 +291,6 @@ func delItem(pos:Vector2):
 
 #选择方块
 func selectItem(type,itemName):
-#	print(index,itemName)
 	selectItemType=type
 	selectItem=itemName
 
@@ -441,7 +442,7 @@ func _draw():
 						Vector2(i.x*blockSize,i.y*blockSize+(l+1)*blockSize),Color(1,1,1,0.5))
 					pass
 				pass
-			elif i.type=="collision"||i.type=="castleFlag":
+			elif i.type=="collision"||i.type=="castleFlag" ||i.type==constants.platform:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type==constants.plant:
