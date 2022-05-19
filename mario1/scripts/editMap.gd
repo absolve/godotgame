@@ -7,22 +7,6 @@ extends Node2D
 const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15
-#
-#var brick=preload("res://scenes/brick.tscn")
-#var box=preload("res://scenes/box1.tscn")
-#var pipe=preload("res://scenes/pipe.tscn")
-#var background=preload("res://scenes/bg.tscn")
-#var mario=preload("res://scenes/mario1.tscn")
-#var pole=preload("res://scenes/pole.tscn")
-#var goomba=preload("res://scenes/goomba.tscn")
-#var collision=preload("res://scenes/collision.tscn")
-#var plant=preload("res://scenes/plant.tscn")
-#var score=preload("res://scenes/score.tscn")
-#var koopa=preload("res://scenes/koopa.tscn")
-#var menu=preload("res://scenes/menu.tscn")
-#var firework=preload("res://scenes/firework.tscn")
-#var castleFlag=preload("res://scenes/flag.tscn")
-#var bigCoin=preload("res://scenes/bigCoin.tscn")
 
 var debug=true
 var isPress=false #编辑时是否按下鼠标

@@ -46,6 +46,8 @@ z_index = 3
 [node name="collision" type="Node2D" parent="."]
 position = Vector2( 0, -1 )
 
+[node name="platform" type="Node2D" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 current = true

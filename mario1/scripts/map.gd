@@ -77,6 +77,7 @@ onready var _bgList=$background
 onready var _poleList=$pole
 onready var _fps=$layer/fps
 onready var _collisionList=$collision
+onready var _platform=$platform
 
 
 func _ready():
@@ -100,7 +101,7 @@ func _ready():
 		_bg.show()
 #		_tab.hide()
 #		_toolBtn.hide()	
-#		loadMapFile("res://levels/test9.json")
+#		loadMapFile("res://levels/test8.json")
 		findMapFile()
 		_title.setTime(time)
 		_title.startCountDown()
@@ -161,11 +162,11 @@ func _ready():
 		pass	
 	elif mode=='test':
 		pass
-#	elif mode=='show':	
-#		_bg.show()
+	elif mode=='show':	
+		_bg.show()
 #		_tab.hide()
 #		_toolBtn.hide()	
-#		_title.hideTime()
+		_title.hideTime()
 #		pass
 #	print(camera.get_camera_position().y)	
 #	print(_marioList.get_children())
@@ -369,7 +370,7 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2	
 				temp.lens=int(i['lens'])
-				_brick.add_child(temp)										
+				_platform.add_child(temp)										
 		file.close()
 	else:
 		print('文件不存在')	
@@ -848,9 +849,9 @@ func saveMarioInfo(m):
 	Game.playerData['mario']['fire']=m.fire
 	
 func _update(delta):
-	if mode=='edit':
-		pass
-	elif mode=='game':
+#	if mode=='edit':
+#		pass
+	if mode=='game':
 		if state==constants.startState:
 			#清除超过屏幕的敌人
 #			var pos=camera.get_camera_position()
@@ -876,22 +877,28 @@ func _update(delta):
 					marioOutYPos()
 			_title._update(delta)
 			
-			for i in _marioList.get_children():
+			for i in _marioList.get_children()+_brickList.get_children()+\
+				_bulletList.get_children()+_itemsList.get_children()+\
+				_otherobjList.get_children()+_enemyList.get_children()+\
+				_poleList.get_children()+_collisionList.get_children()+\
+				_platform.get_children():
 				i._update(delta)
-			for i in _brickList.get_children():
-				i._update(delta)
-			for i in _bulletList.get_children():
-				i._update(delta)
-			for i in _itemsList.get_children():
-				i._update(delta)
-			for i in _otherobjList.get_children():
-				i._update(delta)
-			for i in _enemyList.get_children():
-				i._update(delta)
-			for i in _poleList.get_children():
-				i._update(delta)
-			for i in _collisionList.get_children():
-				i._update(delta)
+#			for i in _brickList.get_children():
+#				i._update(delta)
+#			for i in _bulletList.get_children():
+#				i._update(delta)
+#			for i in _itemsList.get_children():
+#				i._update(delta)
+#			for i in _otherobjList.get_children():
+#				i._update(delta)
+#			for i in _enemyList.get_children():
+#				i._update(delta)
+#			for i in _poleList.get_children():
+#				i._update(delta)
+#			for i in _collisionList.get_children():
+#				i._update(delta)
+#			for i in _platform.get_children():
+#				i._update(delta)
 			
 			screenbrick=getScreenBrick() #获取当前屏幕的方块 两个屏幕大小
 				
@@ -1050,12 +1057,6 @@ func _update(delta):
 						var dx=(y.position.x-i.position.x)/y.getSize()/2
 						var dy=(y.position.y-i.position.y)/y.getSizeY()/2
 						if abs(abs(dx)-abs(dy))<.1:  #两边重叠	
-#							if dy<0:
-#								i.yVel=8
-#							else:
-#								if i.yVel>0:
-#									i.yVel=0
-#								i.position.y=y.position.y-y.getSize()/2-i.getSizeY()/2	
 #							if dy<0:  #下方
 #								if i.position.x>=y.position.x && abs(i.getLeft()-y.getRight())>=4:	
 #									i.yVel=0
@@ -1161,13 +1162,15 @@ func _update(delta):
 									pass
 								else:
 									if dx<0:
-										i.position.x=y.getRight()+i.getSize()/2
+										if i.status!=constants.shell:
+											i.position.x=y.getRight()+i.getSize()/2
 										if i.xVel<0:
 											i.turnDir()	
 										if y.xVel>0:
 											y.turnDir()		
 									else:
-										i.position.x=y.getLeft()-i.getSize()/2
+										if i.status!=constants.shell:
+											i.position.x=y.getLeft()-i.getSize()/2
 										if i.xVel>0:
 											i.turnDir()
 										if y.xVel<0:
