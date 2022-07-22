@@ -319,11 +319,10 @@ func _process(delta):
 						brickType=Game.brickType.brickWall
 			pass
 		
-	elif state==Game.game_state.NEXT_LEVEL:
-		
+	elif state==Game.game_state.NEXT_LEVEL||state==Game.game_state.OVER:
 		pass
-	elif state==Game.game_state.OVER:
-		pass
+#	elif state==Game.game_state.OVER:
+#		pass
 	pass
 
 func _input(event):
@@ -397,18 +396,15 @@ func nextLevel():
 
 #设置状态
 func setState(state):
-	if state==Game.game_state.START:
-		#print('loadMap')
-		
-		pass
-	elif state==Game.game_state.NEXT_LEVEL:
-		
-		pass	
-	elif state==Game.game_state.OVER:
-		
-		pass
-	elif state==Game.game_state.PAUSE:
-		pass	
+#	if state==Game.game_state.START:
+#		#print('loadMap')	
+#		pass
+#	elif state==Game.game_state.NEXT_LEVEL:
+#		pass	
+#	elif state==Game.game_state.OVER:
+#		pass
+#	elif state==Game.game_state.PAUSE:
+#		pass	
 	self.state=state
 
 #击中敌人
@@ -457,7 +453,7 @@ func hitEnemy(enemyType,players,pos):
 func baseDestroy():
 	print('baseDestroy')
 	SoundsUtil.playBaseDestroy()
-	if isNoBase: #五基地继续战斗
+	if isNoBase: #无基地继续战斗
 		return
 	gameOver()
 	#setState(Game.game_state.OVER)
@@ -619,5 +615,4 @@ func gamePause():
 		_clock.paused=true
 		_shovel.paused=true
 	SoundsUtil.playPause()
-	pass
 

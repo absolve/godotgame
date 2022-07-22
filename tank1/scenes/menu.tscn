@@ -10,9 +10,6 @@
 
 [node name="menu" type="Control"]
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="ColorRect" parent="."]
 margin_right = 512.0

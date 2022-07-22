@@ -188,7 +188,7 @@ func _process(delta):
 		timer.start()		
 	elif state==3:
 		pass		
-	pass
+
 
 #计分 index第几行  num 个数	 
 func setp1Num(index,num):
@@ -263,21 +263,16 @@ func nextLevel():
 	if Game.isGameOver:
 		gameOver()
 	elif Game.level>=Game.mapNum:	#最后一关
-		Game.changeScene("res://scenes/info.tscn")
-		pass	
+		Game.changeScene("res://scenes/info.tscn")	
 	else:#下一关
 		Game.level+=1
-		Game.changeSceneAni(Game._mainScene)
-		pass	
-	pass	
+		Game.changeSceneAni(Game._mainScene)		
 	
 #游戏结束	
 func gameOver():
-	Game.changeScene("res://scenes/gameover.tscn")
-	pass	
+	Game.changeScene("res://scenes/gameover.tscn")	
 
 
 func _on_Button_pressed():
 	state=1
 	countStartTime=OS.get_system_time_msecs()	
-	pass # Replace with function body.
