@@ -1,6 +1,130 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/welcome.gd" type="Script" id=1]
+[ext_resource path="res://fonts/new_dynamicfont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://sprites/logo.png" type="Texture" id=3]
+[ext_resource path="res://sprites/indicator.png" type="Texture" id=4]
 
 [node name="welcome" type="Node2D"]
 script = ExtResource( 1 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_top = -1.0
+margin_right = 800.0
+margin_bottom = 599.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 400, 194 )
+texture = ExtResource( 3 )
+
+[node name="indicator" type="Sprite" parent="."]
+position = Vector2( 242, 312 )
+texture = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 124.0
+margin_top = 47.0
+margin_right = 196.0
+margin_bottom = 71.0
+custom_colors/font_color = Color( 0.705882, 0.0392157, 0, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "1up"
+uppercase = true
+
+[node name="Label" type="Label" parent="Label"]
+margin_left = 12.0
+margin_top = 30.0
+margin_right = 52.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 1
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 280.0
+margin_top = 47.0
+margin_right = 520.0
+margin_bottom = 71.0
+custom_colors/font_color = Color( 0.707031, 0.0392795, 0, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "high-score"
+uppercase = true
+
+[node name="Label" type="Label" parent="Label2"]
+margin_left = 88.0
+margin_top = 30.0
+margin_right = 128.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 1
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 616.0
+margin_top = 47.0
+margin_right = 688.0
+margin_bottom = 71.0
+custom_colors/font_color = Color( 0.707031, 0.0392795, 0, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "2up"
+uppercase = true
+
+[node name="Label" type="Label" parent="Label3"]
+margin_left = 11.0
+margin_top = 30.0
+margin_right = 51.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 2 )
+text = "0"
+align = 1
+
+[node name="bottom" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = 82.0
+margin_top = 505.0
+margin_right = 730.0
+margin_bottom = 587.0
+custom_fonts/font = ExtResource( 2 )
+text = "tm & @ 1980 1993 namco ltd.
+
+licensed to nintendo"
+align = 1
+uppercase = true
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="Control"]
+margin_left = 304.0
+margin_top = 303.0
+margin_right = 496.0
+margin_bottom = 327.0
+custom_fonts/font = ExtResource( 2 )
+text = "1 player"
+uppercase = true
+
+[node name="Label2" type="Label" parent="Control"]
+margin_left = 304.0
+margin_top = 358.0
+margin_right = 496.0
+margin_bottom = 382.0
+custom_fonts/font = ExtResource( 2 )
+text = "2 player"
+uppercase = true
+
+[node name="Label3" type="Label" parent="Control"]
+margin_left = 240.0
+margin_top = 439.0
+margin_right = 432.0
+margin_bottom = 463.0
+rect_scale = Vector2( 2, 2 )
+custom_colors/font_color = Color( 0.705882, 0.0392157, 0, 1 )
+custom_fonts/font = ExtResource( 2 )
+text = "namco"
+align = 1
