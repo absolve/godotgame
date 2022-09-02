@@ -73,6 +73,7 @@ onready var bigjump=$bigjump
 onready var fireball=$fireball
 
 func _ready():
+	
 #	status=constants.stop
 	type=constants.mario
 #	debug=true
@@ -200,8 +201,8 @@ func setHurtInvincible():
 	
 	
 func stand(_delta):
-	xVel=0
-	yVel=0
+#	xVel=0
+#	yVel=0
 #	yVel+=gravity*delta
 	if ani.animation in throw_animation&&throwAniFinish:	
 		animation("stand")
@@ -307,7 +308,7 @@ func walk(delta):
 				xVel-=acceleration*delta
 				animation("walk")
 			else:
-#				xVel=0
+				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
 		else:
@@ -315,12 +316,11 @@ func walk(delta):
 				xVel+=acceleration*delta
 				animation("walk")
 			else:
-#				xVel=0
+				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
 		
-	position.x+=xVel*delta
-		
+#	position.x+=xVel*delta
 #	position.y+=yVel*delta	
 	if !isOnFloor:
 #		ani.stop()
@@ -329,8 +329,7 @@ func walk(delta):
 	pass
 
 func jump(delta):
-	yVel+=gravity*delta
-	
+#	yVel+=gravity*delta
 	if isCrouch:
 		animation("crouch")
 	else:
@@ -354,12 +353,12 @@ func jump(delta):
 		if xVel<maxXVel:
 			xVel+=acceleration*delta
 		
-	position.x+=xVel*delta
-	position.y+=yVel*delta	
+#	position.x+=xVel*delta
+#	position.y+=yVel*delta	
 
 func fall(delta):
-	if yVel<maxYVel:
-		yVel+=gravity*delta
+#	if yVel<maxYVel:
+#		yVel+=gravity*delta
 	animation("fall")
 	if Input.is_action_pressed("ui_left"):
 		if xVel>-maxXVel:
@@ -369,8 +368,8 @@ func fall(delta):
 			xVel+=acceleration*delta
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball(false)		
-	position.x+=xVel*delta
-	position.y+=yVel*delta	
+#	position.x+=xVel*delta
+#	position.y+=yVel*delta	
 	
 	if isOnFloor:
 		status = constants.walk		
@@ -417,7 +416,7 @@ func startCrouch():
 	isCrouch=true
 	
 func crouch(delta):
-	yVel+=gravity*delta
+#	yVel+=gravity*delta
 	animation("crouch")
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball(false)
@@ -450,8 +449,8 @@ func crouch(delta):
 		else:
 			xVel=0
 			ani.speed_scale=1		
-	position.x+=xVel*delta
-	position.y+=yVel*delta
+#	position.x+=xVel*delta
+#	position.y+=yVel*delta
 	pass
 
 func pipeIn(delta):
@@ -603,6 +602,39 @@ func walkingToCastle(delta):
 			position.y+=yVel*delta
 		animation("walk")	
 	flagPoleTimer+=1	
+	pass
+
+#判断左边碰撞
+func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+#		if obj.type==constants.box && obj._visible:
+		return true
+		pass
+	elif obj.type==	constants.goomba:
+		
+		pass
+	pass
+
+#判断右边碰撞
+func leftCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+#		if obj.type==constants.box && obj._visible:
+		return true
+		pass
+	elif obj.type==	constants.goomba:
+		
+		pass
+	pass
+
+func floorCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		return true
+	pass
+
+func ceilcollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		return true
+	
 	pass
 
 #动画
