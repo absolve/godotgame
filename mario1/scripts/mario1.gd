@@ -633,7 +633,7 @@ func floorCollide(obj):
 
 func ceilcollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
-		return true
+		return false
 	
 	pass
 

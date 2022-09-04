@@ -63,8 +63,8 @@ func _update(delta):
 #		elif y.xVel>0:
 #			xstart+=1	
 
-		var ystart=floor(y.position.y/blockSize)+1
-		var yend=ystart+1
+		var ystart=floor(y.position.y/blockSize)
+		var yend=ystart+2
 	
 #		if y.yVel<0:
 #			yend=ystart
@@ -100,12 +100,15 @@ func checkCollision(a,b,delta):
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 		if abs(abs(dx)-abs(dy))<.1: 
-			if abs(a.yVel-a.gravity*delta)<abs(a.xVel):
-				if vCollision(a,b,delta)==true:
-					vCollision=true
-			else:
-				if hCollision(a,b,delta)==true:
-					hCollision=true
+#			if abs(a.yVel-a.gravity*delta)<abs(a.xVel):
+#				if vCollision(a,b,delta)==true:
+#					vCollision=true
+#			else:
+#				if hCollision(a,b,delta)==true:
+#					hCollision=true
+					
+#			if hCollision(a,b,delta)==true:
+#					hCollision=true		
 			pass
 		elif abs(dx)>abs(dy): #左右的碰撞	
 			if hCollision(a,b,delta)==true:
@@ -117,7 +120,7 @@ func checkCollision(a,b,delta):
 			pass
 	
 #	if Rect2(Vector2(a.position.x+a.xVel*delta,a.position.y+a.yVel*delta),\
-#			Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect()):
+#			Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect(),true):
 #			if Rect2(Vector2(a.position.x+a.xVel*delta,a.position.y),\
 #				Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect()):
 #				if hCollision(a,b,delta)==true:
@@ -191,7 +194,7 @@ func hCollision(a,b,delta):
 
 #上下判断	
 func vCollision(a,b,delta):
-	if a.yVel>=0: #向下	
+	if a.yVel>0: #向下	
 		if a.has_method('floorCollide'):
 			if a.floorCollide(b)==true:
 				if a.yVel>0:
