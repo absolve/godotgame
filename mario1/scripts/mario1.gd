@@ -1,14 +1,14 @@
 extends "res://scripts/object.gd"
 
 
-var maxXVel=constants.marioWalkMaxSpeed
-var maxYVel=constants.marioMaxYVel #y轴最大速度
+#var maxXVel=constants.marioWalkMaxSpeed
+#var maxYVel=constants.marioMaxYVel #y轴最大速度
 var big = false #是否变大
 #var faceRight=true
 var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
-var isOnFloor=true #是否在地面上
+var isOnFloor=false #是否在地面上
 var dir=constants.right
 var throwAniFinish=false
 var playerId=1  #玩家id
@@ -73,7 +73,8 @@ onready var bigjump=$bigjump
 onready var fireball=$fireball
 
 func _ready():
-	
+	maxXVel=constants.marioWalkMaxSpeed
+	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
 	type=constants.mario
 #	debug=true
@@ -339,6 +340,10 @@ func jump(delta):
 		status=constants.fall	
 #		print('jump')
 		return
+	if isOnFloor: #在地面上
+		gravity=constants.marioGravity
+		status=constants.walk	
+		
 		
 	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
 		gravity=constants.marioGravity
@@ -613,6 +618,11 @@ func rightCollide(obj):
 	elif obj.type==	constants.goomba:
 		
 		pass
+	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
+		obj.type==constants.star || obj.type==constants.mushroom1up||\
+		obj.type==constants.bigCoin:
+		getItem(obj)
+		pass
 	pass
 
 #判断右边碰撞
@@ -621,20 +631,80 @@ func leftCollide(obj):
 #		if obj.type==constants.box && obj._visible:
 		return true
 		pass
-	elif obj.type==	constants.goomba:
-		
+	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
 		pass
+	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
+		obj.type==constants.star || obj.type==constants.mushroom1up||\
+		obj.type==constants.bigCoin:
+		getItem(obj)
 	pass
 
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box:	
+		if xVel==0:
+			if dir==constants.left:
+				if Game.checkMapBrick(position.x+getSize()/2,position.y-getSizeY()/2):
+					position.x-=1
+			elif dir==constants.right:
+				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
+					position.x+=1	
 		return true
+	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
+		obj.type==constants.star || obj.type==constants.mushroom1up||\
+		obj.type==constants.bigCoin:
+		getItem(obj)
 	pass
 
-func ceilcollide(obj):
+func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box:
-		return false
-	
+		if obj.type==constants.box&&obj.status==constants.resting:
+#			if big&&obj.isDestructible():
+#				obj.destroy=true	
+#			elif obj.isDestructible():
+#				SoundsUtil.playBrickHit()
+			obj.startBumped(big)
+			yVel=-1
+		else:			
+#			return true
+			pass
+	elif obj.type==constants.goomba || obj.type==constants.koopa:
+		
+		pass
+	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
+		obj.type==constants.star || obj.type==constants.mushroom1up||\
+		obj.type==constants.bigCoin:
+		getItem(obj)
+	pass
+
+#获取物品
+func getItem(i):
+	if i.type==constants.mushroom:
+		i.queue_free()
+		small2Big()
+		SoundsUtil.playMushroom()
+#		addScore(m,1000)
+	elif i.type==constants.fireflower:
+		i.queue_free()
+		if big:
+			big2Fire()
+		else:
+			small2Big()	
+#		addScore(m,1000)
+		SoundsUtil.playMushroom()
+	elif i.type==constants.star:
+		i.queue_free()
+		setInvincible()
+#		addScore(m,1000)
+		SoundsUtil.stopBgm()
+		SoundsUtil.playSpecialBgm()
+	elif i.type==constants.mushroom1up:	
+		i.queue_free()
+#		addLive(m)
+		SoundsUtil.playItem1up()
+	elif i.type==constants.bigCoin:
+		i.queue_free()
+		SoundsUtil.playCoin()
+#		addCoin(m)	
 	pass
 
 #动画

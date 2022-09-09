@@ -1,12 +1,15 @@
 extends "res://scripts/object.gd"
 
 var status=constants.spin
+var isOnFloor=false
 onready var ani=$ani
 
 func _ready():
+#	maxYVel=constants.marioMaxYVel
 	gravity=constants.boxGravity
 	debug=true
 	yVel=-600
+	active=false
 	ani.play("default")
 	pass
 
@@ -19,11 +22,6 @@ func spinning(delta):
 	yVel+=gravity*delta
 	position.y+=yVel*delta
 	if yVel>400:
-#		Game.addCoin(self,1)
-		Game.addScore(self,200)
+		Game.addScore(position,200)
 		queue_free()
-#		var score=Game.score.instance()
-#		score.rect_position=position
-#		score.score=200
-#		Game.addScore(self,200)
 	pass		

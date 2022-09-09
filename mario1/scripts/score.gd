@@ -4,6 +4,8 @@ extends Label
 var yVel=-80 #y轴速度
 var maxHeight
 var score=0 #显示分数
+var active=false
+var mask=[]
 
 func _ready():
 	maxHeight=rect_position.y-90
@@ -15,6 +17,9 @@ func setPos(pos:Vector2):
 
 func setScore(_score):
 	score=_score
+
+func checkMask(obj):
+	return mask.has(obj)
 
 func _update(delta):
 	rect_position.y+=yVel*delta

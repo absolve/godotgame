@@ -12,8 +12,16 @@ var yVel=0 #y轴速度
 var offsetX=0
 var offsetY=0
 var collisionShow=false  #测试的时候显示是否碰撞
+var active=true#是否是活动的
+var maxXVel=0
+var maxYVel=0
+var mask=[] #用来判断物体之前是否可以碰撞
+var destroy=false
+var localx=0  #地图中位置
+var localy=0
 
 func _ready():
+	debug=true
 #	set_process(false)
 #	set_physics_process(false)
 	pass 
@@ -42,6 +50,10 @@ func getTop()->float:
 
 func getBottom()->float:
 	return position.y+rect.size.y/2
+
+func checkMask(obj):
+	return mask.has(obj)
+		
 
 func _update(delta):
 	if debug:

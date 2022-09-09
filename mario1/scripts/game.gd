@@ -45,8 +45,11 @@ func addObj2Bullet(pos,dir):
 	temp.dir=dir
 	map.addObj2Bullet(temp)
 
-func addScore(m,_score=100):
-	map.addScore(m,_score)
+func addObj(obj):
+	map.addObj(obj)
+
+func addScore(_position,_score=100):
+	map.addScore(_position,_score)
 
 func addCoin(m,_coin=1):
 	map.addCoin(m,_coin)
@@ -59,8 +62,11 @@ func getMario():
 
 #获取地图中方块对象
 func getMapBrick(x,y):
-	
+	return map.getMapBrick(x,y)
 	pass
+
+func checkMapBrick(x,y):
+	return map.checkMapBrick(x,y)
 
 func printFont():
 	print("""

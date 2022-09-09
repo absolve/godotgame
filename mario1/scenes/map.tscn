@@ -64,8 +64,5 @@ margin_bottom = -382.0
 theme = ExtResource( 4 )
 text = "fps:"
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="title" parent="." instance=ExtResource( 8 )]

@@ -14,6 +14,7 @@ var isOnFloor=true #是否在地面上
 func _ready():
 #	type=constants.mushroom
 #	debug=true
+	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 	gravity=constants.enemyGravity
 	oldPos=position.y
@@ -49,6 +50,7 @@ func _update(delta):
 func growing(delta):
 	if oldPos-position.y>=rect.size.y:
 		status=constants.moving
+		active=true
 		if type==constants.fireflower:
 			status=constants.stop
 		elif type==constants.star:
