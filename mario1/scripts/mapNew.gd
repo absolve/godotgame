@@ -53,16 +53,21 @@ func _update(delta):
 			i.queue_free()
 		elif i.destroy:
 			i.queue_free()	
+			
 	for i in _obj.get_children():
+		if i.active:
+			i.yVel+=i.gravity*delta		#增加y速度
+			if i.yVel>i.maxYVel:
+				i.yVel=i.maxYVel
 		i._update(delta)
 		
 	for y in _obj.get_children():
 		var hCollision=false
 		var vCollision=false
-		if y.active:
-			y.yVel+=y.gravity*delta		#增加y速度
-			if y.yVel>y.maxYVel:
-				y.yVel=y.maxYVel
+#		if y.active:
+#			y.yVel+=y.gravity*delta		#增加y速度
+#			if y.yVel>y.maxYVel:
+#				y.yVel=y.maxYVel
 			
 		#检测附近的砖块根据方向来决定方块的位置
 		var xstart=floor((y.position.x-y.getSize())/blockSize)
@@ -72,12 +77,9 @@ func _update(delta):
 		var ystart=floor((y.position.y-y.getSizeY())/blockSize)
 		var yend=floor((y.position.y+y.getSizeY())/blockSize)
 	
-#		if y.yVel<0:
-#			yend=ystart
-#			ystart=ystart-1
-		
 #		print(xstart,'-',xend)
 #		print(ystart,'-',yend)
+		#与方块的配置
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
 				if hasTile(a,b)&&y.active:
@@ -87,11 +89,14 @@ func _update(delta):
 					if result[1]:	
 						vCollision=true
 		
+		#与物体间的配置
+		
+		
 		if !vCollision&&y.active:
-#			if y.yVel>0&&y.yVel<100:
-#				y.yVel+=150
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
+#			if y.yVel>=0:
+#				y.yVel+=100
 		else:
 			y.isOnFloor=true
 			
@@ -141,28 +146,57 @@ func checkCollision(a,b,delta):
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 			
-	if  a.getRect().intersects(b.getRect(),true)&&\
-				!a.getRect().encloses(b.getRect()):	#判断上下是否碰撞
+	if  a.getRect().intersects(b.getRect(),true):	#判断上下是否碰撞
+#		if hCollision:
+#			print('hCollision')
 		var yVal =a.position.y-b.position.y		
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
-		if abs(dy)>abs(dx)&&\
-			abs(abs(b.position.x-a.position.x)-(a.getSize()/2+b.getSize()/2))>5:
+		if abs(dy)>=abs(dx)&&\
+			abs(abs(b.position.x-a.position.x)-(a.getSize()/2+b.getSize()/2))>1:
 			if abs(abs(dx)-abs(dy))<.1:
 				print('111')
-			
-#			if vCollision(a,b,delta)==true:
-#				vCollision=true		
-			if yVal<0 && a.yVel>0:
+
+			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
-			elif yVal>0 && a.yVel<0:
+			elif  dy>0	&&  a.yVel>0: 
+#				if b.type==constants.box:
+#					print('box',a.yVel,' ',abs(b.position.y-a.position.y))
 				if vCollision(a,b,delta)==true:
 					vCollision=true	
-			pass
+					
+		
 				
+#	if hCollision:
+#		print('hCollision')
+#	if	vCollision:
+#		print('vCollision')	
+	
+#	if Rect2(a.position.x,a.position.y\
+#		,a.getSize()/2,a.getSizeY()).intersects(b.getRect()):
+#		var yVal =a.position.y-b.position.y	
+#		if yVal<0 && a.yVel>0:	#下方的物体
+#			if vCollision(a,b,delta)==true:
+#				vCollision=true		
+#		elif yVal>0 && a.yVel<0: #上方分物体
+#			if vCollision(a,b,delta)==true:
+#				vCollision=true	
+	
+		
+#			if yVal<0 && a.yVel>0:	#下方的物体
+#				if vCollision(a,b,delta)==true:
+#					vCollision=true		
+#			elif yVal>0 && a.yVel<0: #上方分物体
+#				if vCollision(a,b,delta)==true:
+#					vCollision=true	
+#			elif a.yVel<0 &&yVal<0:
+#				print(22)
+#			pass
+		
 	pass
-				
+#	if hCollision&&vCollision:
+#		print(333)			
 #	if Rect2(Vector2(a.position.x+a.xVel*delta,a.position.y)\
 #		,Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect()):
 #		if hCollision(a,b,delta):
@@ -301,7 +335,7 @@ func loadMapFile(fileName:String):
 				temp.big=true
 				temp.fire=Game.playerData['mario']['fire']
 				_obj.add_child(temp)
-				marioList.append(_obj)
+				marioList.append(temp)
 				
 		marioPos=pos
 		

@@ -101,6 +101,7 @@ func bumped(delta):
 				destroy()
 				add4Brick()
 				SoundsUtil.playBrickBreak()
+				status=constants.empty
 		position.y+=yVel*delta		
 	pass
 
@@ -108,6 +109,7 @@ func opened(delta):
 	pass
 	
 func startBumped(isBig=false):
+	print('startBumped')
 	yVel=-280
 	status=constants.bumped
 	if !_visible:

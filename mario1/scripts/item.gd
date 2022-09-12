@@ -14,6 +14,7 @@ var isOnFloor=true #是否在地面上
 func _ready():
 #	type=constants.mushroom
 #	debug=true
+	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 	gravity=constants.enemyGravity
@@ -53,6 +54,7 @@ func growing(delta):
 		active=true
 		if type==constants.fireflower:
 			status=constants.stop
+			active=false
 		elif type==constants.star:
 			yVel=-jumpSpeed
 			status=constants.jumping	
@@ -61,11 +63,20 @@ func growing(delta):
 	pass
 	
 func moving(delta):
-	yVel+=gravity*delta
+#	yVel+=gravity*delta
 
-	position.x+=xVel*delta
-	if !isOnFloor:	
-		position.y+=yVel*delta		
+#	position.x+=xVel*delta
+#	if !isOnFloor:	
+#		position.y+=yVel*delta		
+	if dir==constants.left:
+		xVel=-speed
+	else:
+		xVel=speed
+		
+	pass
+
+func startJump():
+	yVel=-jumpSpeed
 	pass
 
 func stop(delta):
@@ -73,9 +84,9 @@ func stop(delta):
 	pass
 
 func jumping(delta):
-	yVel+=gravity*delta
-	position.x+=xVel*delta
-	position.y+=yVel*delta	
+#	yVel+=gravity*delta
+#	position.x+=xVel*delta
+#	position.y+=yVel*delta	
 	pass
 
 func turnLeft():
@@ -91,3 +102,22 @@ func pause():
 func resume():
 	ani.play()	
 	
+func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		dir=constants.left
+		return true
+	pass
+	
+func leftCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		dir=constants.right
+		return true
+	pass
+	
+func floorCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		if type==constants.star:
+			yVel=-jumpSpeed
+		return true
+	pass	
+

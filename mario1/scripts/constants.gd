@@ -124,14 +124,14 @@ const dropSpeed=400 #下落最大速度
 const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=2100
+const enemyGravity=1700
 const enemyMaxVel=1500
 
 const slideFriction=590 #滑行的加速度
 const crouchFriction=440 #蹲下去时加速度
-const acceleration=370	#移动加速度
-const runAcceleration=550 #跑的加速度
-const marioWalkMaxSpeed=180 #走的时候最大速度
+const acceleration=240	#移动加速度
+const runAcceleration=420 #跑的加速度
+const marioWalkMaxSpeed=150 #走的时候最大速度
 const marioRunMaxSpeed=300 #跑的时候最大速度
 const marioAniSpeed=100
 const marioGravity=1800 #重力

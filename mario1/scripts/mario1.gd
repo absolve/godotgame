@@ -613,6 +613,7 @@ func walkingToCastle(delta):
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
+		
 		return true
 		pass
 	elif obj.type==	constants.goomba:
@@ -657,16 +658,18 @@ func floorCollide(obj):
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box:
-		if obj.type==constants.box&&obj.status==constants.resting:
+		if obj.type==constants.box:
 #			if big&&obj.isDestructible():
 #				obj.destroy=true	
 #			elif obj.isDestructible():
 #				SoundsUtil.playBrickHit()
-			obj.startBumped(big)
-			yVel=-1
+			if obj.status==constants.resting:
+				obj.startBumped(big)
+			else:
+				SoundsUtil.playBrickHit()	
 		else:			
-#			return true
-			pass
+			SoundsUtil.playBrickHit()
+		yVel=-1	
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		
 		pass
