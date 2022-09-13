@@ -84,9 +84,10 @@ func stop(delta):
 	pass
 
 func jumping(delta):
-#	yVel+=gravity*delta
-#	position.x+=xVel*delta
-#	position.y+=yVel*delta	
+	if dir==constants.left:
+			xVel=-speed
+	else:
+		xVel=speed
 	pass
 
 func turnLeft():

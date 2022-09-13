@@ -138,37 +138,37 @@ func checkCollision(a,b,delta):
 					hCollision=true
 	
 		
-	if  a.getRect().intersects(b.getRect(),true)&&a.getLeft()<b.getRight()-1&&a.getRight()>b.getLeft()+1:	
+	if  a.getRect().intersects(b.getRect(),true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():	
 		var yVal =a.position.y-b.position.y		
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
+		
 		if abs(dy)>abs(dx):
-			if abs(abs(dx)-abs(dy))<.1:
-				print('111')
-
 			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
-			elif  dy>0	&&  a.yVel>0: 
-				if vCollision(a,b,delta)==true:
-					vCollision=true	
-					
-#			if  a.yVel>0 && a.getBottom()<b.getBottom()&&a.getBottom()>=b.getTop():
-#				if vCollision(a,b,delta)==true:
-#					vCollision=true	
-#				pass
-#			elif a.yVel<0 &&a.getTop()>b.getTop()&& a.getTop()<=b.getBottom():
-#				if vCollision(a,b,delta)==true:
-#					vCollision=true	
-#				pass
-			
-					
-	if b.type==constants.box:
-		if hCollision:
-			print(2212)
-		print(hCollision,' ',vCollision)
-		print(a.xVel,' ',a.yVel)			
-		
+			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
+#				if b.type==constants.box:
+#					print('===',a.yVel,'---',abs(a.getBottom()-b.getTop()))	
+#					print(abs(a.getRight()-b.getLeft()))
+#					pass
+				#如果只是走过一个间隙 判断重叠部分是x多还是y多
+				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
+					if vCollision(a,b,delta)==true:
+						vCollision=true	
+					pass
+				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
+					if vCollision(a,b,delta)==true:
+						vCollision=true	
+				else:
+#					a.xVel=0
+					if dx>0&&a.xVel>0:	
+						if hCollision(a,b,delta)==true:
+							hCollision=true
+					elif dx<0 &&a.xVel<0:
+						if hCollision(a,b,delta)==true:
+							hCollision=true
+				
 	return [hCollision,vCollision]
 	pass
 
