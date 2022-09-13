@@ -25,6 +25,7 @@ var platform=preload("res://scenes/platform.tscn")
 onready var _obj=$obj
 onready var _tile=$tile
 onready var _fps=$layer/fps
+onready var _camera=$camera
 
 var path="res://levels/1-1.json"
 var currentLevel
@@ -35,9 +36,13 @@ var marioPos={} #mario地图出生地
 var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 var mapData={}  #地图以x,y为key value为对象
 var marioList=[]
+var winWidth  #屏幕大小
+var winHeight
 
 func _ready():
 	Game.setMap(self)
+	winWidth= ProjectSettings.get_setting("display/window/size/width")
+	winHeight=ProjectSettings.get_setting("display/window/size/height")
 	loadMapFile("res://levels/test7.json")
 	pass
 
@@ -52,6 +57,10 @@ func _update(delta):
 			mapData[str(i.localx,',',i.localy)]=null
 			i.queue_free()
 		elif i.destroy:
+			i.queue_free()	
+		if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
+			i.queue_free()	
+		if i.getTop()>winHeight:
 			i.queue_free()	
 			
 	for i in _obj.get_children():
@@ -89,14 +98,13 @@ func _update(delta):
 					if result[1]:	
 						vCollision=true
 		
-		#与物体间的配置
+		#与物体间的碰撞
 		
 		
 		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
-#			if y.yVel>=0:
-#				y.yVel+=100
+
 		else:
 			y.isOnFloor=true
 			
@@ -112,30 +120,13 @@ func checkCollision(a,b,delta):
 	var vCollision=false
 
 	#如果a物体x轴和y轴移动发生于b物体的碰撞 判断是那个方向上的碰撞
-#	if a.getRect().intersects(b.getRect(),true):
-#		var dx=(b.position.x-a.position.x)/b.getSize()/2
-#		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
-#		if abs(abs(dx)-abs(dy))<.1: 
-#			if abs(a.yVel-a.gravity*delta)<abs(a.xVel):
-#				if vCollision(a,b,delta)==true:
-#					vCollision=true
-#			else:
-#				if hCollision(a,b,delta)==true:
-#					hCollision=true
-#		elif abs(dx)>abs(dy): #左右的碰撞	
-#			if hCollision(a,b,delta)==true:
-#				hCollision=true
-#			pass
-#		else:#上下的碰撞
-#			if vCollision(a,b,delta)==true:
-#				vCollision=true
-#			pass
+
 	if !is_instance_valid(a)||!is_instance_valid(b):
 		return [hCollision,vCollision]
 	
-	if  a.getRect().intersects(b.getRect()):	#判断左右是否碰撞
+	if  a.getRect().intersects(b.getRect(),true):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x
-		var absXVal=abs(xVal)
+#		var absXVal=abs(xVal)
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 		if abs(dx)>abs(dy): #左右的碰撞	
@@ -145,15 +136,13 @@ func checkCollision(a,b,delta):
 			elif xVal>0 &&a.xVel<0:
 				if hCollision(a,b,delta)==true:
 					hCollision=true
-			
-	if  a.getRect().intersects(b.getRect(),true):	#判断上下是否碰撞
-#		if hCollision:
-#			print('hCollision')
+	
+		
+	if  a.getRect().intersects(b.getRect(),true)&&a.getLeft()<b.getRight()-1&&a.getRight()>b.getLeft()+1:	
 		var yVal =a.position.y-b.position.y		
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
-		if abs(dy)>=abs(dx)&&\
-			abs(abs(b.position.x-a.position.x)-(a.getSize()/2+b.getSize()/2))>1:
+		if abs(dy)>abs(dx):
 			if abs(abs(dx)-abs(dy))<.1:
 				print('111')
 
@@ -161,61 +150,25 @@ func checkCollision(a,b,delta):
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0: 
-#				if b.type==constants.box:
-#					print('box',a.yVel,' ',abs(b.position.y-a.position.y))
 				if vCollision(a,b,delta)==true:
 					vCollision=true	
 					
-		
-				
-#	if hCollision:
-#		print('hCollision')
-#	if	vCollision:
-#		print('vCollision')	
-	
-#	if Rect2(a.position.x,a.position.y\
-#		,a.getSize()/2,a.getSizeY()).intersects(b.getRect()):
-#		var yVal =a.position.y-b.position.y	
-#		if yVal<0 && a.yVel>0:	#下方的物体
-#			if vCollision(a,b,delta)==true:
-#				vCollision=true		
-#		elif yVal>0 && a.yVel<0: #上方分物体
-#			if vCollision(a,b,delta)==true:
-#				vCollision=true	
-	
-		
-#			if yVal<0 && a.yVel>0:	#下方的物体
-#				if vCollision(a,b,delta)==true:
-#					vCollision=true		
-#			elif yVal>0 && a.yVel<0: #上方分物体
+#			if  a.yVel>0 && a.getBottom()<b.getBottom()&&a.getBottom()>=b.getTop():
 #				if vCollision(a,b,delta)==true:
 #					vCollision=true	
-#			elif a.yVel<0 &&yVal<0:
-#				print(22)
-#			pass
+#				pass
+#			elif a.yVel<0 &&a.getTop()>b.getTop()&& a.getTop()<=b.getBottom():
+#				if vCollision(a,b,delta)==true:
+#					vCollision=true	
+#				pass
+			
+					
+	if b.type==constants.box:
+		if hCollision:
+			print(2212)
+		print(hCollision,' ',vCollision)
+		print(a.xVel,' ',a.yVel)			
 		
-	pass
-#	if hCollision&&vCollision:
-#		print(333)			
-#	if Rect2(Vector2(a.position.x+a.xVel*delta,a.position.y)\
-#		,Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect()):
-#		if hCollision(a,b,delta):
-#			hCollision=true
-#		pass
-#	if Rect2(Vector2(a.position.x,a.position.y+a.yVel*delta)\
-#		,Vector2(a.getSize(),a.getSizeY())).intersects(b.getRect()):
-#		if vCollision(a,b,delta):
-#			vCollision=true
-#		pass
-#	else: #这种碰撞是对角边缘碰撞和重叠碰撞
-#		if abs(a.yVel-a.gravity*delta)<abs(a.xVel):
-#			if vCollision(a,b,delta):
-#				vCollision=true
-#		else:
-#			if hCollision(a,b,delta):
-#				hCollision=true
-#		pass
-	
 	return [hCollision,vCollision]
 	pass
 

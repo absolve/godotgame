@@ -19,3 +19,7 @@ margin_right = 50.0
 margin_bottom = 26.0
 custom_fonts/font = ExtResource( 2 )
 uppercase = true
+
+[node name="camera" type="Camera2D" parent="."]
+anchor_mode = 0
+current = true

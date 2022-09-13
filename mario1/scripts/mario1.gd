@@ -381,10 +381,10 @@ func fall(delta):
 
 #调整变大的矩形大小
 func adjustBigRect():
-	rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
+	rect=Rect2(Vector2(-11,-30),Vector2(22,60))	
 
 func adjustSmallRect():
-	rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
+	rect=Rect2(Vector2(-11,-16),Vector2(22,32))	
 
 func adjustCrouchlRect():
 	rect=Rect2(Vector2(-11,-15),Vector2(22,30))	
@@ -630,6 +630,8 @@ func rightCollide(obj):
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
+		
+		
 		return true
 		pass
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
@@ -649,6 +651,8 @@ func floorCollide(obj):
 			elif dir==constants.right:
 				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
 					position.x+=1	
+
+		
 		return true
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
