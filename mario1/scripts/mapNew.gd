@@ -342,6 +342,9 @@ func checkMapBrick(x,y):
 	var mapx=floor(x/blockSize)
 	var mapy=floor(y/blockSize)
 	return hasTile(mapx,mapy)
+
+func checkMapBrickIndex(x,y):
+	return hasTile(x,y)
 	
 func addObj2Other(obj):
 	_obj.add_child(obj)

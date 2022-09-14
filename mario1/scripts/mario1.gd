@@ -614,6 +614,12 @@ func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
 		
+		
+		if Game.checkMapBrickIndex(obj.localx-1,\
+			obj.localy)&&yVel>0&&acceleration==constants.runAcceleration:
+			position.y=obj.getTop()
+			yVel=0
+			pass
 		return true
 		pass
 	elif obj.type==	constants.goomba:
@@ -631,7 +637,11 @@ func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
 		
-		
+		if Game.checkMapBrickIndex(obj.localx+1,\
+			obj.localy)&&yVel>0&&acceleration==constants.runAcceleration:
+			position.y=obj.getTop()
+			yVel=0
+			pass
 		return true
 		pass
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
@@ -663,10 +673,6 @@ func floorCollide(obj):
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box:
 		if obj.type==constants.box:
-#			if big&&obj.isDestructible():
-#				obj.destroy=true	
-#			elif obj.isDestructible():
-#				SoundsUtil.playBrickHit()
 			if obj.status==constants.resting:
 				obj.startBumped(big)
 			else:
