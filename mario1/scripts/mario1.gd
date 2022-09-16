@@ -614,12 +614,15 @@ func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
 		
-		
-		if Game.checkMapBrickIndex(obj.localx-1,\
-			obj.localy)&&yVel>0&&acceleration==constants.runAcceleration:
-			position.y=obj.getTop()
-			yVel=0
-			pass
+		#判断是不是跨过一个间隙
+		if !Game.checkMapBrickIndex(obj.localx-1,\
+			obj.localy)&&yVel>0 && getBottom()-obj.getTop()<constants.boxHeight:
+			position.y=obj.getTop()-getSizeY()/2
+			position.x=obj.getLeft()-getSize()/2+0.2
+			
+			yVel=1
+			return false
+			
 		return true
 		pass
 	elif obj.type==	constants.goomba:
@@ -637,11 +640,14 @@ func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
 		
-		if Game.checkMapBrickIndex(obj.localx+1,\
-			obj.localy)&&yVel>0&&acceleration==constants.runAcceleration:
-			position.y=obj.getTop()
-			yVel=0
-			pass
+		if !Game.checkMapBrickIndex(obj.localx+1,\
+			obj.localy)&&yVel>0&& getBottom()-obj.getTop()<constants.boxHeight:
+			position.y=obj.getTop()-getSizeY()/2
+			position.x=obj.getRight()+getSize()/2-0.2
+			yVel=1
+			
+			return false
+			
 		return true
 		pass
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
@@ -668,6 +674,12 @@ func floorCollide(obj):
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
+	elif obj.type==constants.platform: #平台
+		if status!=constants.jump&&yVel>0:
+			position.y=obj.getTop()-getSizeY()/2
+			yVel=0
+#			isOnFloor=true
+			return true
 	pass
 
 func ceilcollide(obj):#上方的判断

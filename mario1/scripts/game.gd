@@ -71,6 +71,9 @@ func checkMapBrick(x,y):
 func checkMapBrickIndex(x,y):
 	return map.checkMapBrickIndex(x,y)
 
+func getObj():
+	return map.getObj()
+
 func printFont():
 	print("""
   _____ __ __  ____   ___  ____       ___ ___   ____  ____   ____  ___       ____   ____   ___   _____

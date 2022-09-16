@@ -43,7 +43,7 @@ func _ready():
 	Game.setMap(self)
 	winWidth= ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
-	loadMapFile("res://levels/test7.json")
+	loadMapFile("res://levels/test9.json")
 	pass
 
 func _process(delta):
@@ -99,7 +99,14 @@ func _update(delta):
 						vCollision=true
 		
 		#与物体间的碰撞
-		
+		for x in _obj.get_children():
+			if y!=x:
+				var result=checkCollision(y,x,delta)
+				if result[0]:
+					hCollision=true
+				if result[1]:	
+					vCollision=true
+			pass
 		
 		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta	
@@ -148,20 +155,23 @@ func checkCollision(a,b,delta):
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
-#				if b.type==constants.box:
-#					print('===',a.yVel,'---',abs(a.getBottom()-b.getTop()))	
+				if b.type==constants.box:
+					print('===',a.getBottom(),'---',b.getTop())	
 #					print(abs(a.getRight()-b.getLeft()))
-#					pass
+
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多
 				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
 					if vCollision(a,b,delta)==true:
 						vCollision=true	
 					pass
 				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
+#					print(abs(a.getLeft()-b.getRight()),' ',abs(a.getBottom()-b.getTop()))
+#					print(a.yVel)
 					if vCollision(a,b,delta)==true:
 						vCollision=true	
 				else:
 #					a.xVel=0
+					print(a.getBottom(),' ',b.getTop())
 					if dx>0&&a.xVel>0:	
 						if hCollision(a,b,delta)==true:
 							hCollision=true
@@ -322,6 +332,14 @@ func loadMapFile(fileName:String):
 				var obj={"x":i['x'],"y":i['y']}
 				_obj.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
+			elif i['type']=="platform":
+				var temp=platform.instance()
+				temp.spriteIndex=i['spriteIndex']
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2	
+				temp.lens=int(i['lens'])
+				_obj.add_child(temp)
+					
 		file.close()
 		print(mapData)
 	else:
@@ -344,6 +362,7 @@ func checkMapBrick(x,y):
 	return hasTile(mapx,mapy)
 
 func checkMapBrickIndex(x,y):
+#	print(x,' ',y)
 	return hasTile(x,y)
 	
 func addObj2Other(obj):
@@ -368,7 +387,10 @@ func addScore(_position,_score=100):
 
 func getMario():
 	return marioList
-		
+
+func getObj():
+	return _obj
+	
 func _draw():
 	for i in range(mapWidthSize+1):
 		if i%20==0:
