@@ -19,6 +19,7 @@ var mask=[] #用来判断物体之前是否可以碰撞
 var destroy=false
 var localx=0  #地图中位置
 var localy=0
+var isOnFloor=false #是否在地面上
 
 func _ready():
 	debug=true

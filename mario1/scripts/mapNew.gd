@@ -100,7 +100,7 @@ func _update(delta):
 		
 		#与物体间的碰撞
 		for x in _obj.get_children():
-			if y!=x:
+			if y!=x&& y.checkMask(x.type):
 				var result=checkCollision(y,x,delta)
 				if result[0]:
 					hCollision=true
@@ -111,7 +111,6 @@ func _update(delta):
 		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
-
 		else:
 			y.isOnFloor=true
 			
@@ -155,8 +154,8 @@ func checkCollision(a,b,delta):
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
-				if b.type==constants.box:
-					print('===',a.getBottom(),'---',b.getTop())	
+#				if b.type==constants.box:
+#					print('===',a.getBottom(),'---',b.getTop())	
 #					print(abs(a.getRight()-b.getLeft()))
 
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多
@@ -171,7 +170,7 @@ func checkCollision(a,b,delta):
 						vCollision=true	
 				else:
 #					a.xVel=0
-					print(a.getBottom(),' ',b.getTop())
+#					print(a.getBottom(),' ',b.getTop())
 					if dx>0&&a.xVel>0:	
 						if hCollision(a,b,delta)==true:
 							hCollision=true

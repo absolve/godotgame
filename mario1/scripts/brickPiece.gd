@@ -4,7 +4,7 @@ var dir=constants.left
 const speed=90
 onready var ani=$ani
 var spriteIndex=0
-var isOnFloor=false
+#var isOnFloor=false
 
 func _ready():
 	active=false

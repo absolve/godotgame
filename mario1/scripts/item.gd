@@ -8,12 +8,13 @@ const jumpSpeed=460
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容
 onready var ani=$ani
-var isOnFloor=true #是否在地面上
+#var isOnFloor=true #是否在地面上
 
 
 func _ready():
 #	type=constants.mushroom
 #	debug=true
+
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	

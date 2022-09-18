@@ -13,7 +13,7 @@ var coin6Num=1  #多个硬币的数量 最大6
 #var destroy=false #没有东西的时候是否被摧毁
 #var maxXVel=0
 #var maxYVel=0
-var isOnFloor=false
+#var isOnFloor=false
 var needDestroy=false
 
 onready var ani=$ani

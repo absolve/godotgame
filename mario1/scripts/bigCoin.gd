@@ -4,7 +4,7 @@ extends "res://scripts/object.gd"
 """
 onready var ani=$ani
 var status=constants.empty
-var isOnFloor=true
+#var isOnFloor=true
 
 func _ready():
 	type=constants.bigCoin

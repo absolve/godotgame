@@ -9,9 +9,10 @@ var lens=2
 var platformImg=preload("res://sprites/platform.png")
 var winHeight
 var platformType=""
-var isOnFloor=false #是否在地面上
+#var isOnFloor=false #是否在地面上
 
 func _ready():
+	mask=[constants.mario,constants.mushroom,constants.star,constants.mushroom1up]
 	active=false
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
 	type=constants.platform
@@ -38,7 +39,7 @@ func _update(delta):
 			if i.type==constants.mario&&i.status!=constants.jump:
 				if i.getLeft()>getLeft()&&i.getRight()<getRight():
 					print(i.getLeft(),' ',getLeft())
-					if i.getBottom()==getTop():
+					if i.getBottom()>getTop()-0.1&&i.getBottom()<getTop()+0.1:
 						i.position.y=position.y-i.getSizeY()/2+yVel*delta
 						
 		position.y+=yVel*delta	

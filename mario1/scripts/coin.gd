@@ -1,7 +1,7 @@
 extends "res://scripts/object.gd"
 
 var status=constants.spin
-var isOnFloor=false
+#var isOnFloor=false
 onready var ani=$ani
 
 func _ready():

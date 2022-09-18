@@ -8,7 +8,7 @@ var big = false #是否变大
 var fire = false #是否能发射子弹
 var status=constants.stand
 var acceleration =constants.acceleration #加速度
-var isOnFloor=false #是否在地面上
+#var isOnFloor=false #是否在地面上
 var dir=constants.right
 var throwAniFinish=false
 var playerId=1  #玩家id
@@ -73,6 +73,7 @@ onready var bigjump=$bigjump
 onready var fireball=$fireball
 
 func _ready():
+	mask=[constants.mushroom,constants.star,constants.mushroom1up,constants.platform]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -676,8 +677,8 @@ func floorCollide(obj):
 		getItem(obj)
 	elif obj.type==constants.platform: #平台
 		if status!=constants.jump&&yVel>0:
-			position.y=obj.getTop()-getSizeY()/2
-			yVel=0
+#			position.y=obj.getTop()-getSizeY()/2
+#			yVel=0
 #			isOnFloor=true
 			return true
 	pass
