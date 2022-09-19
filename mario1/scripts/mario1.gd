@@ -71,6 +71,7 @@ onready var shadow=$shadow
 onready var jump=$jump
 onready var bigjump=$bigjump
 onready var fireball=$fireball
+onready var slide=$slide
 
 func _ready():
 	mask=[constants.mushroom,constants.star,constants.mushroom1up,constants.platform]
@@ -97,6 +98,8 @@ func _ready():
 	bigjump1.set_loop(false)
 	var fireball1=fireball.stream as AudioStreamOGGVorbis
 	fireball1.set_loop(false)
+	var slide1=slide.stream as AudioStreamMP3
+	slide1.set_loop(false)
 	pass 
 
 
@@ -271,6 +274,7 @@ func walk(delta):
 	
 	if Input.is_action_pressed("ui_left"):
 		if xVel>0: #反方向
+			slide.play()
 			animation("slide")
 			acceleration=constants.slideFriction
 		else:
@@ -278,10 +282,6 @@ func walk(delta):
 			dir=constants.left
 			animation('walk')
 			
-#		if xVel>-maxXVel:
-#			xVel-=acceleration*delta
-#		elif xVel<-maxXVel:
-#			xVel+=acceleration*delta
 		if 	xVel>-maxXVel:
 			xVel-=acceleration*delta
 		else:
@@ -289,6 +289,7 @@ func walk(delta):
 			
 	elif Input.is_action_pressed("ui_right"):
 		if xVel<0:
+			slide.play()
 			animation("slide")
 			acceleration=constants.slideFriction
 		else:
@@ -296,10 +297,6 @@ func walk(delta):
 			acceleration=constants.acceleration
 			animation('walk')
 			
-#		if xVel<maxXVel:
-#			xVel+=acceleration*delta
-#		elif xVel>maxXVel:
-#			xVel-=acceleration*delta
 		if 	xVel<maxXVel:
 			xVel+=acceleration*delta
 		else:
@@ -704,31 +701,35 @@ func ceilcollide(obj):#上方的判断
 
 #获取物品
 func getItem(i):
+	print('getItem')
 	if i.type==constants.mushroom:
-		i.queue_free()
+		i.destroy=true
 		small2Big()
 		SoundsUtil.playMushroom()
+		Game.addScore(position,1000)
 #		addScore(m,1000)
 	elif i.type==constants.fireflower:
-		i.queue_free()
+		i.destroy=true
 		if big:
 			big2Fire()
 		else:
 			small2Big()	
+		Game.addScore(position,1000)	
 #		addScore(m,1000)
 		SoundsUtil.playMushroom()
 	elif i.type==constants.star:
-		i.queue_free()
+		i.destroy=true
 		setInvincible()
 #		addScore(m,1000)
+		Game.addScore(position,1000)	
 		SoundsUtil.stopBgm()
 		SoundsUtil.playSpecialBgm()
 	elif i.type==constants.mushroom1up:	
-		i.queue_free()
+		i.destroy=true
 #		addLive(m)
 		SoundsUtil.playItem1up()
 	elif i.type==constants.bigCoin:
-		i.queue_free()
+		i.destroy=true
 		SoundsUtil.playCoin()
 #		addCoin(m)	
 	pass

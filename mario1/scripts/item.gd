@@ -14,7 +14,7 @@ onready var ani=$ani
 func _ready():
 #	type=constants.mushroom
 #	debug=true
-
+	mask=[constants.platform,constants.mario,constants.goomba,constants.koopa]
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
@@ -40,7 +40,6 @@ func _ready():
 func _update(delta):
 	if status==constants.growing:
 		growing(delta)
-		pass
 	elif status==constants.moving:	
 		moving(delta)
 	elif status==constants.stop:

@@ -43,7 +43,7 @@ func _ready():
 	Game.setMap(self)
 	winWidth= ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
-	loadMapFile("res://levels/test9.json")
+	loadMapFile("res://levels/test10.json")
 	pass
 
 func _process(delta):
@@ -52,16 +52,16 @@ func _process(delta):
 	pass
 
 func _update(delta):
-	for i in _obj.get_children():
-		if i.destroy &&i.type==constants.box:
-			mapData[str(i.localx,',',i.localy)]=null
-			i.queue_free()
-		elif i.destroy:
-			i.queue_free()	
-		if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
-			i.queue_free()	
-		if i.getTop()>winHeight:
-			i.queue_free()	
+#	for i in _obj.get_children():
+#		if i.destroy &&i.type==constants.box:
+#			mapData[str(i.localx,',',i.localy)]=null
+#			i.queue_free()
+#		elif i.destroy:
+#			i.queue_free()	
+#		if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
+#			i.queue_free()	
+#		if i.getTop()>winHeight:
+#			i.queue_free()	
 			
 	for i in _obj.get_children():
 		if i.active:
@@ -100,7 +100,7 @@ func _update(delta):
 		
 		#与物体间的碰撞
 		for x in _obj.get_children():
-			if y!=x&& y.checkMask(x.type):
+			if y!=x&& y.checkMask(x.type)&&!x.destroy:
 				var result=checkCollision(y,x,delta)
 				if result[0]:
 					hCollision=true
@@ -139,7 +139,7 @@ func checkCollision(a,b,delta):
 			if xVal<0&&a.xVel>0:	
 				if hCollision(a,b,delta)==true:
 					hCollision=true
-			elif xVal>0 &&a.xVel<0:
+			elif xVal>0 &&a.xVel<=0:
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 	
@@ -150,7 +150,7 @@ func checkCollision(a,b,delta):
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 		
 		if abs(dy)>abs(dx):
-			if dy<0 &&a.yVel<0 :
+			if dy<0 &&a.yVel<=0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
@@ -183,7 +183,7 @@ func checkCollision(a,b,delta):
 
 #左右判断
 func hCollision(a,b,delta):
-	if a.xVel>=0:
+	if a.xVel>0:
 		if a.has_method('rightCollide'):
 			if a.rightCollide(b)==true: #需要处理位置
 				if a.xVel>0:
@@ -379,8 +379,8 @@ func addCoin(m,_coin=1):
 
 func addScore(_position,_score=100):
 	var temp=score.instance()
-	temp.rect_position=position
-	temp.score=200
+	temp.setPos(_position)
+	temp.setScore(_score)
 	_obj.add_child(temp)
 	pass
 

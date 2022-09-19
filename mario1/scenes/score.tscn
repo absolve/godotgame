@@ -3,10 +3,11 @@
 [ext_resource path="res://fonts/gamefont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scripts/score.gd" type="Script" id=2]
 
-[node name="score" type="Label"]
-custom_fonts/font = ExtResource( 1 )
-align = 1
+[node name="score" type="Node2D"]
+z_index = 1
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 1 )

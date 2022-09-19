@@ -1,4 +1,4 @@
-[gd_scene load_steps=107 format=2]
+[gd_scene load_steps=108 format=2]
 
 [ext_resource path="res://scripts/mario1.gd" type="Script" id=1]
 [ext_resource path="res://sprites/player.png" type="Texture" id=2]
@@ -30,6 +30,7 @@
 [ext_resource path="res://sprites/mario_crouch3.png" type="Texture" id=28]
 [ext_resource path="res://sprites/mario_crouc21.png" type="Texture" id=29]
 [ext_resource path="res://sprites/mario_crouch1.png" type="Texture" id=30]
+[ext_resource path="res://sounds/slide.mp3" type="AudioStream" id=31]
 
 [sub_resource type="AtlasTexture" id=72]
 flags = 4
@@ -710,6 +711,9 @@ stream = ExtResource( 26 )
 
 [node name="fireball" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 27 )
+
+[node name="slide" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 31 )
 
 [connection signal="animation_finished" from="ani" to="." method="_on_ani_animation_finished"]
 [connection signal="frame_changed" from="ani" to="." method="_on_ani_frame_changed"]
