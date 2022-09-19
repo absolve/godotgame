@@ -52,16 +52,16 @@ func _process(delta):
 	pass
 
 func _update(delta):
-#	for i in _obj.get_children():
-#		if i.destroy &&i.type==constants.box:
-#			mapData[str(i.localx,',',i.localy)]=null
-#			i.queue_free()
-#		elif i.destroy:
-#			i.queue_free()	
-#		if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
-#			i.queue_free()	
-#		if i.getTop()>winHeight:
-#			i.queue_free()	
+	for i in _obj.get_children():
+		if i.destroy &&i.type==constants.box:
+			mapData[str(i.localx,',',i.localy)]=null
+			i.queue_free()
+		elif i.destroy:
+			i.queue_free()	
+		if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
+			i.queue_free()	
+		if i.getTop()>winHeight:
+			i.queue_free()	
 			
 	for i in _obj.get_children():
 		if i.active:
@@ -77,7 +77,7 @@ func _update(delta):
 #			y.yVel+=y.gravity*delta		#增加y速度
 #			if y.yVel>y.maxYVel:
 #				y.yVel=y.maxYVel
-			
+				
 		#检测附近的砖块根据方向来决定方块的位置
 		var xstart=floor((y.position.x-y.getSize())/blockSize)
 		var xend=floor((y.position.x+y.getSize())/blockSize)
@@ -91,16 +91,19 @@ func _update(delta):
 		#与方块的配置
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
-				if hasTile(a,b)&&y.active:
+				if hasTile(a,b)&&y.active&&!y.destroy:
 					var result=checkCollision(y,mapData[str(a,",",b)],delta)
 					if result[0]:
 						hCollision=true
 					if result[1]:	
 						vCollision=true
+#		if y.type==constants.mushroom:
+#			print('-----',hCollision,vCollision)
+		
 		
 		#与物体间的碰撞
 		for x in _obj.get_children():
-			if y!=x&& y.checkMask(x.type)&&!x.destroy:
+			if y!=x&& y.checkMask(x.type)&&!x.destroy&&!y.destroy:
 				var result=checkCollision(y,x,delta)
 				if result[0]:
 					hCollision=true
@@ -108,11 +111,20 @@ func _update(delta):
 					vCollision=true
 			pass
 		
+#		if y.type==constants.mushroom&&y.status==constants.moving:
+#			print('======',hCollision,vCollision)
+#			if !vCollision:
+#				print('=======')
+#			pass
+		
+		
 		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
 		else:
 			y.isOnFloor=true
+		
+		
 			
 		if !hCollision&&y.active:
 			y.position.x+=y.xVel*delta	
@@ -139,7 +151,7 @@ func checkCollision(a,b,delta):
 			if xVal<0&&a.xVel>0:	
 				if hCollision(a,b,delta)==true:
 					hCollision=true
-			elif xVal>0 &&a.xVel<=0:
+			elif xVal>0 &&a.xVel<0:
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 	
@@ -150,7 +162,7 @@ func checkCollision(a,b,delta):
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 		
 		if abs(dy)>abs(dx):
-			if dy<0 &&a.yVel<=0 :
+			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
@@ -177,6 +189,7 @@ func checkCollision(a,b,delta):
 					elif dx<0 &&a.xVel<0:
 						if hCollision(a,b,delta)==true:
 							hCollision=true
+					pass		
 				
 	return [hCollision,vCollision]
 	pass
@@ -184,6 +197,16 @@ func checkCollision(a,b,delta):
 #左右判断
 func hCollision(a,b,delta):
 	if a.xVel>0:
+		if b.has_method('leftCollide'):
+			if b.leftCollide(a)==true:
+				if b.xVel<0:
+					b.xVel=0
+				b.position.x=a.getRight()+b.getSize()/2
+		else:
+			if b.xVel<0:
+				b.xVel=0
+			b.position.x=a.getRight()+b.getSize()/2
+		
 		if a.has_method('rightCollide'):
 			if a.rightCollide(b)==true: #需要处理位置
 				if a.xVel>0:
@@ -196,6 +219,16 @@ func hCollision(a,b,delta):
 			a.position.x=b.getLeft()-a.getSize()/2
 			return true
 	else:
+		if b.has_method('rightCollide'):
+			if b.rightCollide(a)==true:
+				if b.xVel>0:
+					b.xVel=0
+				b.position.x=a.getLeft()-b.getSize()/2
+		else:
+			if b.xVel>0:
+				b.xVel=0
+			b.position.x=a.getLeft()-b.getSize()/2
+		
 		if a.has_method('leftCollide'):
 			if a.leftCollide(b)==true: #需要处理位置
 				if a.xVel<0:
