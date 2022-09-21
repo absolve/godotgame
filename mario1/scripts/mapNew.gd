@@ -43,7 +43,11 @@ func _ready():
 	Game.setMap(self)
 	winWidth= ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
-	loadMapFile("res://levels/test10.json")
+	Game.connect("marioStateChange",self,'marioStateChange')
+	Game.connect("marioStateFinish",self,'marioStateFinish')
+	Game.connect("invincibleFinish",self,"invincibleFinish")
+	
+	loadMapFile("res://levels/1-1-1.json")
 	pass
 
 func _process(delta):
@@ -91,13 +95,14 @@ func _update(delta):
 		#与方块的配置
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
-				if hasTile(a,b)&&y.active&&!y.destroy:
-					var result=checkCollision(y,mapData[str(a,",",b)],delta)
-					if result[0]:
-						hCollision=true
-					if result[1]:	
-						vCollision=true
-#		if y.type==constants.mushroom:
+				if hasTile(a,b)&&y.active:
+					if y.checkMask(mapData[str(a,",",b)].type):
+						var result=checkCollision(y,mapData[str(a,",",b)],delta)
+						if result[0]:
+							hCollision=true
+						if result[1]:	
+							vCollision=true
+	#		if y.type==constants.mushroom:
 #			print('-----',hCollision,vCollision)
 		
 		
@@ -118,7 +123,7 @@ func _update(delta):
 #			pass
 		
 		
-		if !vCollision&&y.active:
+		if !vCollision:
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
 		else:
@@ -126,7 +131,7 @@ func _update(delta):
 		
 		
 			
-		if !hCollision&&y.active:
+		if !hCollision:
 			y.position.x+=y.xVel*delta	
 					
 	
@@ -155,7 +160,7 @@ func checkCollision(a,b,delta):
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 	
-		
+	#排除边缘的碰撞	
 	if  a.getRect().intersects(b.getRect(),true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():	
 		var yVal =a.position.y-b.position.y		
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
@@ -166,10 +171,6 @@ func checkCollision(a,b,delta):
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
 			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
-#				if b.type==constants.box:
-#					print('===',a.getBottom(),'---',b.getTop())	
-#					print(abs(a.getRight()-b.getLeft()))
-
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多
 				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
 					if vCollision(a,b,delta)==true:
@@ -202,10 +203,10 @@ func hCollision(a,b,delta):
 				if b.xVel<0:
 					b.xVel=0
 				b.position.x=a.getRight()+b.getSize()/2
-		else:
-			if b.xVel<0:
-				b.xVel=0
-			b.position.x=a.getRight()+b.getSize()/2
+#		else:
+#			if b.xVel<0:
+#				b.xVel=0
+#			b.position.x=a.getRight()+b.getSize()/2
 		
 		if a.has_method('rightCollide'):
 			if a.rightCollide(b)==true: #需要处理位置
@@ -224,10 +225,10 @@ func hCollision(a,b,delta):
 				if b.xVel>0:
 					b.xVel=0
 				b.position.x=a.getLeft()-b.getSize()/2
-		else:
-			if b.xVel>0:
-				b.xVel=0
-			b.position.x=a.getLeft()-b.getSize()/2
+#		else:
+#			if b.xVel>0:
+#				b.xVel=0
+#			b.position.x=a.getLeft()-b.getSize()/2
 		
 		if a.has_method('leftCollide'):
 			if a.leftCollide(b)==true: #需要处理位置
@@ -245,7 +246,17 @@ func hCollision(a,b,delta):
 
 #上下判断	
 func vCollision(a,b,delta):
-	if a.yVel>0: #向下	
+	if a.yVel>=0: #向下	
+		if b.has_method('ceilcollide'):
+			if b.ceilcollide(a)==true:
+				if b.yVel<0:
+					b.yVel=0
+				b.position.y=a.getBottom()+b.getSizeY()/2
+#		else:
+#			if b.yVel<0:
+#					b.yVel=0
+#			b.position.y=a.getBottom()+b.getSizeY()/2
+				
 		if a.has_method('floorCollide'):
 			if a.floorCollide(b)==true:
 				if a.yVel>0:
@@ -258,6 +269,16 @@ func vCollision(a,b,delta):
 			a.position.y=b.getTop()-a.getSizeY()/2		
 			return true
 	else: #向上
+		if b.has_method('floorCollide'):
+			if b.floorCollide(b)==true:
+				if b.yVel>0:
+					b.yVel=0
+				b.position.y=a.getTop()-b.getSizeY()/2	
+#		else:
+#			if b.yVel>0:
+#					b.yVel=0
+#			b.position.y=a.getTop()-b.getSizeY()/2	
+				
 		if a.has_method('ceilcollide'):
 			if a.ceilcollide(b)==true:
 				if a.yVel<0:
@@ -328,7 +349,8 @@ func loadMapFile(fileName:String):
 				temp.position.y=pos['y']*blockSize+blockSize/2
 #				temp.big=Game.playerData['mario']['big']
 				temp.big=true
-				temp.fire=Game.playerData['mario']['fire']
+#				temp.fire=Game.playerData['mario']['fire']
+				temp.fire=true
 				_obj.add_child(temp)
 				marioList.append(temp)
 				
@@ -342,7 +364,7 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.localx=i['x']
 				temp.localy=i['y']
-				var obj={"x":i['x'],"y":i['y']}
+#				var obj={"x":i['x'],"y":i['y']}
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
 				pass
@@ -361,7 +383,7 @@ func loadMapFile(fileName:String):
 						temp._visible=false
 					else:	
 						temp._visible=true
-				var obj={"x":i['x'],"y":i['y']}
+#				var obj={"x":i['x'],"y":i['y']}
 				_obj.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
 			elif i['type']=="platform":
@@ -371,7 +393,12 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2	
 				temp.lens=int(i['lens'])
 				_obj.add_child(temp)
-					
+			elif i['type']=='coin':
+				var temp=bigCoin.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				_obj.add_child(temp)
+						
 		file.close()
 		print(mapData)
 	else:
@@ -419,6 +446,31 @@ func addScore(_position,_score=100):
 
 func getMario():
 	return marioList
+
+func getBulletCount(id):
+	var num=0
+	for i in _obj.get_children():
+		if i.type==constants.fireball:
+			num+=1
+	return num
+
+#状态发生变化
+func marioStateChange():
+	for i in _obj.get_children():
+		if i.type!=constants.mario:
+			i.pause()
+
+#状态结束	
+func marioStateFinish():
+	for i in _obj.get_children():
+		if i.type!=constants.mario:
+			i.resume()
+	pass	
+
+func invincibleFinish():
+	SoundsUtil.stopSpecialBgm()
+	SoundsUtil.playBgm()
+	pass
 
 func getObj():
 	return _obj

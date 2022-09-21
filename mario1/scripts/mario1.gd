@@ -64,6 +64,7 @@ var throw_animation=['throw','throw_green',
 var death_jump_animation=['death','death_green',
 						'death_red','death_black']
 
+var ball=preload("res://scenes/fireball.tscn")
 							
 var aniIndex=0	#动画索引					
 onready var ani=$ani
@@ -74,7 +75,8 @@ onready var fireball=$fireball
 onready var slide=$slide
 
 func _ready():
-	mask=[constants.mushroom,constants.star,constants.mushroom1up,constants.platform]
+	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
+		constants.mushroom1up,constants.platform,constants.bigCoin,constants.plant]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -98,7 +100,7 @@ func _ready():
 	bigjump1.set_loop(false)
 	var fireball1=fireball.stream as AudioStreamOGGVorbis
 	fireball1.set_loop(false)
-	var slide1=slide.stream as AudioStreamMP3
+	var slide1=slide.stream as AudioStreamOGGVorbis
 	slide1.set_loop(false)
 	pass 
 
@@ -322,8 +324,8 @@ func walk(delta):
 #	position.x+=xVel*delta
 #	position.y+=yVel*delta	
 	if !isOnFloor:
-#		ani.stop()
-		ani.speed_scale=1
+		ani.stop()
+#		ani.speed_scale=1
 		status=constants.fall
 	pass
 
@@ -393,7 +395,7 @@ func startDeathJump():
 	dead=true
 	yVel=-500
 	gravity=constants.marioDeathGravity
-	Game.emit_signal("stateChange")
+	Game.emit_signal("marioStateChange")
 	ani.play(death_jump_animation[aniIndex])
 	z_index=5
 	deadStartTime=0
@@ -468,7 +470,7 @@ func pipeOut(delta):
 
 func walkIntoPipe(delta):
 	if dir==constants.left:
-			xVel=-50
+		xVel=-50
 	elif dir==constants.right:
 		xVel=50
 	animation('walk')	
@@ -484,7 +486,7 @@ func small2Big():
 	status=constants.small2big
 	ani.play("small2big")
 	ani.speed_scale=1
-	Game.emit_signal("stateChange")
+	Game.emit_signal("marioStateChange")
 	pass
 
 #变成开火状态
@@ -495,7 +497,7 @@ func big2Fire():
 		modulate.a=1	
 	preStatus=status
 	status=constants.big2fire
-	Game.emit_signal("stateChange")
+	Game.emit_signal("marioStateChange")
 	ani.stop()
 	var name=ani.animation
 	var animationList = ['stand_big','jump_big',
@@ -530,7 +532,7 @@ func fireState(_delta):
 		fire=true
 		if invincible:
 			shadow.visible=true
-		Game.emit_signal('stateFinish')
+		Game.emit_signal('marioStateFinish')
 
 #变小
 func big2Small():
@@ -538,7 +540,7 @@ func big2Small():
 	status=constants.big2small
 	ani.speed_scale=1
 	ani.play("big2small")
-	Game.emit_signal("stateChange")
+	Game.emit_signal("marioStateChange")
 	pass
 
 #开始在旗杆上滑动
@@ -689,7 +691,8 @@ func ceilcollide(obj):#上方的判断
 				SoundsUtil.playBrickHit()	
 		else:			
 			SoundsUtil.playBrickHit()
-		yVel=-1	
+		yVel=1	
+		position.y+=1
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		
 		pass
@@ -715,12 +718,10 @@ func getItem(i):
 		else:
 			small2Big()	
 		Game.addScore(position,1000)	
-#		addScore(m,1000)
 		SoundsUtil.playMushroom()
 	elif i.type==constants.star:
 		i.destroy=true
 		setInvincible()
-#		addScore(m,1000)
 		Game.addScore(position,1000)	
 		SoundsUtil.stopBgm()
 		SoundsUtil.playSpecialBgm()
@@ -835,8 +836,11 @@ func shootFireball(play=true):
 			shootStart=OS.get_system_time_msecs()
 			if play:
 				animation("fire")
-			Game.addObj2Bullet(position,dir)
-			fireball.play()
+			var temp=ball.instance()
+			temp.position=position
+			temp.dir=dir	
+			Game.addObj(temp)
+			fireball.play() #声音
 			
 #播放跳跃声音			
 func playJumpSound():
@@ -847,7 +851,6 @@ func playJumpSound():
 
 func _on_ani_frame_changed():
 	if status==constants.small2big:
-#		print(ani.frame)
 		if ani.frame in [0,2,4]:
 			ani.position.y= 0
 		else:
@@ -872,9 +875,8 @@ func _on_ani_animation_finished():
 		big=true
 		ani.position.y=0
 		status=preStatus
-#		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
 		adjustBigRect()
-		Game.emit_signal('stateFinish')
+		Game.emit_signal('marioStateFinish')
 	elif status==constants.big2small:
 		hurtInvincible=true
 		status=preStatus
@@ -882,8 +884,7 @@ func _on_ani_animation_finished():
 		fire=false
 		position.y+=15
 		aniIndex=0
-#		rect=Rect2(Vector2(-10,-16),Vector2(20,32))	
 		adjustSmallRect()
-		Game.emit_signal('stateFinish')
+		Game.emit_signal('marioStateFinish')
 	
 	pass # Replace with function body.

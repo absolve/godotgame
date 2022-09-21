@@ -140,7 +140,7 @@ const marioJumpSpeed=500
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
-const marioMaxYVel=1200 #最大y速度
+const marioMaxYVel=1100 #最大y速度
 const boxHeight=5 #跨过的间隙时最低的高度
 
 #图块类型

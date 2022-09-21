@@ -7,9 +7,10 @@ var spriteIndex=0
 var rotate=0
 
 func _ready():
-	active=false
+#	active=false
 	maxYVel=constants.marioMaxYVel
 	gravity=constants.enemyGravity
+#	gravity=10
 	type=constants.brickPiece
 	debug=true
 	if dir==constants.right:
@@ -20,21 +21,25 @@ func _ready():
 		ani.play('brick_blue')	
 	elif spriteIndex==2:
 		ani.play('brick_grey')		
-	
-	pass
-
-func _update(delta):
 	if dir==constants.right:
 		xVel=speed
 	elif dir==constants.left:
 		xVel=-speed
-	yVel+=gravity*delta
-	position.x+=xVel*delta
-	position.y+=yVel*delta	
-	rotate+=30
+	pass
+
+func _update(delta):
+#	if dir==constants.right:
+#		xVel=speed
+#	elif dir==constants.left:
+#		xVel=-speed
+#	yVel+=gravity*delta
+#	position.x+=xVel*delta
+#	position.y+=yVel*delta	
+	rotate+=20
 	if rotate>360:
 		rotate=0
-	rotation_degrees=deg2rad(rotate)
+	
+	ani.rotation_degrees=rotate
 	pass
 
 

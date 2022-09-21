@@ -30,7 +30,7 @@
 [ext_resource path="res://sprites/mario_crouch3.png" type="Texture" id=28]
 [ext_resource path="res://sprites/mario_crouc21.png" type="Texture" id=29]
 [ext_resource path="res://sprites/mario_crouch1.png" type="Texture" id=30]
-[ext_resource path="res://sounds/slide.mp3" type="AudioStream" id=31]
+[ext_resource path="res://sounds/slide.ogg" type="AudioStream" id=31]
 
 [sub_resource type="AtlasTexture" id=72]
 flags = 4

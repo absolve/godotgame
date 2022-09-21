@@ -8,7 +8,7 @@ var delTime=140  #删除时间 140帧
 #var maxYVel=constants.enemyMaxVel
 #var init=false
 #var isOnFloor=true #是否在地面上
-
+var dead=false #是否死亡
 
 func _ready():
 	maxYVel=constants.enemyMaxVel

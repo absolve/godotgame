@@ -24,7 +24,7 @@ var coin=preload("res://scenes/coin.tscn")
 func _ready():
 	maxYVel=constants.marioMaxYVel
 	active=false
-	gravity=constants.boxGravity
+#	gravity=constants.boxGravity
 	type=constants.box
 #	debug=true
 #	collisionShow=true
@@ -57,11 +57,11 @@ func resting(delta):
 	pass
 	
 func bumped(delta):
-	yVel+=gravity*delta
+	yVel+=constants.boxGravity*delta
 
 	if position.y>oldPos:
 		position.y=oldPos
-		
+		yVel=0
 		if content==constants.empty&&spriteIndex==3: #变成打开状态
 			status=constants.opened	
 			ani.play("opened")	
@@ -102,7 +102,7 @@ func bumped(delta):
 				add4Brick()
 				SoundsUtil.playBrickBreak()
 				status=constants.empty
-		position.y+=yVel*delta		
+#		position.y+=yVel*delta		
 	pass
 
 func opened(delta):

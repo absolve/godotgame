@@ -8,14 +8,16 @@ var status=constants.fly
 const speed=400
 
 func _ready():
+	mask=[constants.brick,constants.box,constants.goomba,constants.koopa,constants.plant]
 	debug=true
 	type=constants.fireball
 	rect=Rect2(Vector2(-4,-4),Vector2(8,8))
 	gravity=constants.enemyGravity
+	maxYVel=constants.marioMaxYVel
 	if dir==constants.left:
-		xVel=-400
+		xVel=-speed
 	else:
-		xVel=400
+		xVel=speed
 		
 	ani.play('fly')	
 	pass
@@ -23,18 +25,51 @@ func _ready():
 func _update(delta):
 	if status==constants.fly:
 		rotation_degrees+=5
-		yVel+=gravity*delta
-		position.x+=xVel*delta
-		position.y+=yVel*delta	
+#		yVel+=gravity*delta
+#		position.x+=xVel*delta
+#		position.y+=yVel*delta	
 		pass
 	elif status==constants.boom:	
 		pass
 	pass
 
 func boom():
+	print('boom')
+	active=false
+	xVel=0
+	yVel=0
+	gravity=0
 	status=constants.boom
-#	SoundsUtil.playBoom()
+	SoundsUtil.playBoom()
 	ani.play('boom')
-	z_index=3
+	z_index=5
 	yield(ani,"animation_finished")
-	queue_free()
+	destroy=true
+#	queue_free()
+
+func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		boom()
+	elif obj.type==constants.goomba || obj.type==constants.koopa:
+		
+		pass	
+	pass
+	
+func leftCollide(obj):	
+	if obj.type==constants.brick || obj.type==constants.box:
+		boom()	
+	elif obj.type==constants.goomba || obj.type==constants.koopa:
+		
+		pass
+	pass
+	
+func floorCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		yVel=-400
+		return true
+	pass
+
+func ceilcollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box:
+		yVel=1
+	pass		

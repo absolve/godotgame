@@ -14,17 +14,18 @@ onready var ani=$ani
 func _ready():
 #	type=constants.mushroom
 #	debug=true
-	mask=[constants.platform,constants.goomba,constants.koopa,constants.mario]
+	mask=[constants.box,constants.brick,constants.platform,constants.goomba,constants.koopa,constants.mario]
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
-	gravity=constants.enemyGravity
+#	gravity=constants.enemyGravity
 	oldPos=position.y
 	yVel=-50
-	if dir==constants.left:
-		xVel=-speed
-	else:
-		xVel=speed
+#	if dir==constants.left:
+#		xVel=-speed
+#	else:
+#		xVel=speed
+
 #	xVel=-speed	
 #	ani.playing=true
 	if type==constants.mushroom:
@@ -50,17 +51,22 @@ func _update(delta):
 
 func growing(delta):
 	if oldPos-position.y>=rect.size.y:
-		
+		gravity=constants.enemyGravity
 		active=true
 		if type==constants.fireflower:
 			status=constants.stop
 			active=false
+			gravity=0
 		elif type==constants.star:
 			yVel=-jumpSpeed
 			status=constants.jumping	
 		status=constants.moving	
-	else:	
-		position.y+=yVel*delta	
+#		if dir==constants.left:
+#			xVel=-speed
+#		else:
+#			xVel=speed
+#	else:	
+#		position.y+=yVel*delta	
 	pass
 	
 func moving(delta):
@@ -86,7 +92,7 @@ func stop(delta):
 
 func jumping(delta):
 	if dir==constants.left:
-			xVel=-speed
+		xVel=-speed
 	else:
 		xVel=speed
 	pass

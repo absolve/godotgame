@@ -55,6 +55,11 @@ func getBottom()->float:
 func checkMask(obj):
 	return mask.has(obj)
 		
+func pause():
+	pass
+	
+func resume():
+	pass	
 
 func _update(delta):
 	if debug:
