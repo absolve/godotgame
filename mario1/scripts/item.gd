@@ -14,7 +14,8 @@ onready var ani=$ani
 func _ready():
 #	type=constants.mushroom
 #	debug=true
-	mask=[constants.box,constants.brick,constants.platform,constants.goomba,constants.koopa,constants.mario]
+	mask=[constants.box,constants.brick,constants.platform,constants.goomba,
+		constants.koopa,constants.mario,constants.pipe]
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
@@ -65,8 +66,8 @@ func growing(delta):
 #			xVel=-speed
 #		else:
 #			xVel=speed
-#	else:	
-#		position.y+=yVel*delta	
+	else:	
+		position.y+=yVel*delta	
 	pass
 	
 func moving(delta):
@@ -111,19 +112,19 @@ func resume():
 	ani.play()	
 	
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
 		dir=constants.left
 		return true
 	pass
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
 		dir=constants.right
 		return true
 	pass
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
 		if type==constants.star:
 			yVel=-jumpSpeed
 		return true

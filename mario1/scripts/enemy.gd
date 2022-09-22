@@ -8,7 +8,7 @@ var delTime=140  #删除时间 140帧
 #var maxYVel=constants.enemyMaxVel
 #var init=false
 #var isOnFloor=true #是否在地面上
-var dead=false #是否死亡
+var _dead=false #是否死亡
 
 func _ready():
 	maxYVel=constants.enemyMaxVel
@@ -17,11 +17,12 @@ func _ready():
 	
 	
 func walking(delta):
-	if yVel<maxYVel:
-		yVel+=gravity*delta			
-	position.x+=xVel*delta
-	if !isOnFloor:	
-		position.y+=yVel*delta
+#	if yVel<maxYVel:
+#		yVel+=gravity*delta			
+#	position.x+=xVel*delta
+#	if !isOnFloor:	
+#		position.y+=yVel*delta
+	pass
 	
 
 func deathJump(delta):
@@ -41,8 +42,8 @@ func startDeathJump():
 		xVel=-45
 	else:
 		xVel=45
-#	gravity=constants.deathJumpGravity
-	z_index=3
+	gravity=constants.deathJumpGravity
+	z_index=5
 	pass
 
 func dead(delta):

@@ -11,7 +11,8 @@ func _ready():
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
 	type=constants.goomba
-#	status=constants.stop
+	maxYVel=constants.enemyMaxVel #y轴最大速度
+	gravity=constants.enemyGravity
 	if dir==constants.left:
 		xVel=-speed
 	else:
@@ -54,6 +55,8 @@ func startDeathJump(_dir=constants.left):
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
+	_dead=true
+	active=false
 #	z_index=3
 #	status=constants.deadJump
 	pass

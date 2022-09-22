@@ -13,8 +13,13 @@ func _ready():
 #	status=constants.shell
 #	animation("shell")
 #	debug=true
+	mask=[constants.mario,constants.fireball,constants.box,constants.brick
+		,constants.platform]
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
+	maxYVel=constants.enemyMaxVel #y轴最大速度
+	gravity=constants.enemyGravity
+	
 	type=constants.koopa
 	if dir==constants.left:
 		xVel=-speed
@@ -79,6 +84,8 @@ func startDeathJump(_dir=constants.left):
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
+	_dead=true
+	active=false
 #	z_index=2
 #	status=constants.deadJump
 	pass	
@@ -93,15 +100,15 @@ func startSliding():
 	status=constants.sliding	
 
 func shellSliding(delta):
-	if yVel<maxYVel:
-		yVel+=gravity*delta
+#	if yVel<maxYVel:
+#		yVel+=gravity*delta
 	if dir==constants.left:
 		xVel=-slidingSpeed
 	else:
 		xVel=slidingSpeed	
-	position.x+=xVel*delta
-	if !isOnFloor:
-		position.y+=yVel*delta
+#	position.x+=xVel*delta
+#	if !isOnFloor:
+#		position.y+=yVel*delta
 	pass
 
 func turnLeft():
@@ -126,14 +133,11 @@ func changeDir():
 	pass
 
 func pause():
-#	preStatus=status
-#	status=constants.stop
 	ani.stop()
 
 func resume():
 	if status!=constants.dead&&status!=constants.deadJump:
 		ani.play()	
-#	status=preStatus
 
 func animation(type):
 	if type=="walk":

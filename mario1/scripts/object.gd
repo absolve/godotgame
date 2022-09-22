@@ -22,7 +22,7 @@ var localy=0
 var isOnFloor=false #是否在地面上
 
 func _ready():
-	debug=true
+#	debug=true
 #	set_process(false)
 #	set_physics_process(false)
 	pass 

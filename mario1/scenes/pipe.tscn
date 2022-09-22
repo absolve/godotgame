@@ -8,45 +8,45 @@ flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 256, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=1]
+[sub_resource type="AtlasTexture" id=2]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 96, 256, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=7]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 96, 288, 32, 32 )
+region = Rect2( 32, 256, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 256, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=6]
+[sub_resource type="AtlasTexture" id=1]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 32, 288, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=12]
-flags = 4
-atlas = ExtResource( 2 )
-region = Rect2( 0, 288, 32, 32 )
+region = Rect2( 96, 256, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=14]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 128, 256, 32, 32 )
 
-[sub_resource type="AtlasTexture" id=2]
+[sub_resource type="AtlasTexture" id=12]
 flags = 4
 atlas = ExtResource( 2 )
-region = Rect2( 32, 256, 32, 32 )
+region = Rect2( 0, 288, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 32, 288, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 64, 288, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 2 )
+region = Rect2( 96, 288, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=8]
 flags = 4
@@ -60,14 +60,9 @@ animations = [ {
 "name": "0",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 1 ) ],
+"frames": [ SubResource( 2 ) ],
 "loop": false,
-"name": "3",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 7 ) ],
-"loop": true,
-"name": "8",
+"name": "1",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 3 ) ],
@@ -75,14 +70,9 @@ animations = [ {
 "name": "2",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 6 ) ],
-"loop": true,
-"name": "6",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 12 ) ],
-"loop": true,
-"name": "5",
+"frames": [ SubResource( 1 ) ],
+"loop": false,
+"name": "3",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 14 ) ],
@@ -90,14 +80,24 @@ animations = [ {
 "name": "4",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 2 ) ],
-"loop": false,
-"name": "1",
+"frames": [ SubResource( 12 ) ],
+"loop": true,
+"name": "5",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 6 ) ],
+"loop": true,
+"name": "6",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 5 ) ],
 "loop": true,
 "name": "7",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 7 ) ],
+"loop": true,
+"name": "8",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ) ],

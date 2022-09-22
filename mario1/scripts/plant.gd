@@ -8,6 +8,8 @@ var oldYPos
 
 func _ready():
 	debug=true
+	active=false
+	mask=[constants.mario,constants.fireball]
 	rect=Rect2(Vector2(-16,-24),Vector2(32,48))
 	type=constants.plant
 	status=constants.plantIn

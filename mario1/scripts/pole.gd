@@ -16,7 +16,7 @@ func _ready():
 	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32+16))	
 #	showScore(2000)
 #	startFall()
-	set_process(false)
+#	set_process(false)
 	pass
 
 

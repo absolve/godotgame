@@ -404,6 +404,10 @@ func _draw():
 			elif i.type=='box':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
+				if i.content!=constants.empty&&i.content!='':
+					print(i.content)
+					draw_texture(constants.mapTiles[i.content]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
+					pass
 			elif i.type=='brick':	
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	

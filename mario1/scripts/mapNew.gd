@@ -38,6 +38,8 @@ var mapData={}  #地图以x,y为key value为对象
 var marioList=[]
 var winWidth  #屏幕大小
 var winHeight
+var specialEntrance=[] #特殊入口
+
 
 func _ready():
 	Game.setMap(self)
@@ -48,6 +50,7 @@ func _ready():
 	Game.connect("invincibleFinish",self,"invincibleFinish")
 	
 	loadMapFile("res://levels/1-1-1.json")
+#	set_physics_process(false)
 	pass
 
 func _process(delta):
@@ -95,7 +98,8 @@ func _update(delta):
 		#与方块的配置
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
-				if hasTile(a,b)&&y.active:
+#				if hasTile(a,b)&&y.active:
+				if mapData.get(str(a,",",b),null)!=null&&y.active:
 					if y.checkMask(mapData[str(a,",",b)].type):
 						var result=checkCollision(y,mapData[str(a,",",b)],delta)
 						if result[0]:
@@ -106,14 +110,22 @@ func _update(delta):
 #			print('-----',hCollision,vCollision)
 		
 		
-		#与物体间的碰撞
+		#与物体间的碰撞 选择x轴y轴最近的物体
 		for x in _obj.get_children():
-			if y!=x&& y.checkMask(x.type)&&!x.destroy&&!y.destroy:
-				var result=checkCollision(y,x,delta)
-				if result[0]:
-					hCollision=true
-				if result[1]:	
-					vCollision=true
+			if y!=x&&y.mask.has(x.type)&&!x.destroy&&!y.destroy:
+#				if y.getLeft()<=x.getRight()-1 &&y.getRight()>=x.getLeft()+1&&\
+#					y.getTop()<=x.getBottom()-1&&y.getBottom()>=x.getTop()+1:
+					
+				if y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
+					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1&&\
+					y.position.y-y.rect.size.y/2<=x.position.y+x.rect.size.y/2-1&&\
+					y.position.y+y.rect.size.y/2-1>=x.position.y-x.rect.size.y/2+1:
+					
+					var result=checkCollision(y,x,delta)
+					if result[0]:
+						hCollision=true
+					if result[1]:	
+						vCollision=true
 			pass
 		
 #		if y.type==constants.mushroom&&y.status==constants.moving:
@@ -123,18 +135,15 @@ func _update(delta):
 #			pass
 		
 		
-		if !vCollision:
+		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta	
 			y.isOnFloor=false
 		else:
 			y.isOnFloor=true
 		
-		
-			
-		if !hCollision:
+		if !hCollision&&y.active:
 			y.position.x+=y.xVel*delta	
 					
-	
 	pass
 
 
@@ -170,7 +179,7 @@ func checkCollision(a,b,delta):
 			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true		
-			elif  dy>0	&&  a.yVel>0:  #判断地面上是否有物体
+			elif  dy>0	&&  a.yVel>=0:  #判断地面上是否有物体
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多
 				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
 					if vCollision(a,b,delta)==true:
@@ -197,7 +206,7 @@ func checkCollision(a,b,delta):
 
 #左右判断
 func hCollision(a,b,delta):
-	if a.xVel>0:
+	if a.xVel>=0:
 		if b.has_method('leftCollide'):
 			if b.leftCollide(a)==true:
 				if b.xVel<0:
@@ -348,9 +357,9 @@ func loadMapFile(fileName:String):
 				temp.position.x=pos['x']*blockSize+blockSize/2
 				temp.position.y=pos['y']*blockSize+blockSize/2
 #				temp.big=Game.playerData['mario']['big']
-				temp.big=true
+#				temp.big=true
 #				temp.fire=Game.playerData['mario']['fire']
-				temp.fire=true
+#				temp.fire=true
 				_obj.add_child(temp)
 				marioList.append(temp)
 				
@@ -397,6 +406,28 @@ func loadMapFile(fileName:String):
 				var temp=bigCoin.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				_obj.add_child(temp)
+			elif i['type']=='pipe':
+				var temp=pipe.instance()
+				temp.spriteIndex=i['spriteIndex']
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.rotate=int(i['rotate'])
+				if i.has('pipeType'):
+					temp.pipeType=i['pipeType']
+				if i.has('pipeNo'):	
+					temp.pipeNo=i['pipeNo']
+				if i.has("dir"):
+					temp.dir=i['dir']
+				_tile.add_child(temp)
+				mapData[str(i['x'],",",i['y'])]=temp	
+				if i.has('pipeType')&&i['pipeType']!=constants.empty&&i['pipeType']!='':
+					specialEntrance.append(i)
+			elif  i['type']=='flag':  #旗杆
+				var temp = pole.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.poleLen=int(i['len'])
 				_obj.add_child(temp)
 						
 		file.close()

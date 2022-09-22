@@ -36,6 +36,9 @@ var deadEndTime=30
 var flagPoleTimer=0 #从旗杆上转身然后下来
 var poleLength=0 #旗杆右边位置
 var isCrouch=false 	#是否蹲下
+var enterPipeX=0 #进入水管的时候判断是否已经完全进去水管
+var enterPipeY=0 
+
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -76,7 +79,8 @@ onready var slide=$slide
 
 func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
-		constants.mushroom1up,constants.platform,constants.bigCoin,constants.plant]
+		constants.mushroom1up,constants.platform,constants.bigCoin,constants.plant,
+		constants.pipe,constants.pole]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -133,8 +137,6 @@ func _update(delta):
 	elif status==constants.stop:
 		pass	
 	elif status==constants.pipeIn:
-#		yVel=40
-#		position.y+=yVel*delta	
 		pipeIn(delta)
 		pass	
 	elif status==constants.walkInPipe:
@@ -459,8 +461,10 @@ func crouch(delta):
 	pass
 
 func pipeIn(delta):
-	yVel=40
-	position.y+=yVel*delta	
+	if getTop()<enterPipeY:
+		position.y+=yVel*delta	
+	else:
+		print('end')	
 	pass
 
 func pipeOut(delta):
@@ -469,12 +473,17 @@ func pipeOut(delta):
 	pass
 
 func walkIntoPipe(delta):
-	if dir==constants.left:
-		xVel=-50
-	elif dir==constants.right:
-		xVel=50
 	animation('walk')	
-	position.x+=xVel*delta
+	if dir==constants.left:
+		if getRight()>enterPipeX:
+			position.x+=xVel*delta	
+		else:
+			print("end")	
+	elif dir==constants.right:
+		if getLeft()<enterPipeX:
+			position.x+=xVel*delta	
+		else:
+			print("end")
 
 #变大
 func small2Big():
@@ -633,7 +642,17 @@ func rightCollide(obj):
 		obj.type==constants.bigCoin:
 		getItem(obj)
 		pass
-	pass
+	elif obj.type==constants.pipe:
+		if obj.pipeType==constants.pipeIn:
+			if obj.dir==constants.right&&Input.is_action_pressed("ui_right"):
+				enterPipe(obj.dir)
+			else:
+				return true		
+		else:		
+			return true
+	elif obj.type==constants.pole:
+		
+		pass
 
 #判断右边碰撞
 func leftCollide(obj):
@@ -656,6 +675,17 @@ func leftCollide(obj):
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
+	elif obj.type==constants.pipe:
+		if obj.pipeType==constants.pipeIn:
+			if obj.dir==constants.left&&Input.is_action_pressed("ui_left"):
+				enterPipe(obj.dir)
+			else:
+				return true		
+		else:		
+			return true
+	elif obj.type==constants.pole:
+		
+		pass
 	pass
 
 func floorCollide(obj):
@@ -676,9 +706,16 @@ func floorCollide(obj):
 		getItem(obj)
 	elif obj.type==constants.platform: #平台
 		if status!=constants.jump&&yVel>0:
-#			position.y=obj.getTop()-getSizeY()/2
-#			yVel=0
-#			isOnFloor=true
+			return true
+	elif obj.type==constants.pipe:
+		if obj.pipeType==constants.pipeIn:
+			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
+				print('22')
+				enterPipe(obj.dir)
+				pass
+			else:
+				return true	
+		else:		
 			return true
 	pass
 
@@ -734,6 +771,32 @@ func getItem(i):
 		SoundsUtil.playCoin()
 #		addCoin(m)	
 	pass
+
+#进入水管
+func enterPipe(dir):
+	if dir==constants.down:
+		SoundsUtil.playPipe()
+		active=false
+		xVel=0
+		yVel=40
+		enterPipeY=getBottom()
+#		print(getTop())
+		status=constants.pipeIn
+	elif dir==constants.right||dir==constants.left:
+		SoundsUtil.playPipe()
+		active=false
+		status=constants.walkInPipe
+		if dir==constants.left:
+			xVel=-50
+		else:
+			xVel=50	
+		yVel=0
+		ani.speed_scale=1
+		if dir==constants.right:
+			enterPipeX=getRight()+2
+		else:
+			enterPipeX=getLeft()-2	
+		print(enterPipeX)	
 
 #动画
 func animation(type):

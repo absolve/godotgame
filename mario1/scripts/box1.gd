@@ -102,7 +102,7 @@ func bumped(delta):
 				add4Brick()
 				SoundsUtil.playBrickBreak()
 				status=constants.empty
-#		position.y+=yVel*delta		
+		position.y+=yVel*delta		
 	pass
 
 func opened(delta):
