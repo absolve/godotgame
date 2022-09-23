@@ -49,11 +49,11 @@ func _ready():
 	Game.connect("marioStateFinish",self,'marioStateFinish')
 	Game.connect("invincibleFinish",self,"invincibleFinish")
 	
-	loadMapFile("res://levels/1-1-1.json")
+	loadMapFile("res://levels/test10.json")
 #	set_physics_process(false)
 	pass
 
-func _process(delta):
+func _physics_process(delta):
 	_update(delta)
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))	
 	pass
@@ -95,12 +95,12 @@ func _update(delta):
 	
 #		print(xstart,'-',xend)
 #		print(ystart,'-',yend)
-		#与方块的配置
+		#与方块的配置 在这个循环中直接访问元素属性
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
 #				if hasTile(a,b)&&y.active:
 				if mapData.get(str(a,",",b),null)!=null&&y.active:
-					if y.checkMask(mapData[str(a,",",b)].type):
+					if y.mask.has(mapData[str(a,",",b)].type):
 						var result=checkCollision(y,mapData[str(a,",",b)],delta)
 						if result[0]:
 							hCollision=true
@@ -116,11 +116,21 @@ func _update(delta):
 #				if y.getLeft()<=x.getRight()-1 &&y.getRight()>=x.getLeft()+1&&\
 #					y.getTop()<=x.getBottom()-1&&y.getBottom()>=x.getTop()+1:
 					
-				if y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
+#				if y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
+#					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1&&\
+#					y.position.y-y.rect.size.y/2<=x.position.y+x.rect.size.y/2-1&&\
+#					y.position.y+y.rect.size.y/2-1>=x.position.y-x.rect.size.y/2+1:
+				if x.type==constants.pole && y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
+					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1:
+					var result=checkCollision(y,x,delta)
+					if result[0]:
+						hCollision=true
+					if result[1]:	
+						vCollision=true
+				elif y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
 					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1&&\
 					y.position.y-y.rect.size.y/2<=x.position.y+x.rect.size.y/2-1&&\
-					y.position.y+y.rect.size.y/2-1>=x.position.y-x.rect.size.y/2+1:
-					
+					y.position.y+y.rect.size.y/2-1>=x.position.y-x.rect.size.y/2+1:		
 					var result=checkCollision(y,x,delta)
 					if result[0]:
 						hCollision=true
@@ -160,9 +170,11 @@ func checkCollision(a,b,delta):
 		var xVal =a.position.x-b.position.x
 #		var absXVal=abs(xVal)
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
-		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
+		var dy=(b.getCenterY()-a.getCenterY())/b.getSizeY()/2
+#		if b.type==constants.pole:
+#			print(a.position.x,' ',b.position.x,' ',b.getSize())
 		if abs(dx)>abs(dy): #左右的碰撞	
-			if xVal<0&&a.xVel>0:	
+			if xVal<0&&a.xVel>=0:	
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 			elif xVal>0 &&a.xVel<0:
@@ -357,7 +369,7 @@ func loadMapFile(fileName:String):
 				temp.position.x=pos['x']*blockSize+blockSize/2
 				temp.position.y=pos['y']*blockSize+blockSize/2
 #				temp.big=Game.playerData['mario']['big']
-#				temp.big=true
+				temp.big=true
 #				temp.fire=Game.playerData['mario']['fire']
 #				temp.fire=true
 				_obj.add_child(temp)

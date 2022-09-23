@@ -10,15 +10,33 @@ var speed=160
 
 
 func _ready():
-#	debug=true
+	debug=true
 	addPoleLen()
 	type=constants.pole
-	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32+16))	
+	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32))	
 #	showScore(2000)
 #	startFall()
 #	set_process(false)
+	print(rect.size.y)
+	print(getTop())
+	print(getBottom())
+	print(getCenterY())
+	print(getSizeY())
 	pass
 
+#func getRect():
+#	var temp =rect
+#	temp.position+=Vector2(position.x,position.y+16)
+#	return temp
+
+func getCenterY():
+	return position.y+rect.size.y/2
+	
+func getTop():
+	return position.y
+
+func getBottom():
+	return position.y+poleLen*32
 
 #添加旗杆长度
 func addPoleLen():

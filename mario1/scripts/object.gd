@@ -34,6 +34,12 @@ func getRect()->Rect2:
 	temp.position+=position
 	return temp
 
+func getCenterX():
+	return position.x
+	
+func getCenterY():
+	return position.y
+
 func getSize()->float:
 	return rect.size.x
 

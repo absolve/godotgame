@@ -38,7 +38,7 @@ var poleLength=0 #旗杆右边位置
 var isCrouch=false 	#是否蹲下
 var enterPipeX=0 #进入水管的时候判断是否已经完全进去水管
 var enterPipeY=0 
-
+var combo=0  #分数连击
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -559,15 +559,16 @@ func startSliding(length=0):
 	ani.frame=0
 	ani.stop()
 	xVel=0
-	yVel=0
+	gravity=0 #防止加速下落
+	yVel=180
 	dir=constants.right
 #	ani.flip_h=true
-	self.poleLength=length
+#	self.poleLength=length
 	pass
 
 func poleSliding(delta):
-	yVel=220
-	position.y+=yVel*delta
+#	yVel=220
+#	position.y+=yVel*delta
 	animation("poleSliding")
 	pass
 
@@ -580,11 +581,13 @@ func setSitBottom():
 #	ani.flip_h=true
 
 func sitBottomOfPole(_delta):		
+	flagPoleTimer+=1
 	pass
 
 #设置走到城堡里面
 func setwalkingToCastle():
 #	ani.frame=0
+	gravity=constants.marioGravity
 	ani.stop()
 	status=constants.walkingToCastle
 	acceleration=constants.acceleration
@@ -601,19 +604,16 @@ func walkingToCastle(delta):
 		acceleration=constants.acceleration
 #		status=constants.walkingToCastle
 	else:
-#		xVel+=5
-		yVel+=gravity*delta
-		if xVel>0 || xVel<0:
-			ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
-#		if xVel>0:
-#			ani.speed_scale=1+xVel/constants.marioAniSpeed
-#		elif xVel<0:
-#			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
+		xVel+=5
+#		yVel+=gravity*delta
+#		if xVel>0 || xVel<0:
+#			ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
+		if xVel>0:
+			ani.speed_scale=1+xVel/constants.marioAniSpeed
+		elif xVel<0:
+			ani.speed_scale=1+xVel/constants.marioAniSpeed*-1
 		if xVel<maxXVel:
 			xVel+=5
-		position.x+=xVel*delta
-		if !isOnFloor:
-			position.y+=yVel*delta
 		animation("walk")	
 	flagPoleTimer+=1	
 	pass
@@ -651,7 +651,14 @@ func rightCollide(obj):
 		else:		
 			return true
 	elif obj.type==constants.pole:
-		
+		if status!=constants.poleSliding&&status!=constants.sitBottomOfPole:
+			position.x=obj.getLeft()-getSize()/2
+			startSliding()
+		elif status==constants.sitBottomOfPole:
+			if flagPoleTimer>=31:
+				position.x=obj.getRight()-getSize()/2
+				ani.flip_h=true
+				setwalkingToCastle()
 		pass
 
 #判断右边碰撞
@@ -697,7 +704,8 @@ func floorCollide(obj):
 			elif dir==constants.right:
 				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
 					position.x+=1	
-
+		if status==constants.poleSliding:#碰到地面
+			status=constants.sitBottomOfPole
 		
 		return true
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
@@ -712,11 +720,11 @@ func floorCollide(obj):
 			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
 				print('22')
 				enterPipe(obj.dir)
-				pass
 			else:
 				return true	
 		else:		
 			return true
+	combo=0
 	pass
 
 func ceilcollide(obj):#上方的判断
