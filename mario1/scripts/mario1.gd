@@ -39,6 +39,7 @@ var isCrouch=false 	#是否蹲下
 var enterPipeX=0 #进入水管的时候判断是否已经完全进去水管
 var enterPipeY=0 
 var combo=0  #分数连击
+var pipeNo=0 #水管的编号
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -79,8 +80,8 @@ onready var slide=$slide
 
 func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
-		constants.mushroom1up,constants.platform,constants.bigCoin,constants.plant,
-		constants.pipe,constants.pole]
+		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
+		constants.pipe,constants.pole,constants.collision]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -460,17 +461,32 @@ func crouch(delta):
 #	position.y+=yVel*delta
 	pass
 
+#设置水管出来的位置
+func setPipeOutStatus(y):
+	active=false
+	enterPipeY=y
+	status=constants.pipeOut
+	pass
+
 func pipeIn(delta):
 	if getTop()<enterPipeY:
 		position.y+=yVel*delta	
 	else:
+		Game.emit_signal("marioIntoPipe",pipeNo)
+		status=constants.empty
 		print('end')	
 	pass
 
 func pipeOut(delta):
 	yVel=-40
 	position.y+=yVel*delta
+	if getBottom()>enterPipeY:
+		position.y+=yVel*delta
+	else:
+		active=true
+		status=constants.stand	
 	pass
+
 
 func walkIntoPipe(delta):
 	animation('walk')	
@@ -478,11 +494,15 @@ func walkIntoPipe(delta):
 		if getRight()>enterPipeX:
 			position.x+=xVel*delta	
 		else:
+			Game.emit_signal("marioIntoPipe",pipeNo)
+			status=constants.empty
 			print("end")	
 	elif dir==constants.right:
 		if getLeft()<enterPipeX:
 			position.x+=xVel*delta	
 		else:
+			Game.emit_signal("marioIntoPipe",pipeNo)
+			status=constants.empty
 			print("end")
 
 #变大
@@ -592,7 +612,8 @@ func setwalkingToCastle():
 	status=constants.walkingToCastle
 	acceleration=constants.acceleration
 	maxXVel=constants.marioWalkMaxSpeed	
-
+#	xVel=40
+	
 func walkingToCastle(delta):
 	if flagPoleTimer==31:
 		position.x=position.x+poleLength+getSize()
@@ -601,10 +622,11 @@ func walkingToCastle(delta):
 	elif flagPoleTimer<80: #更换到旗杆的另一个侧
 		dir=constants.right
 		xVel=0
+#		xVel=40
 		acceleration=constants.acceleration
 #		status=constants.walkingToCastle
 	else:
-		xVel+=5
+#		xVel+=2
 #		yVel+=gravity*delta
 #		if xVel>0 || xVel<0:
 #			ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
@@ -631,9 +653,10 @@ func rightCollide(obj):
 			
 			yVel=1
 			return false
-			
-		return true
-		pass
+		if obj.type==constants.box&&!obj._visible:
+			return false
+		else:
+			return true	
 	elif obj.type==	constants.goomba:
 		
 		pass
@@ -641,24 +664,31 @@ func rightCollide(obj):
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
-		pass
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.right&&Input.is_action_pressed("ui_right"):
-				enterPipe(obj.dir)
+				enterPipe(obj)
 			else:
 				return true		
 		else:		
 			return true
 	elif obj.type==constants.pole:
 		if status!=constants.poleSliding&&status!=constants.sitBottomOfPole:
-			position.x=obj.getLeft()-getSize()/2
+			position.x=obj.getLeft()-getSize()/2+1
 			startSliding()
+			SoundsUtil.stopBgm()
+			SoundsUtil.stopSpecialBgm()
+			SoundsUtil.playLevelend()
+			addPoleScore(obj.position.y,obj)
 		elif status==constants.sitBottomOfPole:
 			if flagPoleTimer>=31:
 				position.x=obj.getRight()-getSize()/2
 				ani.flip_h=true
 				setwalkingToCastle()
+	elif obj.type==constants.collision:
+		if obj.value==constants.castlePos:
+			destroy=true
+			Game.emit_signal("marioInCastle")
 		pass
 
 #判断右边碰撞
@@ -674,8 +704,10 @@ func leftCollide(obj):
 			
 			return false
 			
-		return true
-		pass
+		if obj.type==constants.box&&!obj._visible:
+			return false
+		else:
+			return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
@@ -685,13 +717,18 @@ func leftCollide(obj):
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.left&&Input.is_action_pressed("ui_left"):
-				enterPipe(obj.dir)
+				enterPipe(obj)
 			else:
 				return true		
 		else:		
 			return true
 	elif obj.type==constants.pole:
 		
+		pass
+	elif obj.type==constants.collision:
+		if obj.value==constants.castlePos:
+			destroy=true
+			Game.emit_signal("marioInCastle")
 		pass
 	pass
 
@@ -705,7 +742,8 @@ func floorCollide(obj):
 				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
 					position.x+=1	
 		if status==constants.poleSliding:#碰到地面
-			status=constants.sitBottomOfPole
+			setSitBottom()
+#			status=constants.sitBottomOfPole
 		
 		return true
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
@@ -719,7 +757,7 @@ func floorCollide(obj):
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
 				print('22')
-				enterPipe(obj.dir)
+				enterPipe(obj)
 			else:
 				return true	
 		else:		
@@ -781,16 +819,20 @@ func getItem(i):
 	pass
 
 #进入水管
-func enterPipe(dir):
-	if dir==constants.down:
+func enterPipe(obj): 
+	pipeNo=obj.pipeNo
+	if obj.dir==constants.down:
 		SoundsUtil.playPipe()
 		active=false
 		xVel=0
 		yVel=40
-		enterPipeY=getBottom()
+		enterPipeY=obj.getTop()
+		if big:#因为有调整y的位置
+			enterPipeY+=12
+#		print(enterPipeY)
 #		print(getTop())
 		status=constants.pipeIn
-	elif dir==constants.right||dir==constants.left:
+	elif obj.dir==constants.right||dir==constants.left:
 		SoundsUtil.playPipe()
 		active=false
 		status=constants.walkInPipe
@@ -801,10 +843,28 @@ func enterPipe(dir):
 		yVel=0
 		ani.speed_scale=1
 		if dir==constants.right:
-			enterPipeX=getRight()+2
+			enterPipeX=getRight()+4
 		else:
-			enterPipeX=getLeft()-2	
+			enterPipeX=getLeft()-4
 		print(enterPipeX)	
+
+func addPoleScore(polePos,obj):
+	if abs(position.y-polePos)<=50:
+		obj.showScore(5000)
+		
+	elif abs(position.y-polePos)<=100:
+		obj.showScore(2000)
+		
+	elif abs(position.y-polePos)<=150:	
+		obj.showScore(1000)
+
+	elif abs(position.y-polePos)<=200:
+		obj.showScore(500)
+		
+	else:
+		obj.showScore(200)
+	obj.startFall()
+	pass
 
 #动画
 func animation(type):

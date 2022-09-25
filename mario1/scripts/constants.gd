@@ -103,6 +103,7 @@ const pipeIn="pipeIn"  #水管进入
 const pipeOut="pipeOut" #水管出去
 const bigCoin='bigCoin'
 const platform="platform"
+const collision='collision'
 
 #方向
 const right="right"
@@ -125,7 +126,7 @@ const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
 const enemyGravity=1700
-const enemyMaxVel=1000
+const enemyMaxVel=900
 
 const slideFriction=590 #滑行的加速度
 const crouchFriction=440 #蹲下去时加速度
@@ -140,8 +141,9 @@ const marioJumpSpeed=500
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
 const deathJumpGravity=1000
-const marioMaxYVel=1000 #最大y速度
+const marioMaxYVel=900 #最大y速度
 const boxHeight=5 #跨过的间隙时最低的高度
+const fireballMaxYVel=800
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"

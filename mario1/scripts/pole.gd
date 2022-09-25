@@ -14,14 +14,15 @@ func _ready():
 	addPoleLen()
 	type=constants.pole
 	rect=Rect2(Vector2(-5,0),Vector2(10,poleLen*32))	
+	
 #	showScore(2000)
 #	startFall()
 #	set_process(false)
-	print(rect.size.y)
-	print(getTop())
-	print(getBottom())
-	print(getCenterY())
-	print(getSizeY())
+#	print(rect.size.y)
+#	print(getTop())
+#	print(getBottom())
+#	print(getCenterY())
+#	print(getSizeY())
 	pass
 
 #func getRect():
@@ -51,16 +52,17 @@ func startFall():
 	status=constants.flagLanding
 
 func showScore(s):
-	score.text=str(s)
-	score.rect_position.y=poleLen*32-20
 	score.visible=true
+	score._label.text=str(s)
+	score.position.y=poleLen*32-20
+	score._label.visible=true
 	pass
 
 
 func _update(delta):
 	if status==constants.flagLanding:
 		flag.position.y+=speed*delta
-		score.rect_position.y-=speed*delta
+		score.position.y-=speed*delta
 		if flag.position.y>=poleLen*32:
 			status=constants.empty
 			Game.emit_signal("flagEnd")
