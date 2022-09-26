@@ -56,6 +56,8 @@ onready var _time=$layer/Control/tab/common/vbox/time
 onready var _background=$layer/Control/tab/common/vbox/background
 onready var _music=$layer/Control/tab/common/vbox/music
 onready var _spriteSet=$layer/Control/tab/common/vbox/spriteset
+onready var _mapName=$layer/Control/tab/common/vbox/mapName
+onready var _nextLevel=$layer/Control/tab/common/vbox/nextLevel
 #onready var _marioList=$mario
 #onready var _brickList=$brick
 #onready var _bulletList=$bullet
@@ -122,6 +124,8 @@ func loadMapFile(fileName:String):
 		_background.setValue(str(currentLevel['bg']))
 		_music.setValue(str(currentLevel['music']))
 		music=str(currentLevel['music'])
+		if currentLevel.has('mapName'):
+			_mapName.setValue(str(currentLevel['mapName']))
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
 		
@@ -186,6 +190,8 @@ func save2File(fileName):
 		"bg":_background.getValue(),
 		"music":_music.getValue(),
 		'time':_time.getValue(),
+		"mapName":_mapName.getValue(),
+		"nextLevel":_nextLevel.getValue(),
 		'marioPos':marioPos,
 		'data':allTiles+bgTiles,
 	}

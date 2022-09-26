@@ -398,6 +398,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe1": {
 	"type": "pipe",
@@ -412,6 +413,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe2": {
 	"type": "pipe",
@@ -424,6 +426,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe3": {
 	"type": "pipe",
@@ -436,6 +439,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe4": {
 	"type": "pipe",
@@ -448,6 +452,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe5": {
 	"type": "pipe",
@@ -460,7 +465,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	
+	"warpzoneNum":''
 	},
 	"pipe6": {
 	"type": "pipe",
@@ -473,6 +478,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe7": {
 	"type": "pipe",
@@ -485,6 +491,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe8": {
 	"type": "pipe",
@@ -497,6 +504,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"pipe9": {
 	"type": "pipe",
@@ -509,6 +517,7 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
+	"warpzoneNum":''
 	},
 	"bg": {
 		"type": "bg",

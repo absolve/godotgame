@@ -82,6 +82,7 @@ animations = [ {
 } ]
 
 [node name="goomba" type="Node2D"]
+z_index = 2
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

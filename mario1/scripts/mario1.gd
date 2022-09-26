@@ -81,7 +81,8 @@ onready var slide=$slide
 func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
 		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
-		constants.pipe,constants.pole,constants.collision]
+		constants.pipe,constants.pole,constants.collision,constants.goomba,
+		constants.koopa]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -744,7 +745,7 @@ func floorCollide(obj):
 		if status==constants.poleSliding:#碰到地面
 			setSitBottom()
 #			status=constants.sitBottomOfPole
-		
+		combo=0
 		return true
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -752,8 +753,10 @@ func floorCollide(obj):
 		getItem(obj)
 	elif obj.type==constants.platform: #平台
 		if status!=constants.jump&&yVel>0:
+			combo=0	
 			return true
 	elif obj.type==constants.pipe:
+		combo=0	
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
 				print('22')
@@ -762,7 +765,21 @@ func floorCollide(obj):
 				return true	
 		else:		
 			return true
-	combo=0
+	elif obj.type==constants.goomba||obj.type==constants.koopa:
+		if! obj._dead:
+			obj.jumpedOn()
+			if combo<constants.scoreList.size():
+				Game.addScore(position,constants.scoreList[combo])
+				combo+=1
+			else:
+				Game.addLive(position,playerId)
+				SoundsUtil.playItem1up()
+				pass	
+			SoundsUtil.playStomp()	
+			yVel=-abs(yVel)/2
+			pass
+		pass
+	
 	pass
 
 func ceilcollide(obj):#上方的判断
@@ -810,12 +827,12 @@ func getItem(i):
 		SoundsUtil.playSpecialBgm()
 	elif i.type==constants.mushroom1up:	
 		i.destroy=true
-#		addLive(m)
+		Game.addLive(position,playerId)	
 		SoundsUtil.playItem1up()
 	elif i.type==constants.bigCoin:
 		i.destroy=true
 		SoundsUtil.playCoin()
-#		addCoin(m)	
+		Game.addCoin(position)	
 	pass
 
 #进入水管

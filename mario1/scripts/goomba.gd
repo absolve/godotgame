@@ -7,11 +7,12 @@ const speed=55
 
 func _ready():
 #	debug=true
+	mask=[constants.brick,constants.box,constants.platform,constants.fireball]
 	._ready()
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
 	type=constants.goomba
-	maxYVel=constants.enemyMaxVel #y轴最大速度
+#	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.enemyGravity
 	if dir==constants.left:
 		xVel=-speed
@@ -46,6 +47,10 @@ func jumpedOn():
 	elif spriteIndex==2:	
 		ani.play("dead_grey")	
 	status=constants.dead	
+	gravity=0
+	xVel=0
+	yVel=0
+	_dead=true
 	pass
 
 

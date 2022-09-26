@@ -13,7 +13,7 @@ var _dead=false #是否死亡
 func _ready():
 	maxYVel=constants.enemyMaxVel
 	._ready()
-	gravity=constants.enemyGravity
+#	gravity=constants.enemyGravity
 	
 	
 func walking(delta):
@@ -49,12 +49,13 @@ func startDeathJump():
 func dead(delta):
 	time+=1
 	if time>=delTime:
-		queue_free()
+#		queue_free()
+		destroy=true
 		pass
 	pass
 
-func destory():
-	queue_free()
+#func destory():
+#	queue_free()
 	
 func turnLeft():
 	dir=constants.left

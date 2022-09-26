@@ -20,8 +20,8 @@ var  backgroundcolor = ['#5C94FC',
 #var score =preload("res://scenes/score.tscn")
 var fireball=preload("res://scenes/fireball.tscn")
 
-#保存的数据
-var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'',
+#保存的数据 level地图文件名  mapName显示的标题名字
+var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapName':"",
 				"mario":{"big":false,"fire":false}}
 
 
@@ -55,8 +55,11 @@ func addObj(obj):
 func addScore(_position,_score=100):
 	map.addScore(_position,_score)
 
-func addCoin(m,_coin=1):
-	map.addCoin(m,_coin)
+func addCoin(_position,_coin=1):
+	map.addCoin(_position,_coin)
+
+func addLive(_position,id):
+	map.addLive(_position,id)
 
 func getPlayerBulletCount(id):
 	return map.getBulletCount(id)

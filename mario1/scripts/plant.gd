@@ -24,7 +24,8 @@ func _ready():
 
 
 func startDeathJump(_dir=constants.left):
-	destory()
+	
+	pass
 
 func _update(delta):
 	if status==constants.stop:

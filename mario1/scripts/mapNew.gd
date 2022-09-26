@@ -26,21 +26,26 @@ onready var _obj=$obj
 onready var _tile=$tile
 onready var _fps=$layer/fps
 onready var _camera=$camera
+onready var _timer=$Timer
 
 #var path="res://levels/1-1.json"
 var mapDir="res://levels"	#内置地图路径
 var currentLevel
 var mapWidthSize=0
+var mapName  #地图的名字
 var time		#时间
 var music
 var marioPos={} #mario地图出生地
-var mode="game"  #game正常游戏  edit编辑  test测试  show展示
+#var mode="game"  #game正常游戏  edit编辑  test测试  show展示
 var mapData={}  #地图以x,y为key value为对象
 var marioList=[]
 var winWidth  #屏幕大小
 var winHeight
 var specialEntrance=[] #特殊入口
 var subLevel="" #子关卡 是否从水管或者树里面出来
+var isLoadsubLevel=false
+var nextLevel=""
+var enemyList=[]
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -52,18 +57,21 @@ func _ready():
 	Game.connect("invincibleFinish",self,"invincibleFinish")
 	Game.connect("marioInCastle",self,"marioInCastle")
 	Game.connect("marioIntoPipe",self,"marioIntoPipe")
+	Game.connect("timeOut",self,"timeOut")
+	Game.connect("hurryup",self,"hurryup")
 	
-#	loadMapFile("res://levels/test10.json")
-	var dir = Directory.new()
-	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-		print("ok")
-		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-	else:
-		print("文件不存在")
+	loadMapFile("res://levels/test10.json")
+#	var dir = Directory.new()
+#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+#		print("ok")
+#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+#	else:
+#		print("文件不存在")
 	
 	
 	subLevel=Game.playerData['subLevel']
 	if subLevel=='':
+		
 		pass
 	else:
 		for i in specialEntrance:
@@ -101,6 +109,7 @@ func _update(delta):
 				i.queue_free()	
 			if i.getTop()>winHeight:
 				i.queue_free()	
+			pass
 			
 	for i in _obj.get_children():
 		if i.active:
@@ -121,7 +130,8 @@ func _update(delta):
 				if mario1.dir==constants.right:
 					mario1.xVel=0
 			#前进
-			if mario1.xVel>=0 && mario1.position.x>_camera.get_camera_screen_center().x+20&&\
+			if mario1.status!=constants.sitBottomOfPole&& mario1.xVel>=0 \
+				&& mario1.position.x>_camera.get_camera_screen_center().x+20&&\
 					_camera.position.x <mapWidthSize*blockSize-winWidth:
 				if _camera.position.x>mapWidthSize*blockSize-winWidth:
 					_camera.position.x=mapWidthSize*blockSize-winWidth
@@ -134,8 +144,13 @@ func _update(delta):
 					_camera.position.x=0
 				else:		
 					_camera.position.x-=int(abs(mario1.position.x-_camera.get_camera_screen_center().x+40))
-			
-		
+			for e in enemyList:
+				if e['init']:
+					continue
+				if e.x*blockSize+blockSize/2>=_camera.position.x+winWidth && \
+					e.x*blockSize+blockSize/2<=_camera.position.x+winWidth*1.2:
+						addEnemy(e)
+						e['init']=true
 		
 		
 				
@@ -148,12 +163,15 @@ func _update(delta):
 #				y.yVel=y.maxYVel
 				
 		#检测附近的砖块根据方向来决定方块的位置
-		var xstart=floor((y.position.x-y.getSize())/blockSize)
-		var xend=floor((y.position.x+y.getSize())/blockSize)
+		var xstart=floor((y.position.x-y.rect.size.x)/blockSize)
+		var xend=floor((y.position.x+y.rect.size.x)/blockSize)
+#		var xend=floor((y.position.x+y.getSize())/blockSize)
 
 
-		var ystart=floor((y.position.y-y.getSizeY())/blockSize)
-		var yend=floor((y.position.y+y.getSizeY())/blockSize)
+#		var ystart=floor((y.position.y-y.getSizeY())/blockSize)
+#		var yend=floor((y.position.y+y.getSizeY())/blockSize)
+		var ystart=floor((y.position.y-y.rect.size.y)/blockSize)
+		var yend=floor((y.position.y+y.rect.size.y)/blockSize)
 	
 #		print(xstart,'-',xend)
 #		print(ystart,'-',yend)
@@ -228,9 +246,8 @@ func checkCollision(a,b,delta):
 	if !is_instance_valid(a)||!is_instance_valid(b):
 		return [hCollision,vCollision]
 	
-	if  a.getRect().intersects(b.getRect(),true):	#判断左右是否碰撞
+	if  a.getRect().intersects(b.getRect()):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x
-#		var absXVal=abs(xVal)
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.getCenterY()-a.getCenterY())/b.getSizeY()/2
 #		if b.type==constants.pole:
@@ -252,7 +269,13 @@ func checkCollision(a,b,delta):
 		if abs(dy)>abs(dx):
 			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
-					vCollision=true		
+					vCollision=true	
+#				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
+#					if vCollision(a,b,delta)==true:
+#						vCollision=true	
+#				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
+#					if vCollision(a,b,delta)==true:
+#						vCollision=true				
 			elif  dy>0	&&  a.yVel>=0:  #判断地面上是否有物体
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多
 				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
@@ -260,13 +283,9 @@ func checkCollision(a,b,delta):
 						vCollision=true	
 					pass
 				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
-#					print(abs(a.getLeft()-b.getRight()),' ',abs(a.getBottom()-b.getTop()))
-#					print(a.yVel)
 					if vCollision(a,b,delta)==true:
 						vCollision=true	
 				else:
-#					a.xVel=0
-#					print(a.getBottom(),' ',b.getTop())
 					if dx>0&&a.xVel>0:	
 						if hCollision(a,b,delta)==true:
 							hCollision=true
@@ -417,24 +436,28 @@ func loadMapFile(fileName:String):
 #		elif currentLevel['bg']=="underwater":	
 #			_bg.color=Color(Game.backgroundcolor[2])
 #		setMapArray(15,mapWidthSize)
+		if currentLevel.has('mapName'):
+			mapName=str(currentLevel['mapName'])
 		
-		
+		if currentLevel.has('nextLevel'):
+			nextLevel=str(currentLevel['nextLevel'])
+			
 		music=str(currentLevel['music'])
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
 		
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
-			if mode=='game' ||  mode=='show':
-				var temp=mario.instance()
-				temp.position.x=pos['x']*blockSize+blockSize/2
-				temp.position.y=pos['y']*blockSize+blockSize/2
+#			if mode=='game' ||  mode=='show':
+			var temp=mario.instance()
+			temp.position.x=pos['x']*blockSize+blockSize/2
+			temp.position.y=pos['y']*blockSize+blockSize/2
 #				temp.big=Game.playerData['mario']['big']
-				temp.big=true
+			temp.big=true
 #				temp.fire=Game.playerData['mario']['fire']
-				temp.fire=true
-				_obj.add_child(temp)
-				marioList.append(temp)
+			temp.fire=true
+			_obj.add_child(temp)
+			marioList.append(temp)
 				
 		marioPos=pos
 		
@@ -514,6 +537,10 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				_tile.add_child(temp)
+			elif i['type']=='goomba' || i['type']=='koopa'||\
+					i['type']==constants.plant:
+					i['init']=false
+					enemyList.append(i)	
 						
 		file.close()
 		print(mapData)
@@ -551,7 +578,6 @@ func checkMapBrick(x,y):
 	return hasTile(mapx,mapy)
 
 func checkMapBrickIndex(x,y):
-#	print(x,' ',y)
 	return hasTile(x,y)
 	
 func addObj2Other(obj):
@@ -564,7 +590,8 @@ func addObj2Item(obj):
 func addObj(obj):
 	_obj.add_child(obj)
 	
-func addCoin(m,_coin=1):
+func addCoin(_position,_coin=1):
+	
 	pass
 
 func addScore(_position,_score=100):
@@ -574,6 +601,43 @@ func addScore(_position,_score=100):
 	_obj.add_child(temp)
 	pass
 
+func addLive(_position,id):
+	var temp=score.instance()
+	temp.setPos(_position)
+	temp.setScore("1UP")
+	_obj.add_child(temp)
+
+#添加	
+func addEnemy(obj):
+	print('addEnemy')
+	if obj.type==constants.goomba:
+		var temp =goomba.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+#		temp.offsetX=obj['offsetX']
+#		temp.offsetY=obj['offsetY']
+		temp.spriteIndex=obj['spriteIndex']
+		temp.dir=obj['dir']
+		_obj.add_child(temp)
+		pass	
+	elif obj.type==constants.plant:
+		var temp=plant.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=obj['offsetX']
+		temp.offsetY=obj['offsetY']
+		temp.spriteIndex=obj['spriteIndex']
+		_obj.add_child(temp)
+		pass
+	elif obj.type==constants.koopa:
+		var temp =koopa.instance()	
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		temp.dir=obj['dir']
+		_obj.add_child(temp)
+		pass
+			
 func getMario():
 	return marioList
 
@@ -602,18 +666,35 @@ func invincibleFinish():
 	SoundsUtil.playBgm()
 	pass
 
+#进入城堡
 func marioInCastle():
-	print('marioInCastle')
+	print('marioInCastle',nextLevel)
+	subLevel=''
+	_timer.start()
 	pass
 
+#进入水管
 func marioIntoPipe(pipeNo):
 	print('marioIntoPipe',pipeNo)
 	for i in specialEntrance:
 		if i.has('pipeNo')&&i['pipeNo']==pipeNo:
-			for y in range(300):
-				yield(get_tree(), "idle_frame")
-			loadSubLevelMap(i['level'],i['subLevel'])
+#			for y in range(300):
+#				yield(get_tree(), "idle_frame")
+			nextLevel=i['level']
+			subLevel=i['subLevel'] #水管或者树的编号
+			isLoadsubLevel=true
+			_timer.start()
+#			loadSubLevelMap(i['level'],i['subLevel'])
 			break
+
+#超时
+func timeOut():
+	
+	pass
+	
+func hurryup():	
+	print("hurryup")
+	SoundsUtil.playLowTime()
 
 func getObj():
 	return _obj
@@ -630,3 +711,19 @@ func _draw():
 		draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
 		Color.gray,0.5,true)	
 	pass
+
+
+func _on_Timer_timeout():
+	if isLoadsubLevel:
+		loadSubLevelMap(nextLevel,subLevel)
+	else:
+		var temp=menu.instance()
+#		Game.playerData['score']=_title.score
+#		Game.playerData['coin']=_title.coinNum
+#		Game.playerData['subLevel']=''
+		queue_free()
+		set_process_input(false)
+		get_tree().get_root().add_child(temp)
+		set_process_input(true)
+		pass	
+	pass # Replace with function body.
