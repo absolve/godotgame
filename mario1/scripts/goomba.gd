@@ -3,11 +3,12 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var preStatus
-const speed=55
+
 
 func _ready():
 #	debug=true
-	mask=[constants.brick,constants.box,constants.platform,constants.fireball]
+	mask=[constants.brick,constants.box,constants.platform,
+		constants.fireball,constants.pipe,constants.koopa,constants.goomba]
 	._ready()
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
@@ -76,3 +77,29 @@ func resume():
 #		status=preStatus
 	if status!=constants.dead&&status!=constants.deadJump:
 		ani.play()	
+		
+func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		turnLeft()
+		return true
+	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+		turnLeft()
+		return true
+	pass
+	
+func leftCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		print(obj.type)
+		turnRight()
+		return true
+	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+		turnRight()
+		return true
+	
+	pass
+	
+func floorCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		
+		return true
+	pass

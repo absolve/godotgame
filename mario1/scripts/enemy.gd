@@ -9,6 +9,7 @@ var delTime=140  #删除时间 140帧
 #var init=false
 #var isOnFloor=true #是否在地面上
 var _dead=false #是否死亡
+const speed=55
 
 func _ready():
 	maxYVel=constants.enemyMaxVel
@@ -17,11 +18,10 @@ func _ready():
 	
 	
 func walking(delta):
-#	if yVel<maxYVel:
-#		yVel+=gravity*delta			
-#	position.x+=xVel*delta
-#	if !isOnFloor:	
-#		position.y+=yVel*delta
+	if dir==constants.left:
+		xVel=-speed
+	else:
+		xVel=speed
 	pass
 	
 

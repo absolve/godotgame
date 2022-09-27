@@ -60,7 +60,7 @@ func _ready():
 	Game.connect("timeOut",self,"timeOut")
 	Game.connect("hurryup",self,"hurryup")
 	
-	loadMapFile("res://levels/test10.json")
+	loadMapFile("res://levels/test7.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -71,21 +71,22 @@ func _ready():
 	
 	subLevel=Game.playerData['subLevel']
 	if subLevel=='':
-		
+		initEnemy()	#初始化当前画面的敌人			
 		pass
 	else:
-		for i in specialEntrance:
-			if i['pipeNo']==subLevel:
-				if i['pipeType']==constants.pipeOut:
-					for y in marioList:
-						y.position.x = i['x']*blockSize
-						y.position.y= i['y']*blockSize+\
-								blockSize+y.getSizeY()/2
-						y.setPipeOutStatus(i['y']*blockSize)		
-								
-						_camera.position.x=	i['x']*blockSize-int(winWidth/3)
-						break		
-				break
+		if subLevel!='':
+			for i in specialEntrance:
+				if i['pipeNo']==subLevel:
+					if i['pipeType']==constants.pipeOut:
+						for y in marioList:
+							y.position.x = i['x']*blockSize
+							y.position.y= i['y']*blockSize+\
+									blockSize+y.getSizeY()/2
+							y.setPipeOutStatus(i['y']*blockSize)				
+							_camera.position.x=	i['x']*blockSize-int(winWidth/3)
+							initEnemy()	#初始化当前画面的敌人
+							break		
+					break
 		pass	
 		
 #	set_physics_process(false)
@@ -301,9 +302,11 @@ func hCollision(a,b,delta):
 	if a.xVel>=0:
 		if b.has_method('leftCollide'):
 			if b.leftCollide(a)==true:
+				print(b.type,a.type)
 				if b.xVel<0:
 					b.xVel=0
 				b.position.x=a.getRight()+b.getSize()/2
+
 #		else:
 #			if b.xVel<0:
 #				b.xVel=0
@@ -311,6 +314,8 @@ func hCollision(a,b,delta):
 		
 		if a.has_method('rightCollide'):
 			if a.rightCollide(b)==true: #需要处理位置
+				
+				print(a.type,b.type)
 				if a.xVel>0:
 					a.xVel=0
 				a.position.x=b.getLeft()-a.getSize()/2
@@ -609,7 +614,7 @@ func addLive(_position,id):
 
 #添加	
 func addEnemy(obj):
-	print('addEnemy')
+	print('addEnemy',obj.type)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -637,6 +642,16 @@ func addEnemy(obj):
 		temp.dir=obj['dir']
 		_obj.add_child(temp)
 		pass
+
+func initEnemy():
+	for e in enemyList:
+		if e['init']:
+			continue
+		if e.x*blockSize+blockSize/2>_camera.position.x&& \
+			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
+				e['init']=true
+				addEnemy(e)	
+	pass
 			
 func getMario():
 	return marioList

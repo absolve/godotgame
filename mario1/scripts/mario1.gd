@@ -659,7 +659,7 @@ func rightCollide(obj):
 		else:
 			return true	
 	elif obj.type==	constants.goomba:
-		
+		return false
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -710,6 +710,7 @@ func leftCollide(obj):
 		else:
 			return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
+		return false
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\

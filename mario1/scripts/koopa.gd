@@ -1,20 +1,20 @@
 extends "res://scripts/enemy.gd"
 
 #const speed=40
-const slidingSpeed=330
+const slidingSpeed=400
 var preStatus
 onready var ani=$ani
-const speed=55
+#const speed=55
 var reviveStartTime=0
 var reviveTime=600 #变成壳然后变回乌龟的时间
-
+var combo=0  #分数连击
 
 func _ready():
 #	status=constants.shell
 #	animation("shell")
 #	debug=true
-	mask=[constants.mario,constants.fireball,constants.box,constants.brick
-		,constants.platform]
+	mask=[constants.fireball,constants.box,constants.brick
+		,constants.platform,constants.pipe,constants.koopa,constants.goomba]
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
 	maxYVel=constants.enemyMaxVel #y轴最大速度
@@ -126,10 +126,10 @@ func turnDir():
 	ani.flip_h=!ani.flip_h
 
 func changeDir():
-	if dir==constants.left:	
-		dir=constants.right
-	else:
-		dir=constants.left
+#	if dir==constants.left:	
+#		dir=constants.right
+#	else:
+#		dir=constants.left
 	pass
 
 func pause():
@@ -167,3 +167,27 @@ func animation(type):
 			ani.play("revive_grey")	
 		elif spriteIndex==3:
 			ani.play("revive_red")					
+
+func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		turnLeft()
+		return true
+	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+		turnLeft()
+		return true
+	pass
+	
+func leftCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		turnRight()
+		return true
+	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+		turnRight()
+		return true
+	pass
+	
+func floorCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		
+		return true
+	pass

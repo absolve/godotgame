@@ -3,7 +3,7 @@ extends "res://scripts/enemy.gd"
 onready var ani=$ani
 var timer=0
 var plantOutTime=270
-var speed=30
+#var speed=30
 var oldYPos
 
 func _ready():
