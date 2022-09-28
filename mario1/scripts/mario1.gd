@@ -658,8 +658,14 @@ func rightCollide(obj):
 			return false
 		else:
 			return true	
-	elif obj.type==	constants.goomba:
-		return false
+	elif obj.type==	constants.goomba||obj.type==constants.koopa:
+		if! obj._dead:
+			if invincible:
+				obj.startDeathJump(constants.right)
+				Game.addScore(position)
+				SoundsUtil.playShoot()
+			elif hurtInvincible:
+				pass	
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -710,7 +716,13 @@ func leftCollide(obj):
 		else:
 			return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
-		return false
+		if! obj._dead:
+			if invincible:
+				obj.startDeathJump(constants.right)
+				Game.addScore(position)
+				SoundsUtil.playShoot()
+			elif hurtInvincible:
+				pass	
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\

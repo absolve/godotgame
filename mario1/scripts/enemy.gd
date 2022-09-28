@@ -37,7 +37,7 @@ func jumpedOn():
 
 func startDeathJump():
 	status=constants.deadJump
-	yVel=-350
+	yVel=-300
 	if dir==constants.left:
 		xVel=-45
 	else:

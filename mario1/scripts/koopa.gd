@@ -63,12 +63,15 @@ func jumpedOn():
 		return
 	elif status==constants.sliding:
 		status=constants.shell
+		xVel=0
+		reviveStartTime=0
+		combo=0
 	animation("shell")	
 	if dir==constants.left:
 		dir=constants.right
 	else:
 		dir=constants.left	
-		
+	xVel=0	
 	reviveStartTime=0
 	status=constants.shell
 	ani.position.y=0	

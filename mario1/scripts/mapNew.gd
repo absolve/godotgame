@@ -247,7 +247,7 @@ func checkCollision(a,b,delta):
 	if !is_instance_valid(a)||!is_instance_valid(b):
 		return [hCollision,vCollision]
 	
-	if  a.getRect().intersects(b.getRect()):	#判断左右是否碰撞
+	if  a.getRect().intersects(b.getRect(),true):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.getCenterY()-a.getCenterY())/b.getSizeY()/2
@@ -302,7 +302,7 @@ func hCollision(a,b,delta):
 	if a.xVel>=0:
 		if b.has_method('leftCollide'):
 			if b.leftCollide(a)==true:
-				print(b.type,a.type)
+#				print(b.type,a.type)
 				if b.xVel<0:
 					b.xVel=0
 				b.position.x=a.getRight()+b.getSize()/2
@@ -313,9 +313,8 @@ func hCollision(a,b,delta):
 #			b.position.x=a.getRight()+b.getSize()/2
 		
 		if a.has_method('rightCollide'):
-			if a.rightCollide(b)==true: #需要处理位置
-				
-				print(a.type,b.type)
+			if a.rightCollide(b)==true: #需要处理位置	
+#				print(a.type,b.type)
 				if a.xVel>0:
 					a.xVel=0
 				a.position.x=b.getLeft()-a.getSize()/2
