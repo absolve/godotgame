@@ -3,6 +3,7 @@ extends Node
 
 #游戏中分数
 const scoreList=[100,200,400,500,800,1000,2000,4000,5000,8000]
+const koopaScore=[500, 800, 1000, 2000, 4000, 5000, 8000]
 
 #游戏状态
 const stateChange='stateChange'
@@ -104,6 +105,7 @@ const pipeOut="pipeOut" #水管出去
 const bigCoin='bigCoin'
 const platform="platform"
 const collision='collision'
+const beetle="beetle"#甲壳虫
 
 #方向
 const right="right"

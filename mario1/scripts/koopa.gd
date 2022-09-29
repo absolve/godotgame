@@ -58,23 +58,40 @@ func _update(delta):
 	
 
 func jumpedOn():
-	if status==constants.shell:
+	if status==constants.walking:
+		animation("shell")
+		if dir==constants.left:
+			dir=constants.right
+		else:
+			dir=constants.left	
+		xVel=0	
+		reviveStartTime=0
+		status=constants.shell
+		ani.position.y=0
+	elif status==constants.shell|| status==constants.revive:
 		startSliding()
-		return
 	elif status==constants.sliding:
 		status=constants.shell
 		xVel=0
 		reviveStartTime=0
 		combo=0
-	animation("shell")	
-	if dir==constants.left:
-		dir=constants.right
-	else:
-		dir=constants.left	
-	xVel=0	
-	reviveStartTime=0
-	status=constants.shell
-	ani.position.y=0	
+#	if status==constants.shell:
+#		startSliding()
+#		return
+#	elif status==constants.sliding:
+#		status=constants.shell
+#		xVel=0
+#		reviveStartTime=0
+#		combo=0
+#	animation("shell")	
+#	if dir==constants.left:
+#		dir=constants.right
+#	else:
+#		dir=constants.left	
+#	xVel=0	
+#	reviveStartTime=0
+#	status=constants.shell
+#	ani.position.y=0	
 	pass
 
 
@@ -94,24 +111,16 @@ func startDeathJump(_dir=constants.left):
 	pass	
 
 
-func startSliding():
-#	if dir==constants.left:
-#		xVel=-slidingSpeed
-#	else:
-#		xVel=slidingSpeed	
+func startSliding(_dir=constants.left):
 	animation("shell")
 	status=constants.sliding	
+	dir=_dir
 
 func shellSliding(delta):
-#	if yVel<maxYVel:
-#		yVel+=gravity*delta
 	if dir==constants.left:
 		xVel=-slidingSpeed
 	else:
 		xVel=slidingSpeed	
-#	position.x+=xVel*delta
-#	if !isOnFloor:
-#		position.y+=yVel*delta
 	pass
 
 func turnLeft():
@@ -176,8 +185,19 @@ func rightCollide(obj):
 		turnLeft()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa:
-		turnLeft()
-		return true
+		if status==constants.sliding:
+			if ! obj._dead:
+				obj.startDeathJump(constants.right)
+				if combo<constants.koopaScore.size():
+					Game.addScore(position,constants.koopaScore[combo])
+					combo+=1
+				else:
+					Game.addLive(position,'')
+					SoundsUtil.playItem1up()
+				SoundsUtil.playStomp()			
+		else:	
+			turnLeft()
+			return true
 	pass
 	
 func leftCollide(obj):
@@ -185,12 +205,34 @@ func leftCollide(obj):
 		turnRight()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa:
-		turnRight()
-		return true
+		if status==constants.sliding:
+			if ! obj._dead:
+				obj.startDeathJump()
+				if combo<constants.koopaScore.size():
+					Game.addScore(position,constants.koopaScore[combo])
+					combo+=1
+				else:
+					Game.addLive(position,'')
+					SoundsUtil.playItem1up()
+				SoundsUtil.playStomp()			
+		else:	
+			turnLeft()
+			return true
 	pass
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		
 		return true
+	elif obj.type==constants.goomba||obj.type==constants.koopa:
+		if status==constants.sliding:
+			if ! obj._dead:
+				obj.startDeathJump()
+				if combo<constants.koopaScore.size():
+					Game.addScore(position,constants.koopaScore[combo])
+					combo+=1
+				else:
+					Game.addLive(position,'')
+					SoundsUtil.playItem1up()
+				SoundsUtil.playStomp()		
 	pass

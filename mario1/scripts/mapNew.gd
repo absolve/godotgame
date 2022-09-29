@@ -193,7 +193,7 @@ func _update(delta):
 		
 		#与物体间的碰撞 选择x轴y轴最近的物体
 		for x in _obj.get_children():
-			if y!=x&&y.mask.has(x.type)&&!x.destroy&&!y.destroy:
+			if y!=x&&y.mask.has(x.type)&&!x.destroy&&!y.destroy&&y.active:
 #				if y.getLeft()<=x.getRight()-1 &&y.getRight()>=x.getLeft()+1&&\
 #					y.getTop()<=x.getBottom()-1&&y.getBottom()>=x.getTop()+1:
 					
@@ -457,9 +457,9 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
 #				temp.big=Game.playerData['mario']['big']
-			temp.big=true
+#			temp.big=true
 #				temp.fire=Game.playerData['mario']['fire']
-			temp.fire=true
+#			temp.fire=true
 			_obj.add_child(temp)
 			marioList.append(temp)
 				
@@ -547,7 +547,7 @@ func loadMapFile(fileName:String):
 					enemyList.append(i)	
 						
 		file.close()
-		print(mapData)
+#		print(mapData)
 	else:
 		print('文件不存在')	
 		pass
@@ -666,12 +666,14 @@ func getBulletCount(id):
 func marioStateChange():
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
+			i.active=false
 			i.pause()
 
 #状态结束	
 func marioStateFinish():
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
+			i.active=true
 			i.resume()
 	pass	
 

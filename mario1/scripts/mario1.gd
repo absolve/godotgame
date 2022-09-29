@@ -396,7 +396,8 @@ func adjustCrouchlRect():
 #开始死亡跳跃
 func startDeathJump():
 	status=constants.deadJump
-	dead=true
+#	dead=true
+	active=false
 	yVel=-500
 	gravity=constants.marioDeathGravity
 	Game.emit_signal("marioStateChange")
@@ -623,9 +624,7 @@ func walkingToCastle(delta):
 	elif flagPoleTimer<80: #更换到旗杆的另一个侧
 		dir=constants.right
 		xVel=0
-#		xVel=40
 		acceleration=constants.acceleration
-#		status=constants.walkingToCastle
 	else:
 #		xVel+=2
 #		yVel+=gravity*delta
@@ -639,7 +638,7 @@ func walkingToCastle(delta):
 			xVel+=5
 		animation("walk")	
 	flagPoleTimer+=1	
-	pass
+	
 
 #判断左边碰撞
 func rightCollide(obj):
@@ -665,7 +664,24 @@ func rightCollide(obj):
 				Game.addScore(position)
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
-				pass	
+				pass
+			elif big:
+				if obj.status==constants.shell|| obj.status==constants.revive:
+					obj.startSliding(constants.right)
+					obj.position.x+=3
+					xVel=xVel/2
+				else:	
+					big2Small()
+					setHurtInvincible()
+				pass
+			else:
+				if obj.status==constants.shell|| obj.status==constants.revive:
+					obj.startSliding(constants.right)
+					obj.position.x+=3
+					xVel=xVel/2
+				else:
+					startDeathJump()
+				pass			
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -723,6 +739,21 @@ func leftCollide(obj):
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
 				pass	
+			elif big:
+				if obj.status==constants.shell|| obj.status==constants.revive:
+					obj.startSliding()
+					obj.position.x-=3
+				else:	
+					big2Small()
+					setHurtInvincible()
+				pass
+			else:
+				if obj.status==constants.shell|| obj.status==constants.revive:
+					obj.startSliding()
+					obj.position.x-=3
+					return true
+				else:
+					startDeathJump()	
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -789,7 +820,7 @@ func floorCollide(obj):
 				SoundsUtil.playItem1up()
 				pass	
 			SoundsUtil.playStomp()	
-			yVel=-abs(yVel)/2
+			yVel=-(abs(yVel)-abs(yVel)/2)
 			pass
 		pass
 	
@@ -807,7 +838,13 @@ func ceilcollide(obj):#上方的判断
 		yVel=1	
 		position.y+=1
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
-		
+		if! obj._dead:
+			if invincible:
+				obj.startDeathJump(constants.right)
+				Game.addScore(position)
+				SoundsUtil.playShoot()
+			elif hurtInvincible:
+				pass
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\

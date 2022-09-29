@@ -50,7 +50,7 @@ func boom():
 #	queue_free()
 
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		boom()
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		
@@ -58,7 +58,7 @@ func rightCollide(obj):
 	pass
 	
 func leftCollide(obj):	
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		boom()	
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		
@@ -66,12 +66,12 @@ func leftCollide(obj):
 	pass
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		yVel=-speed
 		return true
 	pass
 
 func ceilcollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		yVel=1
 	pass		
