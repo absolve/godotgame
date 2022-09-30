@@ -82,21 +82,27 @@ margin_right = 220.0
 margin_bottom = 168.0
 key = "nextLevel"
 
+[node name="status" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
+margin_top = 172.0
+margin_right = 220.0
+margin_bottom = 211.0
+key = "status"
+
 [node name="background" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 172.0
+margin_top = 215.0
 margin_right = 220.0
-margin_bottom = 195.0
+margin_bottom = 238.0
 key = "background"
 list = [ "overworld", "castle", "underwater" ]
 
 [node name="music" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 199.0
+margin_top = 242.0
 margin_right = 220.0
-margin_bottom = 222.0
+margin_bottom = 265.0
 key = "music"
 list = [ "overworld", "castle", "underwater", "underground" ]
 

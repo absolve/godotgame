@@ -154,6 +154,9 @@ func _update(delta):
 #		yVel=-40
 #		position.y+=yVel*delta	
 		pipeOut(delta)	
+	elif status==constants.onlywalk:
+		onlywalk(delta)	
+		
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
 		specialState(delta)
@@ -507,6 +510,16 @@ func walkIntoPipe(delta):
 			status=constants.empty
 			print("end")
 
+#自动行走
+func onlywalk(delta):
+	if dir==constants.left:
+		xVel=-40
+	elif dir==constants.right:
+		xVel=40	
+	animation('walk')	
+	
+	pass
+
 #变大
 func small2Big():
 	if big:
@@ -661,26 +674,23 @@ func rightCollide(obj):
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
-				Game.addScore(position)
+				Game.addScore(Vector2(position.x,getTop()))
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
 				pass
-			elif big:
-				if obj.status==constants.shell|| obj.status==constants.revive:
-					obj.startSliding(constants.right)
-					obj.position.x+=3
-					xVel=xVel/2
-				else:	
-					big2Small()
-					setHurtInvincible()
-				pass
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
-					obj.startSliding(constants.right)
-					obj.position.x+=3
-					xVel=xVel/2
+					obj.startSliding()
+					obj.position.x-=3
 				else:
-					startDeathJump()
+					if yVel>5:
+						jumpOnEnemy(obj)
+					else:	
+						if big:
+							big2Small()
+							setHurtInvincible()
+						else:	
+							startDeathJump()
 				pass			
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
@@ -735,25 +745,23 @@ func leftCollide(obj):
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
-				Game.addScore(position)
+				Game.addScore(Vector2(position.x,getTop()))
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
 				pass	
-			elif big:
-				if obj.status==constants.shell|| obj.status==constants.revive:
-					obj.startSliding()
-					obj.position.x-=3
-				else:	
-					big2Small()
-					setHurtInvincible()
-				pass
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding()
 					obj.position.x-=3
-					return true
 				else:
-					startDeathJump()	
+					if yVel>5:
+						jumpOnEnemy(obj)
+					else:
+						if big:
+							big2Small()
+							setHurtInvincible()
+						else:	
+							startDeathJump()	
 		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
@@ -810,18 +818,7 @@ func floorCollide(obj):
 		else:		
 			return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa:
-		if! obj._dead:
-			obj.jumpedOn()
-			if combo<constants.scoreList.size():
-				Game.addScore(position,constants.scoreList[combo])
-				combo+=1
-			else:
-				Game.addLive(position,playerId)
-				SoundsUtil.playItem1up()
-				pass	
-			SoundsUtil.playStomp()	
-			yVel=-(abs(yVel)-abs(yVel)/2)
-			pass
+		jumpOnEnemy(obj)
 		pass
 	
 	pass
@@ -841,7 +838,7 @@ func ceilcollide(obj):#上方的判断
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
-				Game.addScore(position)
+				Game.addScore(Vector2(position.x,getTop()))
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
 				pass
@@ -859,7 +856,7 @@ func getItem(i):
 		i.destroy=true
 		small2Big()
 		SoundsUtil.playMushroom()
-		Game.addScore(position,1000)
+		Game.addScore(Vector2(position.x,getTop()),1000)
 #		addScore(m,1000)
 	elif i.type==constants.fireflower:
 		i.destroy=true
@@ -867,22 +864,22 @@ func getItem(i):
 			big2Fire()
 		else:
 			small2Big()	
-		Game.addScore(position,1000)	
+		Game.addScore(Vector2(position.x,getTop()),1000)	
 		SoundsUtil.playMushroom()
 	elif i.type==constants.star:
 		i.destroy=true
 		setInvincible()
-		Game.addScore(position,1000)	
+		Game.addScore(Vector2(position.x,getTop()),1000)	
 		SoundsUtil.stopBgm()
 		SoundsUtil.playSpecialBgm()
 	elif i.type==constants.mushroom1up:	
 		i.destroy=true
-		Game.addLive(position,playerId)	
+		Game.addLive(Vector2(position.x,getTop()),playerId)	
 		SoundsUtil.playItem1up()
 	elif i.type==constants.bigCoin:
 		i.destroy=true
 		SoundsUtil.playCoin()
-		Game.addCoin(position)	
+		Game.addCoin(Vector2(position.x,getTop()))	
 	pass
 
 #进入水管
@@ -931,6 +928,21 @@ func addPoleScore(polePos,obj):
 	else:
 		obj.showScore(200)
 	obj.startFall()
+	pass
+
+#踩到敌人
+func jumpOnEnemy(obj):
+	if! obj._dead:
+		obj.jumpedOn()
+		if combo<constants.scoreList.size():
+			Game.addScore(position,constants.scoreList[combo])
+			combo+=1
+		else:
+			Game.addLive(position,playerId)
+			SoundsUtil.playItem1up()
+			pass	
+		SoundsUtil.playStomp()	
+		yVel=-(abs(yVel)-abs(yVel)/2)
 	pass
 
 #动画

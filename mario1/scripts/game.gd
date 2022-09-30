@@ -11,7 +11,7 @@ signal invincibleFinish #无敌时间结束
 signal marioStateChange
 signal marioStateFinish
 signal marioInCastle  #进入城堡
-signal marioIntoPipe #进入水管
+signal marioIntoPipe #进入水管 
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',

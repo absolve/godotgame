@@ -31,4 +31,9 @@ current = true
 wait_time = 2.0
 one_shot = true
 
+[node name="gameover" type="Timer" parent="."]
+wait_time = 1.8
+one_shot = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="gameover" to="." method="_on_gameover_timeout"]

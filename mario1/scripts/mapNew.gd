@@ -27,6 +27,7 @@ onready var _tile=$tile
 onready var _fps=$layer/fps
 onready var _camera=$camera
 onready var _timer=$Timer
+onready var _gameover=$gameover
 
 #var path="res://levels/1-1.json"
 var mapDir="res://levels"	#内置地图路径
@@ -60,7 +61,7 @@ func _ready():
 	Game.connect("timeOut",self,"timeOut")
 	Game.connect("hurryup",self,"hurryup")
 	
-	loadMapFile("res://levels/test7.json")
+	loadMapFile("res://levels/1-1-1.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -109,6 +110,10 @@ func _update(delta):
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()	
 			if i.getTop()>winHeight:
+				if i.type==constants.mario:
+					if i.status!=constants.deadJump:
+						marioStateChange()
+					_gameover.start()
 				i.queue_free()	
 			pass
 			
@@ -246,8 +251,9 @@ func checkCollision(a,b,delta):
 
 	if !is_instance_valid(a)||!is_instance_valid(b):
 		return [hCollision,vCollision]
-	
-	if  a.getRect().intersects(b.getRect(),true):	#判断左右是否碰撞
+	var aRect= a.getRect()
+	var bRect=b.getRect()
+	if  aRect.intersects(bRect,true):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.getCenterY()-a.getCenterY())/b.getSizeY()/2
@@ -262,7 +268,7 @@ func checkCollision(a,b,delta):
 					hCollision=true
 	
 	#排除边缘的碰撞	
-	if  a.getRect().intersects(b.getRect(),true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():	
+	if  aRect.intersects(bRect,true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():	
 		var yVal =a.position.y-b.position.y		
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
@@ -742,4 +748,9 @@ func _on_Timer_timeout():
 		get_tree().get_root().add_child(temp)
 		set_process_input(true)
 		pass	
+	pass # Replace with function body.
+
+
+func _on_gameover_timeout():
+	print('gameover')
 	pass # Replace with function body.
