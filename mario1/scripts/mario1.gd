@@ -40,6 +40,7 @@ var enterPipeX=0 #进入水管的时候判断是否已经完全进去水管
 var enterPipeY=0 
 var combo=0  #分数连击
 var pipeNo=0 #水管的编号
+var _delta
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -108,6 +109,7 @@ func _ready():
 	fireball1.set_loop(false)
 	var slide1=slide.stream as AudioStreamOGGVorbis
 	slide1.set_loop(false)
+	
 	pass 
 
 
@@ -162,6 +164,7 @@ func _update(delta):
 		specialState(delta)
 	if debug:	
 		update()	
+	self._delta=delta
 	pass
 	
 func specialState(_delta):
@@ -398,12 +401,13 @@ func adjustCrouchlRect():
 
 #开始死亡跳跃
 func startDeathJump():
+	SoundsUtil.playDeath()
 	status=constants.deadJump
 #	dead=true
 	active=false
 	yVel=-500
 	gravity=constants.marioDeathGravity
-	Game.emit_signal("marioStateChange")
+	Game.emit_signal("marioDead")
 	ani.play(death_jump_animation[aniIndex])
 	z_index=5
 	deadStartTime=0
@@ -473,6 +477,7 @@ func setPipeOutStatus(y):
 	status=constants.pipeOut
 	pass
 
+#进入水管
 func pipeIn(delta):
 	if getTop()<enterPipeY:
 		position.y+=yVel*delta	
@@ -513,9 +518,11 @@ func walkIntoPipe(delta):
 #自动行走
 func onlywalk(delta):
 	if dir==constants.left:
-		xVel=-40
+		xVel=-70
 	elif dir==constants.right:
-		xVel=40	
+		xVel=70	
+	if xVel>0 || xVel<0:
+		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed	
 	animation('walk')	
 	
 	pass
@@ -526,6 +533,7 @@ func small2Big():
 		return
 	if hurtInvincible:
 		modulate.a=1
+	active=false		
 	preStatus=status
 	status=constants.small2big
 	ani.play("small2big")
@@ -539,6 +547,7 @@ func big2Fire():
 		return
 	if hurtInvincible:
 		modulate.a=1	
+	active=false	
 	preStatus=status
 	status=constants.big2fire
 	Game.emit_signal("marioStateChange")
@@ -576,10 +585,13 @@ func fireState(_delta):
 		fire=true
 		if invincible:
 			shadow.visible=true
+		active=true	
 		Game.emit_signal('marioStateFinish')
 
 #变小
 func big2Small():
+	SoundsUtil.playBig2small()
+	active=false
 	preStatus=status
 	status=constants.big2small
 	ani.speed_scale=1
@@ -597,6 +609,7 @@ func startSliding(length=0):
 	gravity=0 #防止加速下落
 	yVel=180
 	dir=constants.right
+	Game.emit_signal("marioStartSliding")
 #	ani.flip_h=true
 #	self.poleLength=length
 	pass
@@ -657,13 +670,12 @@ func walkingToCastle(delta):
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box:
 #		if obj.type==constants.box && obj._visible:
-		
 		#判断是不是跨过一个间隙
 		if !Game.checkMapBrickIndex(obj.localx-1,\
 			obj.localy)&&yVel>0 && getBottom()-obj.getTop()<constants.boxHeight:
 			position.y=obj.getTop()-getSizeY()/2
 			position.x=obj.getLeft()-getSize()/2+0.2
-			
+
 			yVel=1
 			return false
 		if obj.type==constants.box&&!obj._visible:
@@ -680,8 +692,8 @@ func rightCollide(obj):
 				pass
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
-					obj.startSliding()
-					obj.position.x-=3
+					obj.startSliding(constants.right)
+					obj.position.x+=obj.slidingSpeed*_delta
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
@@ -691,15 +703,14 @@ func rightCollide(obj):
 							setHurtInvincible()
 						else:	
 							startDeathJump()
-				pass			
-		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
-			if obj.dir==constants.right&&Input.is_action_pressed("ui_right"):
+			if status==constants.onlywalk || \
+			(isOnFloor&&obj.dir==constants.right&&Input.is_action_pressed("ui_right")):
 				enterPipe(obj)
 			else:
 				return true		
@@ -720,7 +731,7 @@ func rightCollide(obj):
 				setwalkingToCastle()
 	elif obj.type==constants.collision:
 		if obj.value==constants.castlePos:
-			destroy=true
+#			destroy=true
 			Game.emit_signal("marioInCastle")
 		pass
 
@@ -734,7 +745,7 @@ func leftCollide(obj):
 			position.y=obj.getTop()-getSizeY()/2
 			position.x=obj.getRight()+getSize()/2-0.2
 			yVel=1
-			
+
 			return false
 			
 		if obj.type==constants.box&&!obj._visible:
@@ -752,7 +763,7 @@ func leftCollide(obj):
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding()
-					obj.position.x-=3
+					obj.position.x-=obj.slidingSpeed*_delta
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
@@ -769,7 +780,7 @@ func leftCollide(obj):
 		getItem(obj)
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
-			if obj.dir==constants.left&&Input.is_action_pressed("ui_left"):
+			if isOnFloor&& obj.dir==constants.left&&Input.is_action_pressed("ui_left"):
 				enterPipe(obj)
 			else:
 				return true		
@@ -780,7 +791,7 @@ func leftCollide(obj):
 		pass
 	elif obj.type==constants.collision:
 		if obj.value==constants.castlePos:
-			destroy=true
+#			destroy=true
 			Game.emit_signal("marioInCastle")
 		pass
 	pass
@@ -1085,6 +1096,7 @@ func _on_ani_animation_finished():
 		big=true
 		ani.position.y=0
 		status=preStatus
+		active=true
 		adjustBigRect()
 		Game.emit_signal('marioStateFinish')
 	elif status==constants.big2small:
@@ -1092,6 +1104,7 @@ func _on_ani_animation_finished():
 		status=preStatus
 		big=false
 		fire=false
+		active=true
 		position.y+=15
 		aniIndex=0
 		adjustSmallRect()

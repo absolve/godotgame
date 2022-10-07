@@ -108,6 +108,7 @@ const bigCoin='bigCoin'
 const platform="platform"
 const collision='collision'
 const beetle="beetle"#甲壳虫
+const castleFlag="castleFlag"
 
 #方向
 const right="right"
@@ -116,8 +117,8 @@ const down="down"
 const up="up"
 
 #mario 数据
-var mario_speed=180
-var mario_max_speed=300		#跑的时候最大速度
+#var mario_speed=180
+#var mario_max_speed=300		#跑的时候最大速度
 
 #var runAccel=8 #奔跑加速度
 #var friction=9	#摩檫力
@@ -129,7 +130,7 @@ var mario_max_speed=300		#跑的时候最大速度
 #const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=1700
+const enemyGravity=1800
 const enemyMaxVel=900
 
 const slideFriction=590 #滑行的加速度
@@ -137,7 +138,7 @@ const crouchFriction=440 #蹲下去时加速度
 const acceleration=240	#移动加速度
 const runAcceleration=400 #跑的加速度
 const marioWalkMaxSpeed=170 #走的时候最大速度
-const marioRunMaxSpeed=400 #跑的时候最大速度
+const marioRunMaxSpeed=340 #跑的时候最大速度
 const marioAniSpeed=100
 const marioGravity=1800 #重力
 const marioJumpGravity=1000

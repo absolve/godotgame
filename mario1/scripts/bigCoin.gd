@@ -4,7 +4,7 @@ extends "res://scripts/object.gd"
 """
 onready var ani=$ani
 var status=constants.empty
-#var isOnFloor=true
+var coin=preload("res://scenes/coin.tscn")
 
 func _ready():
 	mask=[constants.box]
@@ -22,5 +22,11 @@ func floorCollide(obj):
 			SoundsUtil.playCoin()
 			active=false
 			destroy=true
+			var temp=coin.instance()
+			temp.position=position
+			temp.position.y=position.y-getSizeY()/2
+			Game.addObj(temp)
+			Game.addCoin(self,1)
+			Game.addScore(position,200)
 		pass
 	pass

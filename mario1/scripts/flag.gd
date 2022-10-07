@@ -10,10 +10,13 @@ var oldYpos=0
 var spriteIndex=0
 
 func _ready():
+	type=constants.castleFlag
+	active=false
 	yVel=-speed
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	oldYpos=position.y
 	position.y+=getSizeY()
+	print('oldYpos',oldYpos)
 	pass
 
 func rising():
@@ -23,8 +26,10 @@ func _update(delta):
 	if status==constants.rising:
 		position.y+=yVel*delta
 		if abs(position.y-oldYpos) >=getSizeY():
+			Game.emit_signal("flagRising")
 			position.y=oldYpos-getSizeY()
 			status=constants.empty
-			Game.emit_signal("flagRising")
+			yVel=0
+			
 		pass
 	pass

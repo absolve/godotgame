@@ -130,6 +130,8 @@ func loadMapFile(fileName:String):
 			_mapName.setValue(str(currentLevel['mapName']))
 		if 	currentLevel.has('status'):
 			_status.setValue(str(currentLevel['status']))
+		if currentLevel.has('nextLevel'):
+			_nextLevel.setValue(str(currentLevel['nextLevel']))	
 			
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
@@ -352,11 +354,11 @@ func _input(event):
 			if event.is_pressed():
 				if (event as InputEventKey).scancode==KEY_LEFT:	
 					if camera.position.x>-minWidthNum/2*blockSize:  #前后一半屏幕
-						camera.position.x-=10
+						camera.position.x-=20
 					pass
 				elif (event as InputEventKey).scancode==KEY_RIGHT:	
 					if camera.position.x<mapWidthSize*blockSize-minWidthNum/2*blockSize:
-						camera.position.x+=10
+						camera.position.x+=20
 					pass	
 		elif event is InputEventMouseButton:
 			if event.button_index == BUTTON_LEFT and  event.pressed:
@@ -390,8 +392,7 @@ func _input(event):
 				else:	
 					var pos=getItemPos(get_global_mouse_position())	
 					addItem(selectItemType,selectItem,pos)
-		pass
-	pass
+					
 
 func _draw():
 	if mode=="edit":

@@ -12,6 +12,9 @@ signal marioStateChange
 signal marioStateFinish
 signal marioInCastle  #进入城堡
 signal marioIntoPipe #进入水管 
+signal countFinish #计算分数结束
+signal marioDead #
+signal marioStartSliding #开始
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',
@@ -20,8 +23,9 @@ var  backgroundcolor = ['#5C94FC',
 #var score =preload("res://scenes/score.tscn")
 var fireball=preload("res://scenes/fireball.tscn")
 
-#保存的数据 level地图文件名  mapName显示的标题名字
+#保存的数据 level地图文件名  mapName显示的标题名字 subLevel 地图中可以进来或者出去的点
 var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapName':"",
+				"time":0,
 				"mario":{"big":false,"fire":false}}
 
 

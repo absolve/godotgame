@@ -10,7 +10,7 @@ onready var _level=$hbox/world/level
 onready var _time=$hbox/timeLable/time
 
 var countDownStart=true
-var currentTime=100  #时间
+var currentTime=0  #时间
 var tick=0
 var tickNum=25
 var fastTickNum=1
@@ -112,6 +112,7 @@ func _update(_delta):
 				addScore(100)
 				SoundsUtil.playScore()
 				if currentTime<=0:
+					Game.emit_signal("countFinish")
 					status=constants.empty
 			_time.text="%0*d"%[3,currentTime]
 	pass	

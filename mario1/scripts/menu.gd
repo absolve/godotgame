@@ -63,13 +63,12 @@ func gameEnd():
 	set_process_input(true)
 	pass
 
-func _process(delta):
+func _physics_process(delta):
 	if status==constants.nextLevel:
 		timer+=1
 		if timer>nextLevelTime:
-			var scene=load("res://scenes/map.tscn")
+			var scene=load("res://scenes/mapNew.tscn")
 			var temp=scene.instance()
-			temp.mode="game"
 			queue_free()
 			set_process_input(false)
 			get_tree().get_root().add_child(temp)
@@ -90,9 +89,8 @@ func _process(delta):
 	elif status==constants.gameRestart:
 		timer+=1
 		if timer>nextLevelTime:
-			var scene=load("res://scenes/map.tscn")
+			var scene=load("res://scenes/mapNew.tscn")
 			var temp=scene.instance()
-			temp.mode="game"
 			temp.marioDeathPos=marioDeathPos
 			queue_free()
 			set_process_input(false)

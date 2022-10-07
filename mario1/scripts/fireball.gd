@@ -5,7 +5,7 @@ var playerId=0
 var dir=constants.right
 var rotate
 var status=constants.fly
-const speed=400
+const speed=370
 
 func _ready():
 	mask=[constants.brick,constants.box,constants.pipe,
@@ -42,7 +42,7 @@ func boom():
 		yVel=0
 		gravity=0
 		status=constants.boom
-		SoundsUtil.playBoom()
+#		SoundsUtil.playBoom()
 		ani.play('boom')
 		z_index=5
 		yield(ani,"animation_finished")
@@ -52,16 +52,26 @@ func boom():
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		boom()
+		SoundsUtil.playBoom()
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
-		
+		if !obj._dead&&status!=constants.boom:
+			obj.startDeathJump(constants.right)
+			Game.addScore(position)
+			boom()
+			SoundsUtil.playShoot()
 		pass	
 	pass
 	
 func leftCollide(obj):	
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		boom()	
+		SoundsUtil.playBoom()
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
-		
+		if !obj._dead&&status!=constants.boom:
+			obj.startDeathJump()
+			Game.addScore(position)
+			boom()
+			SoundsUtil.playShoot()
 		pass
 	pass
 	
@@ -69,9 +79,22 @@ func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		yVel=-speed
 		return true
+	elif obj.type==constants.goomba || obj.type==constants.koopa:
+		if !obj._dead&&status!=constants.boom:
+			obj.startDeathJump()
+			Game.addScore(position)
+			boom()
+			SoundsUtil.playShoot()
 	pass
 
 func ceilcollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		yVel=1
+	elif obj.type==constants.goomba || obj.type==constants.koopa:
+		if !obj._dead&&status!=constants.boom:
+			obj.startDeathJump()
+			Game.addScore(position)
+			boom()
+			SoundsUtil.playShoot()
+						
 	pass		

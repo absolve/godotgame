@@ -52,6 +52,7 @@ animations = [ {
 } ]
 
 [node name="item" type="Node2D"]
+z_index = 1
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

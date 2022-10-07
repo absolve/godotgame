@@ -110,7 +110,7 @@ func opened(delta):
 	
 func startBumped(isBig=false):
 	print('startBumped')
-	yVel=-280
+	yVel=-200
 	status=constants.bumped
 	if !_visible:
 		ani.play("opened")
@@ -122,6 +122,7 @@ func startBumped(isBig=false):
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj(temp)
 		Game.addCoin(self,1)
+		Game.addScore(position,200)
 		SoundsUtil.playCoin()
 	elif content==constants.coins6 && coin6Num<=6:	
 		coin6Num+=1
@@ -130,6 +131,7 @@ func startBumped(isBig=false):
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj(temp)
 		Game.addCoin(self,1)
+		Game.addScore(position,200)
 		SoundsUtil.playCoin()
 	elif content==constants.mushroom||content==constants.mushroom1up||\
 			content==constants.star||content==constants.fireflower:	

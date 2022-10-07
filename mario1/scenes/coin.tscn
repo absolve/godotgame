@@ -11,7 +11,7 @@ animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "default",
-"speed": 8.0
+"speed": 10.0
 } ]
 
 [node name="coin" type="Node2D"]

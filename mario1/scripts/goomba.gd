@@ -100,6 +100,11 @@ func leftCollide(obj):
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		
+		if obj.type==constants.box&&obj.status==constants.bumped:
+			Game.addScore(position,200)
+			if position.x>=obj.position.x:
+				startDeathJump(constants.right)
+			else:
+				startDeathJump()
 		return true
 	pass

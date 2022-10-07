@@ -22,6 +22,6 @@ func spinning(delta):
 	yVel+=gravity*delta
 	position.y+=yVel*delta
 	if yVel>400:
-		Game.addScore(position,200)
+#		Game.addScore(position,200)
 		queue_free()
 	pass		

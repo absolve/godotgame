@@ -3,8 +3,8 @@ extends "res://scripts/object.gd"
 var status=constants.growing
 var dir=constants.right
 var oldPos=0
-const speed=100  #速度
-const jumpSpeed=460
+const speed=110  #速度
+const jumpSpeed=270
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容
 onready var ani=$ani
@@ -51,17 +51,20 @@ func _update(delta):
 	pass
 
 func growing(delta):
-	if oldPos-position.y>=rect.size.y:
+	if oldPos-position.y>rect.size.y:
 		gravity=constants.enemyGravity
 		active=true
 		if type==constants.fireflower:
 			status=constants.stop
-			active=false
+#			active=false
 			gravity=0
+			xVel=0
+			yVel=0
 		elif type==constants.star:
 			yVel=-jumpSpeed
 			status=constants.jumping	
-		status=constants.moving	
+		if type!=constants.fireflower:
+			status=constants.moving	
 #		if dir==constants.left:
 #			xVel=-speed
 #		else:
@@ -127,6 +130,12 @@ func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
 		if type==constants.star:
 			yVel=-jumpSpeed
+		if 	obj.type==constants.box&& obj.status==constants.bumped:
+			yVel=-jumpSpeed
+			if position.x<obj.position.x && dir==constants.right:
+				dir=constants.left
+			elif position.x>=obj.position.x && dir==constants.left:
+				dir=constants.right
 		return true
 	pass	
 
