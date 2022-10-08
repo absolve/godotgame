@@ -69,7 +69,7 @@ func _ready():
 	
 	print(_camera.get_camera_screen_center())
 	
-	loadMapFile("res://levels/1-2.json")
+	loadMapFile("res://levels/test10.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")

@@ -75,23 +75,7 @@ func jumpedOn():
 		xVel=0
 		reviveStartTime=0
 		combo=0
-#	if status==constants.shell:
-#		startSliding()
-#		return
-#	elif status==constants.sliding:
-#		status=constants.shell
-#		xVel=0
-#		reviveStartTime=0
-#		combo=0
-#	animation("shell")	
-#	if dir==constants.left:
-#		dir=constants.right
-#	else:
-#		dir=constants.left	
-#	xVel=0	
-#	reviveStartTime=0
-#	status=constants.shell
-#	ani.position.y=0	
+
 	pass
 
 
@@ -145,11 +129,18 @@ func changeDir():
 	pass
 
 func pause():
+	preStatus=status
+	status=constants.stop
+	active=false
 	ani.stop()
 
 func resume():
+	status=preStatus
+	ani.play()
 	if status!=constants.dead&&status!=constants.deadJump:
-		ani.play()	
+		active=true
+#	if status!=constants.dead&&status!=constants.deadJump:
+#		ani.play()	
 
 func animation(type):
 	if type=="walk":

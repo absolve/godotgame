@@ -5,6 +5,7 @@ var timer=0
 var plantOutTime=270
 #var speed=30
 var oldYPos
+var preStatus
 
 func _ready():
 	debug=true
@@ -40,7 +41,7 @@ func _update(delta):
 		if timer<plantOutTime:
 			timer+=1
 		else:
-			timer=0
+			timer=0	
 			status=	constants.plantIn
 		pass
 	elif status==constants.plantIn:
@@ -52,14 +53,24 @@ func _update(delta):
 		if timer<plantOutTime:
 			timer+=1
 		else:
-			timer=0
-			status=	constants.plantOut		
+			if Game.getMario().size()>0:
+				if Game.getMario()[0].getRight()>getLeft() &&\
+					Game.getMario()[0].getLeft()<getRight():
+						timer-=20
+				else:
+					timer=0
+					status=	constants.plantOut	
+			else:
+				timer=0
+				status=	constants.plantOut			
 	pass
 
 func pause():
+	preStatus=status
 	status=constants.stop
 	ani.stop()
 
 func resume():
+	status=preStatus
 	ani.play()	
 	

@@ -1070,6 +1070,20 @@ func playJumpSound():
 	else:
 		jump.play()
 
+func pause():
+	preStatus=status
+	status=constants.stop
+	active=false
+	ani.stop()
+
+func resume():
+	status=preStatus
+	if status!=constants.small2big||status!=constants.big2small||\
+	status!=constants.deadJump||status!=constants.walkInPipe||\
+	status!=constants.pipeOut||status!=constants.pipeIn||status!=constants.big2fire:
+		active=true
+	ani.play()
+
 func _on_ani_frame_changed():
 	if status==constants.small2big:
 		if ani.frame in [0,2,4]:

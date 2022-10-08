@@ -1,5 +1,6 @@
 extends "res://scripts/object.gd"
 
+var preStatus
 var status=constants.spin
 #var isOnFloor=false
 onready var ani=$ani
@@ -24,4 +25,13 @@ func spinning(delta):
 	if yVel>400:
 #		Game.addScore(position,200)
 		queue_free()
-	pass		
+
+func pause():
+	preStatus=status
+	status=constants.stop
+	ani.stop()
+
+func resume():
+	status=preStatus
+	ani.play()
+	

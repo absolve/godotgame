@@ -1,5 +1,6 @@
 extends "res://scripts/object.gd"
 
+var preStatus
 var status=constants.growing
 var dir=constants.right
 var oldPos=0
@@ -45,7 +46,8 @@ func _update(delta):
 	elif status==constants.moving:	
 		moving(delta)
 	elif status==constants.stop:
-		stop(delta)	
+#		stop(delta)	
+		pass
 	elif status==constants.jumping:
 		jumping(delta)
 	pass
@@ -90,9 +92,8 @@ func startJump():
 	yVel=-jumpSpeed
 	pass
 
-func stop(delta):
-	
-	pass
+#func stop(delta):
+#	pass
 
 func jumping(delta):
 	if dir==constants.left:
@@ -109,9 +110,15 @@ func turnRight():
 	xVel=speed	
 
 func pause():
+	preStatus=status
+	status=constants.stop
+	active=false
 	ani.stop()
 
 func resume():
+	status=preStatus
+	if status!=constants.growing:
+		active=true
 	ani.play()	
 	
 func rightCollide(obj):

@@ -9,12 +9,13 @@ var content=constants.empty  #里面的内容
 #var mainScene
 var spriteIndex=0  #打开后的颜色 0 是普通颜色 1 蓝色 2灰色  3金币盒子
 var _visible=true #是否可见
-var coin6Num=1  #多个硬币的数量 最大6
+var coin6Num=1  #多个硬币的数量
 #var destroy=false #没有东西的时候是否被摧毁
 #var maxXVel=0
 #var maxYVel=0
 #var isOnFloor=false
 var needDestroy=false
+var coinsNum=0 #硬币数量
 
 onready var ani=$ani
 var brick=preload("res://scenes/brickPiece.tscn")
@@ -41,16 +42,26 @@ func _ready():
 		ani.play("default")
 	if _visible==false:
 		visible=false
-#	visible=false	
-	pass
+
+	print('coins12'.split('coins',false))
+
+	if content.begins_with('coins'):
+		var temp = content.split('coins',false)
+		if temp.size()>0&&temp[0].is_valid_integer():
+			coinsNum=temp[0].to_int()
+		else:
+			coinsNum=1
+	print(coinsNum)
 
 func _update(delta):
 	if status==constants.resting:
-		resting(delta)
+#		resting(delta)
+		pass
 	elif status==constants.bumped:
 		bumped(delta)
 	elif status==constants.opened:
-		opened(delta)
+#		opened(delta)
+		pass
 	pass
 
 func resting(delta):
@@ -78,8 +89,8 @@ func bumped(delta):
 							temp.type=constants.mushroom
 				Game.addObj(temp)
 #				SoundsUtil.playItem()
-			elif content==constants.coins6:
-				if coin6Num<6:
+			elif content.begins_with('coins'):
+				if coinsNum>0:
 					status=constants.resting	
 					return	
 			elif content==constants.empty || content=='':
@@ -122,16 +133,17 @@ func startBumped(isBig=false):
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj(temp)
 		Game.addCoin(self,1)
-		Game.addScore(position,200)
+		Game.addScore(Vector2(position.x,position.y-getSizeY()/2),200)
 		SoundsUtil.playCoin()
-	elif content==constants.coins6 && coin6Num<=6:	
-		coin6Num+=1
+	elif content.begins_with('coins') && coinsNum>0:	
+#		coin6Num+=1
+		coinsNum-=1
 		var temp=coin.instance()
 		temp.position=position
 		temp.position.y=position.y-getSizeY()/2
 		Game.addObj(temp)
 		Game.addCoin(self,1)
-		Game.addScore(position,200)
+		Game.addScore(Vector2(position.x,position.y-getSizeY()/2),200)
 		SoundsUtil.playCoin()
 	elif content==constants.mushroom||content==constants.mushroom1up||\
 			content==constants.star||content==constants.fireflower:	

@@ -13,8 +13,8 @@ var tick=22
 var status=constants.empty
 
 func _ready():
-	var scene=load("res://scenes/map.tscn").instance()
-	scene.mode='show'
+	var scene=load("res://scenes/mapNew.tscn").instance()
+#	scene.mode='show'
 	add_child(scene)
 	scene.loadMapFile(path)
 	scene.show_behind_parent=true

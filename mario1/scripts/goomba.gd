@@ -68,15 +68,20 @@ func startDeathJump(_dir=constants.left):
 	pass
 
 func pause():
-#	preStatus=status
-#	status=constants.stop
+	preStatus=status
+	status=constants.stop
+	active=false
 	ani.stop()
 
 func resume():
 #	if status!=constants.dead&&status!=constants.deadJump:
 #		status=preStatus
+	status=preStatus
+	ani.play()	
 	if status!=constants.dead&&status!=constants.deadJump:
-		ani.play()	
+		active=true
+#	if status!=constants.dead&&status!=constants.deadJump:
+#		ani.play()	
 		
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
