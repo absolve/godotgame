@@ -408,8 +408,8 @@ func _draw():
 			Color.gray,0.5,true)	
 		for i in bgTiles+allTiles:
 			if i.type=='goomba':
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 				pass
 			elif i.type=='koopa':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):

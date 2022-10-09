@@ -4,7 +4,7 @@ var status=constants.moveDown
 #onready var ani=$ani
 onready var list=$len
 var spriteIndex=0
-var speed=50
+var speed=10
 var lens=2
 var platformImg=preload("res://sprites/platform.png")
 var winHeight
@@ -21,8 +21,8 @@ func _ready():
 		yVel=speed
 	elif status==constants.moveUp:	
 		yVel=-speed
-	rect=Rect2(Vector2(0,0),Vector2(32*lens,16))
-		
+	rect=Rect2(Vector2(-32*lens/2,-8),Vector2(32*lens,16))
+#	rect=Rect2(-32*lens/2,0,32*lens,16)	
 	for i in range(lens):
 		var temp=Sprite.new()
 		temp.texture=platformImg
@@ -30,15 +30,17 @@ func _ready():
 		temp.position=Vector2(i*32,0)
 		list.add_child(temp)
 		pass
-		
+	print(lens)	
+	print(getRight())	
+	print(getRect().position,getRect().size)
 	pass
 
 func _update(delta):
 	if status==constants.moveDown || status==constants.moveUp:
 		for i in Game.getObj().get_children():
 			if i.type==constants.mario&&i.status!=constants.jump:
-				if i.getLeft()>getLeft()&&i.getRight()<getRight():
-					print(i.getLeft(),' ',getLeft())
+				if i.getRight()>getLeft()&&i.getLeft()<getRight():
+#					print(i.getRight(),' ',getRight())
 					if i.getBottom()>getTop()-0.1&&i.getBottom()<getTop()+0.1:
 						i.position.y=position.y-i.getSizeY()/2+yVel*delta
 						
@@ -47,17 +49,30 @@ func _update(delta):
 			position.y=-16
 	pass
 
-func getLeft():
-	return position.x
-	
-func getRight():
-	return 	position.x+rect.size.x
+#func getLeft():
+#	return position.x
+#
+#func getRight():
+#	return 	position.x+rect.size.x
 
-func getTop():
-	return position.y
+#func getTop():
+#	return position.y
+#
+#func getBottom():
+#	return position.y+rect.size.y
+
+#func getCenterX():
+#	return position.x-rect.size.x/2
+#
+#func getCenterY():
+#	return position.y-rect.size.y/2
+
+#func getRect():
+#	var temp =rect
+#	temp.position+=position
+#	temp.size=Vector2(32*lens*2,position.y)
+#	return temp
 	
-func getBottom():
-	return position.y+rect.size.y
 
 func rightCollide(obj):
 	return false

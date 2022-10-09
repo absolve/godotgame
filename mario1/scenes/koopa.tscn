@@ -228,7 +228,7 @@ animations = [ {
 } ]
 
 [node name="koopa" type="Node2D"]
-z_index = 2
+z_index = 3
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

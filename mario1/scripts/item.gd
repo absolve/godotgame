@@ -22,7 +22,7 @@ func _ready():
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 #	gravity=constants.enemyGravity
 	oldPos=position.y
-	yVel=-50
+	yVel=-40
 #	if dir==constants.left:
 #		xVel=-speed
 #	else:

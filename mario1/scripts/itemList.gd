@@ -10,13 +10,13 @@ func _ready():
 func addItem():
 	for i in constants.tilesAttribute.keys():
 		var type=constants.tilesAttribute[i]['type']
-		if type=='mario'||type=='goomba'||type=='del'\
+		if type=='mario'||type=='del'\
 			||type=='plant'||type=='coin':
 			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				list.add_item(i,constants.mapTiles[type]['0'])
 			else:
 				list.add_item(i)	
-		elif type=='koopa':
+		elif type=='koopa'||type=='goomba':
 			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])

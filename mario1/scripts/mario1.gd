@@ -828,13 +828,13 @@ func floorCollide(obj):
 		combo=0	
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
-				print('22')
+#				print('22')
 				enterPipe(obj)
 			else:
 				return true	
 		else:		
 			return true
-	elif obj.type==constants.goomba||obj.type==constants.koopa:
+	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.plant:
 		jumpOnEnemy(obj)
 		pass
 	
@@ -959,7 +959,7 @@ func jumpOnEnemy(obj):
 			SoundsUtil.playItem1up()
 			pass	
 		SoundsUtil.playStomp()	
-		yVel=-(abs(yVel)-abs(yVel)/2)
+		yVel=-(abs(yVel)-abs(yVel)/3)
 	pass
 
 #动画

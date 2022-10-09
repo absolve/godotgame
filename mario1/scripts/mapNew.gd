@@ -72,7 +72,7 @@ func _ready():
 	
 	print(_camera.get_camera_screen_center())
 	
-	loadMapFile("res://levels/1-2.json")
+	loadMapFile("res://levels/test9.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -129,7 +129,7 @@ func _update(delta):
 		elif i.destroy:
 			i.queue_free()	
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
-			i.type!=constants.bigCoin&&i.type!=constants.castleFlag:
+			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()	
 			if i.getTop()>winHeight:
@@ -343,9 +343,13 @@ func checkCollision(a,b,delta):
 	aRect.position.y+=a.yVel*delta
 	if  aRect.intersects(bRect,true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():
 		var yVal =a.position.y-b.position.y		
-		var dx=(b.position.x-a.position.x)/b.getSize()/2
+		var dx=(b.getCenterX()-a.getCenterX())/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
+#		if b.type==constants.platform:
+#			print(dx,' ',dy)
 		if abs(dy)>abs(dx):
+#			if b.type==constants.platform:
+#				print(1111)
 			if dy<0 &&a.yVel<0 :
 				if vCollision(a,b,delta)==true:
 					vCollision=true				
@@ -566,7 +570,7 @@ func loadMapFile(fileName:String):
 				var temp=platform.instance()
 				temp.spriteIndex=i['spriteIndex']
 				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2	
+				temp.position.y=i['y']*blockSize+8	
 				temp.lens=int(i['lens'])
 				_obj.add_child(temp)
 			elif i['type']=='coin':
@@ -746,14 +750,14 @@ func getBulletCount(id):
 func marioStateChange():
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
-			i.active=false
+#			i.active=false
 			i.pause()
 
 #状态结束	
 func marioStateFinish():
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
-			i.active=true
+#			i.active=true
 			i.resume()
 	pass	
 
