@@ -412,8 +412,8 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 				pass
 			elif i.type=='koopa':
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize-12),Color(1,1,1,0.5))
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize-12),Color(1,1,1,0.5))
 			elif i.type=='box':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
@@ -450,7 +450,7 @@ func _draw():
 			elif i.type==constants.platform:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 #					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
-					for l in range(i.len):
+					for l in range(i.lens):
 						draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize+l*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 			elif i.type==constants.plant:
 				if constants.mapTiles.has(i.type):

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scripts/label.gd" type="Script" id=2]
+
+[node name="label" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 1 )
+valign = 1
+uppercase = true

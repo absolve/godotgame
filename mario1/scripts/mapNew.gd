@@ -21,6 +21,7 @@ var firework=preload("res://scenes/firework.tscn")
 var castleFlag=preload("res://scenes/flag.tscn")
 var bigCoin=preload("res://scenes/bigCoin.tscn")
 var platform=preload("res://scenes/platform.tscn")
+var label=preload("res://scenes/label.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -50,6 +51,8 @@ var nextLevel=""
 var enemyList=[]
 var marioDeathPos={}  #记录上次死亡的地方
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
+var warpZone=[]
+var hasAddWarpZone=false
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -69,7 +72,7 @@ func _ready():
 	
 	print(_camera.get_camera_screen_center())
 	
-	loadMapFile("res://levels/test10.json")
+	loadMapFile("res://levels/1-2.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -189,7 +192,14 @@ func _update(delta):
 					e.x*blockSize+blockSize/2<=_camera.position.x+winWidth*1.2:
 						addEnemy(e)
 						e['init']=true
-
+			#判断warpzone
+			if warpZone.size()>0:
+				if !hasAddWarpZone:
+					if mario1.position.x>warpZone[0].x*blockSize-blockSize*2:
+						addWarpZoneMsg()
+						hasAddWarpZone=true
+						pass
+				pass
 		
 				
 	for y in _obj.get_children():
@@ -580,6 +590,8 @@ func loadMapFile(fileName:String):
 				mapData[str(i['x'],",",i['y'])]=temp	
 				if i.has('pipeType')&&i['pipeType']!=constants.empty&&i['pipeType']!='':
 					specialEntrance.append(i)
+				if i.has('warpzoneNum')	&& i['warpzoneNum']!='':
+					warpZone.append(i)
 			elif  i['type']=='flag':  #旗杆
 				var temp = pole.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -824,6 +836,7 @@ func hurryup():
 
 #mario死亡
 func marioDead():
+	_title.stopCountDown()
 	SoundsUtil.playDeath()
 	SoundsUtil.stopBgm()
 	SoundsUtil.stopSpecialBgm()	
@@ -836,6 +849,29 @@ func saveMarioStatus():
 	
 func marioStartSliding():
 	_title.stopCountDown()
+
+
+func addWarpZoneMsg():
+	if warpZone.size()>=3:
+		var temp= label.instance()
+		temp.setLabel("welcome to warp zone!")
+		temp.position.x=warpZone[0].x*blockSize
+		temp.position.y=warpZone[0].y*blockSize-blockSize*4
+		_obj.add_child(temp)
+	else:
+		var temp= label.instance()
+		temp.setLabel("welcome to warp zone!")
+		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*2
+		temp.position.y=warpZone[0].y*blockSize-blockSize*4
+		_obj.add_child(temp)
+		
+	for i in warpZone:
+		var temp= label.instance()
+		temp.setLabel(i.warpzoneNum)
+		temp.position.x=i.x*blockSize
+		temp.position.y=i.y*blockSize-blockSize*2
+		_obj.add_child(temp)
+	pass
 
 func getObj():
 	return _obj

@@ -110,6 +110,12 @@ func _ready():
 	var slide1=slide.stream as AudioStreamOGGVorbis
 	slide1.set_loop(false)
 	
+	if status==constants.fall:
+		if big:
+			ani.animation=walk_big_animation[aniIndex]
+		else:
+			ani.animation=	walk_small_animation[aniIndex]
+			ani.frame=2
 	pass 
 
 
