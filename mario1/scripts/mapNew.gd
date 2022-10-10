@@ -72,7 +72,7 @@ func _ready():
 	
 	print(_camera.get_camera_screen_center())
 	
-	loadMapFile("res://levels/test9.json")
+	loadMapFile("res://levels/test10.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -859,7 +859,7 @@ func addWarpZoneMsg():
 	if warpZone.size()>=3:
 		var temp= label.instance()
 		temp.setLabel("welcome to warp zone!")
-		temp.position.x=warpZone[0].x*blockSize
+		temp.position.x=warpZone[0].x*blockSize-blockSize
 		temp.position.y=warpZone[0].y*blockSize-blockSize*4
 		_obj.add_child(temp)
 	else:

@@ -5,6 +5,7 @@ const speed=90
 onready var ani=$ani
 var spriteIndex=0
 var rotate=0
+var status=constants.empty
 
 func _ready():
 #	active=false
@@ -35,14 +36,19 @@ func _update(delta):
 #	yVel+=gravity*delta
 #	position.x+=xVel*delta
 #	position.y+=yVel*delta	
-	rotate+=20
-	if rotate>360:
-		rotate=0
-	
-	ani.rotation_degrees=rotate
+	if status!=constants.stop:
+		rotate+=20
+		if rotate>360:
+			rotate=0
+		ani.rotation_degrees=rotate
 	pass
 
 
-#func _on_VisibilityNotifier2D_screen_exited():
-#	queue_free()
-#	pass # Replace with function body.
+func pause():
+	status=constants.stop
+	active=false
+
+
+func resume():
+	status=constants.empty
+	active=true

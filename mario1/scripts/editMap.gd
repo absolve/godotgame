@@ -430,9 +430,13 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type=='pipe':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+#					if i.has('rotate'):
+#						draw_set_transform(Vector2.ZERO,PI / 2.0,Vector2(1, 1))
+
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
 						draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
+#					draw_set_transform(Vector2.ZERO,0,Vector2(1, 1))
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
@@ -451,7 +455,13 @@ func _draw():
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 #					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
 					for l in range(i.lens):
-						draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize+l*blockSize,i.y*blockSize),Color(1,1,1,0.5))
+						if i.x*blockSize==i.x*blockSize+(-blockSize*int(i.lens)/2)+l*blockSize+blockSize/2:
+							draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],
+							Vector2(i.x*blockSize+(-blockSize*int(i.lens)/2)+l*blockSize+blockSize/2,i.y*blockSize),Color(1,1,1,0.7))
+						else:
+							draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],
+							Vector2(i.x*blockSize+(-blockSize*int(i.lens)/2)+l*blockSize+blockSize/2,i.y*blockSize),Color(1,1,1,0.4))
+								
 			elif i.type==constants.plant:
 				if constants.mapTiles.has(i.type):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))

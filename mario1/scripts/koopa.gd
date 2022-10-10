@@ -214,6 +214,12 @@ func leftCollide(obj):
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		
+		if dir==constants.left&&spriteIndex==3: #如果是红乌龟就会自动返回
+			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+				turnRight()
+		elif dir==constants.right&&spriteIndex==3:		
+			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+				turnLeft()
 		return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa:
 		if status==constants.sliding:
