@@ -72,7 +72,7 @@ func _ready():
 	
 	print(_camera.get_camera_screen_center())
 	
-	loadMapFile("res://levels/test10.json")
+	loadMapFile("res://levels/1-2.json")
 #	var dir = Directory.new()
 #	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 #		print("ok")
@@ -82,10 +82,22 @@ func _ready():
 	
 	var tempTime=Game.playerData['time']
 	subLevel=Game.playerData['subLevel']
-	if subLevel=='':
-		initEnemy()	#初始化当前画面的敌人		
-		
-		pass
+	if subLevel=='':	
+		if !marioDeathPos.empty():
+			checkPoint.sort_custom(self,'sort')
+			var temp=null
+			for i in checkPoint:
+				if marioDeathPos['x']>=i['x']:
+					temp=i
+					continue
+			if temp!=null: #设置复活点
+				for i in marioList.get_children():
+					i.position.x=temp['x']
+					i.position.y=temp['y']
+				_camera.position.x=temp['x']-int(winWidth/3)
+				initPlantEnemy()
+		else:
+			initEnemy()	#初始化当前画面的敌人	
 	else:
 		for i in specialEntrance:
 			if i['pipeNo']==subLevel:
@@ -116,6 +128,12 @@ func _ready():
 
 	pass
 
+func sort(a,b):
+	if a['x']>b['x']:
+		return true
+	else:
+		return false
+
 func _physics_process(delta):
 	_update(delta)
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))	
@@ -135,7 +153,8 @@ func _update(delta):
 			if i.getTop()>winHeight:
 				if i.type==constants.mario:
 					if i.status!=constants.deadJump:
-						marioDead()
+#						marioDeathPos={'x':i.position.x}
+						marioDead(i.position.x)
 					_gameover.start()
 				i.queue_free()	
 			
@@ -572,6 +591,8 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+8	
 				temp.lens=int(i['lens'])
+				if i.has('platformType'):
+					temp.status=i['platformType']
 				_obj.add_child(temp)
 			elif i['type']=='coin':
 				var temp=bigCoin.instance()
@@ -603,11 +624,15 @@ func loadMapFile(fileName:String):
 				temp.poleLen=int(i['len'])
 				_obj.add_child(temp)
 			elif  i['type']=='collision':
-				var temp=collision.instance()
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				temp.value=i['value']
-				_obj.add_child(temp)
+				if i['value']=='checkPoint':
+					checkPoint.append({"x":i['x']*blockSize+blockSize/2
+									,"y":i['y']*blockSize+blockSize/2})
+				else:	
+					var temp=collision.instance()
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.value=i['value']
+					_obj.add_child(temp)
 			elif i['type']=='bg':	
 				var temp=background.instance()	
 				temp.spriteIndex=i['spriteIndex']
@@ -734,7 +759,15 @@ func initEnemy():
 			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
 				e['init']=true
 				addEnemy(e)	
-	pass
+
+func initPlantEnemy():
+	for e in enemyList:
+		if e['init']:
+			continue
+		if e.type=='plant' && e.x*blockSize+blockSize/2>_camera.position.x&& \
+			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
+				e['init']=true
+				addEnemy(e)	
 			
 func getMario():
 	return marioList
@@ -831,6 +864,7 @@ func timeOut():
 	marioDead()
 	for i in marioList:
 		if i.type==constants.mario:
+			marioDeathPos={'x':i.position.x}
 			i.startDeathJump()	
 	pass
 	
@@ -839,7 +873,10 @@ func hurryup():
 	SoundsUtil.playLowTime()
 
 #mario死亡
-func marioDead():
+func marioDead(xpos=null):
+	print('marioDead xpos',xpos)
+	if xpos!=null:
+		marioDeathPos={'x':xpos}	
 	_title.stopCountDown()
 	SoundsUtil.playDeath()
 	SoundsUtil.stopBgm()
@@ -924,6 +961,8 @@ func _on_gameover_timeout():
 	Game.playerData['subLevel']=''
 	Game.playerData['time']=0
 	var temp=menu.instance()
+	temp.marioDeathPos=marioDeathPos
+	temp.status=constants.gameRestart
 	queue_free()
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)

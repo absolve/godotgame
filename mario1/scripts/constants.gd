@@ -298,7 +298,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'lens':1,
-		'platformType':""
+		'platformType':"moveDown"
 	},
 	"box": {
 		"type": "box",

@@ -1358,7 +1358,7 @@ func _update(delta):
 					if i.position.y>winHeight+i.getSizeY()/2:
 #						SoundsUtil.stopBgm()
 						marioDeathPos['x']=i.position.x
-						marioDeathPos['x']
+#						marioDeathPos['x']
 						i.queue_free()
 						state=constants.gameIdle
 						nextStatus=constants.gameEnd

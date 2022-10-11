@@ -40,7 +40,7 @@ var winWidth  #窗体大小
 var winHeight
 #var subLevel="" #子关卡 是否从水管或者树里面出来
 #var pipeIndex=0 #当前水管入口的索引
-
+var font
 
 var mode="edit"  #game正常游戏  edit编辑  test测试  show展示
 #onready var _brick=$brick
@@ -80,6 +80,9 @@ func _ready():
 #	winWidth= ProjectSettings.get_setting("display/window/size/width")
 #	winHeight=ProjectSettings.get_setting("display/window/size/height")
 #	print("winHeight",winHeight)
+	font=DynamicFont.new()
+	font.font_data = load("res://fonts/Fixedsys500c.ttf")
+	font.size = 20
 	_mapWidth.valueObj.connect("text_changed",self,"text_changed")
 	if mode=='edit':
 		_bg.hide()
@@ -436,7 +439,10 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
 						draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
-#					draw_set_transform(Vector2.ZERO,0,Vector2(1, 1))
+
+						if i.has('pipeNo')&&str(i.pipeNo)!='':
+							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize+blockSize),str(i.pipeNo),Color(1,1,1,0.9))
+
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))

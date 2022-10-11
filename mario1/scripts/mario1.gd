@@ -413,7 +413,7 @@ func startDeathJump():
 	active=false
 	yVel=-500
 	gravity=constants.marioDeathGravity
-	Game.emit_signal("marioDead")
+	Game.emit_signal("marioDead",position.x)
 	ani.play(death_jump_animation[aniIndex])
 	z_index=5
 	deadStartTime=0

@@ -48,6 +48,8 @@ func _update(delta):
 		position.y+=yVel*delta	
 		if position.y>winHeight&&status==constants.moveDown:
 			position.y=-8
+		elif status==constants.moveUp&&position.y<0:
+			position.y=winHeight+8
 	pass
 
 #func getLeft():

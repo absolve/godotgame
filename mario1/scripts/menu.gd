@@ -28,6 +28,8 @@ func _ready():
 	score=Game.playerData['score']
 	level=Game.playerData['level']
 	num=Game.playerData['lives']
+	if level.count("-")>=2:
+		level=level.rsplit("-",true,1)[0]
 	_title.setScore(score)
 	_title.setCoin(Game.playerData['coin'])
 	_title.setLevel(str(level))
