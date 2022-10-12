@@ -16,7 +16,7 @@ func _ready():
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	oldYpos=position.y
 	position.y+=getSizeY()
-	print('oldYpos',oldYpos)
+#	print('oldYpos',oldYpos)
 	pass
 
 func rising():

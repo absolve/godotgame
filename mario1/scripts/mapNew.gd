@@ -53,6 +53,7 @@ var marioDeathPos={}  #记录上次死亡的地方
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
 var warpZone=[]
 var hasAddWarpZone=false
+var isShow=false #仅仅展示
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -71,6 +72,9 @@ func _ready():
 	Game.connect("marioStartSliding",self,"marioStartSliding")
 	
 	print(_camera.get_camera_screen_center())
+	if isShow:
+		_fps.visible=false
+		return
 	
 	loadMapFile("res://levels/1-2.json")
 #	var dir = Directory.new()
@@ -96,6 +100,8 @@ func _ready():
 					i.position.y=temp['y']
 				_camera.position.x=temp['x']-int(winWidth/3)
 				initPlantEnemy()
+			else:
+				initEnemy()	
 		else:
 			initEnemy()	#初始化当前画面的敌人	
 	else:
@@ -348,12 +354,12 @@ func checkCollision(a,b,delta):
 	if  aRect.intersects(bRect):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
-		var dy=(b.getCenterY()-a.getCenterY())/b.getSizeY()/2
+		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 		if abs(dx)>abs(dy): #左右的碰撞	
 			if xVal<0&&a.xVel>=0:	
 				if hCollision(a,b,delta)==true:
 					hCollision=true
-			elif xVal>0 &&a.xVel<0:
+			elif xVal>0 &&a.xVel<=0:
 				if hCollision(a,b,delta)==true:
 					hCollision=true
 
@@ -362,7 +368,7 @@ func checkCollision(a,b,delta):
 	aRect.position.y+=a.yVel*delta
 	if  aRect.intersects(bRect,true)&&a.getLeft()<b.getRight()&&a.getRight()>b.getLeft():
 		var yVal =a.position.y-b.position.y		
-		var dx=(b.getCenterX()-a.getCenterX())/b.getSize()/2
+		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 #		if b.type==constants.platform:
 #			print(dx,' ',dy)
@@ -543,8 +549,8 @@ func loadMapFile(fileName:String):
 			var temp=mario.instance()
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
-#			temp.big=Game.playerData['mario']['big']
-			temp.big=true
+			temp.big=Game.playerData['mario']['big']
+#			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
 #			temp.fire=true
 #			temp.active=false

@@ -15,6 +15,7 @@ var status=constants.empty
 func _ready():
 	var scene=load("res://scenes/mapNew.tscn").instance()
 #	scene.mode='show'
+	scene.isShow=true
 	add_child(scene)
 	scene.loadMapFile(path)
 	scene.show_behind_parent=true
@@ -55,7 +56,7 @@ func editMap():
 	set_process_input(true)
 	pass
 
-func _process(delta):
+func _physics_process(delta):
 	if status==constants.startState:
 		timer+=1
 		if timer>tick:

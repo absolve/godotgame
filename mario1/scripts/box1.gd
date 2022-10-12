@@ -43,7 +43,7 @@ func _ready():
 	if _visible==false:
 		visible=false
 
-	print('coins12'.split('coins',false))
+#	print('coins12'.split('coins',false))
 
 	if content.begins_with('coins'):
 		var temp = content.split('coins',false)
@@ -51,7 +51,7 @@ func _ready():
 			coinsNum=temp[0].to_int()
 		else:
 			coinsNum=1
-	print(coinsNum)
+#	print(coinsNum)
 
 func _update(delta):
 	if status==constants.resting:
@@ -120,7 +120,7 @@ func opened(delta):
 	pass
 	
 func startBumped(isBig=false):
-	print('startBumped')
+#	print('startBumped')
 	yVel=-200
 	status=constants.bumped
 	if !_visible:

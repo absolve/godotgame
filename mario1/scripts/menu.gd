@@ -27,6 +27,10 @@ func _ready():
 	_title.stopCoinAni()
 	score=Game.playerData['score']
 	level=Game.playerData['level']
+	var file = File.new()
+	if !file.file_exists("res://levels/"+level+".json"):
+		isgameover=true
+		print("地图",level,'不存在')
 	num=Game.playerData['lives']
 	if level.count("-")>=2:
 		level=level.rsplit("-",true,1)[0]

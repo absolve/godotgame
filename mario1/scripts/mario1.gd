@@ -699,7 +699,7 @@ func rightCollide(obj):
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding(constants.right)
-					obj.position.x+=obj.slidingSpeed*_delta
+					obj.position.x+=obj.slidingSpeed*_delta+1
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
@@ -769,7 +769,7 @@ func leftCollide(obj):
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding()
-					obj.position.x-=obj.slidingSpeed*_delta
+					obj.position.x-=obj.slidingSpeed*_delta-1
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
