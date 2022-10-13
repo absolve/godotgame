@@ -34,10 +34,12 @@ func startGame():
 	set_process_input(false)
 	SoundsUtil.playKonamiMusic()
 	yield(SoundsUtil.konami,"finished")
+	for y in range(50):
+		yield(get_tree(),"idle_frame")
 	var scene=load("res://scenes/menu.tscn")
 	var temp=scene.instance()
 	Game.playerData['score']=0
-	Game.playerData['level']="1-1"
+	Game.playerData['level']="1-2"
 	Game.playerData['lives']=3
 	Game.playerData['coin']=0
 	Game.playerData['mario']['big']=false

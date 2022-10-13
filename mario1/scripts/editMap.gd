@@ -424,7 +424,8 @@ func _draw():
 #					print(i.content)
 					if constants.mapTiles.has(i.content):
 						draw_texture(constants.mapTiles[i.content]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-					pass
+					elif i.content.begins_with('coins'):
+						draw_texture(constants.mapTiles['coin']['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 			elif i.type=='brick':	
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	

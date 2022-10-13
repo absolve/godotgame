@@ -90,7 +90,7 @@ func rightCollide(obj):
 	elif  obj.type==constants.goomba||obj.type==constants.koopa:
 		if obj.status!=constants.deadJump:
 			turnLeft()
-		return true
+#		return true
 	pass
 	
 func leftCollide(obj):
@@ -101,7 +101,7 @@ func leftCollide(obj):
 	elif  obj.type==constants.goomba||obj.type==constants.koopa:
 		if obj.status!=constants.deadJump:
 			turnRight()
-		return true
+#		return true
 	
 	pass
 	

@@ -54,6 +54,7 @@ var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
 var warpZone=[]
 var hasAddWarpZone=false
 var isShow=false #仅仅展示
+var marioStatus='' #mairio状态
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -76,13 +77,13 @@ func _ready():
 		_fps.visible=false
 		return
 	
-	loadMapFile("res://levels/1-2.json")
-#	var dir = Directory.new()
-#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-#		print("ok")
-#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-#	else:
-#		print("文件不存在")
+#	loadMapFile("res://levels/1-2-1.json")
+	var dir = Directory.new()
+	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+		print("ok")
+		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+	else:
+		print("文件不存在")
 	
 	var tempTime=Game.playerData['time']
 	subLevel=Game.playerData['subLevel']
@@ -126,7 +127,8 @@ func _ready():
 	else:
 		_title.setTime(time)	
 #	_title.setTime(6)	
-	_title.startCountDown()
+	if marioStatus!=constants.onlywalk: #排除自动进入水管
+		_title.startCountDown()
 	_title.setScore(Game.playerData['score'])
 	_title.setCoin(Game.playerData['coin'])
 	_title.setLevel(mapName)
@@ -539,10 +541,10 @@ func loadMapFile(fileName:String):
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
 		
-		var status=''
+#		var status=''
 		if currentLevel.has('status'):
-			status=currentLevel['status']
-		print(status)
+			marioStatus=currentLevel['status']
+		print(marioStatus)
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
 #			if mode=='game' ||  mode=='show':
@@ -554,8 +556,8 @@ func loadMapFile(fileName:String):
 			temp.fire=Game.playerData['mario']['fire']
 #			temp.fire=true
 #			temp.active=false
-			if status!='':
-				temp.status=status
+			if marioStatus!='':
+				temp.status=marioStatus
 			_obj.add_child(temp)
 			marioList.append(temp)
 				
@@ -816,6 +818,7 @@ func marioInCastle():
 		Game.playerData['mario']['fire']=i.fire
 		i.destroy=true
 #	_timer.start()
+	Game.playerData['time']=0
 	pass
 
 func countFinish():
@@ -860,7 +863,10 @@ func marioIntoPipe(pipeNo):
 #				yield(get_tree(), "idle_frame")
 			nextLevel=i['level']
 			subLevel=i['subLevel'] #水管或者树的编号
-			isLoadsubLevel=true
+			if i.has('warpzoneNum')&&i['warpzoneNum']!='':
+				isLoadsubLevel=false
+			else:	
+				isLoadsubLevel=true
 			_timer.start()
 #			loadSubLevelMap(i['level'],i['subLevel'])
 			break
