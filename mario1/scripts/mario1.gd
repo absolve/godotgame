@@ -699,7 +699,8 @@ func rightCollide(obj):
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding(constants.right)
-					obj.position.x+=obj.slidingSpeed*_delta+1
+					obj.position.x+=abs(obj.slidingSpeed)*_delta+1
+					xVel=abs(xVel)-abs(xVel)/4
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
@@ -769,7 +770,8 @@ func leftCollide(obj):
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding()
-					obj.position.x-=obj.slidingSpeed*_delta-1
+					obj.position.x-=abs(obj.slidingSpeed)*_delta+1
+					xVel=-(abs(xVel)-abs(xVel)/4)
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
@@ -850,7 +852,7 @@ func ceilcollide(obj):#上方的判断
 		else:			
 			SoundsUtil.playBrickHit()
 		yVel=1	
-		position.y+=1
+#		position.y+=1
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		if! obj._dead:
 			if invincible:
@@ -950,15 +952,20 @@ func addPoleScore(polePos,obj):
 #踩到敌人
 func jumpOnEnemy(obj):
 	if! obj._dead:
-		obj.jumpedOn()
-		if combo<constants.scoreList.size():
-			Game.addScore(position,constants.scoreList[combo])
-			combo+=1
-		else:
-			Game.addLive(position,playerId)
-			SoundsUtil.playItem1up()
-			pass	
-		SoundsUtil.playStomp()	
+		if invincible:
+			obj.startDeathJump(constants.right)
+			Game.addScore(Vector2(position.x,getTop()))
+			SoundsUtil.playShoot()
+		else:	
+			obj.jumpedOn()
+			if combo<constants.scoreList.size():
+				Game.addScore(position,constants.scoreList[combo])
+				combo+=1
+			else:
+				Game.addLive(position,playerId)
+				SoundsUtil.playItem1up()
+				pass	
+			SoundsUtil.playStomp()	
 		yVel=-(abs(yVel)-abs(yVel)/3)
 	pass
 

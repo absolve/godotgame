@@ -77,7 +77,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/1-2-1.json")
+#	loadMapFile("res://levels/1-2.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -944,6 +944,8 @@ func _draw():
 
 
 func _on_Timer_timeout():
+	SoundsUtil.stopBgm()
+	SoundsUtil.stopSpecialBgm()	
 	if isLoadsubLevel:
 #		Game.playerData['score']=_title.score
 #		Game.playerData['coin']=_title.coinNum

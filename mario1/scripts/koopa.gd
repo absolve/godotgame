@@ -1,7 +1,7 @@
 extends "res://scripts/enemy.gd"
 
 #const speed=40
-const slidingSpeed=370
+const slidingSpeed=380
 var preStatus
 onready var ani=$ani
 #const speed=55
@@ -188,7 +188,7 @@ func rightCollide(obj):
 				SoundsUtil.playStomp()			
 		else:	
 			turnLeft()
-			return true
+#			return true
 	pass
 	
 func leftCollide(obj):
@@ -208,7 +208,7 @@ func leftCollide(obj):
 				SoundsUtil.playStomp()			
 		else:	
 			turnRight()
-			return true
+#			return true
 	pass
 	
 func floorCollide(obj):
