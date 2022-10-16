@@ -34,7 +34,7 @@ func startGame():
 	set_process_input(false)
 	SoundsUtil.playKonamiMusic()
 	yield(SoundsUtil.konami,"finished")
-	for y in range(50):
+	for y in range(80):
 		yield(get_tree(),"idle_frame")
 	var scene=load("res://scenes/menu.tscn")
 	var temp=scene.instance()

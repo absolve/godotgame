@@ -1125,6 +1125,7 @@ func _on_ani_animation_finished():
 		status=preStatus
 		active=true
 		adjustBigRect()
+		position.y-=17
 		Game.emit_signal('marioStateFinish')
 	elif status==constants.big2small:
 		hurtInvincible=true
@@ -1132,7 +1133,7 @@ func _on_ani_animation_finished():
 		big=false
 		fire=false
 		active=true
-		position.y+=15
+		position.y+=17
 		aniIndex=0
 		adjustSmallRect()
 		Game.emit_signal('marioStateFinish')

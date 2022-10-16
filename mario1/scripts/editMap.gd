@@ -75,6 +75,7 @@ onready var _fps=$layer/fps
 
 
 func _ready():
+	VisualServer.set_default_clear_color(Color(0.1,0.1,0.1,0.1))
 	_itemList.connect("itemSelect",self,'selectItem')
 #	Game.setMap(self)
 #	winWidth= ProjectSettings.get_setting("display/window/size/width")

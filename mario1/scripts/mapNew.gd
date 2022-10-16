@@ -1,5 +1,7 @@
 extends Node2D
 #新的地图 新的碰撞检测
+#参考资料(关于碰撞) https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
+
 const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15 #一个屏幕高15块
@@ -72,7 +74,7 @@ func _ready():
 	Game.connect("marioDead",self,"marioDead")
 	Game.connect("marioStartSliding",self,"marioStartSliding")
 	
-	print(_camera.get_camera_screen_center())
+#	print(_camera.get_camera_screen_center())
 	if isShow:
 		_fps.visible=false
 		return
@@ -96,7 +98,7 @@ func _ready():
 					temp=i
 					continue
 			if temp!=null: #设置复活点
-				for i in marioList.get_children():
+				for i in marioList:
 					i.position.x=temp['x']
 					i.position.y=temp['y']
 				_camera.position.x=temp['x']-int(winWidth/3)
