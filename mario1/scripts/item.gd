@@ -16,7 +16,7 @@ func _ready():
 #	type=constants.mushroom
 #	debug=true
 	mask=[constants.box,constants.brick,constants.platform,constants.goomba,
-		constants.koopa,constants.mario,constants.pipe]
+		constants.koopa,constants.pipe]
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
@@ -122,22 +122,22 @@ func resume():
 	ani.play()	
 	
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		dir=constants.left
 		return true
 	pass
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		dir=constants.right
 		return true
 	pass
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		if type==constants.star:
 			yVel=-jumpSpeed
-		if 	obj.type==constants.box&& obj.status==constants.bumped:
+		if type!=constants.fireflower &&obj.type==constants.box&& obj.status==constants.bumped:
 			yVel=-jumpSpeed
 			if position.x<obj.position.x && dir==constants.right:
 				dir=constants.left
