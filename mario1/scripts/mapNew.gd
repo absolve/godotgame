@@ -134,7 +134,7 @@ func _ready():
 		_title.setTime(time)	
 #	_title.setTime(6)	
 	if marioStatus!=constants.onlywalk: #排除自动进入水管
-#		_title.startCountDown()
+		_title.startCountDown()
 		pass
 	_title.setScore(Game.playerData['score'])
 	_title.setCoin(Game.playerData['coin'])
