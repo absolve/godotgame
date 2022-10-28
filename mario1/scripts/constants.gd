@@ -39,7 +39,8 @@ const shell='shell'
 const plantOut="plantOut"
 const plantIn="plantIn"
 const revive="revive" #复活
-
+const flying='flying' #飞行
+const koopaJump='koopaJump'
 
 #子弹状态
 const fly='fly' 
@@ -61,6 +62,8 @@ const spin="spin"
 #平台的状态
 const moveUp="moveUp"
 const moveDown="moveDown"
+const upAndDown='upAndDown'
+const leftAndRight='leftAndRight'
 
 #mario的状态
 const idle="idle"
@@ -133,7 +136,7 @@ const up="up"
 const enemyGravity=1800
 const enemyMaxVel=900
 
-const slideFriction=590 #滑行的加速度
+const slideFriction=700 #滑行的加速度
 const crouchFriction=440 #蹲下去时加速度
 const acceleration=240	#移动加速度
 const runAcceleration=400 #跑的加速度
@@ -217,6 +220,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'ySpeed':100,  #用来设置飞行状态时的一个速度
 	},
 	"koopa01": {
 		"type": "koopa",
@@ -226,6 +230,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'ySpeed':100, 
 	},
 	"koopa02": {
 		"type": "koopa",
@@ -235,6 +240,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'ySpeed':100, 
 	},
 	"koopa03": {
 		"type": "koopa",
@@ -244,6 +250,37 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'ySpeed':100, 
+	},
+	"koopa04": {
+		"type": "koopa",
+		"spriteIndex": 4,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+	},
+	"koopa05": {
+		"type": "koopa",
+		"spriteIndex": 5,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+	},
+	"koopa06": {
+		"type": "koopa",
+		"spriteIndex": 6,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
 	},
 	"checkPoint":{
 		"type":"collision",
@@ -298,7 +335,9 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'lens':1,
-		'platformType':"moveDown"
+		'platformType':"moveDown",
+		'dir':up,
+		'speed':100,
 	},
 	"box": {
 		"type": "box",
@@ -431,6 +470,190 @@ const tilesAttribute={
 	"brick12": {
 		"type": "brick",
 		"spriteIndex": 11,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick13": {
+		"type": "brick",
+		"spriteIndex": 12,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick14": {
+		"type": "brick",
+		"spriteIndex": 13,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick15": {
+		"type": "brick",
+		"spriteIndex": 14,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick16": {
+		"type": "brick",
+		"spriteIndex": 15,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick17": {
+		"type": "brick",
+		"spriteIndex": 16,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick18": {
+		"type": "brick",
+		"spriteIndex": 17,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick19": {
+		"type": "brick",
+		"spriteIndex": 18,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick20": {
+		"type": "brick",
+		"spriteIndex": 19,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick21": {
+		"type": "brick",
+		"spriteIndex": 20,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick22": {
+		"type": "brick",
+		"spriteIndex": 21,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick23": {
+		"type": "brick",
+		"spriteIndex": 22,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick24": {
+		"type": "brick",
+		"spriteIndex": 23,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick25": {
+		"type": "brick",
+		"spriteIndex": 24,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick26": {
+		"type": "brick",
+		"spriteIndex": 25,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick27": {
+		"type": "brick",
+		"spriteIndex": 26,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick28": {
+		"type": "brick",
+		"spriteIndex": 27,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick29": {
+		"type": "brick",
+		"spriteIndex": 28,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick30": {
+		"type": "brick",
+		"spriteIndex": 29,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick31": {
+		"type": "brick",
+		"spriteIndex": 30,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick32": {
+		"type": "brick",
+		"spriteIndex": 31,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick33": {
+		"type": "brick",
+		"spriteIndex": 32,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick34": {
+		"type": "brick",
+		"spriteIndex": 33,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+	},
+	"brick35": {
+		"type": "brick",
+		"spriteIndex": 34,
 		"x": 0,
 		"y": 0,
 		"offsetX":0,
@@ -852,7 +1075,30 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0
 	},
-	
+		"bg47": {
+		"type": "bg",
+		"spriteIndex": 47,
+		"x": 0,
+		"y": 0
+	},
+		"bg48": {
+		"type": "bg",
+		"spriteIndex": 48,
+		"x": 0,
+		"y": 0
+	},
+		"bg49": {
+		"type": "bg",
+		"spriteIndex": 49,
+		"x": 0,
+		"y": 0
+	},
+		"bg50": {
+		"type": "bg",
+		"spriteIndex": 50,
+		"x": 0,
+		"y": 0
+	},
 }
 				
 var mapTiles={}  #每个图块对应的图片

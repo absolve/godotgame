@@ -50,10 +50,10 @@ var specialEntrance=[] #特殊入口
 var subLevel="" #子关卡 是否从水管或者树里面出来
 var isLoadsubLevel=false
 var nextLevel=""
-var enemyList=[]
+var enemyList=[]	#敌人的列表 等屏幕移动后在初始化
 var marioDeathPos={}  #记录上次死亡的地方
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
-var warpZone=[]
+var warpZone=[]	#就是可以跳关的水管
 var hasAddWarpZone=false
 var isShow=false #仅仅展示
 var marioStatus='' #mairio状态
@@ -79,7 +79,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/1-2.json")
+#	loadMapFile("res://levels/1-3.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -100,8 +100,10 @@ func _ready():
 			if temp!=null: #设置复活点
 				for i in marioList:
 					i.position.x=temp['x']
-					i.position.y=temp['y']
+					i.position.y=temp['y']	
 				_camera.position.x=temp['x']-int(winWidth/3)
+				if _camera.position.x<0:
+					_camera.position.x=0
 				initPlantEnemy()
 			else:
 				initEnemy()	
@@ -117,6 +119,8 @@ func _ready():
 								blockSize+y.getSizeY()/2
 						y.setPipeOutStatus(i['y']*blockSize)				
 						_camera.position.x=	i['x']*blockSize-int(winWidth/3)
+						if _camera.position.x<0:
+							_camera.position.x=0
 						initEnemy()	#初始化当前画面的敌人
 						break		
 				break
@@ -130,7 +134,8 @@ func _ready():
 		_title.setTime(time)	
 #	_title.setTime(6)	
 	if marioStatus!=constants.onlywalk: #排除自动进入水管
-		_title.startCountDown()
+#		_title.startCountDown()
+		pass
 	_title.setScore(Game.playerData['score'])
 	_title.setCoin(Game.playerData['coin'])
 	_title.setLevel(mapName)
@@ -603,6 +608,11 @@ func loadMapFile(fileName:String):
 				temp.lens=int(i['lens'])
 				if i.has('platformType'):
 					temp.status=i['platformType']
+				if i.has('dir'):
+					temp.dir=i['dir']
+				if i.has('speed'):
+					temp.speed=int(i['speed'])
+						
 				_obj.add_child(temp)
 			elif i['type']=='coin':
 				var temp=bigCoin.instance()
@@ -758,6 +768,8 @@ func addEnemy(obj):
 		temp.position.y=obj['y']*blockSize+blockSize/2
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
+		if obj.has('ySpeed'):
+			temp.ySpeed=int(obj['ySpeed'])
 		_obj.add_child(temp)
 		pass
 
@@ -791,6 +803,7 @@ func getBulletCount(id):
 
 #状态发生变化
 func marioStateChange():
+	_title.stopCountDown()
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
 #			i.active=false
@@ -798,6 +811,7 @@ func marioStateChange():
 
 #状态结束	
 func marioStateFinish():
+	_title.startCountDown()
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
 #			i.active=true
@@ -891,7 +905,7 @@ func marioDead(xpos=null):
 	print('marioDead xpos',xpos)
 	if xpos!=null:
 		marioDeathPos={'x':xpos}	
-	_title.stopCountDown()
+#	_title.stopCountDown()
 	SoundsUtil.playDeath()
 	SoundsUtil.stopBgm()
 	SoundsUtil.stopSpecialBgm()	

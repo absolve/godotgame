@@ -8,6 +8,8 @@ onready var ani=$ani
 var reviveStartTime=0
 var reviveTime=600 #变成壳然后变回乌龟的时间
 var combo=0  #分数连击
+var yDir=constants.up #飞行时的移动方向
+var ySpeed=55  #向上飞行时y的速度
 
 func _ready():
 #	status=constants.shell
@@ -25,7 +27,16 @@ func _ready():
 		xVel=-speed
 	else:
 		xVel=speed
-	animation("walk")		
+	
+	if spriteIndex in [4,5,6,7]:	#设置成飞行的状态
+		status=constants.flying
+		yDir=constants.up	
+		spriteIndex-=4
+		gravity=0
+		xVel=0
+		animation("flying")
+	else:		
+		animation("walk")		
 	ani.position.y=-18		
 	pass
 
@@ -43,7 +54,6 @@ func _update(delta):
 		if reviveTime-reviveStartTime<200:
 			status=constants.revive
 			animation("revive")	
-		pass
 	elif status==constants.stop:
 		pass
 	elif status==constants.revive:
@@ -53,17 +63,30 @@ func _update(delta):
 			reviveStartTime=0
 			animation("walk")	
 			ani.position.y=-18
-		pass
-	pass
+	elif status== constants.flying:
+		flying(delta)
+
+
+func flying(delta):
+	if yDir==constants.up:
+		yVel-=1
+		if yVel<-ySpeed:
+			yDir=constants.down
+	elif yDir==constants.down:	
+		yVel+=1
+		if yVel>ySpeed:
+			yDir=constants.up
 	
+	
+	pass
 
 func jumpedOn():
 	if status==constants.walking:
 		animation("shell")
 		if dir==constants.left:
-			dir=constants.right
+			turnRight()
 		else:
-			dir=constants.left	
+			turnLeft()
 		xVel=0	
 		reviveStartTime=0
 		status=constants.shell
@@ -75,9 +98,15 @@ func jumpedOn():
 		xVel=0
 		reviveStartTime=0
 		combo=0
-
+	elif status==constants.flying:
+		status=constants.walking
+		gravity=constants.enemyGravity
+		if dir==constants.left:
+			turnRight()
+		else:
+			turnLeft()	
+		animation("walk")	
 	pass
-
 
 
 func startDeathJump(_dir=constants.left):
@@ -139,8 +168,7 @@ func resume():
 	ani.play()
 	if status!=constants.dead&&status!=constants.deadJump:
 		active=true
-#	if status!=constants.dead&&status!=constants.deadJump:
-#		ani.play()	
+
 
 func animation(type):
 	if type=="walk":
@@ -170,7 +198,22 @@ func animation(type):
 			ani.play("revive_grey")	
 		elif spriteIndex==3:
 			ani.play("revive_red")					
-
+	elif type=="flying":
+		if spriteIndex==0:
+			ani.play("fly")
+		elif spriteIndex==1:
+			ani.play("fly_blue")	
+		elif spriteIndex==2:	
+			ani.play("fly_grey")	
+		elif spriteIndex==3:
+			ani.play("fly_red")		
+		pass
+#	if dir==constants.left:
+#		ani.flip_h=false
+#	else:
+#		ani.flip_h=!ani.flip_h	
+	
+	
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		turnLeft()

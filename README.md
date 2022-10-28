@@ -34,8 +34,7 @@ TODO
 
 <img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20221318.png" />  
 
-mario1文件夹里面就是超级马里奥的程序，游戏当前只有1-1的关卡，缺少一些加分的功能和进入到水管的功能，  
-这个只能后面完善。  
+mario1文件夹里面就是超级马里奥的程序，游戏当前只有1-1,1-2,1-3的关卡,后续关卡持续更新  
 wsad 移动 z加速 x跳跃  
   
 <img src="https://github.com/absolve/godotgame/blob/master/mario1.png" />  
