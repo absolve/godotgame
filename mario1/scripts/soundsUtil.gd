@@ -24,7 +24,8 @@ onready var levelend=$levelend
 onready var underground=$underground
 onready var undergroundFast=$underground_fast
 onready var pipe=$pipe
- 
+onready var castle=$castle
+onready var castleFast=$castle_fast
 
 var bgm="overworld"
 var isLowTime=false
@@ -93,6 +94,12 @@ func playBgm():
 			undergroundFast.play()
 		else:
 			underground.play()
+	elif bgm=='castle':
+		if isLowTime:
+			castleFast.play()
+		else:
+			castle.play()
+		pass
 	pass
 
 func stopBgm():
@@ -102,6 +109,9 @@ func stopBgm():
 	elif bgm=='underground':
 		undergroundFast.stop()
 		underground.stop()
+	elif bgm=='castle':
+		castleFast.stop()
+		castle.stop()
 
 func playSpecialBgm():
 	if isLowTime:

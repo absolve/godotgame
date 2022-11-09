@@ -83,7 +83,7 @@ func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
 		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
-		constants.koopa]
+		constants.koopa,constants.spinFireball,constants.bridge]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -674,20 +674,21 @@ func walkingToCastle(delta):
 
 #判断左边碰撞
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
 #		if obj.type==constants.box && obj._visible:
 		#判断是不是跨过一个间隙
 		if !Game.checkMapBrickIndex(obj.localx-1,\
 			obj.localy)&&yVel>0 && getBottom()-obj.getTop()<constants.boxHeight:
 			position.y=obj.getTop()-getSizeY()/2
 			position.x=obj.getLeft()-getSize()/2+0.2
-
 			yVel=1
 			return false
+			
 		if obj.type==constants.box&&!obj._visible:
 			return false
 		else:
-			return true	
+			if xVel!=0:
+				return true	
 	elif obj.type==	constants.goomba||obj.type==constants.koopa:
 		if! obj._dead:
 			if invincible:
@@ -740,11 +741,12 @@ func rightCollide(obj):
 		if obj.value==constants.castlePos:
 #			destroy=true
 			Game.emit_signal("marioInCastle")
-		pass
+	elif obj.type==constants.spinFireball:
+		print('spinFireball')
 
 #判断右边碰撞
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
 #		if obj.type==constants.box && obj._visible:
 		
 		if !Game.checkMapBrickIndex(obj.localx+1,\
@@ -752,13 +754,13 @@ func leftCollide(obj):
 			position.y=obj.getTop()-getSizeY()/2
 			position.x=obj.getRight()+getSize()/2-0.2
 			yVel=1
-
 			return false
 			
 		if obj.type==constants.box&&!obj._visible:
 			return false
 		else:
-			return true	
+			if xVel!=0:
+				return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
 		if! obj._dead:
 			if invincible:
@@ -802,22 +804,28 @@ func leftCollide(obj):
 #			destroy=true
 			Game.emit_signal("marioInCastle")
 		pass
+	elif obj.type==constants.spinFireball:
+		print('spinFireball')
 	pass
 
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box:	
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:	
 		if xVel==0:
 			if dir==constants.left:
 				if Game.checkMapBrick(position.x+getSize()/2,position.y-getSizeY()/2):
 					position.x-=1
 			elif dir==constants.right:
 				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
-					position.x+=1	
+					position.x+=1
 		if status==constants.poleSliding:#碰到地面
 			setSitBottom()
 #			status=constants.sitBottomOfPole
-		combo=0
-		return true
+		
+		if obj.type==constants.box&&!obj._visible:
+			return false
+		else:	
+			combo=0
+			return true
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
@@ -843,7 +851,7 @@ func floorCollide(obj):
 	pass
 
 func ceilcollide(obj):#上方的判断
-	if obj.type==constants.brick || obj.type==constants.box:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
 		if obj.type==constants.box:
 			if obj.status==constants.resting:
 				obj.startBumped(big)
@@ -852,7 +860,6 @@ func ceilcollide(obj):#上方的判断
 		else:			
 			SoundsUtil.playBrickHit()
 		yVel=1	
-#		position.y+=1
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		if! obj._dead:
 			if invincible:
@@ -861,11 +868,12 @@ func ceilcollide(obj):#上方的判断
 				SoundsUtil.playShoot()
 			elif hurtInvincible:
 				pass
-		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
+	elif obj.type==constants.spinFireball:
+		print('spinFireball')
 	pass
 
 #获取物品

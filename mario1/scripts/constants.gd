@@ -56,6 +56,10 @@ const fastCountDown="fastCountDown"
 #旗子的状态
 const rising="rising"
 
+#旋转火球的状态
+const rotate='rotate'
+
+
 #其他的状态
 const spin="spin"
 
@@ -112,6 +116,9 @@ const platform="platform"
 const collision='collision'
 const beetle="beetle"#甲壳虫
 const castleFlag="castleFlag"
+const spinFireball='spinFireball'
+const bridge='bridge'
+const bowser='bowser' #关底boss
 
 #方向
 const right="right"
@@ -157,7 +164,8 @@ const fireballMaxYVel=900
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
-			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star']
+			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
+			'spinFireball','pipeOut','bridge','bowser']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -184,6 +192,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"goomba": {
 		"type": "goomba",
@@ -193,6 +202,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"goomba01": {
 		"type": "goomba",
@@ -202,6 +212,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"goomba02": {
 		"type": "goomba",
@@ -211,6 +222,7 @@ const tilesAttribute={
 		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"koopa": {
 		"type": "koopa",
@@ -221,6 +233,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100,  #用来设置飞行状态时的一个速度
+		'layer':0,
 	},
 	"koopa01": {
 		"type": "koopa",
@@ -231,6 +244,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"koopa02": {
 		"type": "koopa",
@@ -241,6 +255,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"koopa03": {
 		"type": "koopa",
@@ -251,6 +266,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"koopa04": {
 		"type": "koopa",
@@ -261,6 +277,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"koopa05": {
 		"type": "koopa",
@@ -271,6 +288,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"koopa06": {
 		"type": "koopa",
@@ -281,6 +299,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
 	},
 	"checkPoint":{
 		"type":"collision",
@@ -288,6 +307,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"checkPoint",
+		'layer':0,
 	},
 	"castlePos":{
 		"type":"collision",
@@ -295,12 +315,14 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"castlePos",
+		'layer':0,
 	},
 	"castleFlag":{
 		"type":"castleFlag",
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
+		'layer':0,
 	},
 	"plant":{
 		"type":"plant",
@@ -309,6 +331,44 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":-6,
+		'layer':0,
+	},
+	"bowser0":{
+		"type":"bowser",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"bowser1":{
+		"type":"bowser",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"bowser2":{
+		"type":"bowser",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'spinFireball':{
+		"type": "spinFireball",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"len":6,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':1,
 	},
 	"flag":{
 		"type": "flag",
@@ -318,6 +378,7 @@ const tilesAttribute={
 		"len":2,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"coin": {
 		"type": "coin",
@@ -326,6 +387,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	'platform':{
 		"type": "platform",
@@ -338,6 +400,7 @@ const tilesAttribute={
 		'platformType':"moveDown",
 		'dir':up,
 		'speed':100,
+		'layer':0,
 	},
 	"box": {
 		"type": "box",
@@ -348,6 +411,7 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"box_blue": {
 		"type": "box",
@@ -358,6 +422,7 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"box_grey": {
 		"type": "box",
@@ -368,6 +433,7 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"box_default": {
 		"type": "box",
@@ -378,6 +444,40 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
+	},
+	"box4": {
+		"type": "box",
+		"spriteIndex": 4,
+		"x": 0,
+		"y": 0,
+		"content": empty,
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"box5": {
+		"type": "box",
+		"spriteIndex": 5,
+		"x": 0,
+		"y": 0,
+		"content": empty,
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"box6": {
+		"type": "box",
+		"spriteIndex": 6,
+		"x": 0,
+		"y": 0,
+		"content": empty,
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
 	},
 	"brick": {
 		"type": "brick",
@@ -386,6 +486,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick2": {
 		"type": "brick",
@@ -394,6 +495,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick3": {
 		"type": "brick",
@@ -402,6 +504,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick4": {
 		"type": "brick",
@@ -410,6 +513,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick5": {
 		"type": "brick",
@@ -418,6 +522,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick6": {
 		"type": "brick",
@@ -426,6 +531,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick7": {
 		"type": "brick",
@@ -434,6 +540,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick8": {
 		"type": "brick",
@@ -442,6 +549,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick9": {
 		"type": "brick",
@@ -450,6 +558,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick10": {
 		"type": "brick",
@@ -458,6 +567,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick11": {
 		"type": "brick",
@@ -466,6 +576,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick12": {
 		"type": "brick",
@@ -474,6 +585,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick13": {
 		"type": "brick",
@@ -482,6 +594,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick14": {
 		"type": "brick",
@@ -490,6 +603,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick15": {
 		"type": "brick",
@@ -498,6 +612,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick16": {
 		"type": "brick",
@@ -506,6 +621,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick17": {
 		"type": "brick",
@@ -514,6 +630,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick18": {
 		"type": "brick",
@@ -522,6 +639,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick19": {
 		"type": "brick",
@@ -530,6 +648,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick20": {
 		"type": "brick",
@@ -538,6 +657,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick21": {
 		"type": "brick",
@@ -546,6 +666,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick22": {
 		"type": "brick",
@@ -554,6 +675,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick23": {
 		"type": "brick",
@@ -562,6 +684,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick24": {
 		"type": "brick",
@@ -570,6 +693,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick25": {
 		"type": "brick",
@@ -578,6 +702,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick26": {
 		"type": "brick",
@@ -586,6 +711,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick27": {
 		"type": "brick",
@@ -594,6 +720,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick28": {
 		"type": "brick",
@@ -602,6 +729,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick29": {
 		"type": "brick",
@@ -610,6 +738,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick30": {
 		"type": "brick",
@@ -618,6 +747,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick31": {
 		"type": "brick",
@@ -626,6 +756,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick32": {
 		"type": "brick",
@@ -634,6 +765,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick33": {
 		"type": "brick",
@@ -642,6 +774,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick34": {
 		"type": "brick",
@@ -650,6 +783,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
 	},
 	"brick35": {
 		"type": "brick",
@@ -658,6 +792,16 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
+		'layer':0,
+	},
+	"bridge": {
+		"type": "bridge",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
 	},
 	"pipe": {
 	"type": "pipe",
@@ -672,7 +816,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe1": {
 	"type": "pipe",
@@ -687,7 +832,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe2": {
 	"type": "pipe",
@@ -700,7 +846,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe3": {
 	"type": "pipe",
@@ -713,7 +860,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe4": {
 	"type": "pipe",
@@ -726,7 +874,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe5": {
 	"type": "pipe",
@@ -739,7 +888,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe6": {
 	"type": "pipe",
@@ -752,7 +902,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe7": {
 	"type": "pipe",
@@ -765,7 +916,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe8": {
 	"type": "pipe",
@@ -778,7 +930,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"pipe9": {
 	"type": "pipe",
@@ -791,7 +944,8 @@ const tilesAttribute={
 	"level":"",
 	"subLevel":"",
 	"dir":down,
-	"warpzoneNum":''
+	"warpzoneNum":'',
+	'layer':0,
 	},
 	"bg": {
 		"type": "bg",
@@ -1096,6 +1250,42 @@ const tilesAttribute={
 		"bg50": {
 		"type": "bg",
 		"spriteIndex": 50,
+		"x": 0,
+		"y": 0
+	},
+		"bg51": {
+		"type": "bg",
+		"spriteIndex": 51,
+		"x": 0,
+		"y": 0
+	},
+		"bg52": {
+		"type": "bg",
+		"spriteIndex": 52,
+		"x": 0,
+		"y": 0
+	},
+		"bg53": {
+		"type": "bg",
+		"spriteIndex": 53,
+		"x": 0,
+		"y": 0
+	},
+		"bg54": {
+		"type": "bg",
+		"spriteIndex": 54,
+		"x": 0,
+		"y": 0
+	},
+		"bg55": {
+		"type": "bg",
+		"spriteIndex": 55,
+		"x": 0,
+		"y": 0
+	},
+		"bg56": {
+		"type": "bg",
+		"spriteIndex": 56,
 		"x": 0,
 		"y": 0
 	},

@@ -1,7 +1,7 @@
 extends "res://scripts/object.gd"
-"""
-箱子会出现各种道具 如果是花会判断mario的大小变成蘑菇
-"""
+#"""
+#箱子会出现各种道具 如果是花会判断mario的大小变成蘑菇
+#"""
 
 var status=constants.resting
 var oldPos=0
@@ -40,6 +40,15 @@ func _ready():
 		ani.play("box_grey")
 	elif spriteIndex==3:	
 		ani.play("default")
+	elif spriteIndex in [4,5,6]:
+		status=constants.opened
+		if spriteIndex==4:
+			ani.play("opened")
+		elif spriteIndex==5:
+			ani.play("opened_blue")
+		elif spriteIndex==6:	
+			ani.play("opened_grey")
+	
 	if _visible==false:
 		visible=false
 

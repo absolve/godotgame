@@ -1,9 +1,9 @@
 extends Node2D
 
-"""
-地图显示砖块，箱子
-参考资料(关于碰撞) https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
-"""
+#"""
+#地图显示砖块，箱子
+#参考资料(关于碰撞) https://developer.ibm.com/technologies/javascript/tutorials/wa-build2dphysicsengine/
+#"""
 const blockSize=32  #方块的大小
 const minWidthNum=20  #一个屏幕宽20块
 const heightNun=15
@@ -24,6 +24,7 @@ var bgTiles=[]   #单独背景方块
 var marioPos={} #mario地图出生地
 var selectItem='' #选择的item 名字
 var selectItemType='' #选择的item类型'
+var selectItemLayer=0 #选择的item layer
 var state=constants.empty
 var selectedItem={'x':-1,'y':-1}	#编辑选中方块
 #var delList=[] #删除列表
@@ -100,15 +101,7 @@ func _ready():
 		_title.hideTime()
 		pass
 	pass
-#
-#func findMapFile():
-#	var dir = Directory.new()
-#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-#		print("ok")
-#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-#	else:
-#		printerr("文件不存在")
-#	pass
+
 
 #载入文件
 func loadMapFile(fileName:String):
@@ -252,8 +245,13 @@ func checkHasItem(pos,selectType):
 	else:	
 		for i in allTiles:
 			if i["x"]==indexX&&i["y"]==indexY:
-				flag=true
-				break	
+#				print(i)
+				if i.has('layer'):
+					if int(i['layer'])==int(selectItemLayer):
+						flag=true
+				else:	
+					flag=true
+					
 #	print(flag)
 	return 	flag
 
@@ -292,10 +290,10 @@ func delItem(pos:Vector2):
 			break
 
 #选择方块
-func selectItem(type,itemName):
+func selectItem(type,itemName,layer):
 	selectItemType=type
 	selectItem=itemName
-
+	selectItemLayer=layer
 
 func getItemPos(pos:Vector2):
 	return {
@@ -310,7 +308,9 @@ func getItemAttr(pos:Vector2):
 	var indexY=int(pos.y)/(blockSize)
 	for i in allTiles:
 		if i["x"]==indexX&&i["y"]==indexY:
-#			var attr=constants.tilesAttribute[i.type]
+			if i.has('layer'): #层不一样就继续查找
+				if int(i['layer'])!=int(selectItemLayer):
+					continue
 			_itemAttr.clearAttr()
 			for y in i.keys():
 				_itemAttr.addAttr(y,i[y])
@@ -347,7 +347,7 @@ func _process(delta):
 	if debug && mode=="edit": 
 		update()
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))	
-	_update(delta)
+#	_update(delta)
 	pass
 
 func _input(event):
@@ -418,6 +418,9 @@ func _draw():
 			elif i.type=='koopa':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize-12),Color(1,1,1,0.7))
+			elif i.type=='bowser':
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
 			elif i.type=='box':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
@@ -427,7 +430,7 @@ func _draw():
 						draw_texture(constants.mapTiles[i.content]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 					elif i.content.begins_with('coins'):
 						draw_texture(constants.mapTiles['coin']['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
-			elif i.type=='brick':	
+			elif i.type=='brick'||i.type=='bridge':	
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
 			elif i.type=='coin':
@@ -440,8 +443,10 @@ func _draw():
 
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
 					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
-						draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
-
+						if i.pipeType==constants.pipeIn:
+							draw_texture(constants.mapTiles['pipeIn']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
+						elif i.pipeType==constants.pipeOut:
+							draw_texture(constants.mapTiles['pipeOut']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
 						if i.has('pipeNo')&&str(i.pipeNo)!='':
 							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize+blockSize),str(i.pipeNo),Color(1,1,1,0.9))
 
@@ -471,6 +476,10 @@ func _draw():
 			elif i.type==constants.plant:
 				if constants.mapTiles.has(i.type):
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
+			elif i.type==constants.spinFireball:
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize+blockSize/4,
+								i.y*blockSize+blockSize/4),Color(1,1,1,0.7))	
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.7))
 	pass

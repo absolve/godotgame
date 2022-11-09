@@ -1,7 +1,7 @@
 extends "res://scripts/object.gd"
-"""
-大的金币
-"""
+#"""
+#大的金币
+#"""
 onready var ani=$ani
 var status=constants.empty
 var coin=preload("res://scenes/coin.tscn")

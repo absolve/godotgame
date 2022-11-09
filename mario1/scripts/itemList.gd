@@ -16,13 +16,13 @@ func addItem():
 				list.add_item(i,constants.mapTiles[type]['0'])
 			else:
 				list.add_item(i)	
-		elif type=='koopa'||type=='goomba':
+		elif type=='koopa'||type=='goomba'||type=='bowser':
 			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)
-		elif type=='box'||type=='brick'||type=='bg':
+		elif type=='box'||type=='brick'||type=='bg'||type=='bridge':
 			if constants.mapTiles.has(type)&&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
@@ -35,7 +35,7 @@ func addItem():
 			else:
 				list.add_item(i)
 			pass
-		elif type=="collision" ||type=='platform':
+		elif type=="collision" ||type=='platform'||type=='spinFireball':
 			if constants.mapTiles.has(type) &&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
@@ -51,5 +51,8 @@ func _on_list_item_selected(index):
 #	if constants.tilesAttribute[name].has('spriteIndex'):
 #		spriteIndex=constants.tilesAttribute[name]['spriteIndex']
 	var t=constants.tilesAttribute[name]['type']
-	emit_signal("itemSelect",t,name)
+	var layer = 0
+	if constants.tilesAttribute[name].has('layer'):
+		layer=constants.tilesAttribute[name]['layer']
+	emit_signal("itemSelect",t,name,layer)
 	pass # Replace with function body.

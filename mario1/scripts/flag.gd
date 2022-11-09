@@ -1,8 +1,8 @@
 extends "res://scripts/object.gd"
-"""
-城堡旗帜 
-旗帜默认位置会在地图中位置偏移向下一个方块
-"""
+#"""
+#城堡旗帜 
+#旗帜默认位置会在地图中位置偏移向下一个方块
+#"""
 
 var status=constants.empty
 const speed=80
