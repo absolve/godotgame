@@ -753,8 +753,8 @@ func addEnemy(obj):
 		_obj.add_child(temp)
 	elif obj.type==constants.bowser:
 		var temp=bowser.instance()
-		temp.position.x=obj['x']*blockSize+blockSize/2
-		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.position.x=obj['x']*blockSize+blockSize
+		temp.position.y=obj['y']*blockSize+blockSize
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
 

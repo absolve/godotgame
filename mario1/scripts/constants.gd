@@ -41,6 +41,7 @@ const plantIn="plantIn"
 const revive="revive" #复活
 const flying='flying' #飞行
 const koopaJump='koopaJump'
+const figures='figures' #人物
 
 #子弹状态
 const fly='fly' 
@@ -119,6 +120,8 @@ const castleFlag="castleFlag"
 const spinFireball='spinFireball'
 const bridge='bridge'
 const bowser='bowser' #关底boss
+const fire='fire' #火焰
+const axe='axe'
 
 #方向
 const right="right"
@@ -142,6 +145,7 @@ const up="up"
 #敌人的数据
 const enemyGravity=1800
 const enemyMaxVel=900
+const bowserGravity=300
 
 const slideFriction=700 #滑行的加速度
 const crouchFriction=440 #蹲下去时加速度
@@ -165,7 +169,7 @@ const fireballMaxYVel=900
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
-			'spinFireball','pipeOut','bridge','bowser']
+			'spinFireball','pipeOut','bridge','bowser','figures','axe']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -299,6 +303,33 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
+	},
+	'figures':{
+		"type": "figures",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'figures1':{
+		"type": "figures",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'axe':{
+		"type": "axe",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
 		'layer':0,
 	},
 	"checkPoint":{
