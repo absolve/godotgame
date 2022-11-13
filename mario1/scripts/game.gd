@@ -8,13 +8,15 @@ signal timeOut #时间到
 signal hurryup #时间快到了 
 signal flagRising #旗在城堡升起来
 signal invincibleFinish #无敌时间结束
-signal marioStateChange
-signal marioStateFinish
+signal marioStateChange #状态发生变化
+signal marioStateFinish #状态变化结束
 signal marioInCastle  #进入城堡
 signal marioIntoPipe #进入水管 
 signal countFinish #计算分数结束
-signal marioDead #
+signal marioDead #死亡
 signal marioStartSliding #开始
+signal marioContactAxe  #mario碰到斧头
+
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',

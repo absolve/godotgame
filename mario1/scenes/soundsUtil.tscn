@@ -46,43 +46,53 @@ stream = ExtResource( 6 )
 stream = ExtResource( 5 )
 
 [node name="flag" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 2 )
 
 [node name="konami" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 
 [node name="brick" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
+bus = "sfx"
 
 [node name="brickhit" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
+bus = "sfx"
 
 [node name="coin" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )
+bus = "sfx"
 
 [node name="item" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )
+bus = "sfx"
 
 [node name="item1up" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 12 )
+bus = "sfx"
 
 [node name="mushroom" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 13 )
+bus = "sfx"
 
 [node name="boom" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 14 )
+bus = "sfx"
 
 [node name="shoot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 15 )
+bus = "sfx"
 
 [node name="stomp" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 16 )
+bus = "sfx"
 
 [node name="big2small" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 17 )
+bus = "sfx"
 
 [node name="score" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 18 )
+bus = "sfx"
 
 [node name="gameover" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 19 )
@@ -101,6 +111,7 @@ stream = ExtResource( 22 )
 
 [node name="pipe" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 24 )
+bus = "sfx"
 
 [node name="castle" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 25 )

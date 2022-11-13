@@ -83,7 +83,8 @@ func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
 		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
-		constants.koopa,constants.spinFireball,constants.bridge]
+		constants.koopa,constants.spinFireball,constants.bridge,
+		constants.axe]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop

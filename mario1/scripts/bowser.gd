@@ -11,14 +11,18 @@ var status=constants.walking
 var hp=5
 var startX=0  #保存当前开始位置
 var targetX=0  #目标位置
-var jump=false
+#var jump=false
 var timer=0
 var jumpTimerDelay=140
-var jumpVel=220
+var jumpVel=150
 var moveVel=30
 var fireTimer=0
-var fireTimerDelay=180
+var fireTimerDelay=220
 var moveDir=constants.left
+var shot=false
+
+var fire=preload("res://scenes/fire.tscn")
+
 
 onready var ani=$ani
 
@@ -50,9 +54,17 @@ func _update(delta):
 #					moveDir=constants.right
 		fireTimer+=1
 		if fireTimer>fireTimerDelay-50:
+			if !shot:
+				var temp=fire.instance()
+				temp.position.x=getLeft()-16
+				temp.position.y=getTop()+20
+				temp.target=getTop()+randi()%64
+				Game.addObj(temp)
+				shot=true
 			animation('fire')
 			if fireTimer>fireTimerDelay:
 				fireTimer=0
+				shot=false
 		else:
 			animation('walk')
 		

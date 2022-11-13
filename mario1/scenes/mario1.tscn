@@ -693,7 +693,7 @@ script = ExtResource( 1 )
 show_behind_parent = true
 scale = Vector2( 0.9, 0.9 )
 frames = SubResource( 79 )
-animation = "jump_big_red"
+animation = "small2big"
 
 [node name="shadow" type="AnimatedSprite" parent="."]
 visible = false
@@ -704,15 +704,19 @@ animation = "crouch_red"
 
 [node name="jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 25 )
+bus = "sfx"
 
 [node name="bigjump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 26 )
+bus = "sfx"
 
 [node name="fireball" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 27 )
+bus = "sfx"
 
 [node name="slide" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 31 )
+bus = "sfx"
 
 [connection signal="animation_finished" from="ani" to="." method="_on_ani_animation_finished"]
 [connection signal="frame_changed" from="ani" to="." method="_on_ani_frame_changed"]

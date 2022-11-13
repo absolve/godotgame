@@ -564,3 +564,11 @@ func _on_return_pressed():
 	get_tree().get_root().add_child(temp)
 	set_process_input(true)
 	pass # Replace with function body.
+
+
+func _on_FileDialog_file_selected(path):
+	if path:
+		save2File(path)
+	else:
+		print("没有当前文件")
+	pass # Replace with function body.

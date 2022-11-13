@@ -28,6 +28,8 @@ var label=preload("res://scenes/label.tscn")
 var spinFireball=preload("res://scenes/spinFireball.tscn")
 var bridge=preload("res://scenes/bridge.tscn")
 var bowser=preload("res://scenes/bowser.tscn")
+var axe=preload("res://scenes/axe.tscn")
+
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -84,7 +86,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test16.json")
+#	loadMapFile("res://levels/test17.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -157,7 +159,6 @@ func sort(a,b):
 func _physics_process(delta):
 #	_update(delta)
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))
-	
 	_title._update(delta)
 	
 	for i in _obj.get_children():
@@ -168,7 +169,7 @@ func _physics_process(delta):
 			i.queue_free()
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
-			&&i.type!=constants.spinFireball:
+			&&i.type!=constants.spinFireball&&i.type!=constants.axe:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -238,7 +239,6 @@ func _physics_process(delta):
 						addWarpZoneMsg()
 						hasAddWarpZone=true
 						pass
-				pass
 		
 				
 	for y in _obj.get_children():
@@ -648,6 +648,11 @@ func loadMapFile(fileName:String):
 							i['y']*blockSize+blockSize/2)
 						temp.radius=x*18
 						_obj.add_child(temp)
+			elif i['type']=='axe':
+				var temp=axe.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				_obj.add_child(temp)
 						
 		file.close()
 #		print(mapData)
