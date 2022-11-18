@@ -84,7 +84,7 @@ func _ready():
 		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
-		constants.axe]
+		constants.axe,constants.figures]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -748,7 +748,11 @@ func rightCollide(obj):
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
 		pass
-		
+	elif obj.type==constants.figures:
+		status=constants.stop
+		animation('stand')
+		return true
+		pass
 
 #判断右边碰撞
 func leftCollide(obj):

@@ -29,6 +29,7 @@ var spinFireball=preload("res://scenes/spinFireball.tscn")
 var bridge=preload("res://scenes/bridge.tscn")
 var bowser=preload("res://scenes/bowser.tscn")
 var axe=preload("res://scenes/axe.tscn")
+var figures=preload("res://scenes/figures.tscn")
 
 
 onready var _obj=$obj
@@ -177,7 +178,7 @@ func _physics_process(delta):
 			i.queue_free()
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
-			&&i.type!=constants.spinFireball&&i.type!=constants.axe:
+			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -663,6 +664,11 @@ func loadMapFile(fileName:String):
 						_obj.add_child(temp)
 			elif i['type']=='axe':
 				var temp=axe.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				_obj.add_child(temp)
+			elif i['type']=='figures':
+				var temp=figures.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				_obj.add_child(temp)
