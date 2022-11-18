@@ -97,6 +97,7 @@ animations = [ {
 } ]
 
 [node name="bowser" type="Node2D"]
+z_index = 3
 script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

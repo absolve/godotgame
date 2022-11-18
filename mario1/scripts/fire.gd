@@ -27,3 +27,13 @@ func _update(delta):
 			else:
 				yVel=0	
 	pass
+
+func pause():
+	status=constants.stop
+	active=false
+	ani.stop()
+
+func resume():
+	status=constants.flying
+	active=true
+	ani.play()

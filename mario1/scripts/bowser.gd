@@ -84,12 +84,19 @@ func _update(delta):
 			if position.x+xVel*delta>=targetX:
 				targetX=startX-32*(randi()%2)
 			
-	if isOnFloor:
-		timer+=1
-		if timer>jumpTimerDelay:
-			yVel=-jumpVel
-			timer=0
-	pass
+		if isOnFloor:
+			timer+=1
+			if timer>jumpTimerDelay:
+				yVel=-jumpVel
+				timer=0
+	elif status==constants.dead:
+		yVel+=gravity*delta
+		position.y+=yVel*delta	
+		pass
+	elif status==constants.deadJump:
+		yVel+=gravity*delta
+		position.y+=yVel*delta	
+		pass
 
 #动画
 func animation(type):
@@ -105,6 +112,25 @@ func animation(type):
 	elif dir==constants.left && ani.flip_h:
 		ani.flip_h=false		
 	pass
+
+func setDead():
+	active=false
+	status=constants.dead
+
+func setDeadJump():
+	active=false
+	status=constants.deadJump
+
+func pause():
+	status=constants.stop
+	active=false
+	ani.stop()
+
+func resume():
+	status=constants.walking
+	active=true
+	ani.play()
+
 
 func rightCollide(obj):
 	

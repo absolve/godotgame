@@ -1321,6 +1321,14 @@ const tilesAttribute={
 		"y": 0
 	},
 }
+	
+#属性值的	类型
+const tilesAttributeType={
+	'spriteIndex':"int",
+	"x":"int",
+	"y":"int",
+	'layer':"int"
+}
 				
 var mapTiles={}  #每个图块对应的图片
 

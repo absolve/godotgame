@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=1]
 [ext_resource path="res://sounds/lowtime.ogg" type="AudioStream" id=2]
@@ -26,6 +26,9 @@
 [ext_resource path="res://sounds/pipe.ogg" type="AudioStream" id=24]
 [ext_resource path="res://sounds/castle.ogg" type="AudioStream" id=25]
 [ext_resource path="res://sounds/castle-fast.ogg" type="AudioStream" id=26]
+[ext_resource path="res://sounds/bridgebreak.ogg" type="AudioStream" id=27]
+[ext_resource path="res://sounds/bowserfall.ogg" type="AudioStream" id=28]
+[ext_resource path="res://sounds/castleend.ogg" type="AudioStream" id=29]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 1 )
@@ -118,3 +121,12 @@ stream = ExtResource( 25 )
 
 [node name="castle_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 26 )
+
+[node name="bridgebreak" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 27 )
+
+[node name="bowserfall" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 28 )
+
+[node name="castleend" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 29 )

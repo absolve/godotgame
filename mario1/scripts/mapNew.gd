@@ -64,6 +64,8 @@ var hasAddWarpZone=false
 var isShow=false #仅仅展示
 var marioStatus='' #mairio状态
 var debug=false
+var castleBridge=[]  #保存桥的数据
+
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -80,13 +82,14 @@ func _ready():
 	Game.connect("countFinish",self,"countFinish")
 	Game.connect("marioDead",self,"marioDead")
 	Game.connect("marioStartSliding",self,"marioStartSliding")
+	Game.connect('marioContactAxe',self,'marioContactAxe')
 	
 #	print(_camera.get_camera_screen_center())
 	if isShow:
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test17.json")
+#	loadMapFile("res://levels/test16.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -143,12 +146,20 @@ func _ready():
 	if marioStatus!=constants.onlywalk: #排除自动进入水管
 		_title.startCountDown()
 		pass
+		
+	if castleBridge.size()>0:
+		castleBridge.sort_custom(self,'bridgeSort')
+		
 	_title.setScore(Game.playerData['score'])
 	_title.setCoin(Game.playerData['coin'])
 	_title.setLevel(mapName)
 
-
-	pass
+#排序大到小
+func bridgeSort(a,b):
+	if a['localx']>b['localx']:
+		return true
+	else:
+		return false
 
 func sort(a,b):
 	if a['x']>b['x']:
@@ -161,11 +172,8 @@ func _physics_process(delta):
 	_fps.set_text(str("fps:",Engine.get_frames_per_second()))
 	_title._update(delta)
 	
-	for i in _obj.get_children():
-		if i.destroy &&i.type==constants.box:
-			mapData[str(i.localx,',',i.localy)]=null
-			i.queue_free()
-		elif i.destroy:
+	for i in _obj.get_children():	
+		if i.destroy:
 			i.queue_free()
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
@@ -177,11 +185,15 @@ func _physics_process(delta):
 					if i.status!=constants.deadJump:
 						marioDead(i.position.x)
 					_gameover.start()
+				elif i.type==constants.bowser:
+					if i.status!=constants.deadJump:
+						bowserDrop()
+						pass	
 				i.queue_free()
 			
 	
 	for i in _tile.get_children():
-		if i.type==constants.box:
+		if i.type==constants.box||i.type==constants.bridge:
 			if i.active:
 				i.yVel+=i.gravity*delta		#增加y速度
 				if i.yVel>i.maxYVel:
@@ -552,6 +564,7 @@ func loadMapFile(fileName:String):
 				temp.localy=i['y']
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
+				castleBridge.append(temp) #保存这些桥
 			elif i['type']=='box':
 				var temp=box.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -910,6 +923,40 @@ func saveMarioStatus():
 func marioStartSliding():
 	_title.stopCountDown()
 
+#接触到斧头
+func marioContactAxe():
+	SoundsUtil.stopBgm()
+	SoundsUtil.stopSpecialBgm()
+	for i in _obj.get_children():
+			i.pause()
+			
+	for i in castleBridge:
+		i.destroy=true
+		for y in range(10):
+			yield(get_tree(),"idle_frame")
+		SoundsUtil.playBridgeBreak()	
+#	for i in _obj.get_children():
+#		if i.type==constants.axe:
+#			i.destroy=true
+#			break
+			
+	for i in _obj.get_children():
+		if i.type==constants.bowser:
+			i.resume()		
+			i.setDead()
+		elif i.type==constants.axe:
+			i.destroy=true	
+#		else:
+#			i.resume()	
+	SoundsUtil.playbowserFall()	
+	
+
+#boss掉落
+func bowserDrop():
+	SoundsUtil.playCastleEnd()
+	for i in _obj.get_children():
+		i.resume()
+	pass
 
 func addWarpZoneMsg():
 	if warpZone.size()>=3:

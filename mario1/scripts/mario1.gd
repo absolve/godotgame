@@ -744,6 +744,11 @@ func rightCollide(obj):
 			Game.emit_signal("marioInCastle")
 	elif obj.type==constants.spinFireball:
 		print('spinFireball')
+	elif obj.type==constants.axe:
+		print('axe')
+		Game.emit_signal('marioContactAxe')		
+		pass
+		
 
 #判断右边碰撞
 func leftCollide(obj):
@@ -807,7 +812,9 @@ func leftCollide(obj):
 		pass
 	elif obj.type==constants.spinFireball:
 		print('spinFireball')
-	pass
+	elif obj.type==constants.axe:
+		print('axe')
+		Game.emit_signal('marioContactAxe')		
 
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:	
@@ -848,8 +855,10 @@ func floorCollide(obj):
 	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.plant:
 		jumpOnEnemy(obj)
 		pass
+	elif obj.type==constants.axe:
+		print('axe')
+		Game.emit_signal('marioContactAxe')		
 	
-	pass
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:

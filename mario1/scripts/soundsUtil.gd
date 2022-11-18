@@ -26,6 +26,10 @@ onready var undergroundFast=$underground_fast
 onready var pipe=$pipe
 onready var castle=$castle
 onready var castleFast=$castle_fast
+onready var bridgebreak=$bridgebreak
+onready var bowserfall=$bowserfall
+onready var castleend=$castleend
+
 
 var bgm="overworld"
 var isLowTime=false
@@ -81,6 +85,15 @@ func _ready():
 	
 	var pipe1=pipe.stream as AudioStreamOGGVorbis
 	pipe1.set_loop(false)
+	
+	var bridgebreak1=bridgebreak.stream as AudioStreamOGGVorbis
+	bridgebreak1.set_loop(false)
+	
+	var bowserfall1 = bowserfall.stream as AudioStreamOGGVorbis
+	bowserfall1.set_loop(false)
+	
+	var castleend1=castleend.stream as AudioStreamOGGVorbis
+	castleend1.set_loop(false)
 	pass # Replace with function body.
 
 func playBgm():
@@ -178,5 +191,12 @@ func playLevelend():
 func playPipe():
 	pipe.play()
 
-		
+func playBridgeBreak():
+	bridgebreak.play()
+	
+func playbowserFall():
+	bowserfall.play()
+
+func playCastleEnd():
+	castleend.play()
 	
