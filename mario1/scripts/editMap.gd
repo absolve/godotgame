@@ -411,7 +411,7 @@ func _draw():
 			draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
 			Color.gray,0.5,true)	
 		for i in bgTiles+allTiles:
-			if i.type=='goomba'||i.type=='figures'||i.type=='axe':
+			if i.type=='goomba'||i.type=='axe':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
 				pass
@@ -480,6 +480,10 @@ func _draw():
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize+blockSize/4,
 								i.y*blockSize+blockSize/4),Color(1,1,1,0.7))	
+			elif i.type==constants.figures:
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize-16),Color(1,1,1,0.7))					
+								
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.7))
 	pass

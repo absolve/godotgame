@@ -5,7 +5,7 @@ var playerId=0
 var dir=constants.right
 var rotate
 var status=constants.fly
-const speed=370
+const speed=400
 
 func _ready():
 	mask=[constants.brick,constants.box,constants.pipe,

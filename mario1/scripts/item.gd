@@ -5,7 +5,7 @@ var status=constants.growing
 var dir=constants.right
 var oldPos=0
 const speed=110  #速度
-const jumpSpeed=400
+const jumpSpeed=500
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容
 onready var ani=$ani
@@ -135,6 +135,8 @@ func leftCollide(obj):
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		if type==constants.star:
 			yVel=-jumpSpeed
 		if type!=constants.fireflower &&obj.type==constants.box&& obj.status==constants.bumped:

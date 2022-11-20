@@ -64,8 +64,10 @@ var warpZone=[]	#就是可以跳关的水管
 var hasAddWarpZone=false
 var isShow=false #仅仅展示
 var marioStatus='' #mairio状态
-var debug=false
+var debug=false #调试模式
 var castleBridge=[]  #保存桥的数据
+var castleEndX=0 #城堡最后斧头的位置
+var scrollEnd = false #摄像机滚动到最后
 
 
 func _ready():
@@ -84,13 +86,14 @@ func _ready():
 	Game.connect("marioDead",self,"marioDead")
 	Game.connect("marioStartSliding",self,"marioStartSliding")
 	Game.connect('marioContactAxe',self,'marioContactAxe')
+#	Game.connect("marioCastleEnd",self,"marioCastleEnd")
 	
 #	print(_camera.get_camera_screen_center())
 	if isShow:
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test16.json")
+#	loadMapFile("res://levels/test18.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -178,20 +181,21 @@ func _physics_process(delta):
 			i.queue_free()
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
-			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures:
+			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
+			i.type!=constants.bowser:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
 				if i.type==constants.mario:
 					if i.status!=constants.deadJump:
 						marioDead(i.position.x)
-					_gameover.start()
-				elif i.type==constants.bowser:
-					if i.status!=constants.deadJump:
-						bowserDrop()
-						pass	
+					_gameover.start()	
 				i.queue_free()
-			
+		elif i.type==constants.bowser:
+			if i.getTop()>winHeight:
+				if i.status!=constants.deadJump:
+					bowserDrop()	
+				i.queue_free()	
 	
 	for i in _tile.get_children():
 		if i.type==constants.box||i.type==constants.bridge:
@@ -223,6 +227,11 @@ func _physics_process(delta):
 				mario1.position.x=mapWidthSize*blockSize-mario1.getSize()/2
 				if mario1.dir==constants.right:
 					mario1.xVel=0
+			elif castleEndX!=0&&mario1.getRight()>castleEndX: #防止跳过斧头
+				mario1.position.x=castleEndX-mario1.getSize()/2
+				if mario1.dir==constants.right:
+					mario1.xVel=0
+					
 			#前进
 			if mario1.status!=constants.sitBottomOfPole&& mario1.xVel>0 \
 				&& mario1.position.x>_camera.get_camera_screen_center().x&&\
@@ -230,7 +239,19 @@ func _physics_process(delta):
 				if _camera.position.x>mapWidthSize*blockSize-winWidth:
 					_camera.position.x=mapWidthSize*blockSize-winWidth
 				else:
-					_camera.position.x+=mario1.xVel*delta
+					if castleEndX!=0: #判断是否到了斧头的那一边
+						if _camera.position.x+winWidth<castleEndX:
+							_camera.position.x+=mario1.xVel*delta
+					else:
+						_camera.position.x+=mario1.xVel*delta
+			#如果马里奥是最后通关的话 摄像机直接拉到最后	
+			if 	scrollEnd:
+				if _camera.position.x<mapWidthSize*blockSize-winWidth:
+					_camera.position.x+=100*delta
+				else:
+					marioCastleEnd()
+					scrollEnd=false
+			
 			#后退		
 			if mario1.xVel<0 && mario1.position.x<_camera.get_camera_screen_center().x-40&&\
 				_camera.position.x>0:
@@ -666,6 +687,7 @@ func loadMapFile(fileName:String):
 				var temp=axe.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				castleEndX=temp.position.x+blockSize/2
 				_obj.add_child(temp)
 			elif i['type']=='figures':
 				var temp=figures.instance()
@@ -904,7 +926,6 @@ func timeOut():
 		if i.type==constants.mario:
 			marioDeathPos={'x':i.position.x}
 			i.startDeathJump()
-	pass
 	
 func hurryup():
 	print("hurryup")
@@ -933,36 +954,73 @@ func marioStartSliding():
 func marioContactAxe():
 	SoundsUtil.stopBgm()
 	SoundsUtil.stopSpecialBgm()
+	var hasBowser=false
 	for i in _obj.get_children():
-			i.pause()
+		i.pause()
+		if i.type==constants.bowser&&i.status!=constants.deadJump:
+			hasBowser=true
 			
-	for i in castleBridge:
-		i.destroy=true
-		for y in range(10):
-			yield(get_tree(),"idle_frame")
-		SoundsUtil.playBridgeBreak()	
-#	for i in _obj.get_children():
-#		if i.type==constants.axe:
-#			i.destroy=true
-#			break
-			
+	if hasBowser:		
+		for i in castleBridge:
+			i.destroy=true
+			for y in range(8):
+				yield(get_tree(),"idle_frame")
+			SoundsUtil.playBridgeBreak()	
+	
+	
 	for i in _obj.get_children():
 		if i.type==constants.bowser:
 			i.resume()		
 			i.setDead()
 		elif i.type==constants.axe:
 			i.destroy=true	
-#		else:
-#			i.resume()	
-	SoundsUtil.playbowserFall()	
+
+	if 	hasBowser:
+		SoundsUtil.playbowserFall()	
+	else:
+		bowserDrop()	
 	
 
 #boss掉落
 func bowserDrop():
 	SoundsUtil.playCastleEnd()
+	castleEndX=0
 	for i in _obj.get_children():
-		i.resume()
+		if i.type==constants.mario:
+			i.resume()
+			i.status=constants.onlywalk
+		else:
+			i.resume()	
+	scrollEnd=true
 	pass
+
+#马里奥见到公主或者蘑菇人
+func marioCastleEnd():
+	print('marioCastleEnd')
+	var temp= label.instance()
+	temp.setLabel("thank you mario!")
+	temp.position.x=_camera.position.x+blockSize*7
+	temp.position.y=blockSize*5
+	_obj.add_child(temp)
+	for y in range(90):
+		yield(get_tree(),"idle_frame")
+	var temp1= label.instance()
+	temp1.setLabel("but our princess is in")
+	temp1.position.x=_camera.position.x+blockSize*6
+	temp1.position.y=blockSize*7
+	_obj.add_child(temp1)
+	
+	var temp2= label.instance()
+	temp2.setLabel("another castle!")
+	temp2.position.x=_camera.position.x+blockSize*8
+	temp2.position.y=blockSize*9
+	_obj.add_child(temp2)
+	#进入下一关
+	subLevel=''
+	saveMarioStatus()
+	_timer.start(3)
+	pass
+
 
 func addWarpZoneMsg():
 	if warpZone.size()>=3:
@@ -985,6 +1043,9 @@ func addWarpZoneMsg():
 		temp.position.y=i.y*blockSize-blockSize*2
 		_obj.add_child(temp)
 	pass
+
+
+
 
 func getObj():
 	return _obj

@@ -372,4 +372,4 @@ script = ExtResource( 1 )
 [node name="ani" type="AnimatedSprite" parent="."]
 show_behind_parent = true
 frames = SubResource( 1 )
-animation = "35"
+animation = "0"

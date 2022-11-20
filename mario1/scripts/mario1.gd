@@ -525,9 +525,9 @@ func walkIntoPipe(delta):
 #自动行走
 func onlywalk(delta):
 	if dir==constants.left:
-		xVel=-70
+		xVel=-90
 	elif dir==constants.right:
-		xVel=70	
+		xVel=90	
 	if xVel>0 || xVel<0:
 		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed	
 	animation('walk')	
@@ -676,14 +676,16 @@ func walkingToCastle(delta):
 #判断左边碰撞
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
-#		if obj.type==constants.box && obj._visible:
+
 		#判断是不是跨过一个间隙
 		if !Game.checkMapBrickIndex(obj.localx-1,\
 			obj.localy)&&yVel>0 && getBottom()-obj.getTop()<constants.boxHeight:
-			position.y=obj.getTop()-getSizeY()/2
-			position.x=obj.getLeft()-getSize()/2+0.2
-			yVel=1
-			return false
+			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
+			||obj.type==constants.bridge:
+				position.y=obj.getTop()-getSizeY()/2
+				position.x=obj.getLeft()-getSize()/2+0.2
+				yVel=1
+				return false
 			
 		if obj.type==constants.box&&!obj._visible:
 			return false
@@ -746,25 +748,28 @@ func rightCollide(obj):
 		print('spinFireball')
 	elif obj.type==constants.axe:
 		print('axe')
+		yVel=0
 		Game.emit_signal('marioContactAxe')		
 		pass
 	elif obj.type==constants.figures:
 		status=constants.stop
 		animation('stand')
+#		Game.emit_signal("marioCastleEnd")
 		return true
 		pass
 
 #判断右边碰撞
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
-#		if obj.type==constants.box && obj._visible:
-		
-		if !Game.checkMapBrickIndex(obj.localx+1,\
+
+		if!Game.checkMapBrickIndex(obj.localx+1,\
 			obj.localy)&&yVel>0&& getBottom()-obj.getTop()<constants.boxHeight:
-			position.y=obj.getTop()-getSizeY()/2
-			position.x=obj.getRight()+getSize()/2-0.2
-			yVel=1
-			return false
+			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
+			||obj.type==constants.bridge:	
+				position.y=obj.getTop()-getSizeY()/2
+				position.x=obj.getRight()+getSize()/2-0.2
+				yVel=1
+				return false
 			
 		if obj.type==constants.box&&!obj._visible:
 			return false

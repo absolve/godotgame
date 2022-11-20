@@ -17,6 +17,8 @@ signal marioDead #死亡
 signal marioStartSliding #开始
 signal marioContactAxe  #mario碰到斧头
 signal bowserDrop #boss掉出屏幕
+signal marioCastleEnd #马里奥到了城堡最后
+
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',
