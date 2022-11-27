@@ -35,18 +35,23 @@ script = ExtResource( 1 )
 
 [node name="overworld" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
+bus = "bg"
 
 [node name="overworld_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
+bus = "bg"
 
 [node name="lowtime" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
+bus = "bg"
 
 [node name="star" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
+bus = "bg"
 
 [node name="star_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 5 )
+bus = "bg"
 
 [node name="flag" type="AudioStreamPlayer" parent="."]
 
@@ -99,18 +104,22 @@ bus = "sfx"
 
 [node name="gameover" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 19 )
+bus = "bg"
 
 [node name="death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 20 )
+bus = "sfx"
 
 [node name="levelend" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 21 )
 
 [node name="underground" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 23 )
+bus = "bg"
 
 [node name="underground_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 22 )
+bus = "bg"
 
 [node name="pipe" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 24 )
@@ -118,15 +127,20 @@ bus = "sfx"
 
 [node name="castle" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 25 )
+bus = "bg"
 
 [node name="castle_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 26 )
+bus = "bg"
 
 [node name="bridgebreak" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 27 )
+bus = "sfx"
 
 [node name="bowserfall" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 28 )
+bus = "sfx"
 
 [node name="castleend" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 29 )
+bus = "bg"

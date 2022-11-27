@@ -117,11 +117,13 @@ const platform="platform"
 const collision='collision'
 const beetle="beetle"#甲壳虫
 const castleFlag="castleFlag"
-const spinFireball='spinFireball'
-const bridge='bridge'
+const spinFireball='spinFireball'  #旋转的火焰
+const bridge='bridge'  #桥
 const bowser='bowser' #关底boss
 const fire='fire' #火焰
-const axe='axe'
+const axe='axe'  #斧头
+const vine='vine' #藤曼
+
 
 #方向
 const right="right"
@@ -146,6 +148,8 @@ const up="up"
 const enemyGravity=1800
 const enemyMaxVel=900
 const bowserGravity=300
+
+const fireballGravity=1600
 
 const slideFriction=700 #滑行的加速度
 const crouchFriction=440 #蹲下去时加速度

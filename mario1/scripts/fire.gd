@@ -16,16 +16,20 @@ func _ready():
 	flySound1.set_loop(false)
 	flySound.play()
 	ani.play("default")
+	if dir==constants.right:
+		ani.flip_h=true
 	pass
 
 func _update(delta):
 	if status==constants.flying:
 		if dir==constants.left:
 			xVel=-speed
-			if position.y<target:
-				yVel=50
-			else:
-				yVel=0	
+		else:
+			xVel=speed	
+		if position.y<target:
+			yVel=50
+		else:
+			yVel=0			
 	pass
 
 func pause():

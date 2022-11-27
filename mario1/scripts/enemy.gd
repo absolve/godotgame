@@ -74,7 +74,4 @@ func turnDir():
 		xVel=abs(xVel)	
 	pass
 
-#func setActive():
-#	if !init:
-#		status=constants.walking
-#		init=true
+

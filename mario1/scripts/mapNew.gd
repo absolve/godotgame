@@ -93,7 +93,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test18.json")
+#	loadMapFile("res://levels/test16.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -783,8 +783,8 @@ func addEnemy(obj):
 		var temp=plant.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
-		temp.offsetX=obj['offsetX']
-		temp.offsetY=obj['offsetY']
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
 		pass
@@ -872,12 +872,12 @@ func marioInCastle():
 func countFinish():
 	print('countFinish')
 	var castleFlag
-	var castlePos
-	for i in _obj.get_children():
-		if i.type==constants.castleFlag:
-			castleFlag=i
-		elif i.type==constants.collision && i.value=='castlePos':
-			castlePos=i.position.x
+#	var castlePos
+#	for i in _obj.get_children():
+#		if i.type==constants.castleFlag:
+#			castleFlag=i
+#		elif i.type==constants.collision && i.value=='castlePos':
+#			castlePos=i.position.x
 	if castleFlag!=null:
 		print('rising')
 		castleFlag.rising()
@@ -891,7 +891,7 @@ func countFinish():
 		for i in range(digits.to_int()):
 			SoundsUtil.playBoom()
 			var temp=firework.instance()
-			temp.position.x=castlePos
+			temp.position.x=_camera.get_camera_screen_center().x
 			_obj.add_child(temp)
 			yield(temp.ani,"animation_finished")
 			_title.addScore(300)  #每朵烟花200

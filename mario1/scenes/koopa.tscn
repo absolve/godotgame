@@ -233,4 +233,4 @@ script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 9 )
-animation = "walk"
+animation = "shell"

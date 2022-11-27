@@ -20,6 +20,8 @@ var fireTimer=0
 var fireTimerDelay=220
 var moveDir=constants.left
 var shot=false
+var preStatus   #之前状态
+var level=1  #关卡等级
 
 var fire=preload("res://scenes/fire.tscn")
 
@@ -28,8 +30,8 @@ onready var ani=$ani
 
 func _ready():
 	randomize()
-	debug=true
-	mask=[constants.box,constants.brick,constants.bridge]
+#	debug=true
+	mask=[constants.box,constants.brick,constants.bridge,constants.fireball]
 	rect=Rect2(Vector2(-32,-32),Vector2(64,64))
 	type=constants.bowser
 	maxYVel=constants.enemyMaxVel
@@ -43,22 +45,24 @@ func _ready():
 
 func _update(delta):
 	if status==constants.walking:
-#		animation('walk')
-
-#		if Game.getMario().size()>0:
-#			var m= Game.getMario()[0]
-#			if m.status!=constants.deadJump:
-#				if m.position.x<startX-32*7:
-#					moveDir=constants.left
-#				else:
-#					moveDir=constants.right
+		if Game.getMario().size()>0:
+			var m= Game.getMario()[0]
+			if m.status!=constants.deadJump:
+				if m.position.x<position.x:
+					dir=constants.left
+				else:
+					dir=constants.right
 		fireTimer+=1
 		if fireTimer>fireTimerDelay-50:
 			if !shot:
-				var temp=fire.instance()
-				temp.position.x=getLeft()-16
+				var temp=fire.instance()		
 				temp.position.y=getTop()+20
 				temp.target=getTop()+randi()%64
+				temp.dir=dir
+				if temp.dir==constants.left:
+					temp.position.x=getLeft()-16
+				else:
+					temp.position.x=getRight()+16	
 				Game.addObj(temp)
 				shot=true
 			animation('fire')
@@ -120,31 +124,43 @@ func setDead():
 func setDeadJump():
 	active=false
 	status=constants.deadJump
+	ani.stop()
+	ani.flip_v=true
+	ani.frame=0
+	SoundsUtil.playbowserFall()
+
+func hit():
+	print('hit')
+	if hp<=0:
+		setDeadJump()
+	else:
+		hp-=1
 
 func pause():
+	preStatus=status
 	status=constants.stop
 	active=false
 	ani.stop()
 
 func resume():
-	status=constants.walking
-	active=true
+	status=preStatus
+	if status!=constants.dead&&status!=constants.deadJump:
+		active=true
 	ani.play()
 
 
 func rightCollide(obj):
-	
 	pass
 	
 func leftCollide(obj):
-	
+
 	pass
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:	
-		
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:		
 		return true
-	pass
+
 			
 func ceilcollide(obj):
+
 	pass

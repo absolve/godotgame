@@ -16,7 +16,8 @@ func _ready():
 #	animation("shell")
 #	debug=true
 	mask=[constants.fireball,constants.box,constants.brick
-		,constants.platform,constants.pipe,constants.koopa,constants.goomba]
+		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
+		constants.beetle]
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 #	gravity=constants.enemyGravity
 	maxYVel=constants.enemyMaxVel #y轴最大速度
@@ -76,9 +77,7 @@ func flying(delta):
 		yVel+=1
 		if yVel>ySpeed:
 			yDir=constants.up
-	
-	
-	pass
+
 
 func jumpedOn():
 	if status==constants.walking:
@@ -106,7 +105,6 @@ func jumpedOn():
 		else:
 			turnLeft()	
 		animation("walk")	
-	pass
 
 
 func startDeathJump(_dir=constants.left):
@@ -119,8 +117,6 @@ func startDeathJump(_dir=constants.left):
 	ani.frame=0
 	_dead=true
 	active=false
-#	z_index=2
-#	status=constants.deadJump
 	pass	
 
 
@@ -134,7 +130,7 @@ func shellSliding(delta):
 		xVel=-slidingSpeed
 	else:
 		xVel=slidingSpeed	
-	pass
+
 
 func turnLeft():
 	.turnLeft()
@@ -208,17 +204,14 @@ func animation(type):
 		elif spriteIndex==3:
 			ani.play("fly_red")		
 		pass
-#	if dir==constants.left:
-#		ani.flip_h=false
-#	else:
-#		ani.flip_h=!ani.flip_h	
+
 	
 	
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		turnLeft()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump(constants.right)
@@ -238,7 +231,7 @@ func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		turnRight()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump()
@@ -256,7 +249,6 @@ func leftCollide(obj):
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		
 		if status==constants.walking&& dir==constants.left&&spriteIndex==3: #如果是红乌龟就会自动返回
 			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
 				turnRight()
@@ -264,7 +256,7 @@ func floorCollide(obj):
 			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
 				turnLeft()
 		return true
-	elif obj.type==constants.goomba||obj.type==constants.koopa:
+	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump()
@@ -275,4 +267,9 @@ func floorCollide(obj):
 					Game.addLive(position,'')
 					SoundsUtil.playItem1up()
 				SoundsUtil.playStomp()		
-	pass
+
+func ceilcollide(obj):#上方的判断
+	if obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+		if status==constants.sliding:
+			if ! obj._dead:
+				obj.startDeathJump()

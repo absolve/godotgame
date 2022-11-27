@@ -5,15 +5,16 @@ var playerId=0
 var dir=constants.right
 var rotate
 var status=constants.fly
-const speed=400
+const speed=480
+const ySpeed=400
 
 func _ready():
 	mask=[constants.brick,constants.box,constants.pipe,
-	constants.goomba,constants.koopa,constants.plant]
-	debug=true
+	constants.goomba,constants.koopa,constants.plant,constants.bridge,constants.bowser]
+#	debug=true
 	type=constants.fireball
 	rect=Rect2(Vector2(-5,-5),Vector2(10,10))
-	gravity=constants.enemyGravity
+	gravity=constants.fireballGravity
 	maxYVel=constants.fireballMaxYVel
 	if dir==constants.left:
 		xVel=-speed
@@ -25,7 +26,7 @@ func _ready():
 
 func _update(delta):
 	if status==constants.fly:
-		rotation_degrees+=5
+		rotation_degrees+=10
 #		yVel+=gravity*delta
 #		position.x+=xVel*delta
 #		position.y+=yVel*delta	
@@ -36,7 +37,7 @@ func _update(delta):
 
 func boom():
 	if active:
-		print('boom')
+#		print('boom')
 		active=false
 		xVel=0
 		yVel=0
@@ -47,7 +48,7 @@ func boom():
 		z_index=5
 		yield(ani,"animation_finished")
 		destroy=true
-#	queue_free()
+
 
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -60,6 +61,11 @@ func rightCollide(obj):
 			boom()
 			SoundsUtil.playShoot()
 		pass	
+	elif obj.type==constants.bowser:
+		if status!=constants.boom:
+			boom()	
+			SoundsUtil.playBoom()
+			obj.hit()
 	pass
 	
 func leftCollide(obj):	
@@ -72,12 +78,16 @@ func leftCollide(obj):
 			Game.addScore(position)
 			boom()
 			SoundsUtil.playShoot()
-		pass
-	pass
+	elif obj.type==constants.bowser:
+		if status!=constants.boom:
+			boom()	
+			SoundsUtil.playBoom()
+			obj.hit()
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		yVel=-speed
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+		||obj.type==constants.bridge:
+		yVel=-ySpeed
 		return true
 	elif obj.type==constants.goomba || obj.type==constants.koopa:
 		if !obj._dead&&status!=constants.boom:
@@ -85,7 +95,11 @@ func floorCollide(obj):
 			Game.addScore(position)
 			boom()
 			SoundsUtil.playShoot()
-	pass
+	elif obj.type==constants.bowser:
+		if status!=constants.boom:
+			boom()	
+			SoundsUtil.playBoom()
+			obj.hit()
 
 func ceilcollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -96,5 +110,8 @@ func ceilcollide(obj):
 			Game.addScore(position)
 			boom()
 			SoundsUtil.playShoot()
-						
-	pass		
+	elif obj.type==constants.bowser:
+		if status!=constants.boom:
+			boom()	
+			SoundsUtil.playBoom()	
+			obj.hit()	

@@ -37,7 +37,7 @@ func _update(delta):
 		deathJump(delta)
 	elif status==constants.stop:
 		pass
-	pass
+
 
 	
 func jumpedOn():

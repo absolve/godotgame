@@ -84,7 +84,8 @@ func _ready():
 		constants.mushroom1up,constants.fireflower,constants.platform,constants.bigCoin,constants.plant,
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
-		constants.axe,constants.figures]
+		constants.axe,constants.figures,constants.fireball,constants.bowser,
+		constants.fire]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -744,8 +745,14 @@ func rightCollide(obj):
 		if obj.value==constants.castlePos:
 #			destroy=true
 			Game.emit_signal("marioInCastle")
-	elif obj.type==constants.spinFireball:
-		print('spinFireball')
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+		print(obj.type)
+		if !invincible&&!hurtInvincible:
+			if big:
+				big2Small()
+				setHurtInvincible()
+			else:	
+				startDeathJump()	
 	elif obj.type==constants.axe:
 		print('axe')
 		yVel=0
@@ -819,8 +826,14 @@ func leftCollide(obj):
 #			destroy=true
 			Game.emit_signal("marioInCastle")
 		pass
-	elif obj.type==constants.spinFireball:
-		print('spinFireball')
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+		print(obj.type)
+		if !invincible&&!hurtInvincible:
+			if big:
+				big2Small()
+				setHurtInvincible()
+			else:	
+				startDeathJump()	
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
@@ -867,6 +880,14 @@ func floorCollide(obj):
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+		print(obj.type)
+		if !invincible&&!hurtInvincible:
+			if big:
+				big2Small()
+				setHurtInvincible()
+			else:	
+				startDeathJump()	
 	
 
 func ceilcollide(obj):#上方的判断
@@ -891,9 +912,16 @@ func ceilcollide(obj):#上方的判断
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
-	elif obj.type==constants.spinFireball:
-		print('spinFireball')
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+		print(obj.type)
+		if !invincible&&!hurtInvincible:
+			if big:
+				big2Small()
+				setHurtInvincible()
+			else:	
+				startDeathJump()	
 	pass
+	
 
 #获取物品
 func getItem(i):
@@ -953,9 +981,9 @@ func enterPipe(obj):
 		yVel=0
 		ani.speed_scale=1
 		if dir==constants.right:
-			enterPipeX=getRight()+4
+			enterPipeX=getRight()+5
 		else:
-			enterPipeX=getLeft()-4
+			enterPipeX=getLeft()-5
 		print(enterPipeX)	
 
 func addPoleScore(polePos,obj):
