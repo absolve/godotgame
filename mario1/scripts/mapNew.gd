@@ -30,6 +30,7 @@ var bridge=preload("res://scenes/bridge.tscn")
 var bowser=preload("res://scenes/bowser.tscn")
 var axe=preload("res://scenes/axe.tscn")
 var figures=preload("res://scenes/figures.tscn")
+var vine=preload("res://scenes/vine.tscn")
 
 
 onready var _obj=$obj
@@ -93,7 +94,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test16.json")
+#	loadMapFile("res://levels/test22.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -694,7 +695,12 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				_obj.add_child(temp)
-						
+			elif i['type']=='vine':
+				var temp=vine.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				_obj.add_child(temp)
+					
 		file.close()
 #		print(mapData)
 	else:

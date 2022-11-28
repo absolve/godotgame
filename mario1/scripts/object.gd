@@ -68,8 +68,9 @@ func resume():
 	pass	
 
 func _update(delta):
-	if debug:
-		update()
+#	if debug:
+#		update()
+	pass	
 
 func _draw():
 	if debug:

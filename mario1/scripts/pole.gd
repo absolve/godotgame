@@ -25,10 +25,7 @@ func _ready():
 #	print(getSizeY())
 	pass
 
-#func getRect():
-#	var temp =rect
-#	temp.position+=Vector2(position.x,position.y+16)
-#	return temp
+
 
 func getCenterY():
 	return position.y+rect.size.y/2
@@ -69,5 +66,4 @@ func _update(delta):
 		pass
 	pass
 
-#func _process(delta):
-#	_update(delta)
+
