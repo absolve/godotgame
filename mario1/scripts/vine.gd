@@ -53,5 +53,6 @@ func _update(delta):
 		
 		if lens.get_child_count()*32+position.y<startY-16:
 			addVine()
-	update()
+	if debug:
+		update()
 	pass

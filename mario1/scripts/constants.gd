@@ -87,7 +87,7 @@ const sitBottomOfPole="sitBottomOfPole" #旗已经到了底部
 #const pipeOut='pipeOut'
 const walkInPipe="walkInPipe" #走到水管里
 const onlywalk='onlywalk' #自动往前走
-
+const grabVine='grabVine' #爬藤蔓
 
 #类型
 const empty="empty"

@@ -314,8 +314,8 @@ func _physics_process(delta):
 			if y!=x&&y.mask.has(x.type)&&!x.destroy&&!y.destroy&&y.active:
 #				if y.getLeft()<=x.getRight()-1 &&y.getRight()>=x.getLeft()+1&&\
 #					y.getTop()<=x.getBottom()-1&&y.getBottom()>=x.getTop()+1:
-					
-				if x.type==constants.pole && y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
+				#除了旗杆和藤蔓不是中心对称的	
+				if (x.type==constants.pole ||x.type==constants.vine)&& y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
 					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1:
 					var result=checkCollision(y,x,delta)
 					if result[0]:
@@ -357,6 +357,9 @@ func checkCollision(a,b,delta):
 	var aRect= a.getRect()
 	var bRect=b.getRect()
 
+	if b.type==constants.vine:
+		print(aRect,bRect)
+	
 	aRect.position.x+=a.xVel*delta
 	if  aRect.intersects(bRect):	#判断左右是否碰撞
 		var xVal =a.position.x-b.position.x

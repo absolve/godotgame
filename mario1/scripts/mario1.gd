@@ -85,7 +85,7 @@ func _ready():
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
-		constants.fire]
+		constants.fire,constants.vine]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -166,6 +166,9 @@ func _update(delta):
 		pipeOut(delta)	
 	elif status==constants.onlywalk:
 		onlywalk(delta)	
+	elif status==constants.grabVine:
+		grabVine(delta)
+	
 		
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
@@ -673,6 +676,29 @@ func walkingToCastle(delta):
 		animation("walk")	
 	flagPoleTimer+=1	
 	
+#设置成爬藤蔓
+func setGrabVine():
+	gravity=0
+	xVel=0
+	yVel=0
+	animation("poleSliding")
+	status=constants.grabVine
+	ani.stop()
+	pass
+
+func grabVine(delta):
+	if Input.is_action_pressed("ui_up"):
+		yVel=-100
+		animation("poleSliding")
+		pass
+	elif Input.is_action_pressed("ui_down"):	
+		yVel=100
+		animation("poleSliding")
+		pass
+	else:
+		yVel=0
+		ani.stop()
+	pass
 
 #判断左边碰撞
 func rightCollide(obj):
@@ -757,13 +783,15 @@ func rightCollide(obj):
 		print('axe')
 		yVel=0
 		Game.emit_signal('marioContactAxe')		
-		pass
 	elif obj.type==constants.figures:
 		status=constants.stop
 		animation('stand')
 #		Game.emit_signal("marioCastleEnd")
 		return true
-		pass
+	elif obj.type==constants.vine:
+		if status!=constants.grabVine:
+			setGrabVine()
+		
 
 #判断右边碰撞
 func leftCollide(obj):
