@@ -21,6 +21,7 @@ onready var ani=$ani
 var brick=preload("res://scenes/brickPiece.tscn")
 var item=preload("res://scenes/item.tscn")
 var coin=preload("res://scenes/coin.tscn")
+var vine=preload("res://scenes/vine.tscn")
 
 func _ready():
 	maxYVel=constants.marioMaxYVel
@@ -102,6 +103,10 @@ func bumped(delta):
 				if coinsNum>0:
 					status=constants.resting	
 					return	
+			elif content==constants.vine:
+				var temp=vine.instance()
+				temp.position=position
+				Game.addObj(temp)
 			elif content==constants.empty || content=='':
 				status=constants.resting	
 				return		
@@ -155,7 +160,8 @@ func startBumped(isBig=false):
 		Game.addScore(Vector2(position.x,position.y-getSizeY()/2),200)
 		SoundsUtil.playCoin()
 	elif content==constants.mushroom||content==constants.mushroom1up||\
-			content==constants.star||content==constants.fireflower:	
+			content==constants.star||content==constants.fireflower\
+			||content==constants.vine:	
 			SoundsUtil.playItem()	
 	elif content==constants.empty||content=='':
 		if isBig && isDestructible():

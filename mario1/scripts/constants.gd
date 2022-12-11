@@ -114,7 +114,7 @@ const pipeIn="pipeIn"  #水管进入
 const pipeOut="pipeOut" #水管出去
 const bigCoin='bigCoin'
 const platform="platform"
-const collision='collision'
+const collision='collision'	#碰撞体
 const beetle="beetle"#甲壳虫
 const castleFlag="castleFlag"
 const spinFireball='spinFireball'  #旋转的火焰
@@ -350,6 +350,14 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"castlePos",
+		'layer':0,
+	},
+	"subLevelPos":{
+		"type":"collision",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"value":"subLevelPos",
 		'layer':0,
 	},
 	"castleFlag":{

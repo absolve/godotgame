@@ -9,8 +9,10 @@ var vine2=preload("res://sprites/vine2.png")
 var vine3=preload("res://sprites/vine3.png")
 var vine4=preload("res://sprites/vine4.png")
 var status=constants.growing
-var speed=50
+var speed=70  #上升的速度
 var startY=0 #开始的位置
+var level='' #跳到的关卡
+var subLevel='' #关卡的位置
 
 func _ready():
 	active=false
@@ -35,7 +37,7 @@ func getBottom():
 	return position.y+lens.get_child_count()*32-16
 
 func addVine():
-	print('addVine')
+#	print('addVine')
 	var temp=Sprite.new()
 	temp.texture=vine2
 	temp.position=Vector2(0,lens.get_child_count()*32)
@@ -50,8 +52,7 @@ func _update(delta):
 		if position.y<0:
 			status=constants.empty
 		position.y+=yVel*delta
-		
-		if lens.get_child_count()*32+position.y<startY-16:
+		if position.y+lens.get_child_count()*32-16<startY-16:
 			addVine()
 	if debug:
 		update()

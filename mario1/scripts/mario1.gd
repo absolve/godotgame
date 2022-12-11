@@ -34,13 +34,15 @@ var deadEndTime=30
 #var leftStop=false
 #var rightStop=false
 var flagPoleTimer=0 #从旗杆上转身然后下来
-var poleLength=0 #旗杆右边位置
+#var poleLength=0 #旗杆右边位置
 var isCrouch=false 	#是否蹲下
 var enterPipeX=0 #进入水管的时候判断是否已经完全进去水管
 var enterPipeY=0 
 var combo=0  #分数连击
 var pipeNo=0 #水管的编号
 var _delta
+var vineObj=null #藤曼的对象
+
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -645,20 +647,18 @@ func sitBottomOfPole(_delta):
 
 #设置走到城堡里面
 func setwalkingToCastle():
-#	ani.frame=0
 	gravity=constants.marioGravity
 	ani.stop()
 	status=constants.walkingToCastle
 	acceleration=constants.acceleration
 	maxXVel=constants.marioWalkMaxSpeed	
-#	xVel=40
 	
 func walkingToCastle(delta):
-	if flagPoleTimer==31:
-		position.x=position.x+poleLength+getSize()
-		ani.flip_h=true
+	if flagPoleTimer==31: #转向
+#		position.x=position.x+poleLength+getSize()
+#		ani.flip_h=true
 		pass
-	elif flagPoleTimer<80: #更换到旗杆的另一个侧
+	elif flagPoleTimer<80: #等待一段时间然后往右走
 		dir=constants.right
 		xVel=0
 		acceleration=constants.acceleration
@@ -677,7 +677,12 @@ func walkingToCastle(delta):
 	flagPoleTimer+=1	
 	
 #设置成爬藤蔓
-func setGrabVine():
+func setGrabVine(obj):
+	if position.x>obj.position.x:
+		position.x=obj.getRight()+getSize()/2
+	else:
+		position.x= obj.getLeft()-getSize()/2
+	vineObj=obj
 	gravity=0
 	xVel=0
 	yVel=0
@@ -686,21 +691,47 @@ func setGrabVine():
 	ani.stop()
 	pass
 
+#爬藤曼的处理
 func grabVine(delta):
 	if Input.is_action_pressed("ui_up"):
-		yVel=-100
+		if getTop()>vineObj.getTop():
+			yVel=-100
 		animation("poleSliding")
-		pass
 	elif Input.is_action_pressed("ui_down"):	
-		yVel=100
+		if getBottom()<vineObj.getBottom():
+			yVel=100
 		animation("poleSliding")
-		pass
+	elif Input.is_action_pressed("ui_right"):
+		if position.x>vineObj.position.x &&  Input.is_action_just_pressed("ui_right"): 
+			animation("walk")
+			ani.frame=2
+			ani.stop()
+			status=constants.fall
+			position.x=vineObj.getRight()+getSize()/2+1
+			gravity=constants.marioGravity
+		else:
+			position.x = vineObj.getRight()+getSize()/2
+			dir=constants.left
+			animation("poleSliding")
+			ani.stop()
+	elif Input.is_action_pressed("ui_left"):
+		if position.x<vineObj.position.x && Input.is_action_just_pressed("ui_left"):
+			animation("walk")
+			ani.frame=2
+			ani.stop()
+			status=constants.fall
+			position.x=vineObj.getLeft()-1-getSize()/2
+			gravity=constants.marioGravity
+		else:
+			position.x = vineObj.getLeft()-getSize()/2
+			dir=constants.right
+			animation("poleSliding")
+			ani.stop()
 	else:
 		yVel=0
 		ani.stop()
-	pass
 
-#判断左边碰撞
+#判断右边碰撞
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
 
@@ -764,7 +795,7 @@ func rightCollide(obj):
 			addPoleScore(obj.position.y,obj)
 		elif status==constants.sitBottomOfPole:
 			if flagPoleTimer>=31:
-				position.x=obj.getRight()-getSize()/2
+				position.x=obj.getRight()+getSize()/2
 				ani.flip_h=true
 				setwalkingToCastle()
 	elif obj.type==constants.collision:
@@ -790,10 +821,10 @@ func rightCollide(obj):
 		return true
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
-			setGrabVine()
+			setGrabVine(obj)
 		
 
-#判断右边碰撞
+#判断左边碰撞
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
 
@@ -865,6 +896,10 @@ func leftCollide(obj):
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
+	elif obj.type==constants.vine:
+		if status!=constants.grabVine:
+			setGrabVine(obj)
+
 
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:	
@@ -948,8 +983,8 @@ func ceilcollide(obj):#上方的判断
 				setHurtInvincible()
 			else:	
 				startDeathJump()	
-	pass
-	
+
+
 
 #获取物品
 func getItem(i):

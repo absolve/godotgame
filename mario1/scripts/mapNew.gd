@@ -94,7 +94,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test22.json")
+#	loadMapFile("res://levels/test8.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -357,8 +357,6 @@ func checkCollision(a,b,delta):
 	var aRect= a.getRect()
 	var bRect=b.getRect()
 
-	if b.type==constants.vine:
-		print(aRect,bRect)
 	
 	aRect.position.x+=a.xVel*delta
 	if  aRect.intersects(bRect):	#判断左右是否碰撞
@@ -882,9 +880,9 @@ func countFinish():
 	print('countFinish')
 	var castleFlag
 #	var castlePos
-#	for i in _obj.get_children():
-#		if i.type==constants.castleFlag:
-#			castleFlag=i
+	for i in _obj.get_children():
+		if i.type==constants.castleFlag:
+			castleFlag=i
 #		elif i.type==constants.collision && i.value=='castlePos':
 #			castlePos=i.position.x
 	if castleFlag!=null:
