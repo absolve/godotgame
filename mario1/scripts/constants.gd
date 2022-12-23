@@ -88,6 +88,8 @@ const sitBottomOfPole="sitBottomOfPole" #旗已经到了底部
 const walkInPipe="walkInPipe" #走到水管里
 const onlywalk='onlywalk' #自动往前走
 const grabVine='grabVine' #爬藤蔓
+const autoGrabVine='autoGrabVine' #从藤蔓爬出来
+
 
 #类型
 const empty="empty"
@@ -123,6 +125,7 @@ const bowser='bowser' #关底boss
 const fire='fire' #火焰
 const axe='axe'  #斧头
 const vine='vine' #藤曼
+const jumpingBoard='jumpingBoard'  #跳板
 
 
 #方向
@@ -173,7 +176,7 @@ const fireballMaxYVel=900
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
-			'spinFireball','pipeOut','bridge','bowser','figures','axe']
+			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -336,6 +339,24 @@ const tilesAttribute={
 		"offsetY":0,
 		'layer':0,
 	},
+	'jumpingBoard1':{
+		"type": "jumpingBoard",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'jumpingBoard2':{
+		"type": "jumpingBoard",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
 	"checkPoint":{
 		"type":"collision",
 		"spriteIndex": 1,
@@ -358,6 +379,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"subLevelPos",
+		"pos":0,
 		'layer':0,
 	},
 	"castleFlag":{
@@ -497,6 +519,39 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"content": "mushroom",
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"box_coin": {
+		"type": "box",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"content": "coin",
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"box_star": {
+		"type": "box",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"content": "star",
+		"visible": "t",
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"box_flower": {
+		"type": "box",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"content": "fireflower",
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
@@ -1352,7 +1407,9 @@ const tilesAttributeType={
 	'spriteIndex':"int",
 	"x":"int",
 	"y":"int",
-	'layer':"int"
+	'layer':"int",
+	"offsetX":"int",
+	"offsetY":"int",
 }
 				
 var mapTiles={}  #每个图块对应的图片

@@ -60,6 +60,8 @@ onready var _spriteSet=$layer/Control/tab/common/vbox/spriteset
 onready var _mapName=$layer/Control/tab/common/vbox/mapName
 onready var _nextLevel=$layer/Control/tab/common/vbox/nextLevel
 onready var _status=$layer/Control/tab/common/vbox/status
+onready var _subLevel=$layer/Control/tab/common/vbox/subLevel
+onready var _bonusLevel=$layer/Control/tab/common/vbox/bonusLevel
 
 #onready var _marioList=$mario
 #onready var _brickList=$brick
@@ -129,6 +131,10 @@ func loadMapFile(fileName:String):
 			_status.setValue(str(currentLevel['status']))
 		if currentLevel.has('nextLevel'):
 			_nextLevel.setValue(str(currentLevel['nextLevel']))	
+		if currentLevel.has('subLevel'):
+			_subLevel.setValue(str(currentLevel['subLevel']))	
+		if currentLevel.has('bonusLevel'):
+			_bonusLevel.setValue(str(currentLevel['bonusLevel']))	
 			
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
@@ -196,6 +202,8 @@ func save2File(fileName):
 		'time':_time.getValue(),
 		"mapName":_mapName.getValue(),
 		"nextLevel":_nextLevel.getValue(),
+		"subLevel":_subLevel.getValue(),
+		"bonusLevel":_bonusLevel.getValue(),
 		'status':_status.getValue(),
 		'marioPos':marioPos,
 		'data':allTiles+bgTiles,
@@ -312,13 +320,16 @@ func getItemAttr(pos:Vector2):
 				if int(i['layer'])!=int(selectItemLayer):
 					continue
 			_itemAttr.clearAttr()
-			for y in i.keys():
-				_itemAttr.addAttr(y,i[y])
+			for y in i.keys():  #根据
+				if constants.tilesAttributeType.has(y) && \
+				 constants.tilesAttributeType[y]=='int':
+					_itemAttr.addAttrInt(y,i[y])
+				else:
+					_itemAttr.addAttr(y,i[y])
 			#保存选中数据
 			selectedItem["x"]=indexX	
 			selectedItem["y"]=indexY
 			break
-	pass
 
 
 func sort(a,b):
@@ -326,12 +337,10 @@ func sort(a,b):
 		return true
 	else:
 		return false
-	pass
 
 func text_changed(str1):
 	print(str1)
 	mapWidthSize=int(str1)
-	pass
 	
 func _update(delta):
 #	if mode=='edit':
@@ -483,10 +492,11 @@ func _draw():
 			elif i.type==constants.figures:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize-16),Color(1,1,1,0.7))					
-								
+			elif i.type==constants.jumpingBoard:
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))					
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.7))
-	pass
 
 
 func _on_hide_pressed():
@@ -524,7 +534,7 @@ func _on_FileDialog_confirmed():
 		save2File(_saveDialog.current_path)
 	else:
 		print("没有当前文件")
-	pass # Replace with function body.
+
 
 #保存地图信息
 func _on_apply_pressed():
@@ -545,12 +555,16 @@ func _on_edit_pressed():
 	for i in allTiles:
 		if i["x"]==selectedItem["x"]&&i["y"]==selectedItem["y"]:
 			for z in _itemAttr.list.get_children():
-				if z.key in ['x','y','spriteIndex']:
+				if z.key in constants.tilesAttributeType.keys(): #需要设置整形的属性
 					i[z.key]=int(z.getValue())
+					if z.key =='x':
+						selectedItem["x"]=int(z.getValue())
+					if z.key =='y':
+						selectedItem["y"]=int(z.getValue())
 				else:
 					i[z.key]=z.getValue()
 			break
-	pass # Replace with function body.
+
 
 
 func _on_loadDialog_file_selected(_path):

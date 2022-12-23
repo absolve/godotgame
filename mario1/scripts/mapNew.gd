@@ -31,6 +31,7 @@ var bowser=preload("res://scenes/bowser.tscn")
 var axe=preload("res://scenes/axe.tscn")
 var figures=preload("res://scenes/figures.tscn")
 var vine=preload("res://scenes/vine.tscn")
+var jumpingBoard=preload("res://scenes/JumpingBoard.tscn")
 
 
 onready var _obj=$obj
@@ -57,7 +58,8 @@ var winHeight
 var specialEntrance=[] #特殊入口
 var subLevel="" #子关卡 是否从水管或者树里面出来
 var isLoadsubLevel=false
-var nextLevel=""
+var nextLevel=""  #下一关
+var nextSubLevel="" #下一关 从水管或者树里面出来或者从天上
 var enemyList=[]	#敌人的列表 等屏幕移动后在初始化
 var marioDeathPos={}  #记录上次死亡的地方
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
@@ -69,7 +71,7 @@ var debug=false #调试模式
 var castleBridge=[]  #保存桥的数据
 var castleEndX=0 #城堡最后斧头的位置
 var scrollEnd = false #摄像机滚动到最后
-
+var bonusLevel=false  #是否是奖励关卡
 
 func _ready():
 #	VisualServer.set_default_clear_color(Color('#5C94FC'))
@@ -87,14 +89,14 @@ func _ready():
 	Game.connect("marioDead",self,"marioDead")
 	Game.connect("marioStartSliding",self,"marioStartSliding")
 	Game.connect('marioContactAxe',self,'marioContactAxe')
-#	Game.connect("marioCastleEnd",self,"marioCastleEnd")
-	
-#	print(_camera.get_camera_screen_center())
+	Game.connect('vineEnd',self,'vineEnd')
+
+
 	if isShow:
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test8.json")
+#	loadMapFile("res://levels/test24.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -126,20 +128,31 @@ func _ready():
 			initEnemy()	#初始化当前画面的敌人
 	else:
 		for i in specialEntrance:
-			if i['pipeNo']==subLevel:
-				if i['pipeType']==constants.pipeOut:
-					for y in marioList:
-						y.position.x = i['x']*blockSize
-						y.position.y= i['y']*blockSize+\
-							blockSize+y.getSizeY()/2
-						y.setPipeOutStatus(i['y']*blockSize)
-						_camera.position.x=	i['x']*blockSize-int(winWidth/3)
-						if _camera.position.x<0:
-							_camera.position.x=0
-						initEnemy()	#初始化当前画面的敌人
-						break
+			if i.has('pipeNo') && i['pipeNo']==subLevel&&i['pipeType']==constants.pipeOut:
+				for y in marioList:
+					y.position.x = i['x']*blockSize
+					y.position.y= i['y']*blockSize+\
+						blockSize+y.getSizeY()/2
+					y.setPipeOutStatus(i['y']*blockSize)
+					_camera.position.x=	i['x']*blockSize-int(winWidth/3)
+					if _camera.position.x<0:
+						_camera.position.x=0
+					initEnemy()	#初始化当前画面的敌人
+					break
 				break
-	
+			elif i['type']==constants.collision && i['pos']==subLevel: #从天上掉下来
+				for y in marioList:
+					y.position.x = i['x']*blockSize
+					y.position.y= i['y']*blockSize+\
+						blockSize+y.getSizeY()/2
+#					y.setPipeOutStatus(i['y']*blockSize)
+					_camera.position.x=	i['x']*blockSize-int(winWidth/3)
+					if _camera.position.x<0:
+						_camera.position.x=0
+					initEnemy()	#初始化当前画面的敌人
+					break
+				break
+			
 	if time<100:
 		SoundsUtil.isLowTime=true
 	SoundsUtil.playBgm()	
@@ -151,6 +164,18 @@ func _ready():
 	if marioStatus!=constants.onlywalk: #排除自动进入水管
 		_title.startCountDown()
 		pass
+	
+	if marioStatus==constants.autoGrabVine:  #从藤蔓下方爬出来
+		for i in marioList:
+			var temp = vine.instance()
+			temp.position.x=i.position.x
+			temp.position.y=i.position.y+blockSize
+			temp.length=5
+			_obj.add_child(temp)
+			i.setAutoGrabVine(temp)
+			i.position.y+=blockSize
+			break
+
 		
 	if castleBridge.size()>0:
 		castleBridge.sort_custom(self,'bridgeSort')
@@ -187,11 +212,13 @@ func _physics_process(delta):
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
-				if i.type==constants.mario:
+				if i.type==constants.mario && i.status!=constants.autoGrabVine:
 					if i.status!=constants.deadJump:
 						marioDead(i.position.x)
 					_gameover.start()	
-				i.queue_free()
+					i.queue_free()
+				else:	
+					i.queue_free()
 		elif i.type==constants.bowser:
 			if i.getTop()>winHeight:
 				if i.status!=constants.deadJump:
@@ -542,6 +569,13 @@ func loadMapFile(fileName:String):
 		
 		if currentLevel.has('nextLevel'):
 			nextLevel=str(currentLevel['nextLevel'])
+		
+		if currentLevel.has('subLevel'): #从奖励关卡回到原来地图的位置
+			nextSubLevel=str(currentLevel['subLevel'])
+			
+		if currentLevel.has('bonusLevel'): 
+			if currentLevel['subLevel']=='true':
+				bonusLevel=true
 			
 		music=str(currentLevel['music'])
 		SoundsUtil.bgm=music
@@ -567,7 +601,7 @@ func loadMapFile(fileName:String):
 			_obj.add_child(temp)
 			marioList.append(temp)
 				
-		marioPos=pos
+#		marioPos=pos
 		
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
@@ -654,6 +688,8 @@ func loadMapFile(fileName:String):
 				if i['value']=='checkPoint':
 					checkPoint.append({"x":i['x']*blockSize+blockSize/2
 						,"y":i['y']*blockSize+blockSize/2})
+				elif i['value']=='subLevelPos':
+					specialEntrance.append(i)
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -701,13 +737,18 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				_obj.add_child(temp)
+			elif i['type']=='jumpingBoard':
+				var  temp=jumpingBoard.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize
+				_obj.add_child(temp)
 					
 		file.close()
 #		print(mapData)
 	else:
 		print('文件不存在')
 		pass
-	pass
+
 
 #载入子关卡
 func loadSubLevelMap(level,subLevel):
@@ -1028,6 +1069,11 @@ func marioCastleEnd():
 	_timer.start(3)
 	pass
 
+#藤蔓已经长好
+func vineEnd():
+	for i in marioList:
+		i.startAutoGrabVine=true
+	pass
 
 func addWarpZoneMsg():
 	if warpZone.size()>=3:

@@ -42,6 +42,7 @@ var combo=0  #分数连击
 var pipeNo=0 #水管的编号
 var _delta
 var vineObj=null #藤曼的对象
+var startAutoGrabVine=false #设置开始自动爬藤蔓
 
 
 var stand_small_animation=['stand_small','stand_small_green',
@@ -87,7 +88,7 @@ func _ready():
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
-		constants.fire,constants.vine]
+		constants.fire,constants.vine,constants.jumpingBoard]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -120,6 +121,8 @@ func _ready():
 		else:
 			ani.animation=	walk_small_animation[aniIndex]
 			ani.frame=2
+	
+	
 	pass 
 
 
@@ -170,7 +173,8 @@ func _update(delta):
 		onlywalk(delta)	
 	elif status==constants.grabVine:
 		grabVine(delta)
-	
+	elif status==constants.autoGrabVine:
+		autoGrabVine(delta)
 		
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
@@ -488,6 +492,7 @@ func setPipeOutStatus(y):
 	active=false
 	enterPipeY=y
 	status=constants.pipeOut
+	animation("stand")
 	pass
 
 #进入水管
@@ -696,10 +701,14 @@ func grabVine(delta):
 	if Input.is_action_pressed("ui_up"):
 		if getTop()>vineObj.getTop():
 			yVel=-100
+		else:
+			yVel=0	
 		animation("poleSliding")
 	elif Input.is_action_pressed("ui_down"):	
 		if getBottom()<vineObj.getBottom():
 			yVel=100
+		else:
+			yVel=0		
 		animation("poleSliding")
 	elif Input.is_action_pressed("ui_right"):
 		if position.x>vineObj.position.x &&  Input.is_action_just_pressed("ui_right"): 
@@ -730,6 +739,30 @@ func grabVine(delta):
 	else:
 		yVel=0
 		ani.stop()
+
+#设置成爬藤蔓的状态
+func setAutoGrabVine(obj):
+	animation("poleSliding")
+	vineObj=obj
+	active=false
+	position.x= obj.getLeft()-getSize()/2
+	ani.stop()
+	pass
+
+#自动爬藤蔓
+func autoGrabVine(delta):
+	if startAutoGrabVine:
+		if getTop()>vineObj.getTop():
+			position.y+=yVel*delta
+		else: #转到右边
+			dir=constants.left
+			position.x=vineObj.getRight()+getSize()/2
+			ani.stop()
+			status=	constants.grabVine
+			active=true
+		animation("poleSliding")
+		yVel=-80
+	pass
 
 #判断右边碰撞
 func rightCollide(obj):
@@ -886,7 +919,7 @@ func leftCollide(obj):
 			Game.emit_signal("marioInCastle")
 		pass
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
-		print(obj.type)
+#		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()

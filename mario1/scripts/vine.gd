@@ -49,11 +49,21 @@ func addVine():
 
 func _update(delta):
 	if status==constants.growing:
-		if position.y<0:
+		if position.y-16<0:
 			status=constants.empty
+			
 		position.y+=yVel*delta
-		if position.y+lens.get_child_count()*32-16<startY-16:
+		if length>0:
+			if lens.get_child_count()<length:
+				if position.y+lens.get_child_count()*32-16<startY-16:
+					addVine()
+			else:
+				print("vineEnd")
+				status=constants.empty
+				Game.emit_signal("vineEnd")		
+		elif position.y+lens.get_child_count()*32-16<startY-16:
 			addVine()
+			
 	if debug:
 		update()
 	pass
