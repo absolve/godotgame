@@ -1,6 +1,6 @@
 # godotgame
 掘金：https://juejin.cn/user/1003220454621063  
-个人博客：https://my.oschina.net/u/2000932/  
+个人博客（不更新了）：https://my.oschina.net/u/2000932/  
 知乎：https://www.zhihu.com/people/wang-er-32-96?utm_source=qq&utm_medium=social&utm_oi=551007046833733632  
 使用godot引擎制作的一些小游戏，每个文件夹包含一个工程，真正都完成的话就会有截图在这里展示  
 Some games made using the Godot engine，Each folder contains one project And when I was really done, you'll see the screenshots shown here.  
