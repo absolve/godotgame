@@ -96,7 +96,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test25.json")
+#	loadMapFile("res://levels/test24.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -592,7 +592,7 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
 			temp.big=Game.playerData['mario']['big']
-			temp.big=true
+#			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
 #			temp.fire=true
 #			temp.active=false
