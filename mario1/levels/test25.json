@@ -2,6 +2,24 @@
 	"bg": "castle",
 	"bonusLevel": "false",
 	"data": [{
+		"dir": "left",
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 8,
+		"type": "koopa",
+		"x": 8,
+		"y": 11,
+		"ySpeed": 100
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 0,
+		"y": 12
+	}, {
 		"layer": 0,
 		"offsetX": 0,
 		"offsetY": 0,
@@ -31,32 +49,8 @@
 		"offsetY": 0,
 		"spriteIndex": 0,
 		"type": "brick",
-		"x": 1,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 2,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
 		"x": 2,
 		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 3,
-		"y": 13
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -72,14 +66,6 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 4,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 4,
 		"y": 14
 	}, {
 		"layer": 0,
@@ -88,23 +74,7 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 5,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 5,
 		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 6,
-		"y": 13
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -120,7 +90,7 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 7,
-		"y": 13
+		"y": 14
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -128,7 +98,7 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 8,
-		"y": 13
+		"y": 14
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -136,7 +106,7 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 9,
-		"y": 13
+		"y": 14
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -144,7 +114,7 @@
 		"spriteIndex": 0,
 		"type": "brick",
 		"x": 10,
-		"y": 13
+		"y": 14
 	}, {
 		"layer": 0,
 		"offsetX": 0,
@@ -167,143 +137,7 @@
 		"offsetY": 0,
 		"spriteIndex": 0,
 		"type": "brick",
-		"x": 10,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 9,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 8,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 7,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 11,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 12,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
 		"x": 13,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 14,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 15,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 16,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 17,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 18,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 19,
-		"y": 13
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 19,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 18,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 17,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 16,
-		"y": 14
-	}, {
-		"layer": 0,
-		"offsetX": 0,
-		"offsetY": 0,
-		"spriteIndex": 0,
-		"type": "brick",
-		"x": 15,
 		"y": 14
 	}, {
 		"layer": 0,
@@ -319,22 +153,62 @@
 		"offsetY": 0,
 		"spriteIndex": 0,
 		"type": "brick",
-		"x": 13,
+		"x": 15,
 		"y": 14
 	}, {
 		"layer": 0,
 		"offsetX": 0,
 		"offsetY": 0,
 		"spriteIndex": 0,
-		"type": "jumpingBoard",
-		"x": 4,
+		"type": "brick",
+		"x": 16,
+		"y": 14
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 17,
+		"y": 14
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 18,
+		"y": 14
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 19,
+		"y": 14
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 19,
+		"y": 13
+	}, {
+		"layer": 0,
+		"offsetX": 0,
+		"offsetY": 0,
+		"spriteIndex": 0,
+		"type": "brick",
+		"x": 19,
 		"y": 12
 	}],
 	"mapName": "",
 	"mapSize": "20",
 	"marioPos": {
-		"x": 1,
-		"y": 12
+		"x": 2,
+		"y": 13
 	},
 	"music": "overworld",
 	"nextLevel": "",

@@ -10,6 +10,7 @@ var reviveTime=600 #变成壳然后变回乌龟的时间
 var combo=0  #分数连击
 var yDir=constants.up #飞行时的移动方向
 var ySpeed=55  #向上飞行时y的速度
+var jumpSpeed=400
 
 func _ready():
 #	status=constants.shell
@@ -36,6 +37,11 @@ func _ready():
 		gravity=0
 		xVel=0
 		animation("flying")
+	elif spriteIndex in [8,9,10,11]: #跳跃的状态
+		status=constants.jumping
+		spriteIndex-=8
+		gravity=constants.enemyJumpGravity
+		animation("jumping")
 	else:		
 		animation("walk")		
 	ani.position.y=-18		
@@ -66,7 +72,8 @@ func _update(delta):
 			ani.position.y=-18
 	elif status== constants.flying:
 		flying(delta)
-
+	elif status==constants.jumping:
+		jumping(delta)
 
 func flying(delta):
 	if yDir==constants.up:
@@ -78,7 +85,12 @@ func flying(delta):
 		if yVel>ySpeed:
 			yDir=constants.up
 
-
+func jumping(delta):
+	if dir==constants.left:
+		xVel=-speed
+	else:
+		xVel=speed
+	
 func jumpedOn():
 	if status==constants.walking:
 		animation("shell")
@@ -97,7 +109,7 @@ func jumpedOn():
 		xVel=0
 		reviveStartTime=0
 		combo=0
-	elif status==constants.flying:
+	elif status==constants.flying||status==constants.jumping:
 		status=constants.walking
 		gravity=constants.enemyGravity
 		if dir==constants.left:
@@ -194,7 +206,7 @@ func animation(type):
 			ani.play("revive_grey")	
 		elif spriteIndex==3:
 			ani.play("revive_red")					
-	elif type=="flying":
+	elif type=="flying" || type=='jumping':
 		if spriteIndex==0:
 			ani.play("fly")
 		elif spriteIndex==1:
@@ -203,7 +215,7 @@ func animation(type):
 			ani.play("fly_grey")	
 		elif spriteIndex==3:
 			ani.play("fly_red")		
-		pass
+	
 
 	
 	
@@ -244,8 +256,7 @@ func leftCollide(obj):
 				SoundsUtil.playStomp()			
 		else:	
 			turnRight()
-#			return true
-	pass
+
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -255,6 +266,8 @@ func floorCollide(obj):
 		elif status==constants.walking&& dir==constants.right&&spriteIndex==3:		
 			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
 				turnLeft()
+		if status==constants.jumping:
+			yVel=-jumpSpeed
 		return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:

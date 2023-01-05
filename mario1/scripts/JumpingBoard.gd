@@ -1,6 +1,10 @@
 extends "res://scripts/object.gd"
 
 var spriteIndex=0
+var status=constants.empty
+var timer=0
+var timerDelta=8
+
 onready var ani=$ani
 
 func _ready():
@@ -15,4 +19,20 @@ func _ready():
 	else:
 		ani.play("0")	
 	ani.stop()
+	
 	pass
+
+
+func _update(delta):
+	if status==constants.boardStretch:
+		timer+=1
+		if timer>timerDelta:
+			timer=0
+			status=constants.empty
+			ani.frame=0
+		ani.frame=timer/2
+	
+
+
+func stretch():
+	status=constants.boardStretch

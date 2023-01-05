@@ -43,6 +43,9 @@ var pipeNo=0 #水管的编号
 var _delta
 var vineObj=null #藤曼的对象
 var startAutoGrabVine=false #设置开始自动爬藤蔓
+var onBoardTimer=0
+var onBoardDelta=8.0
+var underwater=false #水下
 
 
 var stand_small_animation=['stand_small','stand_small_green',
@@ -175,6 +178,8 @@ func _update(delta):
 		grabVine(delta)
 	elif status==constants.autoGrabVine:
 		autoGrabVine(delta)
+	elif status==constants.onBoard:
+		onBoard(delta)
 		
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
@@ -385,8 +390,6 @@ func jump(delta):
 		if xVel<maxXVel:
 			xVel+=acceleration*delta
 		
-#	position.x+=xVel*delta
-#	position.y+=yVel*delta	
 
 func fall(delta):
 #	if yVel<maxYVel:
@@ -436,7 +439,6 @@ func deathJump(delta):
 		position.y+=yVel*delta	
 	else:
 		deadStartTime+=1
-	pass
 
 #开始蹲下
 func startCrouch():
@@ -648,7 +650,6 @@ func setSitBottom():
 
 func sitBottomOfPole(_delta):		
 	flagPoleTimer+=1
-	pass
 
 #设置走到城堡里面
 func setwalkingToCastle():
@@ -703,6 +704,9 @@ func grabVine(delta):
 			yVel=-100
 		else:
 			yVel=0	
+		if getTop()-getSizeY()/2<0:
+			Game.emit_signal("marioGrapVineTop",vineObj.level,vineObj.subLevel)
+			
 		animation("poleSliding")
 	elif Input.is_action_pressed("ui_down"):	
 		if getBottom()<vineObj.getBottom():
@@ -762,7 +766,68 @@ func autoGrabVine(delta):
 			active=true
 		animation("poleSliding")
 		yVel=-80
+
+#设置在跳板上
+func setOnBoard(obj):
+	print('setOnBoard')
+	obj.stretch()
+	yVel=10
+	onBoardTimer=0
+	status=constants.onBoard
+	animation("walk")
+	ani.stop()
 	pass
+	
+#在跳板上
+func onBoard(delta):
+	onBoardTimer+=1
+	if onBoardTimer>onBoardDelta:
+		if Input.is_action_pressed("ui_jump"):
+			yVel=-1000
+		else:	
+			yVel=-500
+		status=constants.fall
+
+#水下
+func swim(delta):
+	if Input.is_action_pressed("ui_jump"):
+		yVel=-200
+	else:
+		yVel=0
+	
+	if Input.is_action_pressed("ui_left"):	
+		acceleration=constants.acceleration
+		dir=constants.left
+			
+		if 	xVel>-maxXVel:
+			xVel-=acceleration*delta
+		else:
+			xVel=-maxXVel
+			
+	elif Input.is_action_pressed("ui_right"):
+		dir=constants.right
+		acceleration=constants.acceleration
+			
+		if 	xVel<maxXVel:
+			xVel+=acceleration*delta
+		else:
+			xVel=maxXVel
+	else:
+		if dir==constants.right:
+			if	xVel>0:
+				xVel-=acceleration*delta
+			else:
+				xVel=0
+				ani.speed_scale=1
+		else:
+			if xVel<0:
+				xVel+=acceleration*delta
+			else:
+				xVel=0
+				ani.speed_scale=1
+		
+	pass
+
 
 #判断右边碰撞
 func rightCollide(obj):
@@ -984,7 +1049,10 @@ func floorCollide(obj):
 				setHurtInvincible()
 			else:	
 				startDeathJump()	
-	
+	elif obj.type==constants.jumpingBoard: #在跳板上
+		if yVel>0&&status!=constants.onBoard:
+			setOnBoard(obj)
+		
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
@@ -1172,7 +1240,6 @@ func animation(type):
 	elif type=='fall':
 		if invincible&&getFallAni().size()>0:
 			shadow.animation=getFallAni()[shadowIndex]
-		pass
 	elif type=='poleSliding':
 		if 	big:
 			ani.play(landing_big_animation[aniIndex])	

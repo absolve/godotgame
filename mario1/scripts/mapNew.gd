@@ -74,7 +74,6 @@ var scrollEnd = false #摄像机滚动到最后
 var bonusLevel=false  #是否是奖励关卡
 
 func _ready():
-#	VisualServer.set_default_clear_color(Color('#5C94FC'))
 	Game.setMap(self)
 	winWidth= ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
@@ -90,13 +89,14 @@ func _ready():
 	Game.connect("marioStartSliding",self,"marioStartSliding")
 	Game.connect('marioContactAxe',self,'marioContactAxe')
 	Game.connect('vineEnd',self,'vineEnd')
+	Game.connect('marioGrapVineTop',self,'marioGrapVineTop')
 
-
+	
 	if isShow:
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test24.json")
+#	loadMapFile("res://levels/test25.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -173,7 +173,7 @@ func _ready():
 			temp.length=5
 			_obj.add_child(temp)
 			i.setAutoGrabVine(temp)
-			i.position.y+=blockSize
+			i.position.y+=i.getSizeY()
 			break
 
 		
@@ -592,7 +592,7 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
 			temp.big=Game.playerData['mario']['big']
-#			temp.big=true
+			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
 #			temp.fire=true
 #			temp.active=false
@@ -638,7 +638,13 @@ func loadMapFile(fileName:String):
 						temp._visible=false
 					else:
 						temp._visible=true
-#				var obj={"x":i['x'],"y":i['y']}
+				if i.has('level'):
+					temp.level=i['level']
+				if i.has('subLevel'):
+					temp.subLevel=i['subLevel']
+				if i.has('itemIndex'):
+					temp.itemIndex=i['itemIndex']
+					
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
 			elif i['type']=="platform":
@@ -1074,6 +1080,14 @@ func vineEnd():
 	for i in marioList:
 		i.startAutoGrabVine=true
 	pass
+
+#跳转到下一关
+func marioGrapVineTop(level,subLevel):
+	print(level,'-',subLevel)
+	assert(level!='')
+	loadSubLevelMap(level,subLevel)
+	pass
+
 
 func addWarpZoneMsg():
 	if warpZone.size()>=3:

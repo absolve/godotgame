@@ -16,6 +16,9 @@ var coin6Num=1  #多个硬币的数量
 #var isOnFloor=false
 var needDestroy=false
 var coinsNum=0 #硬币数量
+var level=''  #藤蔓时设置的关卡
+var subLevel=''
+var itemIndex=0 #物品的精灵索引
 
 onready var ani=$ani
 var brick=preload("res://scenes/brickPiece.tscn")
@@ -106,6 +109,8 @@ func bumped(delta):
 			elif content==constants.vine:
 				var temp=vine.instance()
 				temp.position=position
+				temp.level=level
+				temp.subLevel=subLevel
 				Game.addObj(temp)
 			elif content==constants.empty || content=='':
 				status=constants.resting	
@@ -168,8 +173,7 @@ func startBumped(isBig=false):
 			needDestroy=true
 		elif isDestructible():
 			SoundsUtil.playBrickHit()	
-		pass
-	pass		
+		
 
 #空的盒子
 func isDestructible():

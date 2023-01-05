@@ -62,6 +62,7 @@ onready var _nextLevel=$layer/Control/tab/common/vbox/nextLevel
 onready var _status=$layer/Control/tab/common/vbox/status
 onready var _subLevel=$layer/Control/tab/common/vbox/subLevel
 onready var _bonusLevel=$layer/Control/tab/common/vbox/bonusLevel
+onready var _underwater=$layer/Control/tab/common/vbox/underwater
 
 #onready var _marioList=$mario
 #onready var _brickList=$brick
@@ -135,7 +136,8 @@ func loadMapFile(fileName:String):
 			_subLevel.setValue(str(currentLevel['subLevel']))	
 		if currentLevel.has('bonusLevel'):
 			_bonusLevel.setValue(str(currentLevel['bonusLevel']))	
-			
+		if currentLevel.has('underwater'):
+			_underwater.setValue(str(currentLevel['underwater']))	
 		SoundsUtil.bgm=music
 		SoundsUtil.isLowTime=false
 		
@@ -204,6 +206,7 @@ func save2File(fileName):
 		"nextLevel":_nextLevel.getValue(),
 		"subLevel":_subLevel.getValue(),
 		"bonusLevel":_bonusLevel.getValue(),
+		"underwater":_underwater.getValue(),
 		'status':_status.getValue(),
 		'marioPos':marioPos,
 		'data':allTiles+bgTiles,

@@ -43,6 +43,7 @@ const flying='flying' #飞行
 const koopaJump='koopaJump'
 const figures='figures' #人物
 
+
 #子弹状态
 const fly='fly' 
 const boom='boom'
@@ -60,6 +61,8 @@ const rising="rising"
 #旋转火球的状态
 const rotate='rotate'
 
+#跳板状态
+const boardStretch='boardStretch'
 
 #其他的状态
 const spin="spin"
@@ -89,6 +92,8 @@ const walkInPipe="walkInPipe" #走到水管里
 const onlywalk='onlywalk' #自动往前走
 const grabVine='grabVine' #爬藤蔓
 const autoGrabVine='autoGrabVine' #从藤蔓爬出来
+const onBoard='onBoard' #在跳板上
+const swim="swim" #
 
 
 #类型
@@ -148,7 +153,8 @@ const up="up"
 #const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=1800
+const enemyGravity=1700
+const enemyJumpGravity=1000
 const enemyMaxVel=900
 const bowserGravity=300
 
@@ -163,6 +169,7 @@ const marioRunMaxSpeed=340 #跑的时候最大速度
 const marioAniSpeed=100
 const marioGravity=1800 #重力
 const marioJumpGravity=1000
+const marioUnderWaterGravity=1100 #水下重力
 const marioJumpSpeed=500
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
@@ -489,6 +496,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_blue": {
@@ -500,6 +510,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_grey": {
@@ -511,6 +524,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_default": {
@@ -522,6 +538,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_coin": {
@@ -533,6 +552,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_star": {
@@ -544,6 +566,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box_flower": {
@@ -555,6 +580,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box4": {
@@ -566,6 +594,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box5": {
@@ -577,6 +608,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"box6": {
@@ -588,6 +622,9 @@ const tilesAttribute={
 		"visible": "t",
 		"offsetX":0,
 		"offsetY":0,
+		'level':"",
+		"subLevel":'',
+		"itemIndex":0,
 		'layer':0,
 	},
 	"brick": {
