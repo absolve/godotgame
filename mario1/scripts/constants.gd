@@ -942,6 +942,24 @@ const tilesAttribute={
 		"offsetY":0,
 		'layer':0,
 	},
+	"brick36": {
+		"type": "brick",
+		"spriteIndex": 35,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick37": {
+		"type": "brick",
+		"spriteIndex": 36,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
 	"bridge": {
 		"type": "bridge",
 		"spriteIndex": 0,
@@ -1434,6 +1452,126 @@ const tilesAttribute={
 		"bg56": {
 		"type": "bg",
 		"spriteIndex": 56,
+		"x": 0,
+		"y": 0
+	},
+	"bg57": {
+		"type": "bg",
+		"spriteIndex": 57,
+		"x": 0,
+		"y": 0
+	},
+	"bg58": {
+		"type": "bg",
+		"spriteIndex": 58,
+		"x": 0,
+		"y": 0
+	},
+	"bg59": {
+		"type": "bg",
+		"spriteIndex": 59,
+		"x": 0,
+		"y": 0
+	},
+	"bg60": {
+		"type": "bg",
+		"spriteIndex": 60,
+		"x": 0,
+		"y": 0
+	},
+	"bg61": {
+		"type": "bg",
+		"spriteIndex": 61,
+		"x": 0,
+		"y": 0
+	},
+		"bg62": {
+		"type": "bg",
+		"spriteIndex": 62,
+		"x": 0,
+		"y": 0
+	},
+		"bg63": {
+		"type": "bg",
+		"spriteIndex": 63,
+		"x": 0,
+		"y": 0
+	},
+		"bg64": {
+		"type": "bg",
+		"spriteIndex": 64,
+		"x": 0,
+		"y": 0
+	},
+	"bg65": {
+		"type": "bg",
+		"spriteIndex": 65,
+		"x": 0,
+		"y": 0
+	},
+		"bg66": {
+		"type": "bg",
+		"spriteIndex": 66,
+		"x": 0,
+		"y": 0
+	},
+	"bg67": {
+		"type": "bg",
+		"spriteIndex": 67,
+		"x": 0,
+		"y": 0
+	},
+	"bg68": {
+		"type": "bg",
+		"spriteIndex": 68,
+		"x": 0,
+		"y": 0
+	},
+	"bg69": {
+		"type": "bg",
+		"spriteIndex": 69,
+		"x": 0,
+		"y": 0
+	},
+	"bg70": {
+		"type": "bg",
+		"spriteIndex": 70,
+		"x": 0,
+		"y": 0
+	},
+	"bg71": {
+		"type": "bg",
+		"spriteIndex": 71,
+		"x": 0,
+		"y": 0
+	},
+	"bg72": {
+		"type": "bg",
+		"spriteIndex": 72,
+		"x": 0,
+		"y": 0
+	},
+	"bg73": {
+		"type": "bg",
+		"spriteIndex": 73,
+		"x": 0,
+		"y": 0
+	},
+	"bg74": {
+		"type": "bg",
+		"spriteIndex": 74,
+		"x": 0,
+		"y": 0
+	},
+	"bg75": {
+		"type": "bg",
+		"spriteIndex": 75,
+		"x": 0,
+		"y": 0
+	},
+	"bg76": {
+		"type": "bg",
+		"spriteIndex": 76,
 		"x": 0,
 		"y": 0
 	},
