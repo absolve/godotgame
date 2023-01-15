@@ -4,7 +4,6 @@
 [ext_resource path="res://sprites/tiles33x28.png" type="Texture" id=2]
 
 [sub_resource type="AtlasTexture" id=2]
-flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 128, 768, 32, 32 )
 

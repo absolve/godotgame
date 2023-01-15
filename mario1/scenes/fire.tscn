@@ -5,12 +5,10 @@
 [ext_resource path="res://sounds/fire.ogg" type="AudioStream" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
-flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 16, 48, 16 )
 
 [sub_resource type="AtlasTexture" id=2]
-flags = 4
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 48, 16 )
 
