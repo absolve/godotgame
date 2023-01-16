@@ -74,6 +74,11 @@ var throw_animation=['throw','throw_green',
 						'throw_red','throw_black']
 var death_jump_animation=['death','death_green',
 						'death_red','death_black']
+var swim_small_animation=['swim_small','swim_small_green',
+						'swim_small_red','swim_small_black']
+var swim_big_animation=['swim_big','swim_big_green',
+						'swim_big_red','swim_big_black']
+
 
 var ball=preload("res://scenes/fireball.tscn")
 							
