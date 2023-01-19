@@ -729,42 +729,42 @@ animations = [ {
 "frames": [ SubResource( 80 ), SubResource( 81 ), SubResource( 82 ), SubResource( 83 ), SubResource( 84 ), SubResource( 85 ) ],
 "loop": true,
 "name": "swim_big",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 86 ), SubResource( 87 ), SubResource( 88 ), SubResource( 89 ), SubResource( 90 ), SubResource( 91 ) ],
 "loop": true,
 "name": "swim_big_black",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 92 ), SubResource( 93 ), SubResource( 94 ), SubResource( 95 ), SubResource( 96 ), SubResource( 97 ) ],
 "loop": true,
 "name": "swim_big_green",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 98 ), SubResource( 99 ), SubResource( 100 ), SubResource( 101 ), SubResource( 102 ), SubResource( 103 ) ],
 "loop": true,
 "name": "swim_big_red",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 104 ), SubResource( 105 ), SubResource( 106 ), SubResource( 107 ), SubResource( 108 ) ],
 "loop": true,
 "name": "swim_small",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 109 ), SubResource( 110 ), SubResource( 111 ), SubResource( 112 ), SubResource( 113 ) ],
 "loop": true,
 "name": "swim_small_black",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 114 ), SubResource( 115 ), SubResource( 116 ), SubResource( 117 ), SubResource( 118 ) ],
 "loop": true,
 "name": "swim_small_green",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 119 ), SubResource( 120 ), SubResource( 121 ), SubResource( 122 ), SubResource( 123 ) ],
 "loop": true,
 "name": "swim_small_red",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 21 ), SubResource( 22 ), SubResource( 23 ), SubResource( 24 ), SubResource( 25 ), SubResource( 26 ), SubResource( 27 ), SubResource( 28 ), SubResource( 29 ) ],
 "loop": true,
@@ -847,7 +847,7 @@ visible = false
 show_behind_parent = true
 scale = Vector2( 0.9, 0.9 )
 frames = SubResource( 79 )
-animation = "crouch_red"
+animation = "swim_big_green"
 
 [node name="jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 25 )

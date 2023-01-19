@@ -131,6 +131,12 @@ const fire='fire' #火焰
 const axe='axe'  #斧头
 const vine='vine' #藤曼
 const jumpingBoard='jumpingBoard'  #跳板
+const cheapcheap='cheapcheap' #飞鸟
+const bloober='bloober' #乌贼
+const podoboo='podoboo' #火焰
+const bulletBill='bulletBill' #大子弹
+const Lakitu='Lakitu' #天上飞的云朵
+const hammerBro='hammerBro' #锤子兄弟
 
 
 #方向
@@ -177,6 +183,11 @@ const deathJumpGravity=1200
 const marioMaxYVel=900 #最大y速度
 const boxHeight=5 #跨过的间隙时最低的高度
 const fireballMaxYVel=900
+const underwaterMaxHeight=16 #在水下最大高度
+const underwaterAcceleration=180
+const underwaterRunAcceleration=300
+const underwaterWalkMaxSpeed=110
+const underwaterRunMaxSpeed=280
 
 
 #图块类型
@@ -286,7 +297,7 @@ const tilesAttribute={
 		'ySpeed':100, 
 		'layer':0,
 	},
-	"koopa04": {
+	"koopafly04": {
 		"type": "koopa",
 		"spriteIndex": 4,
 		"x": 0,
@@ -297,7 +308,7 @@ const tilesAttribute={
 		'ySpeed':100, 
 		'layer':0,
 	},
-	"koopa05": {
+	"koopafly05": {
 		"type": "koopa",
 		"spriteIndex": 5,
 		"x": 0,
@@ -308,9 +319,64 @@ const tilesAttribute={
 		'ySpeed':100, 
 		'layer':0,
 	},
-	"koopa06": {
+	"koopafly06": {
 		"type": "koopa",
 		"spriteIndex": 6,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+		'layer':0,
+	},
+	"koopafly07": {
+		"type": "koopa",
+		"spriteIndex": 7,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+		'layer':0,
+	},
+	"koopajump08": {
+		"type": "koopa",
+		"spriteIndex": 8,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+		'layer':0,
+	},
+	"koopajump09": {
+		"type": "koopa",
+		"spriteIndex": 9,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+		'layer':0,
+	},
+	"koopajump10": {
+		"type": "koopa",
+		"spriteIndex": 10,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'ySpeed':100, 
+		'layer':0,
+	},
+	"koopajump11": {
+		"type": "koopa",
+		"spriteIndex": 11,
 		"x": 0,
 		"y": 0,
 		'dir': 'left',

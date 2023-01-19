@@ -43,10 +43,11 @@ var pipeNo=0 #水管的编号
 var _delta
 var vineObj=null #藤曼的对象
 var startAutoGrabVine=false #设置开始自动爬藤蔓
-var onBoardTimer=0
+var onBoardTimer=0  #在跳板上时间
 var onBoardDelta=8.0
 var underwater=false #水下
-
+var bubbletimer=0
+var bubbleDelta=20  #气泡间隔
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -124,12 +125,19 @@ func _ready():
 	slide1.set_loop(false)
 	
 	if status==constants.fall:
-		if big:
-			ani.animation=walk_big_animation[aniIndex]
-		else:
-			ani.animation=	walk_small_animation[aniIndex]
-			ani.frame=2
-	
+		if underwater:
+			if big:
+				ani.animation=swim_big_animation[aniIndex]
+			else:
+				ani.animation=swim_small_animation[aniIndex]
+		else:	
+			if big:
+				ani.animation=walk_big_animation[aniIndex]
+			else:
+				ani.animation=	walk_small_animation[aniIndex]
+				ani.frame=2
+	if underwater:
+		gravity=constants.marioUnderWaterGravity
 	
 	pass 
 
@@ -185,6 +193,8 @@ func _update(delta):
 		autoGrabVine(delta)
 	elif status==constants.onBoard:
 		onBoard(delta)
+	elif status==constants.swim:
+		swim(delta)
 		
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
@@ -260,11 +270,15 @@ func stand(_delta):
 		dir=constants.right
 		status = constants.walk
 	elif Input.is_action_pressed("ui_jump"):	
-		yVel=-constants.marioJumpSpeed
-		gravity=constants.marioJumpGravity
-		status=constants.jump
-		playJumpSound()
-#		print("stand jump")
+		if underwater:
+			status=constants.swim
+			pass
+		else:	
+			yVel=-constants.marioJumpSpeed
+			gravity=constants.marioJumpGravity
+			status=constants.jump
+			playJumpSound()
+
 	if Input.is_action_just_pressed("ui_down") &&big:
 		startCrouch()
 		return
@@ -282,30 +296,39 @@ func walk(delta):
 		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
 	
 	if Input.is_action_pressed("ui_action"):
-		acceleration=constants.runAcceleration
-		maxXVel=constants.marioRunMaxSpeed
+		if underwater:
+			acceleration=constants.underwaterRunAcceleration
+			maxXVel=constants.underwaterRunMaxSpeed
+		else:	
+			acceleration=constants.runAcceleration
+			maxXVel=constants.marioRunMaxSpeed
 		if fire&&allowShoot:
 			shootFireball(false)
 			allowShoot=false
 	else:
-		acceleration=constants.acceleration
-		maxXVel=constants.marioWalkMaxSpeed	
+		if underwater:
+			acceleration=constants.underwaterAcceleration
+			maxXVel=constants.underwaterWalkMaxSpeed
+		else:	
+			acceleration=constants.acceleration
+			maxXVel=constants.marioWalkMaxSpeed	
 		allowShoot=true
 		
 	#跳跃
 	if Input.is_action_pressed("ui_jump"):
-		yVel=-constants.marioJumpSpeed
-		gravity=constants.marioJumpGravity
-		status=constants.jump
-		playJumpSound()
-#		print('walk jump')
+		if underwater:
+			status=constants.swim
+		else:	
+			yVel=-constants.marioJumpSpeed
+			gravity=constants.marioJumpGravity
+			status=constants.jump
+			playJumpSound()
 		return
 	
 	if Input.is_action_pressed("ui_down") &&big:
 		startCrouch()
 		return
 	elif isCrouch and big:
-#		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
 		adjustBigRect()
 		position.y-=14
 		ani.position.y=0
@@ -317,7 +340,10 @@ func walk(delta):
 			animation("slide")
 			acceleration=constants.slideFriction
 		else:
-			acceleration=constants.acceleration
+			if underwater:
+				acceleration=constants.underwaterAcceleration
+			else:	
+				acceleration=constants.acceleration
 			dir=constants.left
 			animation('walk')
 			
@@ -332,8 +358,11 @@ func walk(delta):
 			animation("slide")
 			acceleration=constants.slideFriction
 		else:
+			if underwater:
+				acceleration=constants.underwaterAcceleration
+			else:	
+				acceleration=constants.acceleration
 			dir=constants.right
-			acceleration=constants.acceleration
 			animation('walk')
 			
 		if 	xVel<maxXVel:
@@ -362,7 +391,6 @@ func walk(delta):
 #	position.y+=yVel*delta	
 	if !isOnFloor:
 		ani.stop()
-#		ani.speed_scale=1
 		status=constants.fall
 	pass
 
@@ -428,7 +456,6 @@ func adjustCrouchlRect():
 func startDeathJump():
 	SoundsUtil.playDeath()
 	status=constants.deadJump
-#	dead=true
 	active=false
 	yVel=-500
 	gravity=constants.marioDeathGravity
@@ -449,7 +476,6 @@ func deathJump(delta):
 func startCrouch():
 	status=constants.crouch	
 	if !isCrouch:
-#		rect=Rect2(Vector2(-12,-15),Vector2(24,30))	
 		adjustCrouchlRect()
 		position.y+=14  #
 		ani.position.y-=8
@@ -796,9 +822,10 @@ func onBoard(delta):
 #水下
 func swim(delta):
 	if Input.is_action_pressed("ui_jump"):
-		yVel=-200
-	else:
-		yVel=0
+		yVel=-140
+		animation('swim')
+#	else:
+#		yVel=0
 	
 	if Input.is_action_pressed("ui_left"):	
 		acceleration=constants.acceleration
@@ -830,9 +857,16 @@ func swim(delta):
 			else:
 				xVel=0
 				ani.speed_scale=1
-		
-	pass
-
+	if yVel>0:
+#		gravity=constants.marioGravity
+		status=constants.fall	
+		return
+	if isOnFloor: #在地面上
+#		gravity=constants.marioGravity
+		status=constants.walk		
+	if getTop()<constants.underwaterMaxHeight:
+		yVel=3
+	
 
 #判断右边碰撞
 func rightCollide(obj):
@@ -1250,6 +1284,11 @@ func animation(type):
 			ani.play(landing_big_animation[aniIndex])	
 		else:
 			ani.play(landing_small_animation[aniIndex])		
+	elif type=='swim':
+		if 	big:
+			ani.play(swim_big_animation[aniIndex])	
+		else:
+			ani.play(swim_small_animation[aniIndex])	
 								
 	if dir==constants.right && ani.flip_h:
 		ani.flip_h=false
@@ -1283,6 +1322,10 @@ func getFallAni():
 		return crouch_animation
 	elif ani.animation in throw_animation:
 		return throw_animation
+	elif ani.animation in swim_big_animation:
+		return swim_big_animation
+	elif ani.animation in swim_small_animation:
+		return 	swim_small_animation
 	else:
 		return []	
 

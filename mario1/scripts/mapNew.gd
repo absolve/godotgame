@@ -72,6 +72,7 @@ var castleBridge=[]  #保存桥的数据
 var castleEndX=0 #城堡最后斧头的位置
 var scrollEnd = false #摄像机滚动到最后
 var bonusLevel=false  #是否是奖励关卡
+var underwater=false
 
 func _ready():
 	Game.setMap(self)
@@ -96,7 +97,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test16.json")
+#	loadMapFile("res://levels/test28.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -574,7 +575,7 @@ func loadMapFile(fileName:String):
 			nextSubLevel=str(currentLevel['subLevel'])
 			
 		if currentLevel.has('bonusLevel'): 
-			if currentLevel['subLevel']=='true':
+			if currentLevel['bonusLevel']=='true':
 				bonusLevel=true
 			
 		music=str(currentLevel['music'])
@@ -584,6 +585,11 @@ func loadMapFile(fileName:String):
 #		var status=''
 		if currentLevel.has('status'):
 			marioStatus=currentLevel['status']
+			
+		if 	currentLevel.has('underwater'):
+			if currentLevel['underwater']=='true':
+				underwater=true
+			
 		print(marioStatus)
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
@@ -598,6 +604,9 @@ func loadMapFile(fileName:String):
 #			temp.active=false
 			if marioStatus!='':
 				temp.status=marioStatus
+			if underwater:
+				temp.underwater=true
+				
 			_obj.add_child(temp)
 			marioList.append(temp)
 				
