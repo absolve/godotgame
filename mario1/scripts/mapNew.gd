@@ -32,7 +32,10 @@ var axe=preload("res://scenes/axe.tscn")
 var figures=preload("res://scenes/figures.tscn")
 var vine=preload("res://scenes/vine.tscn")
 var jumpingBoard=preload("res://scenes/JumpingBoard.tscn")
-
+var cheapcheap=preload("res://scenes/cheapcheap.tscn")
+var bloober=preload("res://scenes/bloober.tscn")
+var podoboo=preload("res://scenes/podoboo.tscn")
+var lakitu=preload("res://scenes/lakitu.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -97,7 +100,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test28.json")
+#	loadMapFile("res://levels/test29.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -209,7 +212,7 @@ func _physics_process(delta):
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
 			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
-			i.type!=constants.bowser:
+			i.type!=constants.bowser&&i.type!=constants.podoboo:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -746,18 +749,46 @@ func loadMapFile(fileName:String):
 				var temp=figures.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)
 			elif i['type']=='vine':
 				var temp=vine.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)
 			elif i['type']=='jumpingBoard':
 				var  temp=jumpingBoard.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize
 				_obj.add_child(temp)
-					
+			elif i['type']=='cheapcheap':
+				var temp=cheapcheap.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.status=i['status']
+				temp.spriteIndex=i['spriteIndex']
+				_obj.add_child(temp)	
+			elif i['type']=='bloober':	
+				var temp=bloober.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
+				_obj.add_child(temp)	
+			elif i['type']=='podoboo':
+				var temp=podoboo.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
+				_obj.add_child(temp)	
+			elif i['type']=='lakitu':
+				var temp=lakitu.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
+				_obj.add_child(temp)	
+				
+				
 		file.close()
 #		print(mapData)
 	else:

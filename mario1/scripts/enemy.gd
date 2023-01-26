@@ -13,7 +13,7 @@ var speed=55
 
 func _ready():
 	maxYVel=constants.enemyMaxVel
-	._ready()
+#	._ready()
 #	gravity=constants.enemyGravity
 	
 	

@@ -146,13 +146,11 @@ func shellSliding(delta):
 
 func turnLeft():
 	.turnLeft()
-	ani.flip_h=false
-	pass	
+	ani.flip_h=false	
 
 func turnRight():
 	.turnRight()
-	ani.flip_h=true
-	pass	
+	ani.flip_h=true	
 
 func turnDir():
 	.turnDir()

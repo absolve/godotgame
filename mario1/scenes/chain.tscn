@@ -1,10 +1,15 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/chain.gd" type="Script" id=1]
+[ext_resource path="res://sprites/tiles33x28.png" type="Texture" id=2]
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 2 )
+region = Rect2( 384, 448, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [  ],
+"frames": [ SubResource( 2 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0

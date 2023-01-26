@@ -63,4 +63,5 @@ script = ExtResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "3"
+animation = "0"
+frame = 1

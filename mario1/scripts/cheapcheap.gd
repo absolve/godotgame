@@ -2,21 +2,27 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var preStatus
-
-
+var swimYspeed=8
+var swimXspeed=15
 
 func _ready():
 	type=constants.cheapcheap
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.enemyGravity
-	speed=60
+#	speed=swimXspeed
+#	status=constants.swim
+	
+	if status==constants.swim:
+		if spriteIndex==0:
+			swimXspeed=25
+		ani.speed_scale=0.5	
+		gravity=0
+		
 	if dir==constants.left:
-		xVel=-speed
+		xVel=-swimXspeed
 	else:
 		xVel=speed
-	
-	pass
 
 func startDeathJump(_dir=constants.left):
 	status=constants.deadJump
@@ -24,9 +30,10 @@ func startDeathJump(_dir=constants.left):
 	ani.flip_v=true
 	ani.frame=0
 	active=false
+	_dead=true
 	gravity=constants.deathJumpGravity
 	z_index=5
-	pass
+
 
 func pause():
 	preStatus=status
@@ -42,10 +49,23 @@ func resume():
 
 func _update(delta):
 	if status==constants.swim:
+		if spriteIndex==0 && Game.getMario().size()>0: #红色的会追人
+			var m= Game.getMario()[0]
+			if m.status!=constants.deadJump:
+				if m.position.y>position.y && m.position.x<position.x:
+					yVel=swimYspeed
+				elif m.position.y<position.y:	
+					yVel=-swimYspeed
+				else:
+					yVel=0
+		animation('swim')
+		pass
+	elif status==constants.flying:  #在天上飞
+		
 		pass
 	elif status==constants.deadJump:
-		yVel=80
-		position.x+=xVel*delta
+		yVel=50
+#		position.x+=xVel*delta
 		position.y+=yVel*delta
 		pass
 		

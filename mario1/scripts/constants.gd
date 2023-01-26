@@ -73,6 +73,24 @@ const moveDown="moveDown"
 const upAndDown='upAndDown'
 const leftAndRight='leftAndRight'
 
+#乌贼的状态
+const upward='upward'
+const downward='downward'
+const blooberAcceleration=500
+const blooberMaxXSpeed=700
+const blooberMaxYSpeed=700
+
+#火焰的数据
+const podobooGravity=500
+const podobooIdle='podobooIdle'
+
+#Spiny数据
+const spinyEgg='spinyEgg'
+
+#lakitu数据
+const lakituIdle='lakituIdle'
+const lakituDistance=32*3
+
 #mario的状态
 const idle="idle"
 const stand="stand"
@@ -135,8 +153,10 @@ const cheapcheap='cheapcheap' #飞鸟
 const bloober='bloober' #乌贼
 const podoboo='podoboo' #火焰
 const bulletBill='bulletBill' #大子弹
-const Lakitu='Lakitu' #天上飞的云朵
+const lakitu='lakitu' #天上飞的云朵
 const hammerBro='hammerBro' #锤子兄弟
+const bubble='bubble' #气泡
+const spiny='spiny' #有刺的
 
 
 #方向
@@ -164,6 +184,9 @@ const enemyJumpGravity=1000
 const enemyMaxVel=900
 const bowserGravity=300
 
+#气泡y速度
+const bubbleMaxVel=190
+
 const fireballGravity=1600
 
 const slideFriction=700 #滑行的加速度
@@ -175,7 +198,7 @@ const marioRunMaxSpeed=340 #跑的时候最大速度
 const marioAniSpeed=100
 const marioGravity=1800 #重力
 const marioJumpGravity=1000
-const marioUnderWaterGravity=1100 #水下重力
+const marioUnderWaterGravity=800 #水下重力
 const marioJumpSpeed=500
 const marioDeathGravity=1000
 const boxGravity=1800 #箱子重力
@@ -188,13 +211,14 @@ const underwaterAcceleration=180
 const underwaterRunAcceleration=300
 const underwaterWalkMaxSpeed=110
 const underwaterRunMaxSpeed=280
-
+const underwatermarioMaxYVel=220 #水下最大y速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
-			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard']
+			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
+			'cheapcheap','bloober','podoboo','lakitu']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -384,6 +408,123 @@ const tilesAttribute={
 		"offsetY":0,
 		'ySpeed':100, 
 		'layer':0,
+	},
+	'cheapcheap':{
+		"type": "cheapcheap",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'status':'swim',
+		'layer':0,
+	},
+	'cheapcheap1':{
+		"type": "cheapcheap",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'status':'swim',
+		'layer':0,
+	},
+	'cheapcheap2':{
+		"type": "cheapcheap",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'status':'swim',
+		'layer':0,
+	},
+	'cheapcheap3':{
+		"type": "cheapcheap",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'status':'swim',
+		'layer':0,
+	},
+	'bloober':{
+		"type": "bloober",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'bloober1':{
+		"type": "bloober",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'bloober2':{
+		"type": "bloober",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'podoboo':{
+		"type": "podoboo",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'up',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'lakitu':{
+		"type": "lakitu",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'up',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+		'end':0,
+	},
+	'lakitu1':{
+		"type": "lakitu",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'dir': 'up',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+		'end':0,
+	},
+	'lakitu2':{
+		"type": "lakitu",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		'dir': 'up',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+		'end':0,
 	},
 	'figures':{
 		"type": "figures",
@@ -1020,6 +1161,42 @@ const tilesAttribute={
 	"brick37": {
 		"type": "brick",
 		"spriteIndex": 36,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick38": {
+		"type": "brick",
+		"spriteIndex": 37,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick39": {
+		"type": "brick",
+		"spriteIndex": 38,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick40": {
+		"type": "brick",
+		"spriteIndex": 39,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick41": {
+		"type": "brick",
+		"spriteIndex": 40,
 		"x": 0,
 		"y": 0,
 		"offsetX":0,

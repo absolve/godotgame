@@ -6,12 +6,13 @@
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 1 ) ],
-"loop": true,
+"loop": false,
 "name": "default",
 "speed": 5.0
 } ]
 
 [node name="bubble" type="Node2D"]
+z_index = 3
 script = ExtResource( 2 )
 
 [node name="ani" type="AnimatedSprite" parent="."]

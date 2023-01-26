@@ -47,7 +47,7 @@ var onBoardTimer=0  #在跳板上时间
 var onBoardDelta=8.0
 var underwater=false #水下
 var bubbletimer=0
-var bubbleDelta=20  #气泡间隔
+var bubbleDelta=140  #气泡间隔
 
 var stand_small_animation=['stand_small','stand_small_green',
 						'stand_small_red','stand_small_black']
@@ -82,6 +82,7 @@ var swim_big_animation=['swim_big','swim_big_green',
 
 
 var ball=preload("res://scenes/fireball.tscn")
+var bubble=preload("res://scenes/bubble.tscn")
 							
 var aniIndex=0	#动画索引					
 onready var ani=$ani
@@ -90,6 +91,7 @@ onready var jump=$jump
 onready var bigjump=$bigjump
 onready var fireball=$fireball
 onready var slide=$slide
+onready var _swim=$swim
 
 func _ready():
 	mask=[constants.box,constants.brick,constants.mushroom,constants.star,
@@ -97,7 +99,7 @@ func _ready():
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
-		constants.fire,constants.vine,constants.jumpingBoard]
+		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -123,6 +125,9 @@ func _ready():
 	fireball1.set_loop(false)
 	var slide1=slide.stream as AudioStreamOGGVorbis
 	slide1.set_loop(false)
+	var swim1=_swim.stream as AudioStreamOGGVorbis
+	swim1.set_loop(false)
+	
 	
 	if status==constants.fall:
 		if underwater:
@@ -138,7 +143,7 @@ func _ready():
 				ani.frame=2
 	if underwater:
 		gravity=constants.marioUnderWaterGravity
-	
+		maxYVel=constants.underwatermarioMaxYVel
 	pass 
 
 
@@ -199,6 +204,13 @@ func _update(delta):
 	if status!=constants.big2small&&status!=constants.big2fire&&\
 		status!=constants.small2big:	
 		specialState(delta)
+		
+	if status!=constants.stop && underwater:
+		bubbletimer+=1
+		if bubbletimer>bubbleDelta:
+			bubbletimer=0
+			addBubble()
+		
 	if debug:	
 		update()	
 	self._delta=delta
@@ -436,8 +448,8 @@ func fall(delta):
 			xVel+=acceleration*delta
 	if Input.is_action_just_pressed("ui_action")&&fire:
 		shootFireball(false)		
-#	position.x+=xVel*delta
-#	position.y+=yVel*delta	
+	if underwater&& Input.is_action_pressed("ui_jump"):
+		status = constants.swim
 	
 	if isOnFloor:
 		status = constants.walk		
@@ -478,7 +490,7 @@ func startCrouch():
 	if !isCrouch:
 		adjustCrouchlRect()
 		position.y+=14  #
-		ani.position.y-=8
+		ani.position.y-=15
 	acceleration=constants.crouchFriction	
 	isCrouch=true
 	
@@ -824,6 +836,8 @@ func swim(delta):
 	if Input.is_action_pressed("ui_jump"):
 		yVel=-140
 		animation('swim')
+		if !_swim.playing:
+			_swim.play()
 #	else:
 #		yVel=0
 	
@@ -859,13 +873,14 @@ func swim(delta):
 				ani.speed_scale=1
 	if yVel>0:
 #		gravity=constants.marioGravity
+		ani.stop()
 		status=constants.fall	
 		return
 	if isOnFloor: #在地面上
 #		gravity=constants.marioGravity
 		status=constants.walk		
 	if getTop()<constants.underwaterMaxHeight:
-		yVel=3
+		yVel=10
 	
 
 #判断右边碰撞
@@ -1341,6 +1356,11 @@ func shootFireball(play=true):
 			temp.dir=dir	
 			Game.addObj(temp)
 			fireball.play() #声音
+
+func addBubble():
+	var temp=bubble.instance()
+	temp.position=position
+	Game.addObj(temp)
 			
 #播放跳跃声音			
 func playJumpSound():
@@ -1368,13 +1388,13 @@ func _on_ani_frame_changed():
 		if ani.frame in [0,2,4]:
 			ani.position.y= 0
 		else:
-			ani.position.y=-18
+			ani.position.y=-15
 	elif ani.animation in throw_animation:
 		throwAniFinish=true
 	elif status	==constants.big2small:
-		if ani.frame in [0]:
-			ani.position.y= 0
-		elif ani.frame in [2,4,6,8]:
+#		if ani.frame in [0]:
+#			ani.position.y= 0
+		if ani.frame in [2,4,6,8,10]:
 			ani.position.y=20	
 		else:
 			 ani.position.y= 0
@@ -1400,6 +1420,7 @@ func _on_ani_animation_finished():
 		fire=false
 		active=true
 		position.y+=17
+		ani.position.y= 0
 		aniIndex=0
 		adjustSmallRect()
 		Game.emit_signal('marioStateFinish')
