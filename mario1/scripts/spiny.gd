@@ -10,7 +10,7 @@ func _ready():
 		constants.beetle]
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
-	gravity=constants.enemyGravity
+	gravity=constants.spinyEggGravity
 	type=constants.spiny
 	status=constants.spinyEgg
 	pass # Replace with function body.
@@ -22,6 +22,7 @@ func _update(delta):
 		pass
 	elif status==constants.walking:
 		walking(delta)
+		animation('walk')
 		pass	
 	elif status==constants.deadJump:
 		deathJump(delta)	
@@ -61,6 +62,11 @@ func animation(type):
 		ani.play("egg")
 	elif type=='walk':
 		ani.play("walk")	
+		
+	if dir==constants.left:
+		ani.flip_h=false
+	else:
+		ani.flip_h=true		
 	pass
 
 

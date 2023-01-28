@@ -86,10 +86,22 @@ const podobooIdle='podobooIdle'
 
 #Spiny数据
 const spinyEgg='spinyEgg'
+const spinyEggGravity=700
 
 #lakitu数据
 const lakituIdle='lakituIdle'
-const lakituDistance=32*3
+const lakituDistance=32*6
+
+#锤子数据
+const hammerThrow='hammerThrow'
+const hammerGravity=700
+
+#大炮数据
+const cannonFire='cannonFire'
+
+#炮弹数据
+const bulletBillFly='bulletBillFly'
+
 
 #mario的状态
 const idle="idle"
@@ -157,6 +169,8 @@ const lakitu='lakitu' #天上飞的云朵
 const hammerBro='hammerBro' #锤子兄弟
 const bubble='bubble' #气泡
 const spiny='spiny' #有刺的
+const hammer='hammer' #锤子
+const cannon='cannon' #炮塔
 
 
 #方向

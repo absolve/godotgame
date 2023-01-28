@@ -2,7 +2,13 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var preStatus
-var xSpeed=20 #基本速度
+var xSpeed=30 #基本速度
+var timer=0
+var throwDelay=240  #每次扔东西的间隔
+var throwHideTime=70 #扔完后躲起来的时间
+var count=3
+
+var egg=preload("res://scenes/spiny.tscn")
 
 func _ready():
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
@@ -17,18 +23,34 @@ func _ready():
 
 func _update(delta):
 	if status==constants.lakituIdle:
+		timer+=1
+		if timer>throwDelay:
+			timer=0
+			var temp=egg.instance()
+			temp.position.x=position.x
+			temp.position.y=position.y
+			temp.dir=dir
+			temp.yVel=-200
+			Game.addObj(temp)
+			
+		if timer>throwDelay-throwHideTime:
+			animation('idle')
+		else:
+			animation('throw')
+		
 		if Game.getMario().size()>0:
 			var m= Game.getMario()[0]
 			if m.status!=constants.deadJump:
 				var distance=m.position.x-position.x
 				if distance<0:
 					if abs(distance)>constants.lakituDistance:
-						if dir==constants.right:
-							xVel=-max(xSpeed,round(abs(distance))*2)
-							dir=constants.left
-						elif dir==constants.left:
-							xVel=-xSpeed
-							dir=constants.right
+						if dir==constants.left:
+							if m.xVel<0:
+								xVel=-max(xSpeed,abs(m.xVel))
+							else:
+								xVel=-xSpeed
+						elif dir==constants.right:
+							dir=constants.left					
 					else:
 						if dir==constants.right:
 							xVel=xSpeed
@@ -37,23 +59,23 @@ func _update(delta):
 				elif distance>0:
 					if abs(distance)>constants.lakituDistance:
 						if dir==constants.right:
-							xVel=xSpeed
-							dir=constants.left
-						elif dir==constants.left:	
-							xVel=max(xSpeed,round(abs(distance))*2)
-							dir=constants.right
+							if  m.xVel>0:
+								xVel=max(xSpeed,abs(m.xVel))
+							else:
+								xVel=xSpeed
+						elif dir==constants.left:
+							dir=constants.right	
 					else:
 						if dir==constants.right:
 							xVel=xSpeed
 						elif dir==constants.left:
 							xVel=-xSpeed
-					pass	
+								
 			if position.x+xVel*delta<0:
 				dir=constants.right
 		
 		pass
-	
-	pass
+
 	
 func animation(type):
 	if type=='idle':
@@ -70,7 +92,10 @@ func animation(type):
 			ani.play("throw_1")	
 		elif spriteIndex==2:	
 			ani.play("throw_2")	
-		
+	if dir==constants.left:
+		ani.flip_h=false
+	else:
+		ani.flip_h=true		
 				
 	pass	
 	
