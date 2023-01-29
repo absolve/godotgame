@@ -226,13 +226,14 @@ const underwaterRunAcceleration=300
 const underwaterWalkMaxSpeed=110
 const underwaterRunMaxSpeed=280
 const underwatermarioMaxYVel=220 #水下最大y速度
+const marioJumpMinSoeed=200 #踩到敌人最小反弹的速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
 			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
-			'cheapcheap','bloober','podoboo','lakitu']
+			'cheapcheap','bloober','podoboo','lakitu','cannon']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -543,6 +544,42 @@ const tilesAttribute={
 	'figures':{
 		"type": "figures",
 		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'cannon':{
+		"type": "cannon",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'cannon1':{
+		"type": "cannon",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'cannon2':{
+		"type": "cannon",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'cannon3':{
+		"type": "cannon",
+		"spriteIndex": 3,
 		"x": 0,
 		"y": 0,
 		"offsetX":0,

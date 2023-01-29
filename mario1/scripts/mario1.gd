@@ -99,7 +99,8 @@ func _ready():
 		constants.pipe,constants.pole,constants.collision,constants.goomba,
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
-		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober]
+		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
+		constants.bulletBill,constants.cannon]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -885,7 +886,8 @@ func swim(delta):
 
 #判断右边碰撞
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
+		||obj.type==constants.cannon:
 
 		#判断是不是跨过一个间隙
 		if !Game.checkMapBrickIndex(obj.localx-1,\
@@ -902,7 +904,7 @@ func rightCollide(obj):
 		else:
 			if xVel!=0:
 				return true	
-	elif obj.type==	constants.goomba||obj.type==constants.koopa:
+	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -978,7 +980,8 @@ func rightCollide(obj):
 
 #判断左边碰撞
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
+	||obj.type==constants.cannon:
 
 		if!Game.checkMapBrickIndex(obj.localx+1,\
 			obj.localy)&&yVel>0&& getBottom()-obj.getTop()<constants.boxHeight:
@@ -994,7 +997,7 @@ func leftCollide(obj):
 		else:
 			if xVel!=0:
 				return true	
-	elif obj.type==	constants.goomba|| obj.type==constants.koopa:
+	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1054,7 +1057,8 @@ func leftCollide(obj):
 
 
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:	
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
+	||obj.type==constants.cannon:	
 		if xVel==0:
 			if dir==constants.left:
 				if Game.checkMapBrick(position.x+getSize()/2,position.y-getSizeY()/2):
@@ -1089,7 +1093,8 @@ func floorCollide(obj):
 				return true	
 		else:		
 			return true
-	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.plant:
+	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.plant\
+		||obj.type==constants.bulletBill:
 		jumpOnEnemy(obj)
 		pass
 	elif obj.type==constants.axe:
@@ -1109,7 +1114,8 @@ func floorCollide(obj):
 		
 
 func ceilcollide(obj):#上方的判断
-	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge:
+	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
+	||obj.type==constants.cannon:
 		if obj.type==constants.box:
 			if obj.status==constants.resting:
 				obj.startBumped(big)
@@ -1118,7 +1124,7 @@ func ceilcollide(obj):#上方的判断
 		else:			
 			SoundsUtil.playBrickHit()
 		yVel=1	
-	elif obj.type==constants.goomba || obj.type==constants.koopa:
+	elif obj.type==constants.goomba || obj.type==constants.koopa||obj.type==constants.bulletBill:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1229,17 +1235,21 @@ func jumpOnEnemy(obj):
 			obj.startDeathJump(constants.right)
 			Game.addScore(Vector2(position.x,getTop()))
 			SoundsUtil.playShoot()
-		else:	
-			obj.jumpedOn()
-			if combo<constants.scoreList.size():
-				Game.addScore(position,constants.scoreList[combo])
-				combo+=1
+		else:
+			if obj.type!=constants.plant||obj.type!=constants.spiny:	
+				obj.jumpedOn()
+				if combo<constants.scoreList.size():
+					Game.addScore(position,constants.scoreList[combo])
+					combo+=1
+				else:
+					Game.addLive(position,playerId)
+					SoundsUtil.playItem1up()
+					pass	
+				SoundsUtil.playStomp()	
+				yVel=- min(constants.marioJumpMinSoeed,(abs(yVel)-abs(yVel)/3)) 
 			else:
-				Game.addLive(position,playerId)
-				SoundsUtil.playItem1up()
+				
 				pass	
-			SoundsUtil.playStomp()	
-		yVel=-(abs(yVel)-abs(yVel)/3)
 	pass
 
 #动画

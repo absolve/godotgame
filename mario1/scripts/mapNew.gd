@@ -36,6 +36,7 @@ var cheapcheap=preload("res://scenes/cheapcheap.tscn")
 var bloober=preload("res://scenes/bloober.tscn")
 var podoboo=preload("res://scenes/podoboo.tscn")
 var lakitu=preload("res://scenes/lakitu.tscn")
+var cannon=preload("res://scenes/cannon.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -100,7 +101,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test29.json")
+#	loadMapFile("res://levels/1-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -212,7 +213,7 @@ func _physics_process(delta):
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
 			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
-			i.type!=constants.bowser&&i.type!=constants.podoboo:
+			i.type!=constants.bowser&&i.type!=constants.podoboo&&i.type!=constants.cannon:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -356,7 +357,7 @@ func _physics_process(delta):
 				elif y.position.x-y.rect.size.x/2<=x.position.x+x.rect.size.x/2 -1&&\
 					y.position.x+y.rect.size.x/2>=x.position.x-x.rect.size.x/2+1&&\
 					y.position.y-y.rect.size.y/2<=x.position.y+x.rect.size.y/2-1&&\
-					y.position.y+y.rect.size.y/2-1>=x.position.y-x.rect.size.y/2+1:
+					y.position.y+y.rect.size.y/2>=x.position.y-x.rect.size.y/2:
 					var result=checkCollision(y,x,delta)
 					if result[0]:
 						hCollision=true
@@ -721,7 +722,9 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2
 				_tile.add_child(temp)
 			elif i['type']=='goomba' || i['type']=='koopa'||\
-				i['type']==constants.plant||i['type']=='bowser':
+				i['type']==constants.plant||i['type']=='bowser'||\
+				i['type']=='cheapcheap'||i['type']=='bloober'||\
+				i['type']=='lakitu':
 				i['init']=false
 				enemyList.append(i)
 			elif i['type']=='castleFlag':
@@ -762,32 +765,38 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize
 				_obj.add_child(temp)
-			elif i['type']=='cheapcheap':
-				var temp=cheapcheap.instance()
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				temp.status=i['status']
-				temp.spriteIndex=i['spriteIndex']
-				_obj.add_child(temp)	
-			elif i['type']=='bloober':	
-				var temp=bloober.instance()
-				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
-				temp.spriteIndex=i['spriteIndex']
-				_obj.add_child(temp)	
+#			elif i['type']=='cheapcheap':
+#				var temp=cheapcheap.instance()
+#				temp.position.x=i['x']*blockSize+blockSize/2
+#				temp.position.y=i['y']*blockSize+blockSize/2
+#				temp.status=i['status']
+#				temp.spriteIndex=i['spriteIndex']
+#				_obj.add_child(temp)	
+#			elif i['type']=='bloober':	
+#				var temp=bloober.instance()
+#				temp.position.x=i['x']*blockSize+blockSize/2
+#				temp.position.y=i['y']*blockSize+blockSize/2
+#				temp.spriteIndex=i['spriteIndex']
+#				_obj.add_child(temp)	
 			elif i['type']=='podoboo':
 				var temp=podoboo.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)	
-			elif i['type']=='lakitu':
-				var temp=lakitu.instance()
+#			elif i['type']=='lakitu':
+#				var temp=lakitu.instance()
+#				temp.position.x=i['x']*blockSize+blockSize/2
+#				temp.position.y=i['y']*blockSize+blockSize/2
+#				temp.spriteIndex=i['spriteIndex']
+#				_obj.add_child(temp)	
+			elif i['type']=='cannon':
+				var temp=cannon.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)	
-				
+				pass
 				
 		file.close()
 #		print(mapData)
@@ -860,6 +869,9 @@ func addLive(_position,id):
 	_obj.add_child(temp)
 	Game.playerData['lives']+=1
 
+func getCamera():
+	return _camera
+
 #添加敌人
 func addEnemy(obj):
 	print('addEnemy',obj.type)
@@ -897,7 +909,25 @@ func addEnemy(obj):
 		temp.position.y=obj['y']*blockSize+blockSize
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
-
+	elif obj.type==constants.cheapcheap:
+		var temp=cheapcheap.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.status=obj['status']
+		temp.spriteIndex=obj['spriteIndex']
+		_obj.add_child(temp)
+	elif  obj.type==constants.bloober:
+		var temp=bloober.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		_obj.add_child(temp)	
+	elif obj.type==constants.lakitu:
+		var temp=lakitu.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		_obj.add_child(temp)
 
 func initEnemy():
 	for e in enemyList:

@@ -91,6 +91,9 @@ func checkMapBrickIndex(x,y):
 func getObj():
 	return map.getObj()
 
+func getCamera():
+	return map.getCamera()
+
 func printFont():
 	print("""
   _____ __ __  ____   ___  ____       ___ ___   ____  ____   ____  ___       ____   ____   ___   _____
