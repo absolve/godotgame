@@ -266,6 +266,8 @@ func floorCollide(obj):
 				turnLeft()
 		if status==constants.jumping:
 			yVel=-jumpSpeed
+		#todo 增加被砖块撞飞
+		
 		return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:

@@ -59,8 +59,8 @@ func animation(type):
 			ani.play("3")	
 	pass
 
-func floorCollide(obj):
-	return false
-	
-func ceilcollide(obj):
-	return false	
+#func floorCollide(obj):
+#	return false
+#
+#func ceilcollide(obj):
+#	return false	

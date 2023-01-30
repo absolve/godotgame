@@ -102,6 +102,9 @@ const cannonFire='cannonFire'
 #炮弹数据
 const bulletBillFly='bulletBillFly'
 
+#锤子兄弟数据
+const hammerBroGravity=800
+const hammerBroIdle='hammerBroIdle'
 
 #mario的状态
 const idle="idle"
@@ -233,7 +236,7 @@ const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
 			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
-			'cheapcheap','bloober','podoboo','lakitu','cannon']
+			'cheapcheap','bloober','podoboo','lakitu','cannon','hammerBro']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -582,6 +585,26 @@ const tilesAttribute={
 		"spriteIndex": 3,
 		"x": 0,
 		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'hammerBro':{
+		"type": "hammerBro",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'hammerBro1':{
+		"type": "hammerBro",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
 		"offsetX":0,
 		"offsetY":0,
 		'layer':0,

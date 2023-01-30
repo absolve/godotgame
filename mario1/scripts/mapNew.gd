@@ -37,6 +37,7 @@ var bloober=preload("res://scenes/bloober.tscn")
 var podoboo=preload("res://scenes/podoboo.tscn")
 var lakitu=preload("res://scenes/lakitu.tscn")
 var cannon=preload("res://scenes/cannon.tscn")
+var hammerBro=preload("res://scenes/hammerBro.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -101,7 +102,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/1-1.json")
+#	loadMapFile("res://levels/test31.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -724,7 +725,7 @@ func loadMapFile(fileName:String):
 			elif i['type']=='goomba' || i['type']=='koopa'||\
 				i['type']==constants.plant||i['type']=='bowser'||\
 				i['type']=='cheapcheap'||i['type']=='bloober'||\
-				i['type']=='lakitu':
+				i['type']=='lakitu'||i['type']=='hammerBro':
 				i['init']=false
 				enemyList.append(i)
 			elif i['type']=='castleFlag':
@@ -924,6 +925,12 @@ func addEnemy(obj):
 		_obj.add_child(temp)	
 	elif obj.type==constants.lakitu:
 		var temp=lakitu.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.spriteIndex=obj['spriteIndex']
+		_obj.add_child(temp)
+	elif obj.type==constants.hammerBro:
+		var temp=hammerBro.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
 		temp.spriteIndex=obj['spriteIndex']
