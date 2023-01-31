@@ -40,22 +40,22 @@ animations = [ {
 "frames": [ SubResource( 2 ), SubResource( 3 ) ],
 "loop": false,
 "name": "idle_0",
-"speed": 5.0
+"speed": 6.0
 }, {
 "frames": [ SubResource( 4 ), SubResource( 5 ) ],
 "loop": false,
 "name": "idle_1",
-"speed": 5.0
+"speed": 6.0
 }, {
 "frames": [ SubResource( 6 ), SubResource( 7 ) ],
 "loop": true,
 "name": "walk_0",
-"speed": 5.0
+"speed": 6.0
 }, {
 "frames": [ SubResource( 8 ), SubResource( 9 ) ],
 "loop": true,
 "name": "walk_1",
-"speed": 5.0
+"speed": 6.0
 } ]
 
 [node name="hammerBro" type="Node2D"]

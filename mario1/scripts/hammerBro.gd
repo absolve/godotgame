@@ -2,11 +2,13 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var preStatus
-var xSpeed=30
+var xSpeed=70
 var timer=0
 var throwDelay=120
 var prepareDelay=30
 var startX=0 #一开始出现的位置
+var acceleration=90
+var moveLeft=true
 
 func _ready():
 	mask=[constants.fireball,constants.box,constants.brick
@@ -20,6 +22,10 @@ func _ready():
 	status=constants.hammerBroIdle
 	startX=position.x
 	debug=true
+	if dir==constants.right:
+		xVel=xSpeed
+	else:
+		xVel=-xSpeed	
 	pass
 
 func _update(delta):
@@ -33,16 +39,34 @@ func _update(delta):
 		else:
 			animation('walk')
 		
-		if xVel<0:
-			if position.x<startX-32*2:
-				xVel=xSpeed
+		if xVel>0:
+			if xVel>xSpeed:
+				moveLeft=true
+			if !moveLeft:
+				xVel+=acceleration*delta
 			else:
-				xVel=-xSpeed
+				xVel+=-acceleration*delta	
 		else:
-			if position.x>startX+32*2:
-				xVel=-xSpeed	
+			if xVel<-xSpeed:
+				moveLeft=false
+			if moveLeft:
+				xVel-=acceleration*delta	
 			else:
-				xVel=xSpeed
+				xVel+=acceleration*delta
+#		if xVel<-xSpeed:
+#			xVel+=acceleration*delta
+#		elif xVel>xSpeed:
+#			xVel+=-acceleration*delta
+#		else:
+#			if xVel>0:
+#				xVel+=acceleration*delta
+#			else:
+#				xVel+=-acceleration*delta	
+#		if position.x<startX-32*2:
+#			xVel=xSpeed
+#		elif position.x>startX+32*2:
+#			xVel=-xSpeed		
+	
 	pass
 
 
