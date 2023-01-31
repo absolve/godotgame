@@ -100,7 +100,7 @@ func _ready():
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
-		constants.bulletBill,constants.cannon]
+		constants.bulletBill,constants.cannon,constants.hammer]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -976,7 +976,8 @@ func rightCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-		
+	elif obj.type==constants.hammer:
+		print('hammer')	
 
 #判断左边碰撞
 func leftCollide(obj):
@@ -1054,7 +1055,9 @@ func leftCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-
+	elif obj.type==constants.hammer:
+		print('hammer')
+	
 
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
@@ -1111,7 +1114,8 @@ func floorCollide(obj):
 	elif obj.type==constants.jumpingBoard: #在跳板上
 		if yVel>0&&status!=constants.onBoard:
 			setOnBoard(obj)
-		
+	elif obj.type==constants.hammer:
+		print('hammer')	
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
@@ -1144,7 +1148,8 @@ func ceilcollide(obj):#上方的判断
 				setHurtInvincible()
 			else:	
 				startDeathJump()	
-
+	elif obj.type==constants.hammer:
+		print('hammer')
 
 
 #获取物品

@@ -229,7 +229,7 @@ const underwaterRunAcceleration=300
 const underwaterWalkMaxSpeed=110
 const underwaterRunMaxSpeed=280
 const underwatermarioMaxYVel=220 #水下最大y速度
-const marioJumpMinSoeed=200 #踩到敌人最小反弹的速度
+const marioJumpMinSoeed=240 #踩到敌人最小反弹的速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"

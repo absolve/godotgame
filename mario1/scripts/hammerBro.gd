@@ -10,13 +10,16 @@ var startX=0 #一开始出现的位置
 var acceleration=90
 var moveLeft=true
 
+var hammer=preload("res://scenes/hammer.tscn")
+
 func _ready():
+	randomize()
 	mask=[constants.fireball,constants.box,constants.brick
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
 		constants.beetle]
 	type=constants.hammerBro
-	rect=Rect2(Vector2(-16,-25),Vector2(32,50))
-	ani.position.y-=8
+	rect=Rect2(Vector2(-14,-25),Vector2(28,50))
+	ani.position.y-=10
 	gravity=constants.hammerBroGravity
 	maxYVel=constants.enemyMaxVel
 	status=constants.hammerBroIdle
@@ -26,6 +29,8 @@ func _ready():
 		xVel=xSpeed
 	else:
 		xVel=-xSpeed	
+	throwDelay=30+randi()%100
+	
 	pass
 
 func _update(delta):
@@ -33,7 +38,9 @@ func _update(delta):
 		timer+=1
 		if timer>throwDelay:
 			timer=0
-		
+			throwDelay=30+randi()%90
+			throwHammer()
+			
 		if timer<prepareDelay:
 			animation('idle')
 		else:
@@ -52,26 +59,27 @@ func _update(delta):
 			if moveLeft:
 				xVel-=acceleration*delta	
 			else:
-				xVel+=acceleration*delta
-#		if xVel<-xSpeed:
-#			xVel+=acceleration*delta
-#		elif xVel>xSpeed:
-#			xVel+=-acceleration*delta
-#		else:
-#			if xVel>0:
-#				xVel+=acceleration*delta
-#			else:
-#				xVel+=-acceleration*delta	
-#		if position.x<startX-32*2:
-#			xVel=xSpeed
-#		elif position.x>startX+32*2:
-#			xVel=-xSpeed		
+				xVel+=acceleration*delta	
+		if Game.getMario().size()>0:
+			var m= Game.getMario()[0]
+			if m.status!=constants.deadJump:
+				if m.position.x>position.x:
+					dir=constants.right
+					ani.flip_h=true
+				else:
+					dir=constants.left
+					ani.flip_h=false	
 	
 	pass
 
 
 func throwHammer():
+	var temp=hammer.instance()
+	temp.position=position
+	temp.dir=dir
+	temp.spriteIndex=spriteIndex
 	
+	Game.addObj(temp)
 	pass
 
 
