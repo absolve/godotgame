@@ -3,12 +3,17 @@ extends "res://scripts/enemy.gd"
 onready var ani=$ani
 var preStatus
 var xSpeed=70
+var ySpeed=400
 var timer=0
 var throwDelay=120
 var prepareDelay=30
 var startX=0 #一开始出现的位置
 var acceleration=90
 var moveLeft=true
+var jumpTimer=0
+var jumpDelay=120
+var jumpDir="" #跳跃的方向
+var jumpStartY=0 #开始跳跃时的位置
 
 var hammer=preload("res://scenes/hammer.tscn")
 
@@ -46,6 +51,34 @@ func _update(delta):
 		else:
 			animation('walk')
 		
+		jumpTimer+=1
+		if jumpTimer>jumpDelay: #在屏幕中间随机向上获向下
+			jumpTimer=0
+			if position.y<=32*3:
+				jumpDir=constants.down
+				jumpStartY=position.y
+			elif position.y>=32*12:
+				jumpDir=constants.up
+			else:
+				if randi()%5>=2:
+					jumpDir=constants.down	
+					jumpStartY=position.y
+				else:
+					jumpDir=constants.up
+			
+			if jumpDir==constants.up:
+				yVel=-ySpeed
+			elif jumpDir==constants.down:
+				yVel=ySpeed/2
+				
+		
+		if jumpDir==constants.up:
+			if yVel>0:
+				jumpDir=""
+		elif jumpDir==constants.down:		
+			if abs(jumpStartY-position.y)>32:
+				jumpDir=""
+				
 		if xVel>0:
 			if xVel>xSpeed:
 				moveLeft=true
@@ -121,5 +154,14 @@ func rightCollide(obj):
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
 		
+		if jumpDir==constants.down:
+			return false
 		return true
-	pass	
+	
+
+func ceilcollide(obj):#上方的判断
+	if obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+		if jumpDir==constants.up:
+			return false
+		return true	
+			

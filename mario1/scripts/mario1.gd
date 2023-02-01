@@ -399,16 +399,13 @@ func walk(delta):
 				xVel=0
 				ani.speed_scale=1
 				status=constants.stand	
-		
-#	position.x+=xVel*delta
-#	position.y+=yVel*delta	
+			
 	if !isOnFloor:
 		ani.stop()
 		status=constants.fall
 	pass
 
 func jump(delta):
-#	yVel+=gravity*delta
 	if isCrouch:
 		animation("crouch")
 	else:
@@ -1439,5 +1436,3 @@ func _on_ani_animation_finished():
 		aniIndex=0
 		adjustSmallRect()
 		Game.emit_signal('marioStateFinish')
-	
-	pass # Replace with function body.

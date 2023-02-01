@@ -2,24 +2,35 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var timer=0
-var plantOutTime=270
-#var speed=30
+var plantOutTime=200
+var plantInTime=100
 var oldYPos
 var preStatus
+var ySpeed=35
 
 func _ready():
 	debug=true
 	active=false
 	mask=[constants.mario,constants.fireball]
-	rect=Rect2(Vector2(-16,-24),Vector2(32,48))
+	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	type=constants.plant
-	status=constants.plantIn
+#	status=constants.plantIn
+	ani.position.y-=16
 	if spriteIndex==0:
-		ani.play("active")
-	ani.position.y-=6
+		ani.play("0")
+	elif spriteIndex==1:	
+		ani.play("1")
+	elif spriteIndex==2:	
+		ani.play("2")
+	elif spriteIndex==3:
+		ani.play("3")
+
 	position.x+=offsetX
 	position.y+=offsetY
 	oldYPos=position.y
+
+	status=constants.plantIn
+	position.y+=48
 	print(oldYPos,":",position.y)
 	pass
 
@@ -29,41 +40,37 @@ func startDeathJump(_dir=constants.left):
 	pass
 
 func _update(delta):
-	if status==constants.stop:
-		pass
-	elif status==constants.plantOut:
-		yVel=-speed
-		if position.y<=oldYPos:
-			position.y=oldYPos
+	if status==constants.plantOut:
+		if position.y>oldYPos:
+			yVel=-ySpeed
 		else:
-			position.y+=yVel*delta
-		
-		if timer<plantOutTime:
+			yVel=0
 			timer+=1
-		else:
-			timer=0	
-			status=	constants.plantIn
+			if timer>plantOutTime:
+				timer=0
+				status=	constants.plantIn
+		position.y+=yVel*delta
 		pass
 	elif status==constants.plantIn:
-		yVel=speed
-		if position.y>=oldYPos+getSizeY()+5:
-			position.y=oldYPos+getSizeY()+5
-		else:
-			position.y+=yVel*delta	
-		if timer<plantOutTime:
+		if position.y<oldYPos+48:
+			yVel=ySpeed
+		else:  	#准备出来的时候判断是不是有马里奥
+			yVel=0
 			timer+=1
-		else:
 			if Game.getMario().size()>0:
-				if Game.getMario()[0].getRight()>getLeft() &&\
-					Game.getMario()[0].getLeft()<getRight():
-						timer-=20
-				else:
-					timer=0
-					status=	constants.plantOut	
-			else:
+				var m= Game.getMario()[0]
+				if m.status!=constants.deadJump:
+					if abs((m.position.x+m.rect.size.x/2)-(position.x-rect.size.x/2)) <4 &&\
+					abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)) <4:
+						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <4:
+							timer-=20
+			if timer>plantInTime:
 				timer=0
-				status=	constants.plantOut			
-	pass
+				status=	constants.plantOut
+				
+				
+						
+		position.y+=yVel*delta
 
 func pause():
 	preStatus=status

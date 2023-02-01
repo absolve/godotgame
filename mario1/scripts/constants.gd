@@ -682,8 +682,8 @@ const tilesAttribute={
 		"spriteIndex": 0,
 		"x": 0,
 		"y": 0,
-		"offsetX":0,
-		"offsetY":-6,
+		"offsetX":-16,
+		"offsetY":0,
 		'layer':0,
 	},
 	"bowser0":{
