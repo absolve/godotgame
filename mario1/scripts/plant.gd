@@ -3,13 +3,13 @@ extends "res://scripts/enemy.gd"
 onready var ani=$ani
 var timer=0
 var plantOutTime=200
-var plantInTime=100
+var plantInTime=80
 var oldYPos
 var preStatus
 var ySpeed=35
 
 func _ready():
-	debug=true
+#	debug=true
 	active=false
 	mask=[constants.mario,constants.fireball]
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
@@ -35,9 +35,9 @@ func _ready():
 	pass
 
 
-func startDeathJump(_dir=constants.left):
-	
-	pass
+func hit():
+	_dead=true
+	destroy=true
 
 func _update(delta):
 	if status==constants.plantOut:
@@ -61,14 +61,14 @@ func _update(delta):
 				var m= Game.getMario()[0]
 				if m.status!=constants.deadJump:
 #					print(abs((m.position.x+m.rect.size.x/2)-(position.x-rect.size.x/2)))
-#					print(abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)))
-					
+#					print(abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)))				
 					if m.position.x+m.rect.size.x/2>=position.x-rect.size.x/2-3 &&\
 					 m.position.x-m.rect.size.x/2<=position.x+rect.size.x/2+3:
 #						print(m.position.y+m.rect.size.y/2)
 #						print(position.y-rect.size.y/2)
 						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <17:
-							timer-=20
+							if timer>0:
+								timer-=15
 							
 			if timer>plantInTime:
 				timer=0

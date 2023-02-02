@@ -486,8 +486,8 @@ func _draw():
 							Vector2(i.x*blockSize+(-blockSize*int(i.lens)/2)+l*blockSize+blockSize/2,i.y*blockSize),Color(1,1,1,0.4))
 								
 			elif i.type==constants.plant:
-				if constants.mapTiles.has(i.type):
-					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
+				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
+					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
 			elif i.type==constants.spinFireball:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize+blockSize/4,

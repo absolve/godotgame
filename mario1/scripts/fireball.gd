@@ -10,7 +10,8 @@ const ySpeed=400
 
 func _ready():
 	mask=[constants.brick,constants.box,constants.pipe,
-	constants.goomba,constants.koopa,constants.plant,constants.bridge,constants.bowser]
+	constants.goomba,constants.koopa,constants.plant,
+	constants.bridge,constants.bowser]
 #	debug=true
 	type=constants.fireball
 	rect=Rect2(Vector2(-5,-5),Vector2(10,10))
@@ -49,6 +50,8 @@ func boom():
 		yield(ani,"animation_finished")
 		destroy=true
 
+func hitEnemy(type):
+	pass
 
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -64,8 +67,16 @@ func rightCollide(obj):
 	elif obj.type==constants.bowser:
 		if status!=constants.boom:
 			boom()	
-			SoundsUtil.playBoom()
+#			SoundsUtil.playBoom()
 			obj.hit()
+			Game.addScore(position,5000)
+	elif obj.type==constants.plant:
+		if !obj._dead&&status!=constants.boom:
+			obj.hit()
+			boom()	
+#			SoundsUtil.playBoom()
+			Game.addScore(position,200)
+		
 	pass
 	
 func leftCollide(obj):	
@@ -81,8 +92,15 @@ func leftCollide(obj):
 	elif obj.type==constants.bowser:
 		if status!=constants.boom:
 			boom()	
-			SoundsUtil.playBoom()
+#			SoundsUtil.playBoom()
 			obj.hit()
+			Game.addScore(position,5000)
+	elif obj.type==constants.plant:
+		if !obj._dead&&status!=constants.boom:
+			obj.hit()
+			boom()	
+#			SoundsUtil.playBoom()
+			Game.addScore(position,200)
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
@@ -98,8 +116,15 @@ func floorCollide(obj):
 	elif obj.type==constants.bowser:
 		if status!=constants.boom:
 			boom()	
-			SoundsUtil.playBoom()
+#			SoundsUtil.playBoom()
 			obj.hit()
+			Game.addScore(position,5000)
+	elif obj.type==constants.plant:
+		if !obj._dead&&status!=constants.boom:
+			obj.hit()
+			boom()	
+#			SoundsUtil.playBoom()
+			Game.addScore(position,200)
 
 func ceilcollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -109,9 +134,16 @@ func ceilcollide(obj):
 			obj.startDeathJump()
 			Game.addScore(position)
 			boom()
-			SoundsUtil.playShoot()
+#			SoundsUtil.playShoot()
 	elif obj.type==constants.bowser:
 		if status!=constants.boom:
 			boom()	
-			SoundsUtil.playBoom()	
+#			SoundsUtil.playBoom()	
 			obj.hit()	
+			Game.addScore(position,5000)
+	elif obj.type==constants.plant:
+		if !obj._dead&&status!=constants.boom:
+			obj.hit()
+			boom()	
+#			SoundsUtil.playBoom()
+			Game.addScore(position,200)

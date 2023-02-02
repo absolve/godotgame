@@ -102,7 +102,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-#	loadMapFile("res://levels/test32.json")
+#	loadMapFile("res://levels/2-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -214,7 +214,8 @@ func _physics_process(delta):
 		if i.type!=constants.box&&i.type!=constants.pole&&i.type!=constants.collision&&\
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
 			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
-			i.type!=constants.bowser&&i.type!=constants.podoboo&&i.type!=constants.cannon:
+			i.type!=constants.bowser&&i.type!=constants.podoboo&&i.type!=constants.cannon&&\
+			i.type==constants.jumpingBoard:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -606,7 +607,7 @@ func loadMapFile(fileName:String):
 #			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
 #			temp.fire=true
-#			temp.active=false
+
 			if marioStatus!='':
 				temp.status=marioStatus
 			if underwater:
