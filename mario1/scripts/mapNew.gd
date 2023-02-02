@@ -102,7 +102,7 @@ func _ready():
 		_fps.visible=false
 		return
 	
-	#loadMapFile("res://levels/test32.json")
+#	loadMapFile("res://levels/test32.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")

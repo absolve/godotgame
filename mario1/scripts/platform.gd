@@ -7,6 +7,7 @@ var spriteIndex=0
 var speed=50  #速度
 var lens=5
 var platformImg=preload("res://sprites/platform.png")
+var platformImg1=preload("res://sprites/platformbonus.png")
 var winHeight
 var platformType=""
 #var isOnFloor=false #是否在地面上
@@ -33,15 +34,14 @@ func _ready():
 #	rect=Rect2(-32*lens/2,0,32*lens,16)	
 	for i in range(lens):
 		var temp=Sprite.new()
-		temp.texture=platformImg
+		if spriteIndex==0:
+			temp.texture=platformImg
+		elif spriteIndex==1:
+			temp.texture=platformImg1	
 		temp.centered=false
 		temp.position=Vector2(-32*lens/2+i*32,-8)
 		list.add_child(temp)
 		
-#	print(lens)	
-#	print(getRight())	
-#	print(getRect().position,getRect().size)
-	pass
 
 func _update(delta):
 	if status==constants.moveDown || status==constants.moveUp:

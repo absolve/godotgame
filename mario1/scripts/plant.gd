@@ -60,10 +60,16 @@ func _update(delta):
 			if Game.getMario().size()>0:
 				var m= Game.getMario()[0]
 				if m.status!=constants.deadJump:
-					if abs((m.position.x+m.rect.size.x/2)-(position.x-rect.size.x/2)) <4 &&\
-					abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)) <4:
-						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <4:
+#					print(abs((m.position.x+m.rect.size.x/2)-(position.x-rect.size.x/2)))
+#					print(abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)))
+					
+					if m.position.x+m.rect.size.x/2>=position.x-rect.size.x/2-3 &&\
+					 m.position.x-m.rect.size.x/2<=position.x+rect.size.x/2+3:
+#						print(m.position.y+m.rect.size.y/2)
+#						print(position.y-rect.size.y/2)
+						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <17:
 							timer-=20
+							
 			if timer>plantInTime:
 				timer=0
 				status=	constants.plantOut

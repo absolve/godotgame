@@ -1093,7 +1093,7 @@ func floorCollide(obj):
 				return true	
 		else:		
 			return true
-	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.plant\
+	elif obj.type==constants.goomba||obj.type==constants.koopa\
 		||obj.type==constants.bulletBill:
 		jumpOnEnemy(obj)
 		pass

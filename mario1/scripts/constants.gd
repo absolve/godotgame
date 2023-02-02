@@ -72,6 +72,7 @@ const moveUp="moveUp"
 const moveDown="moveDown"
 const upAndDown='upAndDown'
 const leftAndRight='leftAndRight'
+const justRight='justRight'
 
 #乌贼的状态
 const upward='upward'
