@@ -16,7 +16,7 @@ var dir=constants.up
 func _ready():
 	mask=[constants.mario,constants.mushroom,constants.star,constants.mushroom1up]
 	active=false
-	winHeight=ProjectSettings.get_setting("display/window/size/height")
+	winHeight=get_viewport_rect().size.y
 	type=constants.platform
 	gravity=0
 	maxYVel=constants.marioMaxYVel
@@ -48,7 +48,6 @@ func _update(delta):
 		for i in Game.getObj().get_children():
 			if i.type==constants.mario&&i.status!=constants.jump:
 				if i.getRight()>position.x-rect.size.x/2&&i.getLeft()<position.x+rect.size.x/2:
-#					print(i.getRight(),' ',getRight())
 					if i.getBottom()>position.y-rect.size.y/2-0.1&&\
 						i.getBottom()<position.y-rect.size.y/2+0.1:
 						i.position.y=position.y-i.getSizeY()/2+yVel*delta

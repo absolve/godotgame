@@ -73,6 +73,9 @@ const moveDown="moveDown"
 const upAndDown='upAndDown'
 const leftAndRight='leftAndRight'
 const justRight='justRight'
+const platformIdle='platformIdle'
+const platformFall='platformFall'
+
 
 #乌贼的状态
 const upward='upward'
@@ -175,6 +178,8 @@ const bubble='bubble' #气泡
 const spiny='spiny' #有刺的
 const hammer='hammer' #锤子
 const cannon='cannon' #炮塔
+const linkPlatform='linkPlatform' #联动平台
+const staticPlatform='staticPlatform' #基本不动的平台
 
 
 #方向
@@ -230,7 +235,7 @@ const underwaterRunAcceleration=300
 const underwaterWalkMaxSpeed=110
 const underwaterRunMaxSpeed=280
 const underwatermarioMaxYVel=220 #水下最大y速度
-const marioJumpMinSoeed=240 #踩到敌人最小反弹的速度
+const marioJumpMinSoeed=280 #踩到敌人最小反弹的速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"

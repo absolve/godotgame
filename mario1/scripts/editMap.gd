@@ -92,7 +92,6 @@ func _ready():
 	if mode=='edit':
 		_bg.hide()
 		_title.hide()
-		pass
 	elif mode=='game':
 		pass	
 	elif mode=='test':
@@ -102,8 +101,7 @@ func _ready():
 		_tab.hide()
 		_toolBtn.hide()	
 		_title.hideTime()
-		pass
-	pass
+
 
 
 #载入文件

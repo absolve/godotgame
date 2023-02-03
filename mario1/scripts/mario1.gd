@@ -1087,8 +1087,10 @@ func floorCollide(obj):
 		combo=0	
 		if obj.pipeType==constants.pipeIn:
 			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
-#				print('22')
-				enterPipe(obj)
+				if position.x+rect.size.x<obj.position.x+obj.rect.size.x:
+					enterPipe(obj)
+				else:
+					return true		
 			else:
 				return true	
 		else:		
@@ -1193,8 +1195,7 @@ func enterPipe(obj):
 		enterPipeY=obj.getTop()
 		if big:#因为有调整y的位置
 			enterPipeY+=12
-#		print(enterPipeY)
-#		print(getTop())
+
 		status=constants.pipeIn
 	elif obj.dir==constants.right||dir==constants.left:
 		SoundsUtil.playPipe()
