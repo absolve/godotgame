@@ -16,7 +16,7 @@ var subLevel='' #关卡的位置
 
 func _ready():
 	active=false
-	debug=true
+#	debug=true
 	type=constants.vine
 	rect=Rect2(Vector2(-4,-16),Vector2(8,32))
 	var temp=Sprite.new()

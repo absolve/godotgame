@@ -76,27 +76,27 @@ func _physics_process(delta):
 	pass
 		
 func _input(event):
-	if event is InputEventKey:
-		if Input.is_action_just_pressed("ui_down"):
-			if player==1:
-				player=2
-				_indicator.position.y=320
-			elif player==2:	
-				player=3
-				_indicator.position.y=360
-		elif Input.is_action_just_pressed("ui_up"):
-			if player==2:
-				player=1
-				_indicator.position.y=280
-			elif player==3:
-				player=2
-				_indicator.position.y=320	
-		elif Input.is_action_just_pressed("ui_accept"):
-		
-			if player==1||player==2:
-				startGame()
-			else:
-				editMap()	
+#	if event is InputEventKey:
+	if Input.is_action_just_pressed("ui_down"):
+		if player==1:
+			player=2
+			_indicator.position.y=320
+		elif player==2:	
+			player=3
+			_indicator.position.y=360
+	elif Input.is_action_just_pressed("ui_up"):
+		if player==2:
+			player=1
+			_indicator.position.y=280
+		elif player==3:
+			player=2
+			_indicator.position.y=320	
+	elif Input.is_action_just_pressed("ui_accept"):
+	
+		if player==1||player==2:
+			startGame()
+		else:
+			editMap()	
 #			status=constants.startState
 #			if player==1:
 #				_1p.visible=false		

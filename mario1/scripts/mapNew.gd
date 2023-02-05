@@ -38,6 +38,8 @@ var podoboo=preload("res://scenes/podoboo.tscn")
 var lakitu=preload("res://scenes/lakitu.tscn")
 var cannon=preload("res://scenes/cannon.tscn")
 var hammerBro=preload("res://scenes/hammerBro.tscn")
+var staticPlatform=preload("res://scenes/staticPlatform.tscn")
+var linkPlatform=preload("res://scenes/linkPlatform.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -101,8 +103,9 @@ func _ready():
 	if isShow:
 		_fps.visible=false
 		return
-	
-#	loadMapFile("res://levels/1-1.json")
+		
+
+#	loadMapFile("res://levels/test34.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -167,7 +170,7 @@ func _ready():
 	else:
 		_title.setTime(time)
 
-	if marioStatus!=constants.onlywalk: #排除自动进入水管
+	if marioStatus!=constants.onlywalk&&!bonusLevel: #排除自动进入水管和奖励关卡
 		_title.startCountDown()
 		pass
 	
@@ -179,7 +182,7 @@ func _ready():
 			temp.length=5
 			_obj.add_child(temp)
 			i.setAutoGrabVine(temp)
-			i.position.y+=i.getSizeY()
+			i.position.y=get_viewport_rect().size.y+i.getSizeY()#自动设置成屏幕外
 			break
 
 		
@@ -215,15 +218,21 @@ func _physics_process(delta):
 			i.type!=constants.bigCoin&&i.type!=constants.castleFlag&&i.type!=constants.platform\
 			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
 			i.type!=constants.bowser&&i.type!=constants.podoboo&&i.type!=constants.cannon&&\
-			i.type==constants.jumpingBoard:
+			i.type!=constants.jumpingBoard&&i.type!=constants.vine&&i.type!=constants.staticPlatform\
+			&&i.type!=constants.linkPlatform:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
-				if i.type==constants.mario && i.status!=constants.autoGrabVine:
-					if i.status!=constants.deadJump:
-						marioDead(i.position.x)
-					_gameover.start()	
-					i.queue_free()
+				if i.type==constants.mario :
+					if i.status!=constants.autoGrabVine:
+						if bonusLevel:
+							loadSubLevelMap(nextLevel,nextSubLevel)
+						else:
+							if i.status!=constants.deadJump:
+								marioDead(i.position.x)
+							_gameover.start()	
+							i.queue_free()
+								
 				else:	
 					i.queue_free()
 		elif i.type==constants.bowser:
@@ -231,7 +240,12 @@ func _physics_process(delta):
 				if i.status!=constants.deadJump:
 					bowserDrop()	
 				i.queue_free()	
-	
+		elif i.type==constants.staticPlatform:
+			if i.getLeft()>_camera.position.x+winWidth*1.6:
+				i.queue_free()
+			if i.getTop()>winHeight:
+				i.queue_free()
+			
 	for i in _tile.get_children():
 		if i.type==constants.box||i.type==constants.bridge:
 			if i.active:
@@ -586,6 +600,8 @@ func loadMapFile(fileName:String):
 			
 		music=str(currentLevel['music'])
 		SoundsUtil.bgm=music
+		if bonusLevel:
+			SoundsUtil.bgm='star'
 		SoundsUtil.isLowTime=false
 		
 #		var status=''
@@ -767,38 +783,33 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize
 				_obj.add_child(temp)
-#			elif i['type']=='cheapcheap':
-#				var temp=cheapcheap.instance()
-#				temp.position.x=i['x']*blockSize+blockSize/2
-#				temp.position.y=i['y']*blockSize+blockSize/2
-#				temp.status=i['status']
-#				temp.spriteIndex=i['spriteIndex']
-#				_obj.add_child(temp)	
-#			elif i['type']=='bloober':	
-#				var temp=bloober.instance()
-#				temp.position.x=i['x']*blockSize+blockSize/2
-#				temp.position.y=i['y']*blockSize+blockSize/2
-#				temp.spriteIndex=i['spriteIndex']
-#				_obj.add_child(temp)	
 			elif i['type']=='podoboo':
 				var temp=podoboo.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
-				_obj.add_child(temp)	
-#			elif i['type']=='lakitu':
-#				var temp=lakitu.instance()
-#				temp.position.x=i['x']*blockSize+blockSize/2
-#				temp.position.y=i['y']*blockSize+blockSize/2
-#				temp.spriteIndex=i['spriteIndex']
-#				_obj.add_child(temp)	
+				_obj.add_child(temp)		
 			elif i['type']=='cannon':
 				var temp=cannon.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)	
-				pass
+			elif i['type']==constants.staticPlatform:
+				var temp=staticPlatform.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/4
+				temp.spriteIndex=i['spriteIndex']
+				temp.lens=int(i['lens'])
+				temp.status=i['status']
+				_obj.add_child(temp)
+			elif i['type']==constants.linkPlatform:
+				var temp=linkPlatform.instance()
+				temp.position.x=i['x']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.spriteIndex=i['spriteIndex']
+				temp.distance=int(i['distance'])*32
+				_obj.add_child(temp)
 				
 		file.close()
 #		print(mapData)
@@ -1151,20 +1162,19 @@ func marioCastleEnd():
 	subLevel=''
 	saveMarioStatus()
 	_timer.start(3)
-	pass
+
 
 #藤蔓已经长好
 func vineEnd():
 	for i in marioList:
 		i.startAutoGrabVine=true
-	pass
+
 
 #跳转到下一关
 func marioGrapVineTop(level,subLevel):
 	print(level,'-',subLevel)
 	assert(level!='')
 	loadSubLevelMap(level,subLevel)
-	pass
 
 
 func addWarpZoneMsg():

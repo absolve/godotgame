@@ -29,7 +29,8 @@ onready var castleFast=$castle_fast
 onready var bridgebreak=$bridgebreak
 onready var bowserfall=$bowserfall
 onready var castleend=$castleend
-
+onready var underwater=$underwater
+onready var underwater_fast=$underwater_fast
 
 var bgm="overworld"
 var isLowTime=false
@@ -94,7 +95,8 @@ func _ready():
 	
 	var castleend1=castleend.stream as AudioStreamOGGVorbis
 	castleend1.set_loop(false)
-	pass # Replace with function body.
+	
+	
 
 func playBgm():
 	if bgm=="overworld":
@@ -112,8 +114,16 @@ func playBgm():
 			castleFast.play()
 		else:
 			castle.play()
-		pass
-	pass
+	elif bgm=='star':
+		if isLowTime:
+			starFast.play()
+		else:
+			star.play()
+	elif bgm=='underwater':
+		if isLowTime:
+			underwater_fast.play()
+		else:
+			underwater.play()
 
 func stopBgm():
 	if bgm=="overworld":
@@ -125,6 +135,12 @@ func stopBgm():
 	elif bgm=='castle':
 		castleFast.stop()
 		castle.stop()
+	elif bgm=='star':
+		starFast.stop()
+		star.stop()
+	elif bgm=='underwater':
+		underwater_fast.stop()
+		underwater.stop()
 
 func playSpecialBgm():
 	if isLowTime:

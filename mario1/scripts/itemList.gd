@@ -35,16 +35,15 @@ func addItem():
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)
-			pass
 		elif type=="collision" ||type=='platform'||type=='spinFireball'||\
-			type=="bloober"|| type=='podoboo'||'lakitu':
+			type=="bloober"|| type=='podoboo'||'lakitu'||type=='staticPlatform'\
+			||type=='linkPlatform':
 			if constants.mapTiles.has(type) &&!constants.mapTiles[type].empty():
 				var index=constants.tilesAttribute[i]['spriteIndex']
 				list.add_item(i,constants.mapTiles[type][str(index)])
 			else:
 				list.add_item(i)		
 					
-	pass
 
 
 func _on_list_item_selected(index):

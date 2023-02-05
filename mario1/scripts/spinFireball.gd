@@ -12,7 +12,7 @@ var aroundPos  #围绕的点
 var status=constants.rotate
 
 func _ready():
-#	debug=true
+	debug=true
 	active=false
 	rect=Rect2(Vector2(-8,-8),Vector2(16,16))
 	type=constants.spinFireball

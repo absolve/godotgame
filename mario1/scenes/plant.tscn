@@ -45,17 +45,17 @@ animations = [ {
 "frames": [ SubResource( 4 ), SubResource( 5 ) ],
 "loop": true,
 "name": "1",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 6 ), SubResource( 7 ) ],
 "loop": true,
 "name": "2",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [ SubResource( 8 ), SubResource( 9 ) ],
 "loop": true,
 "name": "3",
-"speed": 5.0
+"speed": 8.0
 } ]
 
 [node name="plant" type="Node2D"]

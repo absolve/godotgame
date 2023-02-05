@@ -110,6 +110,10 @@ const bulletBillFly='bulletBillFly'
 const hammerBroGravity=800
 const hammerBroIdle='hammerBroIdle'
 
+#关联平台的数据 
+const linkPlatformIdle='linkPlatformIdle'
+const staticPlatformAcc=100
+
 #mario的状态
 const idle="idle"
 const stand="stand"
@@ -229,7 +233,7 @@ const deathJumpGravity=1200
 const marioMaxYVel=900 #最大y速度
 const boxHeight=5 #跨过的间隙时最低的高度
 const fireballMaxYVel=900
-const underwaterMaxHeight=16 #在水下最大高度
+const underwaterMaxHeight=32 #在水下最大高度
 const underwaterAcceleration=180
 const underwaterRunAcceleration=300
 const underwaterWalkMaxSpeed=110
@@ -242,7 +246,8 @@ const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			,"coin","bg","box",'flag','stick',"collision","plant","castleFlag",
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
 			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
-			'cheapcheap','bloober','podoboo','lakitu','cannon','hammerBro']
+			'cheapcheap','bloober','podoboo','lakitu','cannon','hammerBro',
+			'staticPlatform','linkPlatform']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -801,6 +806,57 @@ const tilesAttribute={
 		'speed':100,
 		'layer':0,
 	},
+	'staticPlatform':{
+		"type": "staticPlatform",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'status':'justRight',
+		'layer':0,
+	},
+	'linkPlatform':{
+		"type": "linkPlatform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'distance':3,
+		'layer':0,
+	},
+	'linkPlatform1':{
+		"type": "linkPlatform",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'distance':3,
+		'layer':0,
+	},
+	'linkPlatform2':{
+		"type": "linkPlatform",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'distance':3,
+		'layer':0,
+	},
+	'linkPlatform3':{
+		"type": "linkPlatform",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'distance':3,
+		'layer':0,
+	},
 	"box": {
 		"type": "box",
 		"spriteIndex": 0,
@@ -1043,6 +1099,15 @@ const tilesAttribute={
 	"brick12": {
 		"type": "brick",
 		"spriteIndex": 11,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick42": {
+		"type": "brick",
+		"spriteIndex": 41,
 		"x": 0,
 		"y": 0,
 		"offsetX":0,

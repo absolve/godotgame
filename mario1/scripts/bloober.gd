@@ -14,7 +14,7 @@ func _ready():
 	maxYVel=constants.blooberMaxYSpeed #y轴最大速度
 	maxXVel=constants.blooberMaxXSpeed
 	gravity=0
-	debug=true
+#	debug=true
 	status=constants.idle
 	pass
 

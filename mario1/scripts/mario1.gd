@@ -100,7 +100,7 @@ func _ready():
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
-		constants.bulletBill,constants.cannon,constants.hammer]
+		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -792,6 +792,7 @@ func setAutoGrabVine(obj):
 	active=false
 	position.x= obj.getLeft()-getSize()/2
 	ani.stop()
+	status=constants.autoGrabVine
 	pass
 
 #自动爬藤蔓
@@ -1079,7 +1080,7 @@ func floorCollide(obj):
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
-	elif obj.type==constants.platform: #平台
+	elif obj.type==constants.platform||obj.type==constants.staticPlatform: #平台
 		if status!=constants.jump&&yVel>0:
 			combo=0	
 			return true
