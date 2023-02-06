@@ -35,10 +35,12 @@ func _ready():
 	elif type==	constants.star:
 		ani.play("star")
 	elif type==constants.mushroom1up:
-		ani.play("1up")
+		if spriteIndex==1:
+			ani.play("1up_1")
+		else:	
+			ani.play("1up")
 	elif type==constants.fireflower:
 		ani.play("fire_flower")	
-	pass
 
 func _update(delta):
 	if status==constants.growing:

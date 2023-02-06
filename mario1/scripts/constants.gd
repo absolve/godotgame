@@ -247,7 +247,7 @@ const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
 			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
 			'cheapcheap','bloober','podoboo','lakitu','cannon','hammerBro',
-			'staticPlatform','linkPlatform']
+			'staticPlatform','linkPlatform','vine']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"

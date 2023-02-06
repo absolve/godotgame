@@ -149,6 +149,8 @@ bus = "bg"
 
 [node name="underwater" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 30 )
+bus = "bg"
 
 [node name="underwater_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 31 )
+bus = "bg"

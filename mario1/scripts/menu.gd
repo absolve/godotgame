@@ -10,11 +10,15 @@ export var num=3
 var marioDeathPos={'x':-1,'y':-1}
 
 onready var _title=$title
-onready var _lives=$img/num
+#onready var _lives=$img/num
+onready var _lives=$ani/num
 onready var _level=$world/level
-onready var _img=$img
+#onready var _img=$img
 onready var _gameover=$gameover
 onready var _world=$world
+
+onready var ani=$ani
+
 
 var status=constants.nextLevel
 var subLevel=""  #用来标记当前关卡的保存点的位置
@@ -39,12 +43,21 @@ func _ready():
 	_title.setLevel(str(level))
 	_level.text=str(level)
 	_lives.text=str(num)
-#	print(num)
+
+	if Game.playerData['mario']['big']:
+		if Game.playerData['mario']['fire']:
+			ani.play("fire")
+		else:
+			ani.play("big")	
+	else:
+		ani.play("small")		
+
 	if num<=0:
 		isgameover=true
 	if isgameover:
 		_world.hide()
-		_img.hide()
+#		_img.hide()
+		ani.hide()
 		_gameover.show()
 		status=constants.gameEnd
 		gameEnd()
@@ -82,15 +95,6 @@ func _physics_process(delta):
 			status=constants.empty
 		pass
 	elif status==constants.gameEnd:
-#		timer+=1
-#		if timer>gameEndTime:
-#			var scene=load("res://scenes/welcome.tscn")
-#			var temp=scene.instance()
-#			queue_free()
-#			set_process_input(false)
-#			get_tree().get_root().add_child(temp)
-#			set_process_input(true)
-#			status=constants.empty
 		pass
 	elif status==constants.gameRestart:
 		timer+=1
@@ -103,4 +107,3 @@ func _physics_process(delta):
 			get_tree().get_root().add_child(temp)
 			set_process_input(true)
 			status=constants.empty
-	pass

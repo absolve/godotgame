@@ -638,9 +638,9 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
 			temp.big=Game.playerData['mario']['big']
-			temp.big=true
+#			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
-			temp.fire=true
+#			temp.fire=true
 
 			if marioStatus!='':
 				temp.status=marioStatus
@@ -652,7 +652,6 @@ func loadMapFile(fileName:String):
 				
 #		marioPos=pos
 		var tempArea=[]
-	
 		
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
@@ -694,7 +693,7 @@ func loadMapFile(fileName:String):
 				if i.has('subLevel'):
 					temp.subLevel=i['subLevel']
 				if i.has('itemIndex'):
-					temp.itemIndex=i['itemIndex']
+					temp.itemIndex=int(i['itemIndex'])
 					
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp

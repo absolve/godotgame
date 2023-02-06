@@ -96,6 +96,7 @@ func bumped(delta):
 				var temp=item.instance()
 				temp.position=position
 				temp.type=content
+				temp.spriteIndex=itemIndex
 				if content==constants.fireflower:
 					if Game.getMario().size()>0:
 						if !Game.getMario()[0].big:
