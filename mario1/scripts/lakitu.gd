@@ -73,9 +73,20 @@ func _update(delta):
 								
 			if position.x+xVel*delta<0:
 				dir=constants.right
-		
+	elif status==constants.deadJump:
+		yVel+=gravity*delta	
+		position.y+=yVel*delta	
 		pass
 
+func startDeathJump(_dir=constants.left):
+	status=constants.deadJump
+	ani.playing=false
+	ani.flip_v=true
+	ani.frame=0
+	active=false
+	_dead=true
+	gravity=constants.deathJumpGravity
+	z_index=5
 	
 func animation(type):
 	if type=='idle':

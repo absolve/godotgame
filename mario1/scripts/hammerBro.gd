@@ -102,9 +102,20 @@ func _update(delta):
 				else:
 					dir=constants.left
 					ani.flip_h=false	
-	
-	pass
+	elif status==constants.deadJump:
+		yVel+=gravity*delta	
+		position.y+=yVel*delta	
 
+
+func startDeathJump(_dir=constants.left):
+	status=constants.deadJump
+	ani.playing=false
+	ani.flip_v=true
+	ani.frame=0
+	active=false
+	_dead=true
+	gravity=constants.deathJumpGravity
+	z_index=5
 
 func throwHammer():
 	var temp=hammer.instance()
@@ -144,7 +155,6 @@ func animation(type):
 		ani.flip_h=false
 	else:
 		ani.flip_h=true	
-	pass
 
 
 func rightCollide(obj):

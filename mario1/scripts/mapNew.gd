@@ -79,7 +79,8 @@ var castleBridge=[]  #保存桥的数据
 var castleEndX=0 #城堡最后斧头的位置
 var scrollEnd = false #摄像机滚动到最后
 var bonusLevel=false  #是否是奖励关卡
-var underwater=false
+var underwater=false #是否水下
+var areaList=[] #区域列表
 
 func _ready():
 	Game.setMap(self)
@@ -105,7 +106,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test34.json")
+#	loadMapFile("res://levels/2-2.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -570,6 +571,23 @@ func hasTile(x,y):
 #			mapData[y][x] = null
 #	pass
 
+func checkHasObj(arr,x,name):
+	var flag=false
+	for i in arr:
+		if i.type==constants.flyingfish:
+			if 'flyingfishStart'==name:
+				if i.startX==x:
+					flag=true
+	return flag
+
+func setObjEnd(arr,x,name,groupId):
+	for i in arr:
+		if name=='flyingfishEnd':
+			if i.type==constants.flyingfish&&i.groupId==groupId:
+				i['endX']=x
+				break
+
+
 #载入文件
 func loadMapFile(fileName:String):
 	var file = File.new()
@@ -620,9 +638,9 @@ func loadMapFile(fileName:String):
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
 			temp.big=Game.playerData['mario']['big']
-#			temp.big=true
+			temp.big=true
 			temp.fire=Game.playerData['mario']['fire']
-#			temp.fire=true
+			temp.fire=true
 
 			if marioStatus!='':
 				temp.status=marioStatus
@@ -633,6 +651,8 @@ func loadMapFile(fileName:String):
 			marioList.append(temp)
 				
 #		marioPos=pos
+		var tempArea=[]
+	
 		
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
@@ -727,6 +747,16 @@ func loadMapFile(fileName:String):
 						,"y":i['y']*blockSize+blockSize/2})
 				elif i['value']=='subLevelPos':
 					specialEntrance.append(i)
+				elif i['value']=='flyingfishStart':
+					if !checkHasObj(tempArea,i['x']*blockSize,'flyingfishStart'):
+						tempArea.append({
+							'type':constants.flyingfish,
+							'startX':i['x']*blockSize,
+							'endX':-1,
+							'groupId':str(i['groupId'])
+						})
+				elif i['value']=='flyingfishEnd':
+					setObjEnd(tempArea,i['x']*blockSize,'flyingfishEnd',str(i['groupId']))
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -813,6 +843,13 @@ func loadMapFile(fileName:String):
 				
 		file.close()
 #		print(mapData)
+		#检查区域信息
+		for i in tempArea:
+			if i.endX!=-1:
+				areaList.append(i)
+			else:
+				printerr("数据错误 ",i)
+
 	else:
 		print('文件不存在')
 		pass
@@ -1217,6 +1254,9 @@ func _draw():
 		for i in range(mapWidthSize):
 			draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
 			Color.gray,0.5,true)
+	
+	if underwater:
+		draw_rect(Rect2(Vector2.ZERO,Vector2(mapWidthSize*32,32*2)),Color('#5C94FC'))
 	pass
 
 

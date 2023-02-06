@@ -42,6 +42,7 @@ var winHeight
 #var subLevel="" #子关卡 是否从水管或者树里面出来
 #var pipeIndex=0 #当前水管入口的索引
 var font
+var currMousePos=Vector2.ZERO  #当前鼠标位置
 
 var mode="edit"  #game正常游戏  edit编辑  test测试  show展示
 #onready var _brick=$brick
@@ -406,10 +407,13 @@ func _input(event):
 				else:	
 					var pos=getItemPos(get_global_mouse_position())	
 					addItem(selectItemType,selectItem,pos)
-					
+			currMousePos=get_global_mouse_position()		
 
 func _draw():
 	if mode=="edit":
+		draw_string(font,currMousePos+Vector2(16,0),'x:'+str(int(currMousePos.x)/blockSize)+" y:"
+			+str(int(currMousePos.y)/blockSize),Color.white)
+		
 		for i in range(mapWidthSize+1):
 			if i%20==0:
 				draw_line(Vector2(i*blockSize,0),Vector2(i*blockSize,blockSize*heightNun)

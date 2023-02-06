@@ -184,7 +184,7 @@ const hammer='hammer' #锤子
 const cannon='cannon' #炮塔
 const linkPlatform='linkPlatform' #联动平台
 const staticPlatform='staticPlatform' #基本不动的平台
-
+const flyingfish='flyingfish' #飞鱼
 
 #方向
 const right="right"
@@ -679,6 +679,24 @@ const tilesAttribute={
 		"y": 0,
 		"value":"subLevelPos",
 		"pos":0,
+		'layer':0,
+	},
+	'flyingfishStart':{
+		"type":"collision",
+		"spriteIndex": 3,
+		"x": 0,
+		"y": 0,
+		"value":"flyingfishStart",
+		"groupId":0,#标记是不是同一组
+		'layer':0,
+	},
+	'flyingfishEnd':{
+		"type":"collision",
+		"spriteIndex": 4,
+		"x": 0,
+		"y": 0,
+		"value":"flyingfishEnd",
+		"groupId":0,
 		'layer':0,
 	},
 	"castleFlag":{
