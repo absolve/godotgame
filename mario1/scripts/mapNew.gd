@@ -81,6 +81,10 @@ var scrollEnd = false #摄像机滚动到最后
 var bonusLevel=false  #是否是奖励关卡
 var underwater=false #是否水下
 var areaList=[] #区域列表
+var flyingFishStart=false
+var flyingFishTimer=0
+var flyingFishDelay=60
+
 
 func _ready():
 	Game.setMap(self)
@@ -106,7 +110,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/2-2.json")
+#	loadMapFile("res://levels/test35.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -220,7 +224,7 @@ func _physics_process(delta):
 			&&i.type!=constants.spinFireball&&i.type!=constants.axe&&i.type!=constants.figures&&\
 			i.type!=constants.bowser&&i.type!=constants.podoboo&&i.type!=constants.cannon&&\
 			i.type!=constants.jumpingBoard&&i.type!=constants.vine&&i.type!=constants.staticPlatform\
-			&&i.type!=constants.linkPlatform:
+			&&i.type!=constants.linkPlatform&&i.type!=constants.flyingfish:
 			if i.getRight()<_camera.position.x||i.getLeft()>_camera.position.x+winWidth*1.6:
 				i.queue_free()
 			if i.getTop()>winHeight:
@@ -246,7 +250,12 @@ func _physics_process(delta):
 				i.queue_free()
 			if i.getTop()>winHeight:
 				i.queue_free()
-			
+		elif i.type==constants.flyingfish:
+			if i.getLeft()>_camera.position.x+winWidth*1.6:
+				i.queue_free()
+			if i.getTop()>winHeight&&i.yVel>0:
+				i.queue_free()	
+				
 	for i in _tile.get_children():
 		if i.type==constants.box||i.type==constants.bridge:
 			if i.active:
@@ -323,7 +332,33 @@ func _physics_process(delta):
 						addWarpZoneMsg()
 						hasAddWarpZone=true
 						pass
-		
+	#对区域进行判断					
+	flyingFishStart=false
+	for i in marioList:
+		if is_instance_valid(i):
+			for y in areaList:
+				if y.type==constants.flyingfish:
+					if y['startX']<i.position.x && y['endX']>i.position.x:
+						flyingFishStart=true
+	#飞鱼
+	if flyingFishStart:
+		flyingFishTimer+=1
+		if flyingFishTimer>flyingFishDelay:
+			flyingFishTimer=0
+			flyingFishDelay=randi()%130+30
+			var temp=cheapcheap.instance()
+			temp.position.x=_camera.get_camera_position().x+randi()%20*32
+			temp.position.y=winHeight+temp.rect.size.y/2
+			temp.status='flying'
+			if temp.position.x>_camera.get_camera_screen_center().x:
+				temp.dir=constants.left
+			else:
+				temp.dir=constants.right	
+			for i in marioList:
+				if is_instance_valid(i):
+					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(i.xVel))
+			_obj.add_child(temp)			
+			print('start flyingFish')
 				
 	for y in _obj.get_children():
 		var hCollision=false
@@ -574,8 +609,12 @@ func hasTile(x,y):
 func checkHasObj(arr,x,name):
 	var flag=false
 	for i in arr:
-		if i.type==constants.flyingfish:
-			if 'flyingfishStart'==name:
+		if 'flyingfishStart'==name:
+			if i.type==constants.flyingfish:
+				if i.startX==x:
+					flag=true
+		elif 'fireStart'==name:
+			if i.type==constants.fire:
 				if i.startX==x:
 					flag=true
 	return flag
@@ -586,7 +625,10 @@ func setObjEnd(arr,x,name,groupId):
 			if i.type==constants.flyingfish&&i.groupId==groupId:
 				i['endX']=x
 				break
-
+		elif name=='fireEnd':
+			if i.type==constants.fire&&i.groupId==groupId:
+				i['endX']=x
+				break
 
 #载入文件
 func loadMapFile(fileName:String):
@@ -748,14 +790,24 @@ func loadMapFile(fileName:String):
 					specialEntrance.append(i)
 				elif i['value']=='flyingfishStart':
 					if !checkHasObj(tempArea,i['x']*blockSize,'flyingfishStart'):
-						tempArea.append({
+						var temp={
 							'type':constants.flyingfish,
 							'startX':i['x']*blockSize,
 							'endX':-1,
+							'spriteIndex':-1,
 							'groupId':str(i['groupId'])
-						})
+						}
+						if i.has('spriteType'):
+							temp.spriteIndex=i.spriteType
+						tempArea.append(temp)	
 				elif i['value']=='flyingfishEnd':
 					setObjEnd(tempArea,i['x']*blockSize,'flyingfishEnd',str(i['groupId']))
+				elif i['value']=='fireStart':
+					
+					pass
+				elif i['value']=='fireEnd':
+					
+					pass
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2

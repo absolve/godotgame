@@ -114,6 +114,11 @@ const hammerBroIdle='hammerBroIdle'
 const linkPlatformIdle='linkPlatformIdle'
 const staticPlatformAcc=100
 
+#飞鱼数据
+const flyingFishGravity=800
+const flyingFishYSpeed=750
+const flyingFishXSpeed=200
+
 #mario的状态
 const idle="idle"
 const stand="stand"
@@ -687,6 +692,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"flyingfishStart",
+		'spriteType':-1, #-1精灵颜色随机
 		"groupId":0,#标记是不是同一组
 		'layer':0,
 	},
@@ -696,6 +702,7 @@ const tilesAttribute={
 		"x": 0,
 		"y": 0,
 		"value":"flyingfishEnd",
+		'spriteType':-1,
 		"groupId":0,
 		'layer':0,
 	},

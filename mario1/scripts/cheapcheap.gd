@@ -4,12 +4,13 @@ onready var ani=$ani
 var preStatus
 var swimYspeed=8
 var swimXspeed=15
+var flyingXSpeed=constants.flyingFishXSpeed
 
 func _ready():
 	type=constants.cheapcheap
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
-	gravity=constants.enemyGravity
+	gravity=constants.flyingFishGravity
 #	speed=swimXspeed
 #	status=constants.swim
 	
@@ -18,11 +19,18 @@ func _ready():
 			swimXspeed=25
 		ani.speed_scale=0.5	
 		gravity=0
-		
-	if dir==constants.left:
-		xVel=-swimXspeed
-	else:
-		xVel=speed
+		if dir==constants.left:
+			xVel=-swimXspeed
+		else:
+			xVel=speed
+	elif status==constants.flying:
+		type=constants.flyingfish
+		yVel=-constants.flyingFishYSpeed
+		if dir==constants.left:
+			xVel=-flyingXSpeed
+		else:
+			xVel=flyingXSpeed
+	
 
 func startDeathJump(_dir=constants.left):
 	status=constants.deadJump
@@ -61,7 +69,7 @@ func _update(delta):
 		animation('swim')
 		pass
 	elif status==constants.flying:  #在天上飞
-		
+		animation('fly')
 		pass
 	elif status==constants.deadJump:
 		yVel=50
@@ -70,7 +78,7 @@ func _update(delta):
 		pass
 		
 func animation(type):
-	if type=='swim':
+	if type=='swim' || type=='fly':
 		if spriteIndex==0:
 			ani.play("0")
 		elif spriteIndex==1:
@@ -79,8 +87,9 @@ func animation(type):
 			ani.play("2")
 		elif spriteIndex==3:	
 			ani.play("3")	
-		pass
-	elif type=='fly':
+	
 		
-		pass	
-				
+	if dir==constants.right:
+		ani.flip_h=true
+	elif dir==constants.left:
+		ani.flip_h=false			

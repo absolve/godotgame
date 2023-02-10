@@ -100,7 +100,8 @@ func _ready():
 		constants.koopa,constants.spinFireball,constants.bridge,
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
-		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform]
+		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
+		constants.hammerBro,constants.cheapcheap,constants.flyingfish]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -954,8 +955,9 @@ func rightCollide(obj):
 		if obj.value==constants.castlePos:
 #			destroy=true
 			Game.emit_signal("marioInCastle")
-	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
-		print(obj.type)
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
+#		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -974,8 +976,7 @@ func rightCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-	elif obj.type==constants.hammer:
-		print('hammer')	
+	
 
 #判断左边碰撞
 func leftCollide(obj):
@@ -1039,7 +1040,8 @@ func leftCollide(obj):
 #			destroy=true
 			Game.emit_signal("marioInCastle")
 		pass
-	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1053,8 +1055,7 @@ func leftCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-	elif obj.type==constants.hammer:
-		print('hammer')
+
 	
 
 func floorCollide(obj):
@@ -1103,7 +1104,8 @@ func floorCollide(obj):
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
-	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
 		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1114,8 +1116,7 @@ func floorCollide(obj):
 	elif obj.type==constants.jumpingBoard: #在跳板上
 		if yVel>0&&status!=constants.onBoard:
 			setOnBoard(obj)
-	elif obj.type==constants.hammer:
-		print('hammer')	
+	
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
@@ -1140,16 +1141,16 @@ func ceilcollide(obj):#上方的判断
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
-	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire:
-		print(obj.type)
+	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
+#		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
 				setHurtInvincible()
 			else:	
 				startDeathJump()	
-	elif obj.type==constants.hammer:
-		print('hammer')
+	
 
 
 #获取物品
