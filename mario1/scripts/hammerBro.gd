@@ -54,6 +54,7 @@ func _update(delta):
 		jumpTimer+=1
 		if jumpTimer>jumpDelay: #在屏幕中间随机向上获向下
 			jumpTimer=0
+			jumpDelay=100+randi()%30
 			if position.y<=32*3:
 				jumpDir=constants.down
 				jumpStartY=position.y

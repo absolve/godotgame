@@ -679,7 +679,7 @@ const tilesAttribute={
 	},
 	"subLevelPos":{
 		"type":"collision",
-		"spriteIndex": 0,
+		"spriteIndex": 2,
 		"x": 0,
 		"y": 0,
 		"value":"subLevelPos",
@@ -699,6 +699,26 @@ const tilesAttribute={
 	'flyingfishEnd':{
 		"type":"collision",
 		"spriteIndex": 4,
+		"x": 0,
+		"y": 0,
+		"value":"flyingfishEnd",
+		'spriteType':-1,
+		"groupId":0,
+		'layer':0,
+	},
+	'fireStart':{
+		"type":"collision",
+		"spriteIndex": 5,
+		"x": 0,
+		"y": 0,
+		"value":"flyingfishEnd",
+		'spriteType':-1,
+		"groupId":0,
+		'layer':0,
+	},
+	'fireEnd':{
+		"type":"collision",
+		"spriteIndex": 6,
 		"x": 0,
 		"y": 0,
 		"value":"flyingfishEnd",
@@ -1400,6 +1420,42 @@ const tilesAttribute={
 		"offsetY":0,
 		'layer':0,
 	},
+	"brick43": {
+		"type": "brick",
+		"spriteIndex": 42,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick44": {
+		"type": "brick",
+		"spriteIndex": 43,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick45": {
+		"type": "brick",
+		"spriteIndex": 44,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	"brick46": {
+		"type": "brick",
+		"spriteIndex": 45,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
 	"bridge": {
 		"type": "bridge",
 		"spriteIndex": 0,
@@ -2012,6 +2068,30 @@ const tilesAttribute={
 	"bg76": {
 		"type": "bg",
 		"spriteIndex": 76,
+		"x": 0,
+		"y": 0
+	},
+	"bg77": {
+		"type": "bg",
+		"spriteIndex": 77,
+		"x": 0,
+		"y": 0
+	},
+	"bg78": {
+		"type": "bg",
+		"spriteIndex": 78,
+		"x": 0,
+		"y": 0
+	},
+	"bg79": {
+		"type": "bg",
+		"spriteIndex": 79,
+		"x": 0,
+		"y": 0
+	},
+	"bg80": {
+		"type": "bg",
+		"spriteIndex": 80,
 		"x": 0,
 		"y": 0
 	},

@@ -110,7 +110,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test35.json")
+#	loadMapFile("res://levels/2-2-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")

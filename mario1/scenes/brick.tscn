@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://scripts/brick .gd" type="Script" id=1]
 [ext_resource path="res://sprites/tiles33x28.png" type="Texture" id=2]
@@ -150,6 +150,22 @@ region = Rect2( 352, 576, 32, 32 )
 [sub_resource type="AtlasTexture" id=43]
 atlas = ExtResource( 2 )
 region = Rect2( 32, 224, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=44]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=45]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=46]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 160, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=47]
+atlas = ExtResource( 2 )
+region = Rect2( 96, 224, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 2 )
@@ -358,6 +374,26 @@ animations = [ {
 "name": "41",
 "speed": 5.0
 }, {
+"frames": [ SubResource( 44 ) ],
+"loop": true,
+"name": "42",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 45 ) ],
+"loop": true,
+"name": "43",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 46 ) ],
+"loop": true,
+"name": "44",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 47 ) ],
+"loop": true,
+"name": "45",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 7 ) ],
 "loop": true,
 "name": "5",
@@ -390,4 +426,4 @@ script = ExtResource( 1 )
 [node name="ani" type="AnimatedSprite" parent="."]
 show_behind_parent = true
 frames = SubResource( 1 )
-animation = "41"
+animation = "45"
