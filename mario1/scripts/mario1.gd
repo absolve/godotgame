@@ -956,7 +956,8 @@ func rightCollide(obj):
 #			destroy=true
 			Game.emit_signal("marioInCastle")
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
+	||obj.type==constants.plant:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1019,7 +1020,6 @@ func leftCollide(obj):
 							setHurtInvincible()
 						else:	
 							startDeathJump()	
-		pass
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
@@ -1041,7 +1041,8 @@ func leftCollide(obj):
 			Game.emit_signal("marioInCastle")
 		pass
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
+	||obj.type==constants.plant:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1105,7 +1106,8 @@ func floorCollide(obj):
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
+	||obj.type==constants.plant:
 		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1142,8 +1144,8 @@ func ceilcollide(obj):#上方的判断
 		obj.type==constants.bigCoin:
 		getItem(obj)
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer:
-#		print(obj.type)
+	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
+	||obj.type==constants.plant:
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -1372,6 +1374,7 @@ func shootFireball(play=true):
 			Game.addObj(temp)
 			fireball.play() #声音
 
+#添加气泡
 func addBubble():
 	var temp=bubble.instance()
 	temp.position=position
@@ -1416,7 +1419,6 @@ func _on_ani_frame_changed():
 		pass
 	if invincible:
 		shadow.frame=ani.frame
-	pass # Replace with function body.
 
 
 func _on_ani_animation_finished():

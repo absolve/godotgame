@@ -36,9 +36,6 @@ margin_bottom = 296.0
 custom_fonts/font = ExtResource( 5 )
 text = "1 player game"
 uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="p2" type="Label" parent="."]
 margin_left = 220.0
@@ -58,11 +55,24 @@ custom_fonts/font = ExtResource( 5 )
 text = "  edit map"
 uppercase = true
 
+[node name="selectworld" type="Label" parent="."]
+margin_left = 235.0
+margin_top = 400.0
+margin_right = 443.0
+margin_bottom = 416.0
+custom_fonts/font = ExtResource( 5 )
+text = "select world"
+align = 2
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="Label" type="Label" parent="."]
 margin_left = 230.0
-margin_top = 390.0
+margin_top = 440.0
 margin_right = 422.0
-margin_bottom = 406.0
+margin_bottom = 456.0
 custom_fonts/font = ExtResource( 5 )
 text = "top - 000000"
 uppercase = true

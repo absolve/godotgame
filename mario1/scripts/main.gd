@@ -5,12 +5,14 @@ extends Node2D
 onready var _indicator=$indicator
 onready var _1p=$p1
 onready var _2p=$p2
+onready var _selectworld=$selectworld
 
-var player=1	#默认选择1玩家  3地图编辑
+var player=1	#默认选择1玩家  3地图编辑 4选择地图
 var path="res://levels/show.json"
 var timer=0
 var tick=22
 var status=constants.empty
+var level='1-1' #当前的关卡
 
 func _ready():
 	var scene=load("res://scenes/mapNew.tscn").instance()
@@ -84,6 +86,9 @@ func _input(event):
 		elif player==2:	
 			player=3
 			_indicator.position.y=360
+		elif player==3:	
+			player=4
+			_indicator.position.y=400
 	elif Input.is_action_just_pressed("ui_up"):
 		if player==2:
 			player=1
@@ -91,12 +96,16 @@ func _input(event):
 		elif player==3:
 			player=2
 			_indicator.position.y=320	
+		elif  player==4:
+			player=3
+			_indicator.position.y=360	
 	elif Input.is_action_just_pressed("ui_accept"):
-	
 		if player==1||player==2:
 			startGame()
-		else:
+		elif player==3:
 			editMap()	
+		elif player==4:	
+			pass
 #			status=constants.startState
 #			if player==1:
 #				_1p.visible=false		
