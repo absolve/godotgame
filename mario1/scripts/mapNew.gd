@@ -40,6 +40,7 @@ var cannon=preload("res://scenes/cannon.tscn")
 var hammerBro=preload("res://scenes/hammerBro.tscn")
 var staticPlatform=preload("res://scenes/staticPlatform.tscn")
 var linkPlatform=preload("res://scenes/linkPlatform.tscn")
+var fire=preload("res://scenes/fire.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -84,9 +85,12 @@ var areaList=[] #区域列表
 var flyingFishStart=false
 var flyingFishTimer=0
 var flyingFishDelay=60
-
+var fireStart=false  #火焰发射是否开始
+var fireTimer=0
+var fireDelay=70
 
 func _ready():
+	randomize()
 	Game.setMap(self)
 	winWidth= ProjectSettings.get_setting("display/window/size/width")
 	winHeight=ProjectSettings.get_setting("display/window/size/height")
@@ -110,7 +114,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/2-2-1.json")
+#	loadMapFile("res://levels/test36.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -340,6 +344,10 @@ func _physics_process(delta):
 				if y.type==constants.flyingfish:
 					if y['startX']<i.position.x && y['endX']>i.position.x:
 						flyingFishStart=true
+				elif y.type==constants.fire:
+					if y['startX']<i.position.x && y['endX']>i.position.x:
+						fireStart=true
+								
 	#飞鱼
 	if flyingFishStart:
 		flyingFishTimer+=1
@@ -354,11 +362,33 @@ func _physics_process(delta):
 				temp.dir=constants.left
 			else:
 				temp.dir=constants.right	
-			for i in marioList:
-				if is_instance_valid(i):
-					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(i.xVel))
-			_obj.add_child(temp)			
+			if marioList.size()>0:
+				var mario1=marioList[0]
+				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
+					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(mario1.xVel))
+					_obj.add_child(temp)			
+#			for i in marioList:
+#				if is_instance_valid(i):
+#					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(i.xVel))
+#					_obj.add_child(temp)			
 			print('start flyingFish')
+	
+	#火焰
+	if fireStart:
+		fireTimer+=1
+		if fireTimer>fireDelay:
+			fireTimer=0
+			fireDelay=randi()%60+120
+			var temp=fire.instance()
+			temp.position.x=_camera.get_camera_screen_center().x*2+temp.rect.size.x/2
+			temp.position.y=temp.rect.size.y/2+randi()%(15*32)
+			if marioList.size()>0:
+				var mario1=marioList[0]
+				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
+					temp.position.y=rand_range(max(32,mario1.position.y-32*4),
+						min(32*14,mario1.position.y+32*2)) 
+					_obj.add_child(temp)			
+			print('start fireFish')
 				
 	for y in _obj.get_children():
 		var hCollision=false
@@ -781,6 +811,7 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.poleLen=int(i['len'])
+				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)
 			elif  i['type']=='collision':
 				if i['value']=='checkPoint':
@@ -803,11 +834,19 @@ func loadMapFile(fileName:String):
 				elif i['value']=='flyingfishEnd':
 					setObjEnd(tempArea,i['x']*blockSize,'flyingfishEnd',str(i['groupId']))
 				elif i['value']=='fireStart':
-					
-					pass
+					if !checkHasObj(tempArea,i['x']*blockSize,'fireStart'):
+						var temp={
+							'type':constants.fire,
+							'startX':i['x']*blockSize,
+							'endX':-1,
+							'spriteIndex':-1,
+							'groupId':str(i['groupId'])
+						}
+						if i.has('spriteType'):
+							temp.spriteIndex=i.spriteType
+						tempArea.append(temp)	
 				elif i['value']=='fireEnd':
-					
-					pass
+					setObjEnd(tempArea,i['x']*blockSize,'fireEnd',str(i['groupId']))
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -829,7 +868,7 @@ func loadMapFile(fileName:String):
 			elif i['type']=='castleFlag':
 				var temp=castleFlag.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
-				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.position.y=i['y']*blockSize+blockSize/2	
 				_obj.add_child(temp)
 			elif i['type']=='spinFireball': #旋转的火球
 				if int(i['len'])>0:
