@@ -4,6 +4,8 @@ extends Node
 #游戏中分数
 const scoreList=[100,200,400,500,800,1000,2000,4000,5000,8000]
 const koopaScore=[500, 800, 1000, 2000, 4000, 5000, 8000]
+var fireBallScore={goomba:100,koopa:200,plant:200,bloober:200,
+cheapcheap:200,flyingfish:200,hammerBro:1000,lakitu:200,spiny:200}
 
 #游戏状态
 const stateChange='stateChange'
@@ -2134,10 +2136,9 @@ func _ready():
 		mapTiles[i]={}
 	loadIcon()	
 
-	pass
 
 
-#载入方块的图片
+#载入方块图片
 func loadIcon():
 	var dic=Directory.new()
 	dic.open("res://icon")

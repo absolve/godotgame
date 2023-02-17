@@ -41,6 +41,7 @@ var hammerBro=preload("res://scenes/hammerBro.tscn")
 var staticPlatform=preload("res://scenes/staticPlatform.tscn")
 var linkPlatform=preload("res://scenes/linkPlatform.tscn")
 var fire=preload("res://scenes/fire.tscn")
+var bulletBill=preload("res://scenes/bulletBill.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -88,6 +89,9 @@ var flyingFishDelay=60
 var fireStart=false  #火焰发射是否开始
 var fireTimer=0
 var fireDelay=70
+var bulletStart=false #炮弹准备开始
+var bulletTimer=0
+var bulletDelay=80
 
 func _ready():
 	randomize()
@@ -347,7 +351,9 @@ func _physics_process(delta):
 				elif y.type==constants.fire:
 					if y['startX']<i.position.x && y['endX']>i.position.x:
 						fireStart=true
-								
+				elif y.type==constants.bulletBill:
+					if y['startX']<i.position.x && y['endX']>i.position.x:
+						bulletStart=true				
 	#飞鱼
 	if flyingFishStart:
 		flyingFishTimer+=1
@@ -389,6 +395,24 @@ func _physics_process(delta):
 						min(32*14,mario1.position.y+32*2)) 
 					_obj.add_child(temp)			
 			print('start fireFish')
+	
+	#炮弹
+	if bulletStart:
+		bulletTimer+=1
+		if bulletTimer>bulletDelay:
+			bulletTimer=0
+			bulletDelay=randi()%70+110
+			var temp=bulletBill.instance()
+			temp.position.x=_camera.get_camera_screen_center().x*2+temp.rect.size.x/2
+			temp.position.y=temp.rect.size.y/2+randi()%(15*32)
+			if marioList.size()>0:
+				var mario1=marioList[0]
+				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
+					temp.position.y=rand_range(max(32,mario1.position.y-32*4),
+						min(32*14,mario1.position.y+32*2)) 
+					_obj.add_child(temp)
+		print('start bullet')
+	
 				
 	for y in _obj.get_children():
 		var hCollision=false
