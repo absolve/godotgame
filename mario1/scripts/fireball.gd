@@ -54,7 +54,7 @@ func boom():
 func hitEnemy(obj):
 	if obj.type==constants.goomba || obj.type==constants.koopa||obj.type==constants.spiny\
 		||obj.type==constants.bloober||obj.type==constants.cheapcheap\
-		||obj.type==constants.lakitu||obj.type==constants.hammerBro||obj.type==constants.plant:
+		||obj.type==constants.lakitu||obj.type==constants.hammerBro:
 		if !obj._dead&&status!=constants.boom:
 			if position.x>obj.position.x:
 				obj.startDeathJump()
@@ -64,15 +64,18 @@ func hitEnemy(obj):
 				Game.addScore(position,constants.fireBallScore[obj.type])
 			else:	
 				Game.addScore(position)
-#			boom()
+			boom()
 			SoundsUtil.playShoot()
 	elif obj.type==constants.bowser:
 		if status!=constants.boom:
 			boom()	
 #			SoundsUtil.playBoom()
 			obj.hit()
-			
-#			Game.addScore(position,5000)
+	elif obj.type==constants.plant:
+		if !obj._dead&&status!=constants.boom:
+			obj.hit()
+			boom()	
+			Game.addScore(position,200)
 #	elif obj.type==constants.plant:
 #		if !obj._dead&&status!=constants.boom:
 #			obj.hit()

@@ -2,8 +2,8 @@ extends "res://scripts/enemy.gd"
 
 onready var ani=$ani
 var timer=0
-var plantOutTime=200
-var plantInTime=80
+var plantOutTime=120
+var plantInTime=90
 var oldYPos
 var preStatus
 var ySpeed=35
@@ -15,7 +15,7 @@ func _ready():
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	type=constants.plant
 #	status=constants.plantIn
-	ani.position.y-=16
+	ani.position.y-=14
 	if spriteIndex==0:
 		ani.play("0")
 	elif spriteIndex==1:	
@@ -72,10 +72,7 @@ func _update(delta):
 							
 			if timer>plantInTime:
 				timer=0
-				status=	constants.plantOut
-				
-				
-						
+				status=	constants.plantOut	
 		position.y+=yVel*delta
 
 func pause():

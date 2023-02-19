@@ -903,7 +903,8 @@ func rightCollide(obj):
 		else:
 			if xVel!=0:
 				return true	
-	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill:
+	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill\
+	||obj.type==constants.hammerBro:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -998,7 +999,8 @@ func leftCollide(obj):
 		else:
 			if xVel!=0:
 				return true	
-	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill:
+	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill\
+	||obj.type==constants.hammerBro:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1099,9 +1101,8 @@ func floorCollide(obj):
 		else:		
 			return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa\
-		||obj.type==constants.bulletBill:
+		||obj.type==constants.bulletBill||obj.type==constants.hammerBro:
 		jumpOnEnemy(obj)
-		pass
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		

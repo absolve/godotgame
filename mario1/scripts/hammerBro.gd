@@ -29,14 +29,13 @@ func _ready():
 	maxYVel=constants.enemyMaxVel
 	status=constants.hammerBroIdle
 	startX=position.x
-	debug=true
+#	debug=true
 	if dir==constants.right:
 		xVel=xSpeed
 	else:
 		xVel=-xSpeed	
 	throwDelay=30+randi()%100
 	
-	pass
 
 func _update(delta):
 	if status==constants.hammerBroIdle:
@@ -77,7 +76,7 @@ func _update(delta):
 			if yVel>0:
 				jumpDir=""
 		elif jumpDir==constants.down:		
-			if abs(jumpStartY-position.y)>32:
+			if abs(jumpStartY-position.y)>rect.size.y+32:
 				jumpDir=""
 				
 		if xVel>0:
@@ -109,14 +108,14 @@ func _update(delta):
 
 
 func startDeathJump(_dir=constants.left):
-	status=constants.deadJump
+	dir=_dir
+	.startDeathJump()
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
-	active=false
 	_dead=true
-	gravity=constants.deathJumpGravity
-	z_index=5
+	active=false
+	
 
 func throwHammer():
 	var temp=hammer.instance()
@@ -159,12 +158,27 @@ func animation(type):
 
 
 func rightCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		if jumpDir!='':
+			return false
+		else:
+			return true	
 	
-	pass
+func leftCollide(obj):
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+		if jumpDir!='':
+			return false
+		else:
+			return true		
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		
+		if obj.type==constants.box&&obj.status==constants.bumped:
+			Game.addScore(position,200)
+			if position.x>=obj.position.x:
+				startDeathJump(constants.right)
+			else:
+				startDeathJump()
 		if jumpDir==constants.down:
 			return false
 		return true

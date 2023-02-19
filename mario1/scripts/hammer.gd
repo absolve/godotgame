@@ -42,10 +42,12 @@ func _update(delta):
 func pause():
 	preStatus=status
 	status=constants.stop
+	active=false
 	ani.stop()
 
 func resume():
 	status=preStatus
+	active=true
 	ani.play()
 
  

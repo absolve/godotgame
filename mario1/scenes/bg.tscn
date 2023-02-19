@@ -294,12 +294,12 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 48 ) ],
-"loop": true,
+"loop": false,
 "name": "28",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 46 ) ],
-"loop": true,
+"loop": false,
 "name": "29",
 "speed": 5.0
 }, {
@@ -309,52 +309,52 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 44 ) ],
-"loop": true,
+"loop": false,
 "name": "30",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 43 ) ],
-"loop": true,
+"loop": false,
 "name": "31",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 47 ) ],
-"loop": true,
+"loop": false,
 "name": "32",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 39 ) ],
-"loop": true,
+"loop": false,
 "name": "33",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 37 ) ],
-"loop": true,
+"loop": false,
 "name": "34",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 38 ) ],
-"loop": true,
+"loop": false,
 "name": "35",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 35 ) ],
-"loop": true,
+"loop": false,
 "name": "36",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 41 ) ],
-"loop": true,
+"loop": false,
 "name": "37",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 36 ) ],
-"loop": true,
+"loop": false,
 "name": "38",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 40 ) ],
-"loop": true,
+"loop": false,
 "name": "39",
 "speed": 5.0
 }, {
@@ -364,52 +364,52 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 42 ) ],
-"loop": true,
+"loop": false,
 "name": "40",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 29 ) ],
-"loop": true,
+"loop": false,
 "name": "41",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 30 ) ],
-"loop": true,
+"loop": false,
 "name": "42",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 31 ) ],
-"loop": true,
+"loop": false,
 "name": "43",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 32 ) ],
-"loop": true,
+"loop": false,
 "name": "44",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 33 ) ],
-"loop": true,
+"loop": false,
 "name": "45",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 34 ) ],
-"loop": true,
+"loop": false,
 "name": "46",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 2 ) ],
-"loop": true,
+"loop": false,
 "name": "47",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 3 ) ],
-"loop": true,
+"loop": false,
 "name": "48",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 4 ) ],
-"loop": true,
+"loop": false,
 "name": "49",
 "speed": 5.0
 }, {
@@ -419,52 +419,52 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 5 ) ],
-"loop": true,
+"loop": false,
 "name": "50",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 6 ) ],
-"loop": true,
+"loop": false,
 "name": "51",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 7 ) ],
-"loop": true,
+"loop": false,
 "name": "52",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 8 ) ],
-"loop": true,
+"loop": false,
 "name": "53",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 9 ) ],
-"loop": true,
+"loop": false,
 "name": "54",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 10 ) ],
-"loop": true,
+"loop": false,
 "name": "55",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 11 ) ],
-"loop": true,
+"loop": false,
 "name": "56",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 12 ) ],
-"loop": true,
+"loop": false,
 "name": "57",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 13 ) ],
-"loop": true,
+"loop": false,
 "name": "58",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 14 ) ],
-"loop": true,
+"loop": false,
 "name": "59",
 "speed": 5.0
 }, {
@@ -474,52 +474,52 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 15 ) ],
-"loop": true,
+"loop": false,
 "name": "60",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 16 ) ],
-"loop": true,
+"loop": false,
 "name": "61",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 17 ) ],
-"loop": true,
+"loop": false,
 "name": "62",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 18 ) ],
-"loop": true,
+"loop": false,
 "name": "63",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 19 ) ],
-"loop": true,
+"loop": false,
 "name": "64",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 20 ) ],
-"loop": true,
+"loop": false,
 "name": "65",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 21 ) ],
-"loop": true,
+"loop": false,
 "name": "66",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 22 ) ],
-"loop": true,
+"loop": false,
 "name": "67",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 23 ) ],
-"loop": true,
+"loop": false,
 "name": "68",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 24 ) ],
-"loop": true,
+"loop": false,
 "name": "69",
 "speed": 5.0
 }, {
@@ -529,52 +529,52 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 25 ) ],
-"loop": true,
+"loop": false,
 "name": "70",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 26 ) ],
-"loop": true,
+"loop": false,
 "name": "71",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 27 ) ],
-"loop": true,
+"loop": false,
 "name": "72",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 28 ) ],
-"loop": true,
+"loop": false,
 "name": "73",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 29 ) ],
-"loop": true,
+"loop": false,
 "name": "74",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 30 ) ],
-"loop": true,
+"loop": false,
 "name": "75",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 31 ) ],
-"loop": true,
+"loop": false,
 "name": "76",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 32 ) ],
-"loop": true,
+"loop": false,
 "name": "77",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 33 ) ],
-"loop": true,
+"loop": false,
 "name": "78",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 34 ) ],
-"loop": true,
+"loop": false,
 "name": "79",
 "speed": 5.0
 }, {
@@ -584,7 +584,7 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ SubResource( 35 ) ],
-"loop": true,
+"loop": false,
 "name": "80",
 "speed": 5.0
 }, {

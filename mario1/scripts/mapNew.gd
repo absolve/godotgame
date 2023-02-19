@@ -118,7 +118,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test36.json")
+#	loadMapFile("res://levels/1-2.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -372,11 +372,7 @@ func _physics_process(delta):
 				var mario1=marioList[0]
 				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
 					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(mario1.xVel))
-					_obj.add_child(temp)			
-#			for i in marioList:
-#				if is_instance_valid(i):
-#					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(i.xVel))
-#					_obj.add_child(temp)			
+					_obj.add_child(temp)					
 			print('start flyingFish')
 	
 	#火焰
@@ -1043,12 +1039,11 @@ func addEnemy(obj):
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
-#		temp.offsetX=obj['offsetX']
-#		temp.offsetY=obj['offsetY']
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
 		_obj.add_child(temp)
-		pass
 	elif obj.type==constants.plant:
 		var temp=plant.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -1057,11 +1052,12 @@ func addEnemy(obj):
 		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
-		pass
 	elif obj.type==constants.koopa:
 		var temp =koopa.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		temp.dir=obj['dir']
 		if obj.has('ySpeed'):
@@ -1077,6 +1073,8 @@ func addEnemy(obj):
 		var temp=cheapcheap.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.status=obj['status']
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
@@ -1084,18 +1082,24 @@ func addEnemy(obj):
 		var temp=bloober.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)	
 	elif obj.type==constants.lakitu:
 		var temp=lakitu.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
 	elif obj.type==constants.hammerBro:
 		var temp=hammerBro.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
 		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
 

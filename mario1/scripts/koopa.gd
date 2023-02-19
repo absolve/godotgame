@@ -30,6 +30,9 @@ func _ready():
 	else:
 		xVel=speed
 	
+	position.x+=offsetX
+	position.y+=offsetY
+	
 	if spriteIndex in [4,5,6,7]:	#设置成飞行的状态
 		status=constants.flying
 		yDir=constants.up	

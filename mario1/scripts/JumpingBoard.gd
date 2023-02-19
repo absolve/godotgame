@@ -9,7 +9,7 @@ onready var ani=$ani
 
 func _ready():
 	active=false
-	debug=true
+#	debug=true
 	rect=Rect2(Vector2(-16,-31),Vector2(32,62))
 	type=constants.jumpingBoard
 	if spriteIndex==0:

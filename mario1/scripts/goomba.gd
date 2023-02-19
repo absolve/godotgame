@@ -19,6 +19,9 @@ func _ready():
 		xVel=-speed
 	else:
 		xVel=speed
+	
+	position.x+=offsetX
+	position.y+=offsetY
 		
 	if spriteIndex==0:
 		ani.play("walk")
@@ -63,9 +66,7 @@ func startDeathJump(_dir=constants.left):
 	ani.frame=0
 	_dead=true
 	active=false
-#	z_index=3
-#	status=constants.deadJump
-	pass
+
 
 func pause():
 	preStatus=status
