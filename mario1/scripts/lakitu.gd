@@ -6,7 +6,7 @@ var xSpeed=30 #基本速度
 var timer=0
 var throwDelay=240  #每次扔东西的间隔
 var throwHideTime=70 #扔完后躲起来的时间
-var count=3
+var maxCount=3
 
 var egg=preload("res://scenes/spiny.tscn")
 
@@ -20,18 +20,27 @@ func _ready():
 	pass
 
 
+func addEgg():
+	var count=0
+	for i in  Game.getObj():
+		if i.type==constants.spiny:
+			count+=1
+	if count<maxCount:
+		var temp=egg.instance()
+		temp.position.x=position.x
+		temp.position.y=position.y
+		temp.dir=dir
+		temp.yVel=-200
+		Game.addObj(temp)
+	pass
+
 
 func _update(delta):
 	if status==constants.lakituIdle:
 		timer+=1
 		if timer>throwDelay:
 			timer=0
-			var temp=egg.instance()
-			temp.position.x=position.x
-			temp.position.y=position.y
-			temp.dir=dir
-			temp.yVel=-200
-			Game.addObj(temp)
+			addEgg()
 			
 		if timer>throwDelay-throwHideTime:
 			animation('idle')
