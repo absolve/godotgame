@@ -22,18 +22,29 @@ func _ready():
 
 func addEgg():
 	var count=0
-	for i in  Game.getObj():
+	for i in  Game.getObj().get_children():
 		if i.type==constants.spiny:
 			count+=1
-	if count<maxCount:
+	if count<=maxCount:
 		var temp=egg.instance()
 		temp.position.x=position.x
 		temp.position.y=position.y
 		temp.dir=dir
-		temp.yVel=-200
+		temp.yVel=-240
 		Game.addObj(temp)
 	pass
 
+func pause():
+	preStatus=status
+	status=constants.stop
+	active=false
+	ani.stop()
+
+func resume():
+	status=preStatus
+	ani.play()	
+	if status!=constants.dead&&status!=constants.deadJump:
+		active=true
 
 func _update(delta):
 	if status==constants.lakituIdle:
@@ -49,7 +60,7 @@ func _update(delta):
 		
 		if Game.getMario().size()>0:
 			var m= Game.getMario()[0]
-			if m.status!=constants.deadJump:
+			if is_instance_valid(m) && m.status!=constants.deadJump:
 				var distance=m.position.x-position.x
 				if distance<0:
 					if abs(distance)>constants.lakituDistance:

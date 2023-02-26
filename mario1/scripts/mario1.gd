@@ -101,7 +101,7 @@ func _ready():
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
 		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
-		constants.hammerBro,constants.cheapcheap,constants.flyingfish]
+		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -904,7 +904,7 @@ func rightCollide(obj):
 			if xVel!=0:
 				return true	
 	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill\
-	||obj.type==constants.hammerBro:
+	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -956,9 +956,24 @@ func rightCollide(obj):
 		if obj.value==constants.castlePos:
 #			destroy=true
 			Game.emit_signal("marioInCastle")
+	elif obj.type==constants.cheapcheap||obj.type==constants.bloober\
+	||obj.type==constants.plant||obj.type==constants.spiny:
+		if! obj._dead:
+			if invincible:
+				if obj.type==constants.plant:
+					obj.hit()
+				else:	
+					obj.startDeathJump(constants.right)
+				Game.addScore(Vector2(position.x,getTop()))
+				SoundsUtil.playShoot()
+			elif !hurtInvincible:
+				if big:
+					big2Small()
+					setHurtInvincible()
+				else:	
+					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
-	||obj.type==constants.plant:
+	||obj.type==constants.hammer:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -984,7 +999,6 @@ func rightCollide(obj):
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
 	||obj.type==constants.cannon:
-
 		if!Game.checkMapBrickIndex(obj.localx+1,\
 			obj.localy)&&yVel>0&& getBottom()-obj.getTop()<constants.boxHeight:
 			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
@@ -1000,7 +1014,7 @@ func leftCollide(obj):
 			if xVel!=0:
 				return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill\
-	||obj.type==constants.hammerBro:
+	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1034,18 +1048,30 @@ func leftCollide(obj):
 				return true		
 		else:		
 			return true
-	elif obj.type==constants.pole:
-		
+	elif obj.type==constants.pole:	
 		pass
 	elif obj.type==constants.collision:
 		if obj.value==constants.castlePos:
 #			destroy=true
-			Game.emit_signal("marioInCastle")
-		pass
+			Game.emit_signal("marioInCastle")	
+	elif obj.type==constants.cheapcheap||obj.type==constants.bloober\
+	||obj.type==constants.plant||obj.type==constants.spiny:
+		if! obj._dead:
+			if invincible:
+				if obj.type==constants.plant:
+					obj.hit()
+				else:	
+					obj.startDeathJump(constants.right)
+				Game.addScore(Vector2(position.x,getTop()))
+				SoundsUtil.playShoot()
+			elif !hurtInvincible:
+				if big:
+					big2Small()
+					setHurtInvincible()
+				else:	
+					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
-	||obj.type==constants.plant:
-#		print(obj.type)
+		||obj.type==constants.hammer:
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -1101,15 +1127,31 @@ func floorCollide(obj):
 		else:		
 			return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa\
-		||obj.type==constants.bulletBill||obj.type==constants.hammerBro:
+		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\
+		||obj.type==constants.beetle||obj.type==constants.flyingfish:
 		jumpOnEnemy(obj)
 	elif obj.type==constants.axe:
 		print('axe')
 		Game.emit_signal('marioContactAxe')		
+	elif obj.type==constants.cheapcheap||obj.type==constants.bloober\
+	||obj.type==constants.plant||obj.type==constants.spiny:
+		if! obj._dead:
+			if invincible:
+				if obj.type==constants.plant:
+					obj.hit()
+				else:	
+					obj.startDeathJump(constants.right)
+				Game.addScore(Vector2(position.x,getTop()))
+				SoundsUtil.playShoot()
+			elif !hurtInvincible:
+				if big:
+					big2Small()
+					setHurtInvincible()
+				else:	
+					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
-	||obj.type==constants.plant:
-		print(obj.type)
+	||obj.type==constants.hammer:
+#		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -1132,21 +1174,31 @@ func ceilcollide(obj):#上方的判断
 		else:			
 			SoundsUtil.playBrickHit()
 		yVel=1	
-	elif obj.type==constants.goomba || obj.type==constants.koopa||obj.type==constants.bulletBill:
-		if! obj._dead:
-			if invincible:
-				obj.startDeathJump(constants.right)
-				Game.addScore(Vector2(position.x,getTop()))
-				SoundsUtil.playShoot()
-			elif hurtInvincible:
-				pass
+	elif obj.type==constants.goomba||obj.type==constants.koopa\
+		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\
+		||obj.type==constants.beetle||obj.type==constants.flyingfish||\
+		obj.type==constants.cheapcheap||obj.type==constants.bloober\
+		||obj.type==constants.plant||obj.type==constants.spiny:
+			if! obj._dead:
+				if invincible:
+					if obj.type==constants.plant:
+						obj.hit()
+					else:	
+						obj.startDeathJump(constants.right)
+					Game.addScore(Vector2(position.x,getTop()))
+					SoundsUtil.playShoot()
+				elif !hurtInvincible:
+					if big:
+						big2Small()
+						setHurtInvincible()
+					else:	
+						startDeathJump()	
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
 		getItem(obj)
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.cheapcheap||obj.type==constants.bloober||obj.type==constants.hammer\
-	||obj.type==constants.plant:
+	||obj.type==constants.hammer:
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -1244,20 +1296,20 @@ func jumpOnEnemy(obj):
 			Game.addScore(Vector2(position.x,getTop()))
 			SoundsUtil.playShoot()
 		else:
-			if obj.type!=constants.plant||obj.type!=constants.spiny:	
-				obj.jumpedOn()
-				if combo<constants.scoreList.size():
-					Game.addScore(position,constants.scoreList[combo])
-					combo+=1
-				else:
-					Game.addLive(position,playerId)
-					SoundsUtil.playItem1up()
-					pass	
-				SoundsUtil.playStomp()	
-				yVel=- min(constants.marioJumpMinSoeed,(abs(yVel)-abs(yVel)/3)) 
+#			if obj.type!=constants.plant||obj.type!=constants.spiny:	
+			obj.jumpedOn()
+			if combo<constants.scoreList.size():
+				Game.addScore(position,constants.scoreList[combo])
+				combo+=1
 			else:
-				
+				Game.addLive(position,playerId)
+				SoundsUtil.playItem1up()
 				pass	
+			SoundsUtil.playStomp()	
+			yVel=- min(constants.marioJumpMinSoeed,(abs(yVel)-abs(yVel)/3)) 
+#			else:
+#
+#				pass	
 	pass
 
 #动画

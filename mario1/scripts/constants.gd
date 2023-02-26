@@ -77,7 +77,7 @@ const leftAndRight='leftAndRight'
 const justRight='justRight'
 const platformIdle='platformIdle'
 const platformFall='platformFall'
-
+const platformJustDown='platformJustDown'
 
 #乌贼的状态
 const upward='upward'
@@ -213,7 +213,7 @@ const up="up"
 #const jumpSpeed=400	#跳跃高度
 
 #敌人的数据
-const enemyGravity=1700
+const enemyGravity=1800
 const enemyJumpGravity=1000
 const enemyMaxVel=900
 const bowserGravity=300
@@ -254,7 +254,7 @@ const tilesType=['del',"mario","goomba","koopa","brick","pipe"
 			"pipeIn",'platform','mushroom','mushroom1up','fireflower','star',
 			'spinFireball','pipeOut','bridge','bowser','figures','axe','jumpingBoard',
 			'cheapcheap','bloober','podoboo','lakitu','cannon','hammerBro',
-			'staticPlatform','linkPlatform','vine']
+			'staticPlatform','linkPlatform','vine','beetle']
 
 #图块 所有的图块
 #const tiles=['del',"mario","goomba","koopa","brick","pipe"
@@ -443,6 +443,36 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'layer':0,
+	},
+	'beetle':{
+		"type": "beetle",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'beetle1':{
+		"type": "beetle",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
+	'beetle2':{
+		"type": "beetle",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		'dir': 'left',
+		"offsetX":0,
+		"offsetY":0,
 		'layer':0,
 	},
 	'cheapcheap':{
@@ -854,7 +884,7 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
-		'lens':1,
+		'lens':3,
 		'platformType':"moveDown",
 		'dir':up,
 		'speed':100,
@@ -867,9 +897,22 @@ const tilesAttribute={
 		"y": 0,
 		"offsetX":0,
 		"offsetY":0,
-		'lens':1,
+		'lens':3,
 		'platformType':"leftAndRight",
 		'dir':left,
+		'speed':100,
+		'layer':0,
+	},
+	'platformRight':{
+		"type": "platform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'platformType':"leftAndRight",
+		'dir':right,
 		'speed':100,
 		'layer':0,
 	},
@@ -884,6 +927,17 @@ const tilesAttribute={
 		'status':'justRight',
 		'layer':0,
 	},
+	'platformDown':{
+		"type": "staticPlatform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'status':'platformJustDown',
+		'layer':0,
+	},
 	'linkPlatform':{
 		"type": "linkPlatform",
 		"spriteIndex": 0,
@@ -892,6 +946,8 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'distance':3,
+		'leftHeight':3,
+		'rightHeight':3,
 		'layer':0,
 	},
 	'linkPlatform1':{
@@ -902,6 +958,8 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'distance':3,
+		'leftHeight':3,
+		'rightHeight':3,
 		'layer':0,
 	},
 	'linkPlatform2':{
@@ -912,6 +970,8 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'distance':3,
+		'leftHeight':3,
+		'rightHeight':3,
 		'layer':0,
 	},
 	'linkPlatform3':{
@@ -922,6 +982,8 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'distance':3,
+		'leftHeight':3,
+		'rightHeight':3,
 		'layer':0,
 	},
 	"box": {

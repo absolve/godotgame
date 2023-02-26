@@ -11,7 +11,7 @@ func _ready():
 	mask=[constants.fireball,constants.box,constants.brick
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
 		constants.beetle]
-	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
+	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.enemyGravity
 	type=constants.beetle
@@ -36,7 +36,6 @@ func _update(delta):
 		if reviveTime-reviveStartTime<200:
 			status=constants.revive
 			animation("revive")	
-		pass
 	elif status==constants.stop:
 		pass
 	elif status==constants.revive:
@@ -102,6 +101,13 @@ func resume():
 	if status!=constants.dead&&status!=constants.deadJump:
 		active=true
 
+func turnLeft():
+	.turnLeft()
+	ani.flip_h=false	
+
+func turnRight():
+	.turnRight()
+	ani.flip_h=true	
 
 func animation(type):
 	if type=="walk":
@@ -131,7 +137,12 @@ func animation(type):
 			ani.play("revive_grey")	
 		elif spriteIndex==3:
 			ani.play("revive_red")		
-
+	if dir==constants.left:
+		ani.flip_h=false
+	elif dir==constants.right:
+		ani.flip_h=true	
+	
+	
 
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -170,8 +181,7 @@ func leftCollide(obj):
 				SoundsUtil.playStomp()			
 		else:	
 			turnRight()
-#			return true
-	pass
+
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:

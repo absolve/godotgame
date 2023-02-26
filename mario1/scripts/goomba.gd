@@ -10,7 +10,7 @@ func _ready():
 	mask=[constants.brick,constants.box,constants.platform,
 		constants.fireball,constants.pipe,constants.koopa,constants.goomba]
 	._ready()
-	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
+	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 #	gravity=constants.enemyGravity
 	type=constants.goomba
 #	maxYVel=constants.enemyMaxVel #y轴最大速度

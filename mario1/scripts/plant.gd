@@ -39,6 +39,8 @@ func hit():
 	_dead=true
 	destroy=true
 
+
+
 func _update(delta):
 	if status==constants.plantOut:
 		if position.y>oldYPos:

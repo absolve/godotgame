@@ -425,7 +425,7 @@ func _draw():
 			draw_line(Vector2(0,i*blockSize),Vector2(blockSize*mapWidthSize,i*blockSize),
 			Color.gray,0.5,true)	
 		for i in bgTiles+allTiles:
-			if i.type=='goomba'||i.type=='axe':
+			if i.type=='goomba'||i.type=='axe'||i.type=='beetle':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
 				pass

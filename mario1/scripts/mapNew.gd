@@ -42,6 +42,7 @@ var staticPlatform=preload("res://scenes/staticPlatform.tscn")
 var linkPlatform=preload("res://scenes/linkPlatform.tscn")
 var fire=preload("res://scenes/fire.tscn")
 var bulletBill=preload("res://scenes/bulletBill.tscn")
+var beetle=preload("res://scenes/beetle.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -882,7 +883,8 @@ func loadMapFile(fileName:String):
 			elif i['type']=='goomba' || i['type']=='koopa'||\
 				i['type']==constants.plant||i['type']=='bowser'||\
 				i['type']=='cheapcheap'||i['type']=='bloober'||\
-				i['type']=='lakitu'||i['type']=='hammerBro':
+				i['type']=='lakitu'||i['type']=='hammerBro'||\
+				i['type']==constants.beetle:
 				i['init']=false
 				enemyList.append(i)
 			elif i['type']=='castleFlag':
@@ -949,6 +951,7 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				temp.distance=int(i['distance'])*32
+				temp.leftHeight=int(i['leftHeight'])
 				_obj.add_child(temp)
 				
 		file.close()
@@ -1062,6 +1065,15 @@ func addEnemy(obj):
 		temp.dir=obj['dir']
 		if obj.has('ySpeed'):
 			temp.ySpeed=int(obj['ySpeed'])
+		_obj.add_child(temp)
+	elif obj.type==constants.beetle:
+		var temp =beetle.instance()
+		temp.position.x=obj['x']*blockSize+blockSize/2
+		temp.position.y=obj['y']*blockSize+blockSize/2
+		temp.offsetX=int(obj['offsetX'])
+		temp.offsetY=int(obj['offsetY'])
+		temp.spriteIndex=obj['spriteIndex']
+		temp.dir=obj['dir']
 		_obj.add_child(temp)
 	elif obj.type==constants.bowser:
 		var temp=bowser.instance()
@@ -1342,19 +1354,17 @@ func addWarpZoneMsg():
 	else:
 		var temp= label.instance()
 		temp.setLabel("welcome to warp zone!")
-		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*2
-		temp.position.y=warpZone[0].y*blockSize-blockSize*4
+		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*3
+		temp.position.y=warpZone[0].y*blockSize-blockSize*5
 		_obj.add_child(temp)
 		
 	for i in warpZone:
 		var temp= label.instance()
 		temp.setLabel(i.warpzoneNum)
 		temp.position.x=i.x*blockSize
-		temp.position.y=i.y*blockSize-blockSize*2
+		temp.position.y=i.y*blockSize-blockSize*3
 		_obj.add_child(temp)
 	pass
-
-
 
 
 func getObj():

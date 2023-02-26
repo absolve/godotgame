@@ -20,7 +20,10 @@ func _ready():
 	type=constants.vine
 	rect=Rect2(Vector2(-4,-16),Vector2(8,32))
 	var temp=Sprite.new()
-	temp.texture=vine1
+	if spriteIndex==0:
+		temp.texture=vine1
+	elif spriteIndex==1:
+		temp.texture=vine3
 	temp.position=Vector2(0,lens.get_child_count()*32)
 	lens.add_child(temp)
 	yVel=-speed
@@ -39,7 +42,10 @@ func getBottom():
 func addVine():
 #	print('addVine')
 	var temp=Sprite.new()
-	temp.texture=vine2
+	if spriteIndex==0:
+		temp.texture=vine2
+	elif spriteIndex==1:	
+		temp.texture=vine4
 	temp.position=Vector2(0,lens.get_child_count()*32)
 	lens.add_child(temp)
 #	rect=Rect2(Vector2(-16,-16),Vector2(32,lens.get_child_count()*32))

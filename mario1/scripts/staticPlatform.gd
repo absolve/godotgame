@@ -27,8 +27,8 @@ func _ready():
 		temp.centered=false
 		temp.position=Vector2(-32*lens/2+i*32,-8)
 		list.add_child(temp)
-	pass
-
+	if status==constants.platformJustDown:
+		acceleration=200
 
 func _update(delta):
 	if status==constants.platformIdle:
@@ -65,4 +65,17 @@ func _update(delta):
 						i.position.x+=xVel*delta
 						
 		position.x+=xVel*delta	
-
+	elif status==constants.platformJustDown:
+		startMove=false
+		for i in Game.getObj().get_children():
+			if i.type==constants.mario&&i.status!=constants.jump:
+				if i.getRight()>position.x-rect.size.x/2&&i.getLeft()<position.x+rect.size.x/2:
+					if i.getBottom()>position.y-rect.size.y/2-0.1&&\
+						i.getBottom()<position.y-rect.size.y/2+0.1:
+						i.position.y=position.y-i.getSizeY()/2+yVel*delta
+						startMove=true
+		if startMove:
+			yVel+=acceleration*delta
+			position.y+=yVel*delta
+		else:
+			yVel=0	

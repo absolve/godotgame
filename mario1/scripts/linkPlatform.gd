@@ -11,8 +11,8 @@ var spriteIndex=0
 var rightPlatform
 var leftPlatform
 var lineColor={"0":"#ffcec6","1":'#bbefee','2':'#ffffff','3':'#bff9ad'}
-var leftHeight=3
-var rightHeight=3
+var leftHeight=3	#左边高度
+var rightHeight=3   #右边高度
 var lens=3
 var leftCount=0
 var rightCount=0
@@ -103,7 +103,5 @@ func rightCallback(i):
 func _draw():
 	draw_line(left.position-Vector2(0,6),right.position-Vector2(0,6),Color(lineColor['0']),5)
 	
-	
 	draw_line(left.position-Vector2(16,0),Vector2(left.position.x,leftPlatformYPos)-Vector2(16,-8),Color(lineColor['0']),5)	
 	draw_line(right.position+Vector2(16,0),Vector2(right.position.x,rightPlatformYPos)+Vector2(16,-8),Color(lineColor['0']),5)
-	pass
