@@ -119,7 +119,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/1-2.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -192,13 +192,13 @@ func _ready():
 		for i in marioList:
 			var temp = vine.instance()
 			temp.position.x=i.position.x
-			temp.position.y=i.position.y+blockSize
+			temp.position.y=get_viewport_rect().size.y+blockSize/2
 			temp.length=5
 			_obj.add_child(temp)
 			i.setAutoGrabVine(temp)
 			i.position.y=get_viewport_rect().size.y+i.getSizeY()#自动设置成屏幕外
 			break
-
+		SoundsUtil.playItem()
 		
 	if castleBridge.size()>0:
 		castleBridge.sort_custom(self,'bridgeSort')
@@ -255,7 +255,7 @@ func _physics_process(delta):
 					bowserDrop()	
 				i.queue_free()	
 		elif i.type==constants.staticPlatform:
-			if i.getLeft()>_camera.position.x+winWidth*1.6:
+			if i.getLeft()>mapWidthSize*blockSize:
 				i.queue_free()
 			if i.getTop()>winHeight:
 				i.queue_free()
@@ -343,6 +343,8 @@ func _physics_process(delta):
 						pass
 	#对区域进行判断					
 	flyingFishStart=false
+	fireStart=false
+	bulletStart=false
 	for i in marioList:
 		if is_instance_valid(i):
 			for y in areaList:
@@ -381,7 +383,7 @@ func _physics_process(delta):
 		fireTimer+=1
 		if fireTimer>fireDelay:
 			fireTimer=0
-			fireDelay=randi()%60+120
+			fireDelay=randi()%60+200
 			var temp=fire.instance()
 			temp.position.x=_camera.get_camera_screen_center().x*2+temp.rect.size.x/2
 			temp.position.y=temp.rect.size.y/2+randi()%(15*32)
@@ -952,6 +954,7 @@ func loadMapFile(fileName:String):
 				temp.spriteIndex=i['spriteIndex']
 				temp.distance=int(i['distance'])*32
 				temp.leftHeight=int(i['leftHeight'])
+				temp.rightHeight=int(i['rightHeight'])
 				_obj.add_child(temp)
 				
 		file.close()
@@ -1065,6 +1068,8 @@ func addEnemy(obj):
 		temp.dir=obj['dir']
 		if obj.has('ySpeed'):
 			temp.ySpeed=int(obj['ySpeed'])
+		if obj.has('yDir'):
+			temp.yDir=obj['yDir']
 		_obj.add_child(temp)
 	elif obj.type==constants.beetle:
 		var temp =beetle.instance()

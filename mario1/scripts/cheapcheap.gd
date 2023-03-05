@@ -41,6 +41,10 @@ func startDeathJump(_dir=constants.left):
 	_dead=true
 	gravity=constants.deathJumpGravity
 	z_index=5
+	yVel=0
+
+func jumpedOn():
+	startDeathJump()
 
 
 func pause():
@@ -72,10 +76,12 @@ func _update(delta):
 		animation('fly')
 		pass
 	elif status==constants.deadJump:
-		yVel=50
-#		position.x+=xVel*delta
-		position.y+=yVel*delta
-		pass
+		if type==constants.cheapcheap:
+			yVel=50
+			position.y+=yVel*delta
+		elif type==constants.flyingfish:
+			deathJump(delta)	
+
 		
 func animation(type):
 	if type=='swim' || type=='fly':

@@ -297,6 +297,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="layer"]
+margin_right = 200.0
+margin_bottom = 70.0
+window_title = "请确认..."
+dialog_text = "是否退出"
+
 [node name="title" parent="." instance=ExtResource( 8 )]
 visible = false
 
@@ -311,3 +317,4 @@ visible = false
 [connection signal="file_selected" from="layer/FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="confirmed" from="layer/loadDialog" to="." method="_on_loadDialog_confirmed"]
 [connection signal="file_selected" from="layer/loadDialog" to="." method="_on_loadDialog_file_selected"]
+[connection signal="confirmed" from="layer/ConfirmationDialog" to="." method="_on_ConfirmationDialog_confirmed"]

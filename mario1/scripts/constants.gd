@@ -322,6 +322,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100,  #用来设置飞行状态时的一个速度
+		'yDir':down,
 		'layer':0,
 	},
 	"koopa01": {
@@ -333,6 +334,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopa02": {
@@ -344,6 +346,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopa03": {
@@ -355,6 +358,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopafly04": {
@@ -366,6 +370,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopafly05": {
@@ -377,6 +382,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopafly06": {
@@ -388,6 +394,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopafly07": {
@@ -399,6 +406,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopajump08": {
@@ -410,6 +418,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopajump09": {
@@ -421,6 +430,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopajump10": {
@@ -432,6 +442,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	"koopajump11": {
@@ -443,6 +454,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'ySpeed':100, 
+		'yDir':down,
 		'layer':0,
 	},
 	'beetle':{
@@ -2428,6 +2440,54 @@ const tilesAttribute={
 	"bg80": {
 		"type": "bg",
 		"spriteIndex": 80,
+		"x": 0,
+		"y": 0
+	},
+	"bg81": {
+		"type": "bg",
+		"spriteIndex": 81,
+		"x": 0,
+		"y": 0
+	},
+	"bg82": {
+		"type": "bg",
+		"spriteIndex": 82,
+		"x": 0,
+		"y": 0
+	},
+	"bg83": {
+		"type": "bg",
+		"spriteIndex": 83,
+		"x": 0,
+		"y": 0
+	},
+	"bg84": {
+		"type": "bg",
+		"spriteIndex": 84,
+		"x": 0,
+		"y": 0
+	},
+	"bg85": {
+		"type": "bg",
+		"spriteIndex": 85,
+		"x": 0,
+		"y": 0
+	},
+	"bg86": {
+		"type": "bg",
+		"spriteIndex": 86,
+		"x": 0,
+		"y": 0
+	},
+	"bg87": {
+		"type": "bg",
+		"spriteIndex": 87,
+		"x": 0,
+		"y": 0
+	},
+	"bg88": {
+		"type": "bg",
+		"spriteIndex": 88,
 		"x": 0,
 		"y": 0
 	},

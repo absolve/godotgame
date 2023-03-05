@@ -64,6 +64,7 @@ onready var _status=$layer/Control/tab/common/vbox/status
 onready var _subLevel=$layer/Control/tab/common/vbox/subLevel
 onready var _bonusLevel=$layer/Control/tab/common/vbox/bonusLevel
 onready var _underwater=$layer/Control/tab/common/vbox/underwater
+onready var _confirmationDialog=$layer/ConfirmationDialog
 
 #onready var _marioList=$mario
 #onready var _brickList=$brick
@@ -80,6 +81,7 @@ onready var _fps=$layer/fps
 
 
 func _ready():
+#	get_tree().set_auto_accept_quit(false)
 	VisualServer.set_default_clear_color(Color(0.1,0.1,0.1,0.1))
 	_itemList.connect("itemSelect",self,'selectItem')
 #	Game.setMap(self)
@@ -515,6 +517,12 @@ func _draw():
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.7))
 
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+#		get_tree().quit() 
+#		if !_confirmationDialog.visible:
+#			_confirmationDialog.popup_centered()
+		pass
 
 func _on_hide_pressed():
 	_toolBtn.show()
@@ -606,4 +614,9 @@ func _on_FileDialog_file_selected(path):
 		save2File(path)
 	else:
 		print("没有当前文件")
+	pass # Replace with function body.
+
+
+func _on_ConfirmationDialog_confirmed():
+	get_tree().quit()
 	pass # Replace with function body.

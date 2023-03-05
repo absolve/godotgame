@@ -35,6 +35,7 @@ func _ready():
 	leftPlatform.lens=lens
 	leftPlatform.linkPlatform=self
 	Game.addObj(leftPlatform)
+	leftPlatformYPos=leftPlatform.position.y
 	
 	rightPlatform=staticPlatform.instance()
 	rightPlatform.position.x=distance/2+position.x+16
@@ -43,7 +44,7 @@ func _ready():
 	rightPlatform.linkPlatform=self
 	rightPlatform.side=constants.right
 	Game.addObj(rightPlatform)
-	
+	rightPlatformYPos=rightPlatform.position.y
 	pass
 
 func _update(delta):

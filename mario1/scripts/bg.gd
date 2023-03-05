@@ -8,7 +8,7 @@ func _ready():
 	active=false
 	debug=false
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	if spriteIndex>=0&&spriteIndex<=80:
+	if spriteIndex>=0&&spriteIndex<=88:
 		ani.play(str(spriteIndex))
 
 	else:
