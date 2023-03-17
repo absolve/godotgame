@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
+[ext_resource path="res://scenes/treeUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://sprites/logo.png" type="Texture" id=2]
 [ext_resource path="res://sprites/active_option.png" type="Texture" id=3]
 [ext_resource path="res://scripts/main.gd" type="Script" id=4]
@@ -80,3 +81,14 @@ uppercase = true
 position = Vector2( 180, 280 )
 texture = ExtResource( 3 )
 centered = false
+
+[node name="treeUI" parent="." instance=ExtResource( 1 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 216.0
+margin_top = 56.0
+margin_right = 216.0
+margin_bottom = 56.0

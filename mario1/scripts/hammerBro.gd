@@ -158,18 +158,20 @@ func animation(type):
 
 
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		if jumpDir!='':
-			return false
-		else:
-			return true	
+#	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+#		if jumpDir!='':
+#			return false
+#		else:
+#			return true	
+	return true	
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		if jumpDir!='':
-			return false
-		else:
-			return true		
+#	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+#		if jumpDir!='':
+#			return false
+#		else:
+#			return true		
+	return true	
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:

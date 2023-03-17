@@ -6,6 +6,7 @@ onready var _indicator=$indicator
 onready var _1p=$p1
 onready var _2p=$p2
 onready var _selectworld=$selectworld
+onready var _treeui=$treeUI
 
 var player=1	#默认选择1玩家  3地图编辑 4选择地图
 var path="res://levels/show.json"
@@ -14,15 +15,18 @@ var tick=22
 var status=constants.empty
 var level='1-1' #当前的关卡
 
+
 func _ready():
 	var scene=load("res://scenes/mapNew.tscn").instance()
-#	scene.mode='show'
 	scene.isShow=true
 	add_child(scene)
 	scene.loadMapFile(path)
 	scene.show_behind_parent=true
 	scene.set_process_input(false)
 	scene.z_index=-1
+	
+	_treeui.connect("selectMap",self,"selectMap")
+	_treeui.connect("cancel",self,"cancel")
 	pass 
 
 func startGame():
@@ -41,7 +45,7 @@ func startGame():
 	var scene=load("res://scenes/menu.tscn")
 	var temp=scene.instance()
 	Game.playerData['score']=0
-	Game.playerData['level']="1-1"
+	Game.playerData['level']=level
 	Game.playerData['lives']=3
 	Game.playerData['coin']=0
 	Game.playerData['mario']['big']=false
@@ -59,6 +63,7 @@ func editMap():
 	get_tree().get_root().add_child(temp)
 	set_process_input(true)
 	pass
+
 
 func _physics_process(delta):
 	if status==constants.startState:
@@ -78,7 +83,6 @@ func _physics_process(delta):
 	pass
 		
 func _input(event):
-#	if event is InputEventKey:
 	if Input.is_action_just_pressed("ui_down"):
 		if player==1:
 			player=2
@@ -105,27 +109,13 @@ func _input(event):
 		elif player==3:
 			editMap()	
 		elif player==4:	
-			pass
-#			status=constants.startState
-#			if player==1:
-#				_1p.visible=false		
-#			elif player==2:
-#				_2p.visible=false
-#
-#			set_process_input(false)
-#			SoundsUtil.playKonamiMusic()
-#			yield(SoundsUtil.konami,"finished")
-#			var scene=load("res://scenes/menu.tscn")
-#			var temp=scene.instance()
-#			Game.playerData['score']=0
-#			Game.playerData['level']="1-1"
-#			Game.playerData['lives']=3
-#			Game.playerData['coin']=0
-#			Game.playerData['mario']['big']=false
-#			Game.playerData['mario']['fire']=false
-#
-#			queue_free()
-#
-#			get_tree().get_root().add_child(temp)
-#			set_process_input(true)
+			_treeui.visible=true
+
+func selectMap(level):
+	print(level)
+	if level!='':
+		self.level=level
+		_treeui.visible=false
 	
+func cancel():
+	_treeui.visible=false
