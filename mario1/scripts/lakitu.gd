@@ -7,6 +7,8 @@ var timer=0
 var throwDelay=240  #每次扔东西的间隔
 var throwHideTime=70 #扔完后躲起来的时间
 var maxCount=3
+var endX= 0 #最后的距离
+var marioEndX=false #马里奥超过了最后的位置
 
 var egg=preload("res://scenes/spiny.tscn")
 
@@ -48,51 +50,61 @@ func resume():
 
 func _update(delta):
 	if status==constants.lakituIdle:
-		timer+=1
-		if timer>throwDelay:
-			timer=0
-			addEgg()
-			
-		if timer>throwDelay-throwHideTime:
-			animation('idle')
-		else:
-			animation('throw')
-		
 		if Game.getMario().size()>0:
 			var m= Game.getMario()[0]
 			if is_instance_valid(m) && m.status!=constants.deadJump:
-				var distance=m.position.x-position.x
-				if distance<0:
-					if abs(distance)>constants.lakituDistance:
-						if dir==constants.left:
-							if m.xVel<0:
-								xVel=-max(xSpeed,abs(m.xVel))
-							else:
-								xVel=-xSpeed
-						elif dir==constants.right:
-							dir=constants.left					
-					else:
-						if dir==constants.right:
-							xVel=xSpeed
-						elif dir==constants.left:
-							xVel=-xSpeed
-				elif distance>0:
-					if abs(distance)>constants.lakituDistance:
-						if dir==constants.right:
-							if  m.xVel>0:
-								xVel=max(xSpeed,abs(m.xVel))
-							else:
+				if m.position.x>endX:
+					xVel=-xSpeed
+					marioEndX=true
+				else:	
+					marioEndX=false
+					var distance=m.position.x-position.x
+					if distance<0:
+						if abs(distance)>constants.lakituDistance:
+							if dir==constants.left:
+								if m.xVel<0:
+									xVel=-max(xSpeed,abs(m.xVel))
+								else:
+									xVel=-xSpeed
+							elif dir==constants.right:
+								dir=constants.left					
+						else:
+							if dir==constants.right:
 								xVel=xSpeed
-						elif dir==constants.left:
-							dir=constants.right	
-					else:
-						if dir==constants.right:
-							xVel=xSpeed
-						elif dir==constants.left:
-							xVel=-xSpeed
+							elif dir==constants.left:
+								xVel=-xSpeed
+					elif distance>0:
+						if abs(distance)>constants.lakituDistance:
+							if dir==constants.right:
+								if  m.xVel>0:
+									xVel=max(xSpeed,abs(m.xVel))
+								else:
+									xVel=xSpeed
+							elif dir==constants.left:
+								dir=constants.right	
+						else:
+							if dir==constants.right:
+								xVel=xSpeed
+							elif dir==constants.left:
+								xVel=-xSpeed
 								
-			if position.x+xVel*delta<0:
+			if !marioEndX &&position.x+xVel*delta<0:
 				dir=constants.right
+	
+		timer+=1
+		if timer>throwDelay:
+			timer=0
+			if !marioEndX:
+				addEgg()
+		
+		if 	marioEndX:
+			animation('idle')
+			
+		else:	
+			if timer>throwDelay-throwHideTime:
+				animation('idle')
+			else:
+				animation('throw')
 	elif status==constants.deadJump:
 		yVel+=gravity*delta	
 		position.y+=yVel*delta	

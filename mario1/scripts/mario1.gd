@@ -101,7 +101,8 @@ func _ready():
 		constants.axe,constants.figures,constants.fireball,constants.bowser,
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
 		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
-		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny]
+		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny,
+		constants.podoboo]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -880,13 +881,13 @@ func swim(delta):
 #		gravity=constants.marioGravity
 		status=constants.walk		
 	if getTop()<constants.underwaterMaxHeight:
-		yVel=10
+		yVel=20
 	
 
 #判断右边碰撞
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
-		||obj.type==constants.cannon:
+		||obj.type==constants.cannon||obj.type==constants.jumpingBoard:
 
 		#判断是不是跨过一个间隙
 		if !Game.checkMapBrickIndex(obj.localx-1,\
@@ -902,7 +903,10 @@ func rightCollide(obj):
 			return false
 		else:
 			if xVel!=0:
-				return true	
+				if obj.type==constants.jumpingBoard && yVel>0:
+					return false
+				else:	
+					return true	
 	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill\
 	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
 		if! obj._dead:
@@ -973,7 +977,7 @@ func rightCollide(obj):
 				else:	
 					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.hammer:
+	||obj.type==constants.hammer||obj.type==constants.podoboo:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -998,7 +1002,7 @@ func rightCollide(obj):
 #判断左边碰撞
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
-	||obj.type==constants.cannon:
+	||obj.type==constants.cannon||obj.type==constants.jumpingBoard:
 		if!Game.checkMapBrickIndex(obj.localx+1,\
 			obj.localy)&&yVel>0&& getBottom()-obj.getTop()<constants.boxHeight:
 			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
@@ -1012,7 +1016,10 @@ func leftCollide(obj):
 			return false
 		else:
 			if xVel!=0:
-				return true	
+				if obj.type==constants.jumpingBoard && yVel>0:
+					return false
+				else:	
+					return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill\
 	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
 		if! obj._dead:
@@ -1071,7 +1078,7 @@ func leftCollide(obj):
 				else:	
 					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-		||obj.type==constants.hammer:
+		||obj.type==constants.hammer||obj.type==constants.podoboo:
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()
@@ -1150,7 +1157,7 @@ func floorCollide(obj):
 				else:	
 					startDeathJump()	
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.hammer:
+	||obj.type==constants.hammer||obj.type==constants.podoboo:
 #		print(obj.type)
 		if !invincible&&!hurtInvincible:
 			if big:
@@ -1198,7 +1205,7 @@ func ceilcollide(obj):#上方的判断
 		obj.type==constants.bigCoin:
 		getItem(obj)
 	elif obj.type==constants.spinFireball||obj.type==constants.bowser||obj.type==constants.fire\
-	||obj.type==constants.hammer:
+	||obj.type==constants.hammer||obj.type==constants.podoboo:
 		if !invincible&&!hurtInvincible:
 			if big:
 				big2Small()

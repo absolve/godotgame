@@ -18,7 +18,7 @@ func _ready():
 	ani.play("default")
 	if dir==constants.right:
 		ani.flip_h=true
-	pass
+	
 
 func _update(delta):
 	if status==constants.flying:

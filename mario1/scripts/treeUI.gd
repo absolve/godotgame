@@ -2,9 +2,9 @@ extends Control
 
 #var mapConfig
 
-onready var _tree=$vbox/Tree
-onready var okbtn=$vbox/HFlow/ok
-onready var cancelbtn=$vbox/HFlow/cancel
+onready var _tree=$Panel/vbox/Tree
+onready var okbtn=$Panel/vbox/HFlow/ok
+onready var cancelbtn=$Panel/vbox/HFlow/cancel
 var mapConfig="res://levels/mapInfo.ini"  #地图
 
 signal selectMap 

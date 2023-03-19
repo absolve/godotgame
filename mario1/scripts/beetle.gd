@@ -145,7 +145,8 @@ func animation(type):
 	
 
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+	||obj.type==constants.jumpingBoard:
 		turnLeft()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
@@ -165,7 +166,8 @@ func rightCollide(obj):
 	pass
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+	||obj.type==constants.jumpingBoard:
 		turnRight()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:

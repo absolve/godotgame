@@ -441,7 +441,6 @@ func _draw():
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
 				if i.content!=constants.empty&&i.content!='':
-#					print(i.content)
 					if constants.mapTiles.has(i.content):
 						draw_texture(constants.mapTiles[i.content]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))	
 					elif i.content.begins_with('coins'):
@@ -578,7 +577,8 @@ func _on_loadDialog_confirmed():
 #编辑属性
 func _on_edit_pressed():
 	for i in allTiles:
-		if i["x"]==selectedItem["x"]&&i["y"]==selectedItem["y"]:
+		if i["x"]==selectedItem["x"]&&i["y"]==selectedItem["y"]&& \
+		selectItemType==i["type"]:
 			for z in _itemAttr.list.get_children():
 				if z.key in constants.tilesAttributeType.keys(): #需要设置整形的属性
 					i[z.key]=int(z.getValue())

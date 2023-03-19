@@ -1,36 +1,48 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/treeUI.gd" type="Script" id=1]
 [ext_resource path="res://ui/theme.tres" type="Theme" id=2]
+[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=3]
 
 [node name="treeUI" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 
-[node name="vbox" type="VBoxContainer" parent="."]
-margin_right = 216.0
-margin_bottom = 352.0
+[node name="Panel" type="Panel" parent="."]
+margin_right = 221.0
+margin_bottom = 356.0
 
-[node name="Tree" type="Tree" parent="vbox"]
+[node name="vbox" type="VBoxContainer" parent="Panel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -108.0
+margin_top = -176.0
+margin_right = 108.0
+margin_bottom = 176.0
+
+[node name="Tree" type="Tree" parent="Panel/vbox"]
 margin_right = 216.0
 margin_bottom = 325.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
 
-[node name="HFlow" type="HBoxContainer" parent="vbox"]
+[node name="HFlow" type="HBoxContainer" parent="Panel/vbox"]
 margin_top = 329.0
 margin_right = 216.0
 margin_bottom = 352.0
 
-[node name="ok" type="Button" parent="vbox/HFlow"]
+[node name="ok" type="Button" parent="Panel/vbox/HFlow"]
 margin_right = 106.0
 margin_bottom = 23.0
 size_flags_horizontal = 3
 theme = ExtResource( 2 )
 text = "OK"
 
-[node name="cancel" type="Button" parent="vbox/HFlow"]
+[node name="cancel" type="Button" parent="Panel/vbox/HFlow"]
 margin_left = 110.0
 margin_right = 216.0
 margin_bottom = 23.0
@@ -38,5 +50,5 @@ size_flags_horizontal = 3
 theme = ExtResource( 2 )
 text = "CANCEL"
 
-[connection signal="pressed" from="vbox/HFlow/ok" to="." method="_on_ok_pressed"]
-[connection signal="pressed" from="vbox/HFlow/cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Panel/vbox/HFlow/ok" to="." method="_on_ok_pressed"]
+[connection signal="pressed" from="Panel/vbox/HFlow/cancel" to="." method="_on_cancel_pressed"]

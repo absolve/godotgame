@@ -57,7 +57,7 @@ func _update(delta):
 			if position.y<=32*3:
 				jumpDir=constants.down
 				jumpStartY=position.y
-			elif position.y>=32*12:
+			elif position.y>=32*10:
 				jumpDir=constants.up
 			else:
 				if randi()%5>=2:
@@ -109,10 +109,16 @@ func _update(delta):
 
 func startDeathJump(_dir=constants.left):
 	dir=_dir
-	.startDeathJump()
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
+	status=constants.deadJump
+	if dir==constants.left:
+		xVel=-45
+	else:
+		xVel=45
+	gravity=constants.deathJumpGravity
+	z_index=5
 	_dead=true
 	active=false
 	
@@ -124,8 +130,10 @@ func throwHammer():
 	temp.spriteIndex=spriteIndex
 	
 	Game.addObj(temp)
-	pass
+	
 
+func jumpedOn():
+	startDeathJump()
 
 func pause():
 	preStatus=status

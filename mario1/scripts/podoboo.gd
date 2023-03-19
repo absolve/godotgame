@@ -42,9 +42,11 @@ func _update(delta):
 func pause():
 	preStatus=status
 	status=constants.stop
-
+	active=false
+	
 func resume():
 	status=preStatus
+	active=true
 	
 func animation(type):
 	if type=='up':

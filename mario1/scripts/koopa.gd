@@ -18,7 +18,7 @@ func _ready():
 #	debug=true
 	mask=[constants.fireball,constants.box,constants.brick
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
-		constants.beetle]
+		constants.beetle,constants.jumpingBoard]
 	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 #	gravity=constants.enemyGravity
 	maxYVel=constants.enemyMaxVel #y轴最大速度
@@ -221,7 +221,8 @@ func animation(type):
 	
 	
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+	||obj.type==constants.jumpingBoard:
 		turnLeft()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
@@ -241,7 +242,8 @@ func rightCollide(obj):
 	pass
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+	||obj.type==constants.jumpingBoard:
 		turnRight()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:

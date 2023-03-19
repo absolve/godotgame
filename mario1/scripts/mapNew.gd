@@ -119,7 +119,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test37.json")
+#	loadMapFile("res://levels/6-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -385,15 +385,18 @@ func _physics_process(delta):
 			fireTimer=0
 			fireDelay=randi()%60+200
 			var temp=fire.instance()
-			temp.position.x=_camera.get_camera_screen_center().x*2+temp.rect.size.x/2
-			temp.position.y=temp.rect.size.y/2+randi()%(15*32)
+			temp.position.x=_camera.get_camera_screen_center().x+winWidth/2+32
+#			print(_camera.get_camera_screen_center().x)
+#			print(_camera.position.x+20*32)
+			temp.position.y=temp.rect.size.y/2+randi()%(14*32)
 			if marioList.size()>0:
 				var mario1=marioList[0]
 				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
 					temp.position.y=rand_range(max(32,mario1.position.y-32*4),
 						min(32*14,mario1.position.y+32*2)) 
-					_obj.add_child(temp)			
-			print('start fireFish')
+					_obj.add_child(temp)	
+					
+			print('start fire')
 	
 	#炮弹
 	if bulletStart:
@@ -1103,14 +1106,21 @@ func addEnemy(obj):
 		temp.offsetY=int(obj['offsetY'])
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)	
-	elif obj.type==constants.lakitu:
-		var temp=lakitu.instance()
-		temp.position.x=obj['x']*blockSize+blockSize/2
-		temp.position.y=obj['y']*blockSize+blockSize/2
-		temp.offsetX=int(obj['offsetX'])
-		temp.offsetY=int(obj['offsetY'])
-		temp.spriteIndex=obj['spriteIndex']
-		_obj.add_child(temp)
+	elif obj.type==constants.lakitu:  #判断游戏中是不是已经有了
+		var has=false
+		for i in _obj.get_children():
+			if i.type==constants.lakitu && !i._dead:
+				has=true
+				print('has lakitu')
+		if 	!has:	
+			var temp=lakitu.instance()
+			temp.position.x=obj['x']*blockSize+blockSize/2
+			temp.position.y=obj['y']*blockSize+blockSize/2
+			temp.offsetX=int(obj['offsetX'])
+			temp.offsetY=int(obj['offsetY'])
+			temp.spriteIndex=obj['spriteIndex']
+			temp.endX=int(obj['end'])*blockSize
+			_obj.add_child(temp)
 	elif obj.type==constants.hammerBro:
 		var temp=hammerBro.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
