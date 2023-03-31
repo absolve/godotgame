@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=2]
+[gd_resource type="Theme" load_steps=11 format=2]
 
 [ext_resource path="res://ui/button_normal.tres" type="StyleBox" id=1]
 [ext_resource path="res://ui/button_focused.tres" type="StyleBox" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://ui/panel.tres" type="StyleBox" id=7]
 [ext_resource path="res://ui/panel_popup.tres" type="StyleBox" id=8]
 [ext_resource path="res://fonts/uifont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://ui/tab_bg.tres" type="StyleBox" id=10]
 
 [resource]
 default_font = ExtResource( 9 )
@@ -194,7 +195,7 @@ LineEdit/fonts/font = ExtResource( 9 )
 LineEdit/icons/clear = null
 LineEdit/styles/focus = ExtResource( 2 )
 LineEdit/styles/normal = ExtResource( 6 )
-LineEdit/styles/read_only = ExtResource( 6 )
+LineEdit/styles/read_only = null
 LinkButton/colors/font_color = Color( 0, 0, 0, 1 )
 LinkButton/colors/font_color_hover = Color( 0, 0, 0, 1 )
 LinkButton/colors/font_color_pressed = Color( 0, 0, 0, 1 )
@@ -277,9 +278,9 @@ RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
 ScrollContainer/styles/bg = null
 SpinBox/icons/updown = null
-TabContainer/colors/font_color_bg = Color( 0, 0, 0, 1 )
+TabContainer/colors/font_color_bg = Color( 1, 1, 1, 1 )
 TabContainer/colors/font_color_disabled = Color( 0, 0, 0, 1 )
-TabContainer/colors/font_color_fg = Color( 0, 0, 0, 1 )
+TabContainer/colors/font_color_fg = Color( 1, 1, 1, 1 )
 TabContainer/constants/hseparation = 4
 TabContainer/constants/label_valign_bg = 2
 TabContainer/constants/label_valign_fg = 0
@@ -292,7 +293,7 @@ TabContainer/icons/increment = null
 TabContainer/icons/increment_highlight = null
 TabContainer/icons/menu = null
 TabContainer/icons/menu_highlight = null
-TabContainer/styles/panel = null
+TabContainer/styles/panel = ExtResource( 10 )
 TabContainer/styles/tab_bg = null
 TabContainer/styles/tab_disabled = null
 TabContainer/styles/tab_fg = null

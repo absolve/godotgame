@@ -12,6 +12,7 @@ script = ExtResource( 1 )
 [node name="Panel" type="Panel" parent="."]
 margin_right = 221.0
 margin_bottom = 356.0
+theme = ExtResource( 2 )
 
 [node name="vbox" type="VBoxContainer" parent="Panel"]
 anchor_left = 0.5
@@ -25,19 +26,21 @@ margin_bottom = 176.0
 
 [node name="Tree" type="Tree" parent="Panel/vbox"]
 margin_right = 216.0
-margin_bottom = 325.0
+margin_bottom = 322.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_colors/font_color_selected = Color( 1, 1, 1, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_fonts/font = ExtResource( 3 )
 
 [node name="HFlow" type="HBoxContainer" parent="Panel/vbox"]
-margin_top = 329.0
+margin_top = 327.0
 margin_right = 216.0
 margin_bottom = 352.0
 
 [node name="ok" type="Button" parent="Panel/vbox/HFlow"]
 margin_right = 106.0
-margin_bottom = 23.0
+margin_bottom = 25.0
 size_flags_horizontal = 3
 theme = ExtResource( 2 )
 text = "OK"
@@ -45,7 +48,7 @@ text = "OK"
 [node name="cancel" type="Button" parent="Panel/vbox/HFlow"]
 margin_left = 110.0
 margin_right = 216.0
-margin_bottom = 23.0
+margin_bottom = 25.0
 size_flags_horizontal = 3
 theme = ExtResource( 2 )
 text = "CANCEL"
