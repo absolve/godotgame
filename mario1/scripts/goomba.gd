@@ -98,7 +98,7 @@ func rightCollide(obj):
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
 	||obj.type==constants.jumpingBoard:
-		print(obj.type)
+#		print(obj.type)
 		turnRight()
 		return true
 	elif  obj.type==constants.goomba||obj.type==constants.koopa:

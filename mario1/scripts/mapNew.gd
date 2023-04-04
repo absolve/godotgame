@@ -71,6 +71,7 @@ var isLoadsubLevel=false
 var nextLevel=""  #下一关
 var nextSubLevel="" #下一关 从水管或者树里面出来或者从天上
 var enemyList=[]	#敌人的列表 等屏幕移动后在初始化
+var enemyPosList={} #敌人位置列表
 var marioDeathPos={}  #记录上次死亡的地方
 var checkPoint=[] #检查点 用于判断马里奥死亡后重新复活的位置
 var warpZone=[]	#就是可以跳关的水管
@@ -119,7 +120,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/6-1.json")
+#	loadMapFile("res://levels/1-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -206,6 +207,7 @@ func _ready():
 	_title.setScore(Game.playerData['score'])
 	_title.setCoin(Game.playerData['coin'])
 	_title.setLevel(mapName)
+#	print(enemyPosList)
 
 #排序大到小
 func bridgeSort(a,b):
@@ -327,13 +329,24 @@ func _physics_process(delta):
 					_camera.position.x=0
 				else:
 					_camera.position.x-=abs(mario1.xVel*delta)
-			for e in enemyList:
-				if e['init']:
-					continue
-				if e.x*blockSize+blockSize/2>=_camera.position.x+winWidth && \
-					e.x*blockSize+blockSize/2<=_camera.position.x+winWidth*1.2:
-						addEnemy(e)
-						e['init']=true
+#			for e in enemyList:
+#				if e['init']:
+#					continue
+#				if e.x*blockSize+blockSize/2>=_camera.position.x+winWidth && \
+#					e.x*blockSize+blockSize/2<=_camera.position.x+winWidth*1.2:
+#						addEnemy(e)
+#						e['init']=true
+			#判断屏幕右侧的敌人是否需要添加
+			var startPos=floor((_camera.position.x+winWidth)/blockSize)
+			var endPos=floor((_camera.position.x+winWidth*1.2)/blockSize)
+			for i in range(startPos,endPos+1):
+				if enemyPosList.has(str(i)):
+					for y in enemyPosList[str(i)]:
+						if y['init']:
+							continue
+						else:	
+							addEnemy(y)
+							y['init']=true
 			#判断warpzone
 			if warpZone.size()>0:
 				if !hasAddWarpZone:
@@ -891,6 +904,12 @@ func loadMapFile(fileName:String):
 				i['type']=='lakitu'||i['type']=='hammerBro'||\
 				i['type']==constants.beetle:
 				i['init']=false
+				if enemyPosList.has(str(i['x'])):
+					enemyPosList[str(i['x'])].append(i)
+				else:
+					enemyPosList[str(i['x'])]=[]
+					enemyPosList[str(i['x'])].append(i)
+					
 				enemyList.append(i)
 			elif i['type']=='castleFlag':
 				var temp=castleFlag.instance()
@@ -1043,7 +1062,7 @@ func getCamera():
 
 #添加敌人
 func addEnemy(obj):
-	print('addEnemy',obj.type)
+	print('addEnemy ',obj.type)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -1130,23 +1149,45 @@ func addEnemy(obj):
 		temp.spriteIndex=obj['spriteIndex']
 		_obj.add_child(temp)
 
+#生成当前画面里面的敌人
 func initEnemy():
-	for e in enemyList:
-		if e['init']:
-			continue
-		if e.x*blockSize+blockSize/2>_camera.position.x&& \
-			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
-				e['init']=true
-				addEnemy(e)
+#	for e in enemyList:
+#		if e['init']:
+#			continue
+#		if e.x*blockSize+blockSize/2>_camera.position.x&& \
+#			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
+#				e['init']=true
+#				addEnemy(e)
+	var startPos=floor((_camera.position.x)/blockSize)
+	var endPos=floor((_camera.position.x+winWidth)/blockSize)
+	for i in range(startPos,endPos+1):
+		if enemyPosList.has(str(i)):
+			for y in enemyPosList[str(i)]:
+				if y['init']:
+					continue
+				else:	
+					addEnemy(y)
+					y['init']=true
 
 func initPlantEnemy():
-	for e in enemyList:
-		if e['init']:
-			continue
-		if e.type=='plant' && e.x*blockSize+blockSize/2>_camera.position.x&& \
-			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
-				e['init']=true
-				addEnemy(e)
+#	for e in enemyList:
+#		if e['init']:
+#			continue
+#		if e.type=='plant' && e.x*blockSize+blockSize/2>_camera.position.x&& \
+#			e.x*blockSize+blockSize/2<_camera.position.x+winWidth:
+#				e['init']=true
+#				addEnemy(e)
+	var startPos=floor((_camera.position.x)/blockSize)
+	var endPos=floor((_camera.position.x+winWidth)/blockSize)
+	for i in range(startPos,endPos+1):
+		if enemyPosList.has(str(i)):
+			for y in enemyPosList[str(i)]:
+				if y['init']:
+					continue
+				elif y['type']=='plant':	
+					addEnemy(y)
+					y['init']=true
+	
 			
 func getMario():
 	return marioList
