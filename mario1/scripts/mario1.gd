@@ -102,7 +102,7 @@ func _ready():
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
 		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
 		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny,
-		constants.podoboo]
+		constants.podoboo,constants.lakitu]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -908,7 +908,8 @@ func rightCollide(obj):
 				else:	
 					return true	
 	elif obj.type==	constants.goomba||obj.type==constants.koopa||obj.type==constants.bulletBill\
-	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
+	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish\
+	||obj.type==constants.lakitu:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1021,7 +1022,8 @@ func leftCollide(obj):
 				else:	
 					return true	
 	elif obj.type==	constants.goomba|| obj.type==constants.koopa||obj.type==constants.bulletBill\
-	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish:
+	||obj.type==constants.hammerBro||obj.type==constants.beetle||obj.type==constants.flyingfish\
+	||obj.type==constants.lakitu:
 		if! obj._dead:
 			if invincible:
 				obj.startDeathJump(constants.right)
@@ -1135,7 +1137,8 @@ func floorCollide(obj):
 			return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa\
 		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\
-		||obj.type==constants.beetle||obj.type==constants.flyingfish:
+		||obj.type==constants.beetle||obj.type==constants.flyingfish||\
+		obj.type==constants.lakitu:
 		jumpOnEnemy(obj)
 	elif obj.type==constants.axe:
 		print('axe')
@@ -1185,7 +1188,8 @@ func ceilcollide(obj):#上方的判断
 		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\
 		||obj.type==constants.beetle||obj.type==constants.flyingfish||\
 		obj.type==constants.cheapcheap||obj.type==constants.bloober\
-		||obj.type==constants.plant||obj.type==constants.spiny:
+		||obj.type==constants.plant||obj.type==constants.spiny\
+		||obj.type==constants.lakitu:
 			if! obj._dead:
 				if invincible:
 					if obj.type==constants.plant:

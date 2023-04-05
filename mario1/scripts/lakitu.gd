@@ -119,6 +119,9 @@ func startDeathJump(_dir=constants.left):
 	_dead=true
 	gravity=constants.deathJumpGravity
 	z_index=5
+
+func jumpedOn():
+	startDeathJump()
 	
 func animation(type):
 	if type=='idle':
