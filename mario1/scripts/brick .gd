@@ -9,7 +9,7 @@ func _ready():
 #	debug=true
 #	collisionShow=true
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
-	if spriteIndex >=0&&spriteIndex<=53:
+	if spriteIndex >=0&&spriteIndex<=54:
 		ani.play(str(spriteIndex))
 	else:
 		ani.play("0")	

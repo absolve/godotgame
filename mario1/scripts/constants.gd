@@ -1327,6 +1327,15 @@ const tilesAttribute={
 		"offsetY":0,
 		'layer':0,
 	},
+	"brick55": {
+		"type": "brick",
+		"spriteIndex": 54,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'layer':0,
+	},
 	"brick13": {
 		"type": "brick",
 		"spriteIndex": 12,

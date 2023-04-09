@@ -333,6 +333,7 @@ func getItemAttr(pos:Vector2):
 			#保存选中数据
 			selectedItem["x"]=indexX	
 			selectedItem["y"]=indexY
+#			selectItemType=i['type']
 			break
 
 
@@ -389,8 +390,6 @@ func _input(event):
 						delItem(get_global_mouse_position())
 					else:  #显示属性
 						getItemAttr(get_global_mouse_position())
-						pass
-					pass
 				else:	
 					var pos=getItemPos(get_global_mouse_position())	
 					addItem(selectItemType,selectItem,pos)
