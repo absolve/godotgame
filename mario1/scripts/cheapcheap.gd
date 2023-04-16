@@ -33,15 +33,16 @@ func _ready():
 	
 
 func startDeathJump(_dir=constants.left):
-	status=constants.deadJump
+	z_index=5
+	dir=_dir
+	ani.position.y=0
+	.startDeathJump()
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
-	active=false
 	_dead=true
-	gravity=constants.deathJumpGravity
-	z_index=5
-	yVel=0
+	active=false
+
 
 func jumpedOn():
 	startDeathJump()
@@ -63,18 +64,19 @@ func _update(delta):
 	if status==constants.swim:
 		if spriteIndex==0 && Game.getMario().size()>0: #红色的会追人
 			var m= Game.getMario()[0]
-			if m.status!=constants.deadJump:
+			if is_instance_valid(m)&& m.status!=constants.deadJump:
 				if m.position.y>position.y && m.position.x<position.x:
 					yVel=swimYspeed
 				elif m.position.y<position.y:	
 					yVel=-swimYspeed
 				else:
 					yVel=0
+		else:
+			yVel=0			
 		animation('swim')
 		pass
 	elif status==constants.flying:  #在天上飞
 		animation('fly')
-		pass
 	elif status==constants.deadJump:
 		if type==constants.cheapcheap:
 			yVel=50

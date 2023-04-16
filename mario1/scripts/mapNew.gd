@@ -94,12 +94,19 @@ var fireDelay=70
 var bulletStart=false #炮弹准备开始
 var bulletTimer=0
 var bulletDelay=80
+var gamePause=false  #游戏暂停
+var gameOver=false #游戏结束
+var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
+
 
 func _ready():
 	randomize()
 	Game.setMap(self)
-	winWidth= ProjectSettings.get_setting("display/window/size/width")
-	winHeight=ProjectSettings.get_setting("display/window/size/height")
+#	winWidth= ProjectSettings.get_setting("display/window/size/width")
+#	winHeight=ProjectSettings.get_setting("display/window/size/height")
+	winWidth=get_viewport_rect().size.x
+	winHeight=get_viewport_rect().size.y
+#	print(winWidth,winHeight)
 	Game.connect("marioStateChange",self,'marioStateChange')
 	Game.connect("marioStateFinish",self,'marioStateFinish')
 	Game.connect("invincibleFinish",self,"invincibleFinish")
@@ -120,7 +127,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/7-3.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -373,7 +380,7 @@ func _physics_process(delta):
 	#飞鱼
 	if flyingFishStart:
 		flyingFishTimer+=1
-		if flyingFishTimer>flyingFishDelay:
+		if flyingFishTimer>flyingFishDelay&&!gamePause:
 			flyingFishTimer=0
 			flyingFishDelay=randi()%130+30
 			var temp=cheapcheap.instance()
@@ -389,12 +396,12 @@ func _physics_process(delta):
 				if is_instance_valid(mario1)&&mario1.status!=constants.deadJump:
 					temp.flyingXSpeed=max(constants.flyingFishXSpeed,abs(mario1.xVel))
 					_obj.add_child(temp)					
-			print('start flyingFish')
+#			print('start flyingFish')
 	
 	#火焰
 	if fireStart:
 		fireTimer+=1
-		if fireTimer>fireDelay:
+		if fireTimer>fireDelay&&!gamePause:
 			fireTimer=0
 			fireDelay=randi()%60+200
 			var temp=fire.instance()
@@ -409,16 +416,16 @@ func _physics_process(delta):
 						min(32*14,mario1.position.y+32*2)) 
 					_obj.add_child(temp)	
 					
-			print('start fire')
+#			print('start fire')
 	
 	#炮弹
 	if bulletStart:
 		bulletTimer+=1
-		if bulletTimer>bulletDelay:
+		if bulletTimer>bulletDelay&&!gamePause:
 			bulletTimer=0
 			bulletDelay=randi()%70+110
 			var temp=bulletBill.instance()
-			temp.position.x=_camera.get_camera_screen_center().x*2+temp.rect.size.x/2
+			temp.position.x=_camera.get_camera_screen_center().x+winWidth/2+32
 			temp.position.y=temp.rect.size.y/2+randi()%(15*32)
 			if marioList.size()>0:
 				var mario1=marioList[0]
@@ -426,7 +433,7 @@ func _physics_process(delta):
 					temp.position.y=rand_range(max(32,mario1.position.y-32*4),
 						min(32*14,mario1.position.y+32*2)) 
 					_obj.add_child(temp)
-		print('start bullet')
+#		print('start bullet')
 	
 				
 	for y in _obj.get_children():
@@ -512,7 +519,7 @@ func checkCollision(a,b,delta):
 
 	
 	aRect.position.x+=a.xVel*delta
-	if  aRect.intersects(bRect):	#判断左右是否碰撞
+	if  aRect.intersects(bRect):	#判断左右是否碰撞  这个排除了边框的判断
 		var xVal =a.position.x-b.position.x
 		var dx=(b.position.x-a.position.x)/b.getSize()/2
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
@@ -533,22 +540,30 @@ func checkCollision(a,b,delta):
 		var dy=(b.position.y-a.position.y)/b.getSizeY()/2
 #		if b.type==constants.platform:
 #			print(dx,' ',dy)
-		if abs(dy)>abs(dx):
+		if abs(dy)>abs(dx):	# a在b的上方或者下方
 #			if b.type==constants.platform:
 #				print(1111)
-			if dy<0 &&a.yVel<0 :
+			if dy<0 &&a.yVel<0 :# a在下方 b上方
 				if vCollision(a,b,delta)==true:
 					vCollision=true
-			elif  dy>0	&&  a.yVel>=0:  #判断地面上是否有物体
+			elif  dy>0	&&  a.yVel>=0:  #判断地面上是否有物体  a在上方 b在下方
 				#如果只是走过一个间隙 判断重叠部分是x多还是y多	
-				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
+#				if dx>=0 && abs(a.getRight()-b.getLeft())>abs(a.getBottom()-b.getTop()):
+#					if vCollision(a,b,delta)==true:
+#						vCollision=true
+#				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
+#					if vCollision(a,b,delta)==true:
+#						vCollision=true
+				#这里需要排除那种对角线的那种碰撞
+				if dx>0 && abs(a.getRight()-b.getLeft())>2:
 					if vCollision(a,b,delta)==true:
 						vCollision=true
-				elif dx<0 && abs(a.getLeft()-b.getRight())>abs(a.getBottom()-b.getTop()):
+				elif dx<=0 && abs(a.getLeft()-b.getRight())>2:
 					if vCollision(a,b,delta)==true:
-						vCollision=true
+						vCollision=true		
 				else:
-					#如果下方有方块就不进行左右碰撞的判断		
+					#属于两个物体位置在对角线的情况
+					#如果下方有方块就不进行左右碰撞的判断	  
 					if !checkMapBrick(a.position.x,a.getBottom()+blockSize/2):
 						if dx>0&&a.xVel>=0:
 							if hCollision(a,b,delta)==true:
@@ -556,7 +571,7 @@ func checkCollision(a,b,delta):
 						elif dx<0 &&a.xVel<0:
 							if hCollision(a,b,delta)==true:
 								hCollision=true
-					pass
+	
 					
 	return [hCollision,vCollision]
 
@@ -574,7 +589,7 @@ func hCollision(a,b,delta):
 	
 		if a.has_method('rightCollide'):
 			if a.rightCollide(b)==true: #需要处理位置
-#				print(a.type,b.type)
+#				print(a.type,b.getLeft())
 				if a.xVel>0:
 					a.xVel=0
 				a.position.x=b.getLeft()-a.getSize()/2
@@ -686,6 +701,14 @@ func checkHasObj(arr,x,name):
 			if i.type==constants.fire:
 				if i.startX==x:
 					flag=true
+		elif 'bulletStart'==name:
+			if i.type==constants.bulletBill:
+				if i.startX==x:
+					flag=true
+		elif 'mazeStart'==name:
+			if i.type==constants.maze:
+				if i.startX==x:
+					flag=true
 	return flag
 
 func setObjEnd(arr,x,name,groupId):
@@ -698,7 +721,15 @@ func setObjEnd(arr,x,name,groupId):
 			if i.type==constants.fire&&i.groupId==groupId:
 				i['endX']=x
 				break
-
+		elif name=='bulletEnd':
+			if i.type==constants.bulletBill&&i.groupId==groupId:
+				i['endX']=x
+				break
+		elif name=='mazeEnd':
+			if i.type==constants.maze&&i.mazeId==groupId:
+				i['endX']=x
+				break
+			
 #载入文件
 func loadMapFile(fileName:String):
 	var file = File.new()
@@ -763,7 +794,7 @@ func loadMapFile(fileName:String):
 				
 #		marioPos=pos
 		var tempArea=[]
-		
+		var tempMaze=[]
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
 				var temp=brick.instance()
@@ -886,6 +917,31 @@ func loadMapFile(fileName:String):
 						tempArea.append(temp)	
 				elif i['value']=='fireEnd':
 					setObjEnd(tempArea,i['x']*blockSize,'fireEnd',str(i['groupId']))
+				elif i['value']=='bulletStart':
+					if !checkHasObj(tempArea,i['x']*blockSize,'bulletStart'):
+						var temp={
+								'type':constants.bulletBill,
+								'startX':i['x']*blockSize,
+								'endX':-1,
+								'spriteIndex':-1,
+								'spriteType':i['spriteType'],
+								'groupId':str(i['groupId'])
+							}
+						tempArea.append(temp)	
+				elif i['value']=='bulletEnd':	
+					setObjEnd(tempArea,i['x']*blockSize,'bulletEnd',str(i['groupId']))		
+				elif i['value']=='mazeStart':
+					if !checkHasObj(tempMaze,i['x']*blockSize,'mazeStart'):
+						var temp={
+								'type':constants.maze,
+								'startX':i['x']*blockSize,
+								'endX':-1,
+								'spriteIndex':-1,
+								'mazeId':str(i['mazeId'])
+							}
+						tempMaze.append(temp)	
+				elif i['value']=='mazeEnd':
+					setObjEnd(tempMaze,i['x']*blockSize,'mazeEnd',str(i['mazeId']))
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -977,6 +1033,8 @@ func loadMapFile(fileName:String):
 				temp.distance=int(i['distance'])*32
 				temp.leftHeight=int(i['leftHeight'])
 				temp.rightHeight=int(i['rightHeight'])
+				if i.has('lens'):
+					temp.lens=int(i['lens'])
 				_obj.add_child(temp)
 				
 		file.close()
@@ -1002,7 +1060,7 @@ func loadSubLevelMap(level,subLevel):
 	Game.playerData['time']=_title.currentTime
 	saveMarioStatus()
 	SoundsUtil.stopBgm()
-	SoundsUtil.stopSpecialBgm()
+#	SoundsUtil.stopSpecialBgm()
 	var scene=load("res://scenes/mapNew.tscn")
 	var temp=scene.instance()
 	queue_free()
@@ -1023,6 +1081,7 @@ func getMapBrick(x,y):
 func checkMapBrick(x,y):
 	var mapx=floor(x/blockSize)
 	var mapy=floor(y/blockSize)
+#	print(mapx,mapy)
 	return hasTile(mapx,mapy)
 
 func checkMapBrickIndex(x,y):
@@ -1062,7 +1121,7 @@ func getCamera():
 
 #添加敌人
 func addEnemy(obj):
-	print('addEnemy ',obj.type)
+#	print('addEnemy ',obj.type)
 	if obj.type==constants.goomba:
 		var temp =goomba.instance()
 		temp.position.x=obj['x']*blockSize+blockSize/2
@@ -1201,24 +1260,25 @@ func getBulletCount(id):
 
 #状态发生变化
 func marioStateChange():
+	gamePause=true
 	_title.stopCountDown()
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
-#			i.active=false
 			i.pause()
-
+	
 #状态结束	
 func marioStateFinish():
+	gamePause=false
 	_title.startCountDown()
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
-#			i.active=true
 			i.resume()
 	pass
 
 func invincibleFinish():
-	SoundsUtil.stopSpecialBgm()
-	SoundsUtil.playBgm()
+#	SoundsUtil.stopSpecialBgm()
+#	SoundsUtil.playBgm()
+	SoundsUtil.playLastBgm()
 	pass
 
 #进入城堡
@@ -1299,13 +1359,14 @@ func hurryup():
 
 #mario死亡
 func marioDead(xpos=null):
+	gameOver=true
 	print('marioDead xpos',xpos)
 	if xpos!=null:
 		marioDeathPos={'x':xpos}
 #	_title.stopCountDown()
 	SoundsUtil.playDeath()
 	SoundsUtil.stopBgm()
-	SoundsUtil.stopSpecialBgm()
+#	SoundsUtil.stopSpecialBgm()
 	marioStateChange()
 
 func saveMarioStatus():
@@ -1319,7 +1380,7 @@ func marioStartSliding():
 #接触到斧头
 func marioContactAxe():
 	SoundsUtil.stopBgm()
-	SoundsUtil.stopSpecialBgm()
+#	SoundsUtil.stopSpecialBgm()
 	var hasBowser=false
 	for i in _obj.get_children():
 		i.pause()
@@ -1446,7 +1507,7 @@ func _draw():
 
 func _on_Timer_timeout():
 	SoundsUtil.stopBgm()
-	SoundsUtil.stopSpecialBgm()
+#	SoundsUtil.stopSpecialBgm()
 	if isLoadsubLevel:
 #		Game.playerData['score']=_title.score
 #		Game.playerData['coin']=_title.coinNum
@@ -1482,4 +1543,25 @@ func _on_gameover_timeout():
 	set_process_input(false)
 	get_tree().get_root().add_child(temp)
 	set_process_input(true)
+
+func _input(event):
+	if !isShow:
+		if !gameOver &&Input.is_action_just_pressed("ui_accept"):
+			if gamePause:
+				_title.startCountDown()
+				gamePause=false
+				SoundsUtil.playPause()
+				SoundsUtil.playBgm()
+				for i in _obj.get_children():
+					i.resume()
+			else:
+				_title.stopCountDown()	
+				gamePause=true
+				SoundsUtil.stopBgm()
+#				SoundsUtil.stopSpecialBgm()
+				SoundsUtil.playPause()
+				for i in _obj.get_children():
+					i.pause()
+				
+			
 

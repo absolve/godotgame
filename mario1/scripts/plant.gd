@@ -56,21 +56,26 @@ func _update(delta):
 	elif status==constants.plantIn:
 		if position.y<oldYPos+48:
 			yVel=ySpeed
-		else:  	#准备出来的时候判断是不是有马里奥
+		else:  	#准备出来的时候判断水管附近是不是有马里奥
 			yVel=0
 			timer+=1
 			if Game.getMario().size()>0:
 				var m= Game.getMario()[0]
-				if m.status!=constants.deadJump:
+				if is_instance_valid(m) && m.status!=constants.deadJump:
 #					print(abs((m.position.x+m.rect.size.x/2)-(position.x-rect.size.x/2)))
-#					print(abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)))				
-					if m.position.x+m.rect.size.x/2>=position.x-rect.size.x/2-3 &&\
-					 m.position.x-m.rect.size.x/2<=position.x+rect.size.x/2+3:
+#					print(abs((m.position.x-m.rect.size.x/2)-(position.x+rect.size.x/2)))
+							
+					if m.position.x+m.rect.size.x/2>=position.x-rect.size.x-32 &&\
+					 m.position.x-m.rect.size.x/2<=position.x+rect.size.x+32:
 #						print(m.position.y+m.rect.size.y/2)
 #						print(position.y-rect.size.y/2)
-						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <17:
+#						print(m.position.y+m.rect.size.y/2,' ',position.y-rect.size.y)
+						if m.position.y+m.rect.size.y/2>position.y-rect.size.y*2: #在植物下方就不出来
 							if timer>0:
 								timer-=15
+#						if abs((m.position.y+m.rect.size.y/2)-(position.y-rect.size.y/2)) <17:
+#							if timer>0:
+#								timer-=15
 							
 			if timer>plantInTime:
 				timer=0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://scripts/soundsUtil.gd" type="Script" id=1]
 [ext_resource path="res://sounds/lowtime.ogg" type="AudioStream" id=2]
@@ -31,6 +31,7 @@
 [ext_resource path="res://sounds/castleend.ogg" type="AudioStream" id=29]
 [ext_resource path="res://sounds/underwater.ogg" type="AudioStream" id=30]
 [ext_resource path="res://sounds/underwater-fast.ogg" type="AudioStream" id=31]
+[ext_resource path="res://sounds/pause.ogg" type="AudioStream" id=32]
 
 [node name="soundsUtil" type="Node2D"]
 script = ExtResource( 1 )
@@ -154,3 +155,7 @@ bus = "bg"
 [node name="underwater_fast" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 31 )
 bus = "bg"
+
+[node name="pause" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 32 )
+bus = "sfx"

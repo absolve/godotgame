@@ -12,6 +12,7 @@ var winHeight
 var platformType=""
 #var isOnFloor=false #是否在地面上
 var dir=constants.up
+var preStatus
 
 func _ready():
 	mask=[constants.mario,constants.mushroom,constants.star,constants.mushroom1up]
@@ -94,9 +95,17 @@ func _update(delta):
 						i.position.x+=xVel*delta
 		
 		position.x+=xVel*delta
-	pass
+	
 
+func pause():
+	preStatus=status
+	status=constants.stop
+#	ani.stop()
 
+func resume():
+	status=preStatus
+#	ani.play()
+	
 
 func rightCollide(obj):
 	return false

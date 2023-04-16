@@ -192,6 +192,8 @@ const cannon='cannon' #炮塔
 const linkPlatform='linkPlatform' #联动平台
 const staticPlatform='staticPlatform' #基本不动的平台
 const flyingfish='flyingfish' #飞鱼
+const maze='maze'
+
 
 #方向
 const right="right"
@@ -228,7 +230,7 @@ const crouchFriction=440 #蹲下去时加速度
 const acceleration=240	#移动加速度
 const runAcceleration=400 #跑的加速度
 const marioWalkMaxSpeed=170 #走的时候最大速度
-const marioRunMaxSpeed=340 #跑的时候最大速度
+const marioRunMaxSpeed=330 #跑的时候最大速度
 const marioAniSpeed=100
 const marioGravity=1800 #重力
 const marioJumpGravity=1000
@@ -243,10 +245,10 @@ const fireballMaxYVel=900
 const underwaterMaxHeight=64 #在水下最大高度
 const underwaterAcceleration=180
 const underwaterRunAcceleration=300
-const underwaterWalkMaxSpeed=110
+const underwaterWalkMaxSpeed=180
 const underwaterRunMaxSpeed=280
 const underwatermarioMaxYVel=220 #水下最大y速度
-const marioJumpMinSoeed=280 #踩到敌人最小反弹的速度
+const marioJumpMinSoeed=240 #踩到敌人最小反弹的速度
 
 #图块类型
 const tilesType=['del',"mario","goomba","koopa","brick","pipe"
@@ -842,6 +844,54 @@ const tilesAttribute={
 		"groupId":0,
 		'layer':0,
 	},
+	'bulletStart':{
+		"type":"collision",
+		"spriteIndex": 10,
+		"x": 0,
+		"y": 0,
+		"value":"bulletStart",
+		'spriteType':-1,
+		"groupId":0,
+		'layer':0,
+	},
+	'bulletEnd':{
+		"type":"collision",
+		"spriteIndex": 11,
+		"x": 0,
+		"y": 0,
+		"value":"bulletEnd",
+		'spriteType':-1,
+		"groupId":0,
+		'layer':0,
+	},
+	'mazeStart':{
+		"type":"collision",
+		"spriteIndex": 7,
+		"x": 0,
+		"y": 0,
+		"value":"mazeStart",
+		"mazeId":0,  #迷宫的id  唯一
+		'layer':0,
+	},
+	'mazeEnd':{
+		"type":"collision",
+		"spriteIndex": 8,
+		"x": 0,
+		"y": 0,
+		"value":"mazeEnd",
+		"mazeId":0,
+		'layer':0,
+	},
+	'mazeGate':{
+		"type":"collision",
+		"spriteIndex": 9,
+		"x": 0,
+		"y": 0,
+		"value":"mazeGate",
+		"mazeId":0,  #属于那个迷宫
+		'layer':0,
+	},
+	
 	"castleFlag":{
 		"type":"castleFlag",
 		"spriteIndex": 0,
@@ -961,7 +1011,7 @@ const tilesAttribute={
 		"offsetY":0,
 		'layer':0,
 	},
-	'platform':{
+	'platformJustDown':{
 		"type": "platform",
 		"spriteIndex": 0,
 		"x": 0,
@@ -971,7 +1021,20 @@ const tilesAttribute={
 		'lens':3,
 		'platformType':"moveDown",
 		'dir':up,
-		'speed':100,
+		'speed':80,
+		'layer':0,
+	},
+	'platformJustUp':{
+		"type": "platform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'platformType':"moveUp",
+		'dir':up,
+		'speed':80,
 		'layer':0,
 	},
 	'platformleft':{
@@ -984,7 +1047,7 @@ const tilesAttribute={
 		'lens':3,
 		'platformType':"leftAndRight",
 		'dir':left,
-		'speed':100,
+		'speed':80,
 		'layer':0,
 	},
 	'platformRight':{
@@ -997,7 +1060,33 @@ const tilesAttribute={
 		'lens':3,
 		'platformType':"leftAndRight",
 		'dir':right,
-		'speed':100,
+		'speed':80,
+		'layer':0,
+	},
+	'platformUp':{
+		"type": "platform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'platformType':"upAndDown",
+		'dir':up,
+		'speed':80,
+		'layer':0,
+	},
+	'platformDown':{
+		"type": "platform",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		"offsetX":0,
+		"offsetY":0,
+		'lens':3,
+		'platformType':"upAndDown",
+		'dir':down,
+		'speed':80,
 		'layer':0,
 	},
 	'staticPlatform':{
@@ -1011,7 +1100,7 @@ const tilesAttribute={
 		'status':'justRight',
 		'layer':0,
 	},
-	'platformDown':{
+	'staticPlatformDown':{
 		"type": "staticPlatform",
 		"spriteIndex": 0,
 		"x": 0,
@@ -1032,6 +1121,7 @@ const tilesAttribute={
 		'distance':3,
 		'leftHeight':3,
 		'rightHeight':3,
+		'lens':3,
 		'layer':0,
 	},
 	'linkPlatform1':{
@@ -1044,6 +1134,7 @@ const tilesAttribute={
 		'distance':3,
 		'leftHeight':3,
 		'rightHeight':3,
+		'lens':3,
 		'layer':0,
 	},
 	'linkPlatform2':{
@@ -1056,6 +1147,7 @@ const tilesAttribute={
 		'distance':3,
 		'leftHeight':3,
 		'rightHeight':3,
+		'lens':3,
 		'layer':0,
 	},
 	'linkPlatform3':{
@@ -1068,6 +1160,7 @@ const tilesAttribute={
 		'distance':3,
 		'leftHeight':3,
 		'rightHeight':3,
+		'lens':3,
 		'layer':0,
 	},
 	"box": {

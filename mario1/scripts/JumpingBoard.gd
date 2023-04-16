@@ -9,8 +9,8 @@ onready var ani=$ani
 
 func _ready():
 	active=false
-	debug=true
-	rect=Rect2(Vector2(-16,-31),Vector2(32,62))
+#	debug=true
+	rect=Rect2(Vector2(-16,-32),Vector2(32,64))
 	type=constants.jumpingBoard
 	if spriteIndex==0:
 		ani.play("0")
@@ -20,8 +20,11 @@ func _ready():
 		ani.play("0")	
 	ani.stop()
 	
-	pass
+func getLeft()->float:
+	return position.x-rect.size.x/2+1
 
+func getRight()->float:
+	return position.x+rect.size.x/2-1
 
 func _update(delta):
 	if status==constants.boardStretch:

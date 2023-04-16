@@ -1,7 +1,7 @@
 extends "res://scripts/enemy.gd"
 
 #const speed=40
-const slidingSpeed=380
+const slidingSpeed=330
 var preStatus
 onready var ani=$ani
 #const speed=55
@@ -10,16 +10,16 @@ var reviveTime=600 #变成壳然后变回乌龟的时间
 var combo=0  #分数连击
 var yDir=constants.up #飞行时的移动方向
 var ySpeed=55  #向上飞行时y的速度
-var jumpSpeed=400
+var jumpSpeed=380
 
 func _ready():
 #	status=constants.shell
 #	animation("shell")
 #	debug=true
-	mask=[constants.fireball,constants.box,constants.brick
+	mask=[constants.fireball,constants.box,constants.brick,constants.spiny
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
-		constants.beetle,constants.jumpingBoard]
-	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
+		constants.beetle,constants.jumpingBoard,constants.cannon]
+	rect=Rect2(Vector2(-12,-16),Vector2(24,32))
 #	gravity=constants.enemyGravity
 	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.enemyGravity
@@ -34,8 +34,7 @@ func _ready():
 	position.y+=offsetY
 	
 	if spriteIndex in [4,5,6,7]:	#设置成飞行的状态
-		status=constants.flying
-		yDir=constants.up	
+		status=constants.flying	
 		spriteIndex-=4
 		gravity=0
 		xVel=0
@@ -48,7 +47,7 @@ func _ready():
 	else:		
 		animation("walk")		
 	ani.position.y=-18		
-	pass
+	
 
 func _update(delta):
 	if status==constants.walking:
@@ -115,6 +114,7 @@ func jumpedOn():
 	elif status==constants.flying||status==constants.jumping:
 		status=constants.walking
 		gravity=constants.enemyGravity
+		yVel=1
 		if dir==constants.left:
 			turnRight()
 		else:
@@ -132,8 +132,7 @@ func startDeathJump(_dir=constants.left):
 	ani.frame=0
 	_dead=true
 	active=false
-	pass	
-
+		
 
 func startSliding(_dir=constants.left):
 	animation("shell")
@@ -218,14 +217,15 @@ func animation(type):
 			ani.play("fly_red")		
 	
 
-	
-	
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnLeft()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.beetle||obj.type==constants.spiny:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump(constants.right)
@@ -239,14 +239,17 @@ func rightCollide(obj):
 		else:	
 			turnLeft()
 #			return true
-	pass
+
 	
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnRight()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.beetle||obj.type==constants.spiny:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump()
@@ -262,17 +265,26 @@ func leftCollide(obj):
 
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box\
+	||obj.type==constants.pipe||obj.type==constants.cannon:
 		if status==constants.walking&& dir==constants.left&&spriteIndex==3: #如果是红乌龟就会自动返回
-			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+			if !Game.checkMapBrick(position.x,position.y+getSizeY()):
 				turnRight()
 		elif status==constants.walking&& dir==constants.right&&spriteIndex==3:		
-			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+			if !Game.checkMapBrick(position.x,position.y+getSizeY()):
 				turnLeft()
 		if status==constants.jumping:
 			yVel=-jumpSpeed
-		#todo 增加被砖块撞飞
-		
+		# 增加被砖块撞飞
+		if obj.type==constants.box&&obj.status==constants.bumped:
+			Game.addScore(position,200)
+			animation("shell")
+			xVel=0	
+			reviveStartTime=0
+			status=constants.shell
+			ani.position.y=0	
+		if obj.type==constants.box&&!obj._visible:
+			return false		
 		return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:

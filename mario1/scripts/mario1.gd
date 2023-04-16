@@ -102,7 +102,7 @@ func _ready():
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
 		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
 		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny,
-		constants.podoboo,constants.lakitu]
+		constants.podoboo,constants.lakitu,constants.beetle]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -147,6 +147,9 @@ func _ready():
 	if underwater:
 		gravity=constants.marioUnderWaterGravity
 		maxYVel=constants.underwatermarioMaxYVel
+		status=constants.fall
+		animation('swim')
+#		ani.stop()
 	pass 
 
 
@@ -178,17 +181,9 @@ func _update(delta):
 	elif status==constants.stop:
 		pass	
 	elif status==constants.pipeIn:
-		pipeIn(delta)
-		pass	
+		pipeIn(delta)	
 	elif status==constants.walkInPipe:
 		walkIntoPipe(delta)
-#		if dir==constants.left:
-#			xVel=-50
-#		elif dir==constants.right:
-#			xVel=50
-#		animation('walk')	
-#		position.x+=xVel*delta
-		pass
 	elif status==constants.pipeOut:
 #		yVel=-40
 #		position.y+=yVel*delta	
@@ -222,7 +217,7 @@ func _update(delta):
 func specialState(_delta):
 	if invincible:
 		if invincibleEndime-invincibleStartTime>200:
-			if invincibleStartTime%6==0:
+			if invincibleStartTime%4==0:
 				if shadowIndex==3:
 					shadowIndex=0
 				else:
@@ -657,6 +652,9 @@ func big2Small():
 	active=false
 	preStatus=status
 	status=constants.big2small
+	if isCrouch:
+		position.y-=14
+		ani.position.y=0
 	ani.speed_scale=1
 	ani.play("big2small")
 	Game.emit_signal("marioStateChange")
@@ -839,9 +837,7 @@ func swim(delta):
 		animation('swim')
 		if !_swim.playing:
 			_swim.play()
-#	else:
-#		yVel=0
-	
+
 	if Input.is_action_pressed("ui_left"):	
 		acceleration=constants.acceleration
 		dir=constants.left
@@ -872,6 +868,9 @@ func swim(delta):
 			else:
 				xVel=0
 				ani.speed_scale=1
+	if Input.is_action_just_pressed("ui_action")&&fire:
+		shootFireball()
+	
 	if yVel>0:
 #		gravity=constants.marioGravity
 		ani.stop()
@@ -895,15 +894,15 @@ func rightCollide(obj):
 			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
 			||obj.type==constants.bridge:
 				position.y=obj.getTop()-getSizeY()/2
-				position.x=obj.getLeft()-getSize()/2+0.2
-				yVel=1
+#				position.x=obj.getLeft()-getSize()/2+0.2
+#				yVel=1
 				return false
 			
 		if obj.type==constants.box&&!obj._visible:
 			return false
 		else:
 			if xVel!=0:
-				if obj.type==constants.jumpingBoard && yVel>0:
+				if obj.type==constants.jumpingBoard && yVel!=0:
 					return false
 				else:	
 					return true	
@@ -915,22 +914,23 @@ func rightCollide(obj):
 				obj.startDeathJump(constants.right)
 				Game.addScore(Vector2(position.x,getTop()))
 				SoundsUtil.playShoot()
-			elif hurtInvincible:
-				pass
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding(constants.right)
+					Game.addScore(Vector2(position.x,getTop()),500)
+					SoundsUtil.playShoot()
 					obj.position.x+=abs(obj.slidingSpeed)*_delta+1
 					xVel=abs(xVel)-abs(xVel)/4
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
 					else:	
-						if big:
-							big2Small()
-							setHurtInvincible()
-						else:	
-							startDeathJump()
+						if !hurtInvincible:
+							if big:
+								big2Small()
+								setHurtInvincible()
+							else:	
+								startDeathJump()
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
@@ -949,7 +949,7 @@ func rightCollide(obj):
 			position.x=obj.getLeft()-getSize()/2+1
 			startSliding()
 			SoundsUtil.stopBgm()
-			SoundsUtil.stopSpecialBgm()
+#			SoundsUtil.stopSpecialBgm()
 			SoundsUtil.playLevelend()
 			addPoleScore(obj.position.y,obj)
 		elif status==constants.sitBottomOfPole:
@@ -1009,15 +1009,15 @@ func leftCollide(obj):
 			if (obj.type==constants.box && 	obj._visible) || obj.type==constants.brick\
 			||obj.type==constants.bridge:	
 				position.y=obj.getTop()-getSizeY()/2
-				position.x=obj.getRight()+getSize()/2-0.2
-				yVel=1
+#				position.x=obj.getRight()+getSize()/2-0.2
+#				yVel=1
 				return false
 			
 		if obj.type==constants.box&&!obj._visible:
 			return false
 		else:
 			if xVel!=0:
-				if obj.type==constants.jumpingBoard && yVel>0:
+				if obj.type==constants.jumpingBoard && yVel!=0:
 					return false
 				else:	
 					return true	
@@ -1029,22 +1029,23 @@ func leftCollide(obj):
 				obj.startDeathJump(constants.right)
 				Game.addScore(Vector2(position.x,getTop()))
 				SoundsUtil.playShoot()
-			elif hurtInvincible:
-				pass	
 			else:
 				if obj.status==constants.shell|| obj.status==constants.revive:
 					obj.startSliding()
+					Game.addScore(Vector2(position.x,getTop()),500)
+					SoundsUtil.playShoot()
 					obj.position.x-=abs(obj.slidingSpeed)*_delta+1
 					xVel=-(abs(xVel)-abs(xVel)/4)
 				else:
 					if yVel>5:
 						jumpOnEnemy(obj)
 					else:
-						if big:
-							big2Small()
-							setHurtInvincible()
-						else:	
-							startDeathJump()	
+						if !hurtInvincible:
+							if big:
+								big2Small()
+								setHurtInvincible()
+							else:	
+								startDeathJump()	
 	elif obj.type== constants.mushroom || obj.type==constants.fireflower||\
 		obj.type==constants.star || obj.type==constants.mushroom1up||\
 		obj.type==constants.bigCoin:
@@ -1095,17 +1096,16 @@ func leftCollide(obj):
 			setGrabVine(obj)
 
 	
-
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
 	||obj.type==constants.cannon:	
-		if xVel==0:
-			if dir==constants.left:
-				if Game.checkMapBrick(position.x+getSize()/2,position.y-getSizeY()/2):
-					position.x-=1
-			elif dir==constants.right:
-				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
-					position.x+=1
+#		if xVel==0:
+#			if dir==constants.left:
+#				if Game.checkMapBrick(position.x+getSize()/2,position.y-getSizeY()/2):
+#					position.x-=1
+#			elif dir==constants.right:
+#				if Game.checkMapBrick(position.x-getSize()/2,position.y-getSizeY()/2):
+#					position.x+=1
 		if status==constants.poleSliding:#碰到地面
 			setSitBottom()
 #			status=constants.sitBottomOfPole
@@ -1183,7 +1183,18 @@ func ceilcollide(obj):#上方的判断
 				SoundsUtil.playBrickHit()	
 		else:			
 			SoundsUtil.playBrickHit()
-		yVel=1	
+#		yVel=1	
+		#如果跟边缘发生碰撞小于2px就修改马里奥的位置
+		if position.x>obj.position.x:
+			if abs(getLeft()-obj.getRight())<3:
+				position.x=obj.getRight()+getSize()/2
+			else:
+				yVel=1	
+		else:
+			if abs(getRight()-obj.getLeft())<=3:
+				position.x=obj.getLeft()-getSize()/2
+			else:
+				yVel=1	
 	elif obj.type==constants.goomba||obj.type==constants.koopa\
 		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\
 		||obj.type==constants.beetle||obj.type==constants.flyingfish||\
@@ -1218,7 +1229,6 @@ func ceilcollide(obj):#上方的判断
 				startDeathJump()	
 	
 
-
 #获取物品
 func getItem(i):
 	print('getItem')
@@ -1240,8 +1250,9 @@ func getItem(i):
 		i.destroy=true
 		setInvincible()
 		Game.addScore(Vector2(position.x,getTop()),1000)	
-		SoundsUtil.stopBgm()
-		SoundsUtil.playSpecialBgm()
+#		SoundsUtil.stopBgm()
+#		SoundsUtil.playSpecialBgm()
+		SoundsUtil.changeBgm("star")
 	elif i.type==constants.mushroom1up:	
 		i.destroy=true
 		Game.addLive(Vector2(position.x,getTop()),playerId)	
@@ -1301,6 +1312,7 @@ func addPoleScore(polePos,obj):
 
 #踩到敌人
 func jumpOnEnemy(obj):
+	print('jumpOnEnemy')
 	if! obj._dead:
 		if invincible:
 			obj.startDeathJump(constants.right)
@@ -1314,14 +1326,11 @@ func jumpOnEnemy(obj):
 				combo+=1
 			else:
 				Game.addLive(position,playerId)
-				SoundsUtil.playItem1up()
-				pass	
+				SoundsUtil.playItem1up()	
 			SoundsUtil.playStomp()	
-			yVel=- min(constants.marioJumpMinSoeed,(abs(yVel)-abs(yVel)/3)) 
-#			else:
-#
-#				pass	
-	pass
+#			yVel=- max(constants.marioJumpMinSoeed,abs(abs(yVel)-abs(yVel)/3)) 
+			yVel=- constants.marioJumpMinSoeed
+
 
 #动画
 func animation(type):
@@ -1496,11 +1505,20 @@ func _on_ani_animation_finished():
 		Game.emit_signal('marioStateFinish')
 	elif status==constants.big2small:
 		hurtInvincible=true
-		status=preStatus
+		
 		big=false
 		fire=false
 		active=true
-		position.y+=17
+		if isCrouch:
+			if xVel!=0:
+				status=constants.stand
+			else:
+				status=constants.walk
+			isCrouch=false  #设置成没有蹲下
+			position.y+=14
+		else:
+			status=preStatus
+			position.y+=17	
 		ani.position.y= 0
 		aniIndex=0
 		adjustSmallRect()

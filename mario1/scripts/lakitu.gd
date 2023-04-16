@@ -16,7 +16,7 @@ func _ready():
 	rect=Rect2(Vector2(-16,-16),Vector2(32,32))
 	type=constants.lakitu
 	maxYVel=constants.enemyMaxVel #y轴最大速度
-	debug=true
+#	debug=true
 	ani.position.y-=18
 	status=constants.lakituIdle
 	pass
@@ -111,14 +111,16 @@ func _update(delta):
 		pass
 
 func startDeathJump(_dir=constants.left):
-	status=constants.deadJump
+	z_index=5
+	dir=_dir
+	ani.position.y=0
+	.startDeathJump()
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
-	active=false
 	_dead=true
-	gravity=constants.deathJumpGravity
-	z_index=5
+	active=false
+
 
 func jumpedOn():
 	startDeathJump()

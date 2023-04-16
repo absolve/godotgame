@@ -31,8 +31,10 @@ onready var bowserfall=$bowserfall
 onready var castleend=$castleend
 onready var underwater=$underwater
 onready var underwater_fast=$underwater_fast
+onready var pause=$pause
 
 var bgm="overworld"
+var lastBgm=''
 var isLowTime=false
 
 func _ready():
@@ -96,7 +98,8 @@ func _ready():
 	var castleend1=castleend.stream as AudioStreamOGGVorbis
 	castleend1.set_loop(false)
 	
-	
+	var pause1=pause.stream as AudioStreamOGGVorbis
+	pause1.set_loop(false)
 
 func playBgm():
 	if bgm=="overworld":
@@ -142,15 +145,26 @@ func stopBgm():
 		underwater_fast.stop()
 		underwater.stop()
 
-func playSpecialBgm():
-	if isLowTime:
-		starFast.play()
-	else:
-		star.play()
+#func playSpecialBgm():
+#	if isLowTime:
+#		starFast.play()
+#	else:
+#		star.play()
 
-func stopSpecialBgm():
-	starFast.stop()
-	star.stop()
+func changeBgm(newBgm):
+	stopBgm()
+	lastBgm=bgm
+	bgm=newBgm
+	playBgm()
+
+func playLastBgm():
+	stopBgm()
+	bgm=lastBgm
+	playBgm()
+
+#func stopSpecialBgm():
+#	starFast.stop()
+#	star.stop()
 	
 func playKonamiMusic():
 	konami.play()
@@ -216,3 +230,5 @@ func playbowserFall():
 func playCastleEnd():
 	castleend.play()
 	
+func playPause():
+	pause.play()

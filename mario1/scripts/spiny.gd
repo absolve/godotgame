@@ -7,7 +7,7 @@ var preStatus
 func _ready():
 	mask=[constants.fireball,constants.box,constants.brick
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
-		constants.beetle]
+		constants.beetle,constants.cannon]
 	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.spinyEggGravity
@@ -71,26 +71,34 @@ func animation(type):
 
 
 func rightCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box\
+	||obj.type==constants.pipe||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnLeft()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.spiny||obj.type==constants.beetle:
 		if obj.status!=constants.deadJump:
 			turnLeft()
 
 	
 func leftCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		print(obj.type)
+	if obj.type==constants.brick || obj.type==constants.box\
+	||obj.type==constants.pipe||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnRight()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.spiny||obj.type==constants.beetle:
 		if obj.status!=constants.deadJump:
 			turnRight()
 
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
+	if obj.type==constants.brick || obj.type==constants.box\
+	||obj.type==constants.pipe||obj.type==constants.cannon:
 		if obj.type==constants.box&&obj.status==constants.bumped:
 			Game.addScore(position,200)
 			if position.x>=obj.position.x:
@@ -99,4 +107,6 @@ func floorCollide(obj):
 				startDeathJump()
 		if status==constants.spinyEgg:
 			status=constants.walking
+		if obj.type==constants.box&&!obj._visible:
+			return false	
 		return true

@@ -8,9 +8,9 @@ var combo=0  #分数连击
 var preStatus
 
 func _ready():
-	mask=[constants.fireball,constants.box,constants.brick
+	mask=[constants.fireball,constants.box,constants.brick,constants.spiny
 		,constants.platform,constants.pipe,constants.koopa,constants.goomba,
-		constants.beetle]
+		constants.beetle,constants.cannon]
 	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 	maxYVel=constants.enemyMaxVel #y轴最大速度
 	gravity=constants.enemyGravity
@@ -35,7 +35,7 @@ func _update(delta):
 		reviveStartTime+=1
 		if reviveTime-reviveStartTime<200:
 			status=constants.revive
-			animation("revive")	
+#			animation("revive")	
 	elif status==constants.stop:
 		pass
 	elif status==constants.revive:
@@ -52,7 +52,7 @@ func shellSliding(delta):
 		xVel=-slidingSpeed
 	else:
 		xVel=slidingSpeed	
-	pass
+	
 
 func jumpedOn():
 	if status==constants.walking:
@@ -129,27 +129,30 @@ func animation(type):
 		elif spriteIndex==3:
 			ani.play("shell_red")	
 	elif type=="revive":
-		if spriteIndex==0:
-			ani.play("revive")
-		elif spriteIndex==1:
-			ani.play("revive_blue")	
-		elif spriteIndex==2:	
-			ani.play("revive_grey")	
-		elif spriteIndex==3:
-			ani.play("revive_red")		
+#		if spriteIndex==0:
+#			ani.play("revive")
+#		elif spriteIndex==1:
+#			ani.play("revive_blue")	
+#		elif spriteIndex==2:	
+#			ani.play("revive_grey")	
+#		elif spriteIndex==3:
+#			ani.play("revive_red")	
+		pass		
 	if dir==constants.left:
 		ani.flip_h=false
 	elif dir==constants.right:
 		ani.flip_h=true	
 	
 	
-
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnLeft()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.beetle||obj.type==constants.spiny:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump(constants.right)
@@ -167,10 +170,13 @@ func rightCollide(obj):
 	
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnRight()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.beetle||obj.type==constants.spiny:
 		if status==constants.sliding:
 			if ! obj._dead:
 				obj.startDeathJump()
@@ -186,13 +192,16 @@ func leftCollide(obj):
 
 	
 func floorCollide(obj):
-	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		if status==constants.walking&& dir==constants.left&&spriteIndex==3: #如果是红乌龟就会自动返回
-			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
-				turnRight()
-		elif status==constants.walking&& dir==constants.right&&spriteIndex==3:		
-			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
-				turnLeft()
+	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
+	||obj.type==constants.cannon:
+#		if status==constants.walking&& dir==constants.left&&spriteIndex==3: #如果是红乌龟就会自动返回
+#			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+#				turnRight()
+#		elif status==constants.walking&& dir==constants.right&&spriteIndex==3:		
+#			if !Game.checkMapBrick(position.x,position.y+getSizeY()/2):
+#				turnLeft()
+		if obj.type==constants.box&&!obj._visible:
+			return false		
 		return true
 	elif obj.type==constants.goomba||obj.type==constants.koopa||obj.type==constants.beetle:
 		if status==constants.sliding:

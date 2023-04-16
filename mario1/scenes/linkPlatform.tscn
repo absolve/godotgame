@@ -82,7 +82,6 @@ animations = [ {
 } ]
 
 [node name="linkPlatform" type="Node2D"]
-position = Vector2( 32, 32 )
 script = ExtResource( 2 )
 
 [node name="left" type="AnimatedSprite" parent="."]

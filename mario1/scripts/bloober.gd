@@ -7,6 +7,7 @@ var xSpeed=40
 var lastXPos=0 #上次准备移动时x位置
 var lastYPos=0 #上次下降y的位置
 var downSpeed=30 #自由下降的速度
+var winHeight
 
 func _ready():
 	type=constants.bloober
@@ -16,6 +17,7 @@ func _ready():
 	gravity=0
 #	debug=true
 	status=constants.idle
+	winHeight=get_viewport_rect().size.y
 	pass
 
 func _update(delta):
@@ -56,15 +58,19 @@ func _update(delta):
 		yVel=downSpeed
 		if Game.getMario().size()>0:
 			var m= Game.getMario()[0]
-			if getBottom()+10> m.position.y-16:
+			if is_instance_valid(m)&& getBottom()+10> m.position.y-16:
 				status=constants.upward
 				lastXPos=position.x
 				if position.x>m.position.x:
 					dir=constants.left
 				else:
 					dir=constants.right	
-				
-
+			else:
+				if getBottom()+32>=winHeight:
+					status=constants.upward
+		elif getBottom()+32>=winHeight:
+			status=constants.upward
+		
 func startDeathJump(_dir=constants.left):
 	ani.playing=false
 	ani.flip_v=true

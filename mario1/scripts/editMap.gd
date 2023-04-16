@@ -452,9 +452,6 @@ func _draw():
 					draw_texture(constants.mapTiles[i.type]['0'],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
 			elif i.type=='pipe':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
-#					if i.has('rotate'):
-#						draw_set_transform(Vector2.ZERO,PI / 2.0,Vector2(1, 1))
-
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
 					if i.has('pipeType') && (i.pipeType==constants.pipeIn||i.pipeType==constants.pipeOut):
 						if i.pipeType==constants.pipeIn:
@@ -512,6 +509,22 @@ func _draw():
 			elif i.type==constants.linkPlatform:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
+					#绘制距离和平台的位置
+					draw_rect(Rect2(Vector2(i.x*blockSize-int(i.distance)*blockSize/2,i.y*blockSize),Vector2(blockSize,blockSize))
+					,Color(1,1,1,0.7),false,2)
+					draw_rect(Rect2(Vector2(i.x*blockSize+int(i.distance)*blockSize/2,i.y*blockSize),Vector2(blockSize,blockSize))
+					,Color(1,1,1,0.7),false,2)
+					
+					draw_rect(Rect2(Vector2(i.x*blockSize-int(i.distance)*blockSize/2,
+						i.y*blockSize+int(i.leftHeight)*blockSize+blockSize/3)
+						,Vector2(blockSize,blockSize/4))
+						,Color(1,0,0,0.7),false,2)
+					
+					draw_rect(Rect2(Vector2(i.x*blockSize+int(i.distance)*blockSize/2,
+						i.y*blockSize+int(i.rightHeight)*blockSize+blockSize/3)
+						,Vector2(blockSize,blockSize/4))
+						,Color(1,0,0,0.7),false,2)
+					
 		if !marioPos.empty():
 			draw_texture(constants.mapTiles['mario']['0'],Vector2(marioPos.x*blockSize,marioPos.y*blockSize),Color(1,1,1,0.7))
 

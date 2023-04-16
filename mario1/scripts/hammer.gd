@@ -11,7 +11,7 @@ onready var ani=$ani
 
 func _ready():
 	type=constants.hammer
-	rect=Rect2(Vector2(-8,-8),Vector2(16,16))
+	rect=Rect2(Vector2(-9,-8),Vector2(18,16))
 	gravity=constants.hammerGravity
 	maxYVel=constants.enemyMaxVel
 #	debug=true

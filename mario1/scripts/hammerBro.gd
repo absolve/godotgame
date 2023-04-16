@@ -3,7 +3,7 @@ extends "res://scripts/enemy.gd"
 onready var ani=$ani
 var preStatus
 var xSpeed=70
-var ySpeed=400
+var ySpeed=450
 var timer=0
 var throwDelay=120
 var prepareDelay=30
@@ -95,7 +95,7 @@ func _update(delta):
 				xVel+=acceleration*delta	
 		if Game.getMario().size()>0:
 			var m= Game.getMario()[0]
-			if m.status!=constants.deadJump:
+			if is_instance_valid(m)&& m.status!=constants.deadJump:
 				if m.position.x>position.x:
 					dir=constants.right
 					ani.flip_h=true
@@ -109,16 +109,12 @@ func _update(delta):
 
 func startDeathJump(_dir=constants.left):
 	dir=_dir
+	ani.position.y=0
+	.startDeathJump()
+	animation('idle')
 	ani.playing=false
 	ani.flip_v=true
 	ani.frame=0
-	status=constants.deadJump
-	if dir==constants.left:
-		xVel=-45
-	else:
-		xVel=45
-	gravity=constants.deathJumpGravity
-	z_index=5
 	_dead=true
 	active=false
 	
@@ -171,7 +167,7 @@ func rightCollide(obj):
 #			return false
 #		else:
 #			return true	
-	return true	
+	return false	
 	
 func leftCollide(obj):
 #	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
@@ -179,7 +175,7 @@ func leftCollide(obj):
 #			return false
 #		else:
 #			return true		
-	return true	
+	return false	
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:

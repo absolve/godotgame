@@ -5,7 +5,8 @@ var status=constants.growing
 var dir=constants.right
 var oldPos=0
 const speed=110  #速度
-const jumpSpeed=300
+const jumpSpeed=340
+const starYSpeed=540
 var spriteIndex=0 #0 1 是蘑菇
 #var content=constants.mushroom  #内容
 onready var ani=$ani
@@ -52,7 +53,7 @@ func _update(delta):
 		pass
 	elif status==constants.jumping:
 		jumping(delta)
-	pass
+
 
 func growing(delta):
 	if oldPos-position.y>rect.size.y:
@@ -65,7 +66,7 @@ func growing(delta):
 			xVel=0
 			yVel=0
 		elif type==constants.star:
-			yVel=-jumpSpeed
+			yVel=-starYSpeed
 			status=constants.jumping	
 		if type!=constants.fireflower:
 			status=constants.moving	
@@ -102,11 +103,10 @@ func jumping(delta):
 		xVel=-speed
 	else:
 		xVel=speed
-	pass
 
 func turnLeft():
 	xVel=-speed
-	pass
+
 
 func turnRight():
 	xVel=speed	
@@ -140,7 +140,7 @@ func floorCollide(obj):
 		if obj.type==constants.box&&!obj._visible:
 			return false
 		if type==constants.star:
-			yVel=-jumpSpeed
+			yVel=-starYSpeed
 		if type!=constants.fireflower &&obj.type==constants.box&& obj.status==constants.bumped:
 			yVel=-jumpSpeed
 			if position.x<obj.position.x && dir==constants.right:

@@ -8,7 +8,8 @@ var preStatus
 func _ready():
 #	debug=true
 	mask=[constants.brick,constants.box,constants.platform,
-		constants.fireball,constants.pipe,constants.koopa,constants.goomba]
+		constants.fireball,constants.pipe,constants.koopa,constants.goomba
+		,constants.cannon,constants.beetle,constants.spiny,constants.beetle]
 	._ready()
 	rect=Rect2(Vector2(-15,-16),Vector2(30,32))
 #	gravity=constants.enemyGravity
@@ -86,10 +87,13 @@ func resume():
 		
 func rightCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnLeft()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.spiny||obj.type==constants.beetle:
 		if obj.status!=constants.deadJump:
 			turnLeft()
 #		return true
@@ -97,24 +101,26 @@ func rightCollide(obj):
 	
 func leftCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe\
-	||obj.type==constants.jumpingBoard:
-#		print(obj.type)
+	||obj.type==constants.jumpingBoard||obj.type==constants.cannon:
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		turnRight()
 		return true
-	elif  obj.type==constants.goomba||obj.type==constants.koopa:
+	elif  obj.type==constants.goomba||obj.type==constants.koopa\
+	||obj.type==constants.spiny||obj.type==constants.beetle:
 		if obj.status!=constants.deadJump:
 			turnRight()
 #		return true
 	
-	pass
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box||obj.type==constants.pipe:
-		if obj.type==constants.box&&obj.status==constants.bumped:
+		if obj.type==constants.box&&obj.status==constants.bumped||obj.type==constants.cannon:
 			Game.addScore(position,200)
 			if position.x>=obj.position.x:
 				startDeathJump(constants.right)
 			else:
 				startDeathJump()
+		if obj.type==constants.box&&!obj._visible:
+			return false
 		return true
-	pass

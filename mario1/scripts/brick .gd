@@ -13,7 +13,5 @@ func _ready():
 		ani.play(str(spriteIndex))
 	else:
 		ani.play("0")	
-	pass 
 
-#	set_process(false)
 
