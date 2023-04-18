@@ -127,7 +127,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test37.json")
+#	loadMapFile("res://levels/1-2.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -1468,18 +1468,24 @@ func addWarpZoneMsg():
 		temp.position.x=warpZone[0].x*blockSize-blockSize
 		temp.position.y=warpZone[0].y*blockSize-blockSize*4
 		_obj.add_child(temp)
-	else:
+	elif warpZone.size()>=2:
 		var temp= label.instance()
 		temp.setLabel("welcome to warp zone!")
 		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*3
+		temp.position.y=warpZone[0].y*blockSize-blockSize*5
+		_obj.add_child(temp)
+	elif warpZone.size()>=1:
+		var temp= label.instance()
+		temp.setLabel("welcome to warp zone!")
+		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*5
 		temp.position.y=warpZone[0].y*blockSize-blockSize*5
 		_obj.add_child(temp)
 		
 	for i in warpZone:
 		var temp= label.instance()
 		temp.setLabel(i.warpzoneNum)
-		temp.position.x=i.x*blockSize
-		temp.position.y=i.y*blockSize-blockSize*3
+		temp.position.x=i.x*blockSize-blockSize/3
+		temp.position.y=i.y*blockSize-blockSize*2
 		_obj.add_child(temp)
 	pass
 
