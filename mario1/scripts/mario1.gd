@@ -1176,24 +1176,30 @@ func floorCollide(obj):
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
 	||obj.type==constants.cannon:
-		if obj.type==constants.box:
-			if obj.status==constants.resting:
-				obj.startBumped(big)
-			else:
-				SoundsUtil.playBrickHit()	
-		else:			
-			SoundsUtil.playBrickHit()
-#		yVel=1	
 		#如果跟边缘发生碰撞小于2px就修改马里奥的位置
 		if position.x>obj.position.x:
 			if abs(getLeft()-obj.getRight())<3:
 				position.x=obj.getRight()+getSize()/2
 			else:
+				if obj.type==constants.box:
+					if obj.status==constants.resting:
+						obj.startBumped(big)
+					else:
+						SoundsUtil.playBrickHit()	
+				else:			
+					SoundsUtil.playBrickHit()
 				yVel=1	
 		else:
 			if abs(getRight()-obj.getLeft())<=3:
 				position.x=obj.getLeft()-getSize()/2
 			else:
+				if obj.type==constants.box:
+					if obj.status==constants.resting:
+						obj.startBumped(big)
+					else:
+						SoundsUtil.playBrickHit()	
+				else:			
+					SoundsUtil.playBrickHit()
 				yVel=1	
 	elif obj.type==constants.goomba||obj.type==constants.koopa\
 		||obj.type==constants.bulletBill||obj.type==constants.hammerBro\

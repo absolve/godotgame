@@ -127,7 +127,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/1-2.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -274,6 +274,7 @@ func _physics_process(delta):
 			if i.getTop()>winHeight&&i.yVel>0:
 				i.queue_free()	
 				
+	#todo 改为只更新屏幕内的箱子	
 	for i in _tile.get_children():
 		if i.type==constants.box||i.type==constants.bridge:
 			if i.active:
@@ -285,7 +286,8 @@ func _physics_process(delta):
 				i.queue_free()
 			else:
 				i._update(delta)
-			
+	
+		
 	for i in _obj.get_children():
 		if i.active:
 			i.yVel+=i.gravity*delta		#增加y速度
@@ -336,13 +338,7 @@ func _physics_process(delta):
 					_camera.position.x=0
 				else:
 					_camera.position.x-=abs(mario1.xVel*delta)
-#			for e in enemyList:
-#				if e['init']:
-#					continue
-#				if e.x*blockSize+blockSize/2>=_camera.position.x+winWidth && \
-#					e.x*blockSize+blockSize/2<=_camera.position.x+winWidth*1.2:
-#						addEnemy(e)
-#						e['init']=true
+
 			#判断屏幕右侧的敌人是否需要添加
 			var startPos=floor((_camera.position.x+winWidth)/blockSize)
 			var endPos=floor((_camera.position.x+winWidth*1.2)/blockSize)
@@ -360,7 +356,7 @@ func _physics_process(delta):
 					if mario1.position.x>warpZone[0].x*blockSize-blockSize*2:
 						addWarpZoneMsg()
 						hasAddWarpZone=true
-						pass
+						
 	#对区域进行判断					
 	flyingFishStart=false
 	fireStart=false
@@ -376,7 +372,15 @@ func _physics_process(delta):
 						fireStart=true
 				elif y.type==constants.bulletBill:
 					if y['startX']<i.position.x && y['endX']>i.position.x:
-						bulletStart=true				
+						bulletStart=true	
+			#如果马里奥到了迷宫的尽头判断游戏地图是不是只有一个屏幕大小
+			#如果不是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫信息
+			#设置成新的位置，如果迷宫失效直接忽略	
+			for m in mazeList:
+				if mazeList[m].vaild:
+					if mazeList[m]['endX']<i.position.x:
+						print(mazeList[m])		
+									
 	#飞鱼
 	if flyingFishStart:
 		flyingFishTimer+=1
@@ -794,7 +798,9 @@ func loadMapFile(fileName:String):
 				
 #		marioPos=pos
 		var tempArea=[]
+		var tempAreaEnd=[]
 		var tempMaze=[]
+		var tempMazeEnd=[]
 		for i in currentLevel['data']:
 			if i['type'] =='brick':
 				var temp=brick.instance()
@@ -937,7 +943,8 @@ func loadMapFile(fileName:String):
 								'startX':i['x']*blockSize,
 								'endX':-1,
 								'spriteIndex':-1,
-								'mazeId':str(i['mazeId'])
+								'mazeId':str(i['mazeId']),
+								'vaild':true,
 							}
 						tempMaze.append(temp)	
 				elif i['value']=='mazeEnd':
@@ -1045,7 +1052,13 @@ func loadMapFile(fileName:String):
 				areaList.append(i)
 			else:
 				printerr("数据错误 ",i)
-
+		
+		for i in tempMaze:
+			if i.endX!=-1:
+				mazeList[i.mazeId]=i
+			else:
+				printerr("数据错误 ",i)	
+		print(mazeList)
 	else:
 		print('文件不存在')
 		pass
@@ -1487,8 +1500,11 @@ func addWarpZoneMsg():
 		temp.position.x=i.x*blockSize-blockSize/3
 		temp.position.y=i.y*blockSize-blockSize*2
 		_obj.add_child(temp)
-	pass
 
+#添加一段新的迷宫	
+func addNewMaze(obj):
+	
+	pass
 
 func getObj():
 	return _obj
