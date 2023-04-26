@@ -406,26 +406,33 @@ func _physics_process(delta):
 #							for w in range(0,winHeight/blockSize+1):
 #								if mapData.has(str(z,',',w)):
 #									var b=mapData[str(z,',',w)]
-#									tempMapList.append(mapData[str(z,',',w)])
 #									b.position.x+=mazeLength
 #									b.localx+=mazeLength/blockSize
+#									tempMapList.append(b)
 #									mapData.erase(str(z,',',w))
+#
 #						for t in tempMapList:	#重建方块的字典
-#							mapData[str(i['localx'],",",i['localy'])]=t
+#							mapData[str(t.localx,",",t.localy)]=t
 #						mapWidthSize+=mazeLength/blockSize
 #						#复制迷宫里面的场景信息
-#						var offsetx=_camera.position.x+winWidth-mazeList[m]['startX']
+#						var offsetx=floor((_camera.position.x+winWidth-mazeList[m]['startX'])/blockSize)+1
+#						print(offsetx,' ',offsetx/blockSize)
 #						var tempList=mazeObjList[m]
+#						print(tempList)
 #						for x in tempList:
 #							var temp=x.duplicate()
-#							temp.localx+=offsetx/blockSize
-#							temp.position.x+=offsetx
-#							x.localx+=offsetx/blockSize
+#							for property in x.get_property_list():
+#								if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
+#									temp[property.name] = x[property.name]
+#							temp.localx+=offsetx
+#							temp.position.x+=offsetx*blockSize
+#							x.localx+=offsetx
 #							_tile.add_child(temp)
+#							print(str(temp.localx,",",temp.localy))
 #							mapData[str(temp.localx,",",temp.localy)]=temp
 #
 #						mazeList[m].vaild=false	
-			
+					
 									
 	#飞鱼
 	if flyingFishStart:
@@ -1159,11 +1166,15 @@ func loadMapFile(fileName:String):
 		for i in mazeList:
 			var m=mazeList[i]
 			mazeObjList[i]=[]
-			for y in range(m.startX/blockSize,m.endX/blockSize+1):
+			for y in range(m.startX/blockSize,m.endX/blockSize):
 				for z in range(0,winHeight/blockSize+1):
 					if mapData.has(str(y,',',z)):
 						var obj=mapData[str(y,',',z)]
-						mazeObjList[i].append(obj.duplicate())
+						var new=obj.duplicate()
+						for property in obj.get_property_list():
+							if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
+								new[property.name] = obj[property.name]
+						mazeObjList[i].append(new)
 		print(mazeObjList)		
 	else:
 		print('文件不存在')
