@@ -97,7 +97,7 @@ var bulletDelay=80
 var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
-
+var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
 
 func _ready():
 	randomize()
@@ -275,17 +275,35 @@ func _physics_process(delta):
 				i.queue_free()	
 				
 	#todo 改为只更新屏幕内的箱子	
-	for i in _tile.get_children():
-		if i.type==constants.box||i.type==constants.bridge:
-			if i.active:
-				i.yVel+=i.gravity*delta		#增加y速度
-				if i.yVel>i.maxYVel:
-					i.yVel=i.maxYVel
-			if i.destroy:
-				mapData[str(i.localx,',',i.localy)]=null
-				i.queue_free()
-			else:
-				i._update(delta)
+#	for i in _tile.get_children():
+#		if i.type==constants.box||i.type==constants.bridge:
+#			if i.active:
+#				i.yVel+=i.gravity*delta		#增加y速度
+#				if i.yVel>i.maxYVel:
+#					i.yVel=i.maxYVel
+#			if i.destroy:
+#				mapData[str(i.localx,',',i.localy)]=null
+#				i.queue_free()
+#			else:
+#				i._update(delta)
+	
+	for i in range(floor(_camera.position.x/blockSize),
+		floor((_camera.position.x+winWidth)/blockSize)+1):
+		for y in range(0,winHeight/blockSize+1):
+			if mapData.has(str(i,',',y)):
+				var b=mapData[str(i,',',y)]
+				if b.type==constants.box||b.type==constants.bridge:	
+					if b.active:
+						b.yVel+=b.gravity*delta		#增加y速度
+						if b.yVel>b.maxYVel:
+							b.yVel=b.maxYVel
+					if b.destroy:
+						mapData[str(b.localx,',',b.localy)]=null
+						b.queue_free()
+						mapData.erase(str(b.localx,',',b.localy))
+					else:
+						b._update(delta)
+	
 	
 		
 	for i in _obj.get_children():
@@ -376,10 +394,38 @@ func _physics_process(delta):
 			#如果马里奥到了迷宫的尽头判断游戏地图是不是只有一个屏幕大小
 			#如果不是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫信息
 			#设置成新的位置，如果迷宫失效直接忽略	
-			for m in mazeList:
-				if mazeList[m].vaild:
-					if mazeList[m]['endX']<i.position.x:
-						print(mazeList[m])		
+#			for m in mazeList:
+#				if mazeList[m].vaild:
+#					if mazeList[m]['endX']<i.position.x:
+#						print(mazeList[m])		
+#						var tempMapList=[]
+#						var mazeLength=(mazeList[m]['endX']-mazeList[m]['startX'])
+#						print('mazeLength',mazeLength)
+#						for z in range(floor((_camera.position.x+winWidth)/blockSize)+1
+#						,mapWidthSize):
+#							for w in range(0,winHeight/blockSize+1):
+#								if mapData.has(str(z,',',w)):
+#									var b=mapData[str(z,',',w)]
+#									tempMapList.append(mapData[str(z,',',w)])
+#									b.position.x+=mazeLength
+#									b.localx+=mazeLength/blockSize
+#									mapData.erase(str(z,',',w))
+#						for t in tempMapList:	#重建方块的字典
+#							mapData[str(i['localx'],",",i['localy'])]=t
+#						mapWidthSize+=mazeLength/blockSize
+#						#复制迷宫里面的场景信息
+#						var offsetx=_camera.position.x+winWidth-mazeList[m]['startX']
+#						var tempList=mazeObjList[m]
+#						for x in tempList:
+#							var temp=x.duplicate()
+#							temp.localx+=offsetx/blockSize
+#							temp.position.x+=offsetx
+#							x.localx+=offsetx/blockSize
+#							_tile.add_child(temp)
+#							mapData[str(temp.localx,",",temp.localy)]=temp
+#
+#						mazeList[m].vaild=false	
+			
 									
 	#飞鱼
 	if flyingFishStart:
@@ -574,9 +620,7 @@ func checkCollision(a,b,delta):
 								hCollision=true
 						elif dx<0 &&a.xVel<0:
 							if hCollision(a,b,delta)==true:
-								hCollision=true
-	
-					
+								hCollision=true			
 	return [hCollision,vCollision]
 
 
@@ -896,59 +940,95 @@ func loadMapFile(fileName:String):
 				elif i['value']=='subLevelPos':
 					specialEntrance.append(i)
 				elif i['value']=='flyingfishStart':
-					if !checkHasObj(tempArea,i['x']*blockSize,'flyingfishStart'):
-						var temp={
-							'type':constants.flyingfish,
-							'startX':i['x']*blockSize,
-							'endX':-1,
-							'spriteIndex':-1,
-							'groupId':str(i['groupId'])
-						}
-						if i.has('spriteType'):
-							temp.spriteIndex=i.spriteType
-						tempArea.append(temp)	
+#					if !checkHasObj(tempArea,i['x']*blockSize,'flyingfishStart'):
+					var temp={
+						'type':constants.flyingfish,
+						'startX':i['x']*blockSize,
+						'endX':-1,
+						'spriteIndex':-1,
+						'groupId':str(i['groupId'])
+					}
+					if i.has('spriteType'):
+						temp.spriteIndex=i.spriteType
+					tempArea.append(temp)	
 				elif i['value']=='flyingfishEnd':
-					setObjEnd(tempArea,i['x']*blockSize,'flyingfishEnd',str(i['groupId']))
+					var temp={
+						'type':constants.flyingfish,
+						'startX':0,
+						'endX':i['x']*blockSize,
+						'spriteIndex':-1,
+						'groupId':str(i['groupId'])
+					}
+					if i.has('spriteType'):
+						temp.spriteIndex=i.spriteType
+					tempAreaEnd.append(temp)	
+#					setObjEnd(tempArea,i['x']*blockSize,'flyingfishEnd',str(i['groupId']))
 				elif i['value']=='fireStart':
-					if !checkHasObj(tempArea,i['x']*blockSize,'fireStart'):
-						var temp={
+#					if !checkHasObj(tempArea,i['x']*blockSize,'fireStart'):
+					var temp={
+						'type':constants.fire,
+						'startX':i['x']*blockSize,
+						'endX':-1,
+						'spriteIndex':-1,
+						'groupId':str(i['groupId'])
+					}
+					if i.has('spriteType'):
+						temp.spriteIndex=i.spriteType
+					tempArea.append(temp)	
+				elif i['value']=='fireEnd':
+					var temp={
 							'type':constants.fire,
-							'startX':i['x']*blockSize,
-							'endX':-1,
+							'startX':0,
+							'endX':i['x']*blockSize,
 							'spriteIndex':-1,
 							'groupId':str(i['groupId'])
 						}
-						if i.has('spriteType'):
-							temp.spriteIndex=i.spriteType
-						tempArea.append(temp)	
-				elif i['value']=='fireEnd':
-					setObjEnd(tempArea,i['x']*blockSize,'fireEnd',str(i['groupId']))
+					tempAreaEnd.append(temp)	
+#					setObjEnd(tempArea,i['x']*blockSize,'fireEnd',str(i['groupId']))
 				elif i['value']=='bulletStart':
-					if !checkHasObj(tempArea,i['x']*blockSize,'bulletStart'):
-						var temp={
-								'type':constants.bulletBill,
-								'startX':i['x']*blockSize,
-								'endX':-1,
-								'spriteIndex':-1,
-								'spriteType':i['spriteType'],
-								'groupId':str(i['groupId'])
-							}
-						tempArea.append(temp)	
+#					if !checkHasObj(tempArea,i['x']*blockSize,'bulletStart'):
+					var temp={
+							'type':constants.bulletBill,
+							'startX':i['x']*blockSize,
+							'endX':-1,
+							'spriteIndex':-1,
+							'spriteType':i['spriteType'],
+							'groupId':str(i['groupId'])
+						}
+					tempArea.append(temp)	
 				elif i['value']=='bulletEnd':	
-					setObjEnd(tempArea,i['x']*blockSize,'bulletEnd',str(i['groupId']))		
+					var temp={
+							'type':constants.bulletBill,
+							'startX':0,
+							'endX':i['x']*blockSize,
+							'spriteIndex':-1,
+							'spriteType':i['spriteType'],
+							'groupId':str(i['groupId'])
+						}
+					tempAreaEnd.append(temp)	
+#					setObjEnd(tempArea,i['x']*blockSize,'bulletEnd',str(i['groupId']))		
 				elif i['value']=='mazeStart':
-					if !checkHasObj(tempMaze,i['x']*blockSize,'mazeStart'):
-						var temp={
-								'type':constants.maze,
-								'startX':i['x']*blockSize,
-								'endX':-1,
-								'spriteIndex':-1,
-								'mazeId':str(i['mazeId']),
-								'vaild':true,
-							}
-						tempMaze.append(temp)	
+#					if !checkHasObj(tempMaze,i['x']*blockSize,'mazeStart'):
+					var temp={
+							'type':constants.maze,
+							'startX':i['x']*blockSize,
+							'endX':-1,
+							'spriteIndex':-1,
+							'mazeId':str(i['mazeId']),
+							'vaild':true,
+						}
+					tempMaze.append(temp)	
 				elif i['value']=='mazeEnd':
-					setObjEnd(tempMaze,i['x']*blockSize,'mazeEnd',str(i['mazeId']))
+					var temp={
+							'type':constants.maze,
+							'startX':0,
+							'endX':i['x']*blockSize,
+							'spriteIndex':-1,
+							'mazeId':str(i['mazeId']),
+							'vaild':true,
+						}
+					tempMazeEnd.append(temp)	
+#					setObjEnd(tempMaze,i['x']*blockSize,'mazeEnd',str(i['mazeId']))
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -966,7 +1046,7 @@ func loadMapFile(fileName:String):
 				i['type']=='cheapcheap'||i['type']=='bloober'||\
 				i['type']=='lakitu'||i['type']=='hammerBro'||\
 				i['type']==constants.beetle:
-				i['init']=false
+				i['init']=false#用来设置是否初始化
 				if enemyPosList.has(str(i['x'])):
 					enemyPosList[str(i['x'])].append(i)
 				else:
@@ -1048,10 +1128,27 @@ func loadMapFile(fileName:String):
 #		print(mapData)
 		#检查区域信息
 		for i in tempArea:
+			for y in tempAreaEnd:
+				if i.type==constants.flyingfish && y.type==constants.flyingfish\
+				&&i.groupId==y.groupId:
+					i['endX']=y['endX']
+				elif i.type==constants.fire&& y.type==constants.fire\
+				&&i.groupId==y.groupId:
+					i['endX']=y['endX']
+				elif i.type==constants.bulletBill&& y.type==constants.bulletBill\
+				&&i.groupId==y.groupId:
+					i['endX']=y['endX']
+				
+		for i in tempArea:
 			if i.endX!=-1:
 				areaList.append(i)
 			else:
 				printerr("数据错误 ",i)
+		
+		for i in tempMaze:
+			for y in tempMazeEnd:
+				if i.type==constants.maze&&i.mazeId==y.mazeId:
+					i['endX']=y['endX']
 		
 		for i in tempMaze:
 			if i.endX!=-1:
@@ -1059,6 +1156,15 @@ func loadMapFile(fileName:String):
 			else:
 				printerr("数据错误 ",i)	
 		print(mazeList)
+		for i in mazeList:
+			var m=mazeList[i]
+			mazeObjList[i]=[]
+			for y in range(m.startX/blockSize,m.endX/blockSize+1):
+				for z in range(0,winHeight/blockSize+1):
+					if mapData.has(str(y,',',z)):
+						var obj=mapData[str(y,',',z)]
+						mazeObjList[i].append(obj.duplicate())
+		print(mazeObjList)		
 	else:
 		print('文件不存在')
 		pass
