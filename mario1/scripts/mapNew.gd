@@ -43,6 +43,7 @@ var linkPlatform=preload("res://scenes/linkPlatform.tscn")
 var fire=preload("res://scenes/fire.tscn")
 var bulletBill=preload("res://scenes/bulletBill.tscn")
 var beetle=preload("res://scenes/beetle.tscn")
+var mazeGate=preload("res://scenes/mazeGate.tscn")
 
 onready var _obj=$obj
 onready var _tile=$tile
@@ -304,7 +305,6 @@ func _physics_process(delta):
 					else:
 						b._update(delta)
 	
-	
 		
 	for i in _obj.get_children():
 		if i.active:
@@ -401,8 +401,7 @@ func _physics_process(delta):
 #						var tempMapList=[]
 #						var mazeLength=(mazeList[m]['endX']-mazeList[m]['startX'])
 #						print('mazeLength',mazeLength)
-#						for z in range(floor((_camera.position.x+winWidth)/blockSize)+1
-#						,mapWidthSize):
+#						for z in range(floor((_camera.position.x+winWidth)/blockSize)+1,mapWidthSize):
 #							for w in range(0,winHeight/blockSize+1):
 #								if mapData.has(str(z,',',w)):
 #									var b=mapData[str(z,',',w)]
@@ -413,12 +412,20 @@ func _physics_process(delta):
 #
 #						for t in tempMapList:	#重建方块的字典
 #							mapData[str(t.localx,",",t.localy)]=t
+#						#移动屏幕外敌人的位置	
+#						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
+#							if enemyPosList.has(str(z)):	
+#								enemyPosList[str(z+mazeLength)]=enemyPosList[str(z)]
+#								enemyPosList.erase(str(z))
+#
 #						mapWidthSize+=mazeLength/blockSize
+#						if castleEndX!=0:	#把斧头的位置移动
+#							castleEndX+=mazeLength
 #						#复制迷宫里面的场景信息
 #						var offsetx=floor((_camera.position.x+winWidth-mazeList[m]['startX'])/blockSize)+1
 #						print(offsetx,' ',offsetx/blockSize)
 #						var tempList=mazeObjList[m]
-#						print(tempList)
+##						print(tempList)
 #						for x in tempList:
 #							var temp=x.duplicate()
 #							for property in x.get_property_list():
@@ -427,10 +434,24 @@ func _physics_process(delta):
 #							temp.localx+=offsetx
 #							temp.position.x+=offsetx*blockSize
 #							x.localx+=offsetx
+#							x.position.x+=offsetx*blockSize
 #							_tile.add_child(temp)
-#							print(str(temp.localx,",",temp.localy))
+##							print(str(temp.localx,",",temp.localy))
 #							mapData[str(temp.localx,",",temp.localy)]=temp
 #
+#						#移动迷宫内敌人的位置
+#						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
+#							if enemyPosList.has(str(w)):
+#								var temp=enemyPosList[str(w)]
+#								enemyPosList[str(w+offsetx)]=temp.duplicate(true)
+#								for e in enemyPosList[str(w+offsetx)]:
+#									e.init=false
+#
+#
+#
+#						mazeList[m].startX+=offsetx*blockSize
+#						mazeList[m].endX+=offsetx*blockSize
+#						print(mazeList[m])
 #						mazeList[m].vaild=false	
 					
 									

@@ -193,7 +193,7 @@ const linkPlatform='linkPlatform' #联动平台
 const staticPlatform='staticPlatform' #基本不动的平台
 const flyingfish='flyingfish' #飞鱼
 const maze='maze'
-
+const mazeGate='mazeGate'
 
 #方向
 const right="right"
@@ -889,6 +889,7 @@ const tilesAttribute={
 		"y": 0,
 		"value":"mazeGate",
 		"mazeId":0,  #属于那个迷宫
+		'gateId':0, #门的id 代表类型
 		'layer':0,
 	},
 	
