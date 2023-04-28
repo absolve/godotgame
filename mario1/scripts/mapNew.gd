@@ -415,7 +415,10 @@ func _physics_process(delta):
 #						#移动屏幕外敌人的位置	
 #						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
 #							if enemyPosList.has(str(z)):	
-#								enemyPosList[str(z+mazeLength)]=enemyPosList[str(z)]
+#								var temp=enemyPosList[str(z)]
+#								enemyPosList[str(z+mazeLength)]=temp
+#								for e in temp:
+#									e.x+=mazeLength/blockSize
 #								enemyPosList.erase(str(z))
 #
 #						mapWidthSize+=mazeLength/blockSize
@@ -445,6 +448,7 @@ func _physics_process(delta):
 #								var temp=enemyPosList[str(w)]
 #								enemyPosList[str(w+offsetx)]=temp.duplicate(true)
 #								for e in enemyPosList[str(w+offsetx)]:
+#									e.x+=offsetx
 #									e.init=false
 #
 #
