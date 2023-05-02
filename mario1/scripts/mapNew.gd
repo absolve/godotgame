@@ -99,6 +99,7 @@ var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
 var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
+var mapObjList={} #地图对象以x,y为key value为对象
 
 func _ready():
 	randomize()
@@ -121,7 +122,7 @@ func _ready():
 	Game.connect('marioContactAxe',self,'marioContactAxe')
 	Game.connect('vineEnd',self,'vineEnd')
 	Game.connect('marioGrapVineTop',self,'marioGrapVineTop')
-
+	Game.connect('mazegate',self,'mazegate')
 	
 	if isShow:
 		_fps.visible=false
@@ -255,8 +256,7 @@ func _physics_process(delta):
 							if i.status!=constants.deadJump:
 								marioDead(i.position.x)
 							_gameover.start()	
-							i.queue_free()
-								
+							i.queue_free()				
 				else:	
 					i.queue_free()
 		elif i.type==constants.bowser:
@@ -392,72 +392,162 @@ func _physics_process(delta):
 					if y['startX']<i.position.x && y['endX']>i.position.x:
 						bulletStart=true	
 			#如果马里奥到了迷宫的尽头判断游戏地图是不是只有一个屏幕大小
-			#如果不是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫信息
+			#如果不是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫到屏幕的位置
 			#设置成新的位置，如果迷宫失效直接忽略	
-#			for m in mazeList:
-#				if mazeList[m].vaild:
-#					if mazeList[m]['endX']<i.position.x:
-#						print(mazeList[m])		
-#						var tempMapList=[]
+			for m in mazeList:
+				if mazeList[m].vaild:
+					if mazeList[m]['endX']<=i.position.x:
+						print(mazeList[m])		
+						var tempMapList=[]
+						var tempMapObjList=[]
 #						var mazeLength=(mazeList[m]['endX']-mazeList[m]['startX'])
-#						print('mazeLength',mazeLength)
-#						for z in range(floor((_camera.position.x+winWidth)/blockSize)+1,mapWidthSize):
-#							for w in range(0,winHeight/blockSize+1):
-#								if mapData.has(str(z,',',w)):
-#									var b=mapData[str(z,',',w)]
-#									b.position.x+=mazeLength
-#									b.localx+=mazeLength/blockSize
-#									tempMapList.append(b)
-#									mapData.erase(str(z,',',w))
-#
-#						for t in tempMapList:	#重建方块的字典
-#							mapData[str(t.localx,",",t.localy)]=t
-#						#移动屏幕外敌人的位置	
-#						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
-#							if enemyPosList.has(str(z)):	
-#								var temp=enemyPosList[str(z)]
-#								enemyPosList[str(z+mazeLength)]=temp
-#								for e in temp:
-#									e.x+=mazeLength/blockSize
-#								enemyPosList.erase(str(z))
-#
-#						mapWidthSize+=mazeLength/blockSize
-#						if castleEndX!=0:	#把斧头的位置移动
-#							castleEndX+=mazeLength
-#						#复制迷宫里面的场景信息
-#						var offsetx=floor((_camera.position.x+winWidth-mazeList[m]['startX'])/blockSize)+1
-#						print(offsetx,' ',offsetx/blockSize)
-#						var tempList=mazeObjList[m]
-##						print(tempList)
-#						for x in tempList:
-#							var temp=x.duplicate()
-#							for property in x.get_property_list():
-#								if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
-#									temp[property.name] = x[property.name]
-#							temp.localx+=offsetx
-#							temp.position.x+=offsetx*blockSize
-#							x.localx+=offsetx
-#							x.position.x+=offsetx*blockSize
-#							_tile.add_child(temp)
-##							print(str(temp.localx,",",temp.localy))
-#							mapData[str(temp.localx,",",temp.localy)]=temp
-#
-#						#移动迷宫内敌人的位置
-#						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
-#							if enemyPosList.has(str(w)):
-#								var temp=enemyPosList[str(w)]
-#								enemyPosList[str(w+offsetx)]=temp.duplicate(true)
-#								for e in enemyPosList[str(w+offsetx)]:
-#									e.x+=offsetx
-#									e.init=false
-#
-#
-#
-#						mazeList[m].startX+=offsetx*blockSize
-#						mazeList[m].endX+=offsetx*blockSize
+						var mazeLength=floor((_camera.position.x+winWidth
+										-mazeList[m]['startX'])/blockSize)
+						print(_camera.position.x+winWidth)
+						print('result ',_camera.position.x+winWidth-mazeList[m]['startX'])
+						print('startX ',mazeList[m]['startX'])
+						print('mazeLength ',mazeLength)
+						print('mario ',i.position.x)
+						print('mapWidthSize ',mapWidthSize)
+						print('移动位置 ',floor((_camera.position.x+winWidth)/blockSize))
+						for z in range(floor((_camera.position.x+winWidth)/blockSize),mapWidthSize):
+							print('index ',z)
+							for w in range(0,winHeight/blockSize+1):
+								if mapData.has(str(z,',',w)):
+									var b=mapData[str(z,',',w)]
+									b.position.x+=mazeLength*blockSize
+									b.localx+=mazeLength
+									tempMapList.append(b)
+									mapData.erase(str(z,',',w))
+								if mapObjList.has(str(z,',',w)): #存的是地图json数据
+									var b=mapObjList[str(z,',',w)]
+									tempMapObjList.append(b)
+									b.x+=mazeLength
+									mapObjList.erase(str(z,',',w))
+								
+						for t in tempMapList:	#重建方块的字典
+							mapData[str(t.localx,",",t.localy)]=t
+						for t in tempMapObjList:
+							mapObjList[str(t.x,",",t.y)]=t	
+							
+						#移动屏幕外敌人的位置	
+						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
+							if enemyPosList.has(str(z)):	
+								var temp=enemyPosList[str(z)]
+								enemyPosList[str(z+mazeLength)]=temp
+								for e in temp:
+									e.x+=mazeLength
+								enemyPosList.erase(str(z))
+
+						mapWidthSize+=mazeLength
+						if castleEndX!=0:	#把斧头的位置移动
+							castleEndX+=mazeLength*blockSize
+						#复制迷宫里面的场景信息
+						var offsetx=mazeLength
+						print('offsetx ',offsetx)
+						for z in range(mazeList[m]['startX']/blockSize,
+							floor((_camera.position.x+winWidth)/blockSize)):
+							for w in range(0,winHeight/blockSize+1):
+								if mapObjList.has(str(z,',',w)):
+									var obj=mapObjList[str(z,',',w)].duplicate(true)
+									if obj['type'] =='brick':
+										var temp=brick.instance()
+										temp.spriteIndex=obj['spriteIndex']
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										obj['x']+=offsetx
+										_tile.add_child(temp)
+										mapData[str(temp.localx,",",temp.localy)]=temp
+										mapObjList[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']=='box':
+										var temp=box.instance()
+										temp.spriteIndex=obj['spriteIndex']
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										obj['x']+=offsetx
+										temp.content=obj['content']
+										if typeof(obj['visible'])==TYPE_BOOL:
+											temp._visible=obj['visible']
+										elif typeof(obj['visible'])==TYPE_STRING:
+											if obj['visible']=="false"||obj['visible']=="f":
+												temp._visible=false
+											else:
+												temp._visible=true
+										if obj.has('level'):
+											temp.level=obj['level']
+										if obj.has('subLevel'):
+											temp.subLevel=obj['subLevel']
+										if obj.has('itemIndex'):
+											temp.itemIndex=int(obj['itemIndex'])							
+										_tile.add_child(temp)
+										mapData[str(temp.localx,",",temp.localy)]=temp
+										mapObjList[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']=='pipe':
+										var temp=pipe.instance()
+										temp.spriteIndex=obj['spriteIndex']
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.rotate=int(obj['rotate'])
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										obj['x']+=offsetx
+										if obj.has('pipeType'):
+											temp.pipeType=obj['pipeType']
+										if obj.has('pipeNo'):
+											temp.pipeNo=obj['pipeNo']
+										if obj.has("dir"):
+											temp.dir=obj['dir']
+										_tile.add_child(temp)
+										if obj.has('pipeType')&&obj['pipeType']!=constants.empty&&obj['pipeType']!='':
+											specialEntrance.append(obj)
+										if obj.has('warpzoneNum')&& obj['warpzoneNum']!='':
+											warpZone.append(obj)
+										mapData[str(temp.localx,",",temp.localy)]=temp
+										mapObjList[str(temp.localx,",",temp.localy)]=obj	
+									elif obj['type']=='collision' && obj['value']=='mazeGate':
+										var temp=mazeGate.instance()
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										temp.gateId=obj['gateId']
+										temp.mazeId=mazeList[m].mazeId
+										obj['x']+=offsetx
+										_tile.add_child(temp)
+										mapData[str(temp.localx,",",temp.localy)]=temp
+										mapObjList[str(temp.localx,",",temp.localy)]=obj
+
+						#移动迷宫内敌人的位置
+						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
+							if enemyPosList.has(str(w)):
+								var temp=enemyPosList[str(w)]
+								enemyPosList[str(w+offsetx)]=temp.duplicate(true)
+								for e in enemyPosList[str(w+offsetx)]:
+									e.x+=offsetx
+									e.init=false
+
+
+
+						mazeList[m].startX+=offsetx*blockSize
+						mazeList[m].endX+=offsetx*blockSize
+						for s in mazeList[m].gate:	#重新设置迷宫门的状态
+							mazeList[m].gate[s]=0
+						#重新设置其他有效迷宫的位置
+						for x in mazeList:
+							if  mazeList[x]!=mazeList[m]&& mazeList[x].vaild && \
+							mazeList[x].endX>mazeList[m].endX:
+								mazeList[x].startX+=offsetx*blockSize
+								mazeList[x].endX+=offsetx*blockSize
+							
 #						print(mazeList[m])
+#						print(mazeList)
+#						if offsetx<16:
+#							mazeList[m].vaild=false	
 #						mazeList[m].vaild=false	
-					
 									
 	#飞鱼
 	if flyingFishStart:
@@ -887,6 +977,7 @@ func loadMapFile(fileName:String):
 				temp.localy=i['y']
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
+				mapObjList[str(i['x'],",",i['y'])]=i
 			elif i['type'] =='bridge':
 				var temp=bridge.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -897,6 +988,7 @@ func loadMapFile(fileName:String):
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
 				castleBridge.append(temp) #保存这些桥
+				mapObjList[str(i['x'],",",i['y'])]=i
 			elif i['type']=='box':
 				var temp=box.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -921,6 +1013,7 @@ func loadMapFile(fileName:String):
 					
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
+				mapObjList[str(i['x'],",",i['y'])]=i
 			elif i['type']=="platform":
 				var temp=platform.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -946,6 +1039,8 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.rotate=int(i['rotate'])
+				temp.localx=i['x']
+				temp.localy=i['y']
 				if i.has('pipeType'):
 					temp.pipeType=i['pipeType']
 				if i.has('pipeNo'):
@@ -958,6 +1053,7 @@ func loadMapFile(fileName:String):
 					specialEntrance.append(i)
 				if i.has('warpzoneNum')	&& i['warpzoneNum']!='':
 					warpZone.append(i)
+				mapObjList[str(i['x'],",",i['y'])]=i	
 			elif  i['type']=='flag':  #旗杆
 				var temp = pole.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1061,6 +1157,16 @@ func loadMapFile(fileName:String):
 						}
 					tempMazeEnd.append(temp)	
 #					setObjEnd(tempMaze,i['x']*blockSize,'mazeEnd',str(i['mazeId']))
+				elif i['value']=='mazeGate': #迷宫门
+					var temp=mazeGate.instance()
+					temp.position.x=i['x']*blockSize+blockSize/2
+					temp.position.y=i['y']*blockSize+blockSize/2
+					temp.localx=i['x']
+					temp.localy=i['y']
+					temp.gateId=i['gateId']
+					_tile.add_child(temp)
+					mapData[str(i['x'],",",i['y'])]=temp
+					mapObjList[str(i['x'],",",i['y'])]=i
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -1155,6 +1261,7 @@ func loadMapFile(fileName:String):
 				if i.has('lens'):
 					temp.lens=int(i['lens'])
 				_obj.add_child(temp)
+			
 				
 		file.close()
 #		print(mapData)
@@ -1187,20 +1294,32 @@ func loadMapFile(fileName:String):
 				mazeList[i.mazeId]=i
 			else:
 				printerr("数据错误 ",i)	
-		print(mazeList)
-		for i in mazeList:
+		
+		for i in mazeList:  #设置每个迷宫里面的门
 			var m=mazeList[i]
-			mazeObjList[i]=[]
+			m['gate']={} #根据门id设置 value 0开启 1关闭
 			for y in range(m.startX/blockSize,m.endX/blockSize):
 				for z in range(0,winHeight/blockSize+1):
 					if mapData.has(str(y,',',z)):
 						var obj=mapData[str(y,',',z)]
-						var new=obj.duplicate()
-						for property in obj.get_property_list():
-							if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
-								new[property.name] = obj[property.name]
-						mazeObjList[i].append(new)
-		print(mazeObjList)		
+						if obj.type==constants.mazeGate:
+							obj.mazeId=m.mazeId
+							if !m['gate'].has(obj.gateId):
+								m['gate'][obj.gateId]=0
+		print(mazeList)						
+#		for i in mazeList:
+#			var m=mazeList[i]
+#			mazeObjList[i]=[]
+#			for y in range(m.startX/blockSize,m.endX/blockSize):
+#				for z in range(0,winHeight/blockSize+1):
+#					if mapData.has(str(y,',',z)):
+#						var obj=mapData[str(y,',',z)]
+#						var new=obj.duplicate()
+#						for property in obj.get_property_list():
+#							if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
+#								new[property.name] = obj[property.name]
+#						mazeObjList[i].append(new)
+#		print(mazeObjList)		
 	else:
 		print('文件不存在')
 		pass
@@ -1648,6 +1767,22 @@ func addNewMaze(obj):
 	
 	pass
 
+#设置迷宫门
+func mazegate(mazeId,gateId):
+	print(mazeId,gateId)
+	if mazeList.has(mazeId):
+		if mazeList[mazeId].gate.has(gateId):
+			mazeList[mazeId].gate[gateId]=1
+			print(mazeList)
+			print(mazeList[mazeId].gate.size())
+			var num=0
+			for i in  mazeList[mazeId].gate:
+				if mazeList[mazeId].gate[i]==1:
+					num+=1
+			if num==mazeList[mazeId].gate.size():
+				mazeList[mazeId].vaild=false
+				print('迷宫',mazeId,'失效')
+			
 func getObj():
 	return _obj
 	

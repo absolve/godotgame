@@ -102,7 +102,7 @@ func _ready():
 		constants.fire,constants.vine,constants.jumpingBoard,constants.bloober,
 		constants.bulletBill,constants.cannon,constants.hammer,constants.staticPlatform,
 		constants.hammerBro,constants.cheapcheap,constants.flyingfish,constants.spiny,
-		constants.podoboo,constants.lakitu,constants.beetle]
+		constants.podoboo,constants.lakitu,constants.beetle,constants.mazeGate]
 	maxXVel=constants.marioWalkMaxSpeed
 	maxYVel=constants.marioMaxYVel #y轴最大速度
 #	status=constants.stop
@@ -998,7 +998,12 @@ func rightCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-	
+	elif obj.type==constants.mazeGate:
+#		print('mazeGate')
+		if obj.vaild:
+			obj.vaild=false
+			Game.emit_signal("mazegate",obj.mazeId,obj.gateId)
+		pass
 
 #判断左边碰撞
 func leftCollide(obj):
@@ -1094,7 +1099,11 @@ func leftCollide(obj):
 	elif obj.type==constants.vine:
 		if status!=constants.grabVine:
 			setGrabVine(obj)
-
+	elif obj.type==constants.mazeGate:
+#		print('mazeGate')
+		if obj.vaild:
+			obj.vaild=false
+			Game.emit_signal("mazegate",obj.mazeId,obj.gateId)
 	
 func floorCollide(obj):
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
@@ -1171,7 +1180,11 @@ func floorCollide(obj):
 	elif obj.type==constants.jumpingBoard: #在跳板上
 		if yVel>0&&status!=constants.onBoard:
 			setOnBoard(obj)
-	
+	elif obj.type==constants.mazeGate:
+#		print('mazeGate')
+		if obj.vaild:
+			obj.vaild=false
+			Game.emit_signal("mazegate",obj.mazeId,obj.gateId)
 
 func ceilcollide(obj):#上方的判断
 	if obj.type==constants.brick || obj.type==constants.box|| obj.type==constants.bridge\
@@ -1233,7 +1246,11 @@ func ceilcollide(obj):#上方的判断
 				setHurtInvincible()
 			else:	
 				startDeathJump()	
-	
+	elif obj.type==constants.mazeGate:
+#		print('mazeGate')
+		if obj.vaild:
+			obj.vaild=false
+			Game.emit_signal("mazegate",obj.mazeId,obj.gateId)
 
 #获取物品
 func getItem(i):
@@ -1318,7 +1335,7 @@ func addPoleScore(polePos,obj):
 
 #踩到敌人
 func jumpOnEnemy(obj):
-	print('jumpOnEnemy')
+#	print('jumpOnEnemy')
 	if! obj._dead:
 		if invincible:
 			obj.startDeathJump(constants.right)
