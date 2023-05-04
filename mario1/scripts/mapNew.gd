@@ -129,7 +129,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test37.json")
+#	loadMapFile("res://levels/8-4-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -411,7 +411,6 @@ func _physics_process(delta):
 						print('mapWidthSize ',mapWidthSize)
 						print('移动位置 ',floor((_camera.position.x+winWidth)/blockSize))
 						for z in range(floor((_camera.position.x+winWidth)/blockSize),mapWidthSize):
-							print('index ',z)
 							for w in range(0,winHeight/blockSize+1):
 								if mapData.has(str(z,',',w)):
 									var b=mapData[str(z,',',w)]
