@@ -1,6 +1,28 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/pacman.gd" type="Script" id=1]
 
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [  ],
+"loop": true,
+"name": "die",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "intermission",
+"speed": 5.0
+} ]
+
 [node name="pacman" type="Node2D"]
 script = ExtResource( 1 )
+
+[node name="ani" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "intermission"

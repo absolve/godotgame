@@ -98,8 +98,15 @@ var bulletDelay=80
 var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
-var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
+#var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
 var mapObjList={} #地图对象以x,y为key value为对象
+var mapBgList={}	#背景的信息以x,y为key value为对象
+var mapBgData={}	#保存的是背景的节点数据
+var mapOtherList={} #一些平台或者其他需要保存的数据以x,y为key value为对象
+
+var mapObjData={'bg':{},'obj':{}}#地图中对象的node数据
+var mapObj={'tile':{},'bg':{},'obj':{}} #用来保存地图中一些对象的json数据
+
 
 func _ready():
 	randomize()
@@ -391,8 +398,8 @@ func _physics_process(delta):
 				elif y.type==constants.bulletBill:
 					if y['startX']<i.position.x && y['endX']>i.position.x:
 						bulletStart=true	
-			#如果马里奥到了迷宫的尽头判断游戏地图是不是只有一个屏幕大小
-			#如果不是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫到屏幕的位置
+			#如果马里奥到了迷宫的尽头判断迷宫是否有效
+			#如果是就在屏幕外部添加一段迷宫地图，并把原先地图后移，在把迷宫到屏幕的位置
 			#设置成新的位置，如果迷宫失效直接忽略	
 			for m in mazeList:
 				if mazeList[m].vaild:
@@ -400,6 +407,8 @@ func _physics_process(delta):
 						print(mazeList[m])		
 						var tempMapList=[]
 						var tempMapObjList=[]
+						var tempMapBgList=[]
+						var tempMapBgData=[]
 #						var mazeLength=(mazeList[m]['endX']-mazeList[m]['startX'])
 						var mazeLength=floor((_camera.position.x+winWidth
 										-mazeList[m]['startX'])/blockSize)
@@ -418,16 +427,31 @@ func _physics_process(delta):
 									b.localx+=mazeLength
 									tempMapList.append(b)
 									mapData.erase(str(z,',',w))
-								if mapObjList.has(str(z,',',w)): #存的是地图json数据
+								if mapObjList.has(str(z,',',w)): #存的是地图方块json数据
 									var b=mapObjList[str(z,',',w)]
 									tempMapObjList.append(b)
 									b.x+=mazeLength
 									mapObjList.erase(str(z,',',w))
-								
+								if mapBgData.has(str(z,',',w)): #如果有背景
+									var b=mapBgData[str(z,',',w)]
+									b.position.x+=mazeLength*blockSize
+									b.localx+=mazeLength
+									tempMapBgData.append(b)
+									mapBgData.erase(str(z,',',w))
+								if mapBgList.has(str(z,',',w)): #改变json数据
+									var b=mapBgList[str(z,',',w)]
+									tempMapBgList.append(b)
+									b.x+=mazeLength
+									mapBgList.erase(str(z,',',w))
+									
 						for t in tempMapList:	#重建方块的字典
 							mapData[str(t.localx,",",t.localy)]=t
 						for t in tempMapObjList:
 							mapObjList[str(t.x,",",t.y)]=t	
+						for t in tempMapBgData:
+							mapBgData[str(t.localx,",",t.localy)]=t	
+						for t in tempMapBgList:
+							mapBgList[str(t.x,",",t.y)]=t	
 							
 						#移动屏幕外敌人的位置	
 						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
@@ -519,7 +543,20 @@ func _physics_process(delta):
 										_tile.add_child(temp)
 										mapData[str(temp.localx,",",temp.localy)]=temp
 										mapObjList[str(temp.localx,",",temp.localy)]=obj
-
+								
+								if mapBgList.has(str(z,',',w)):
+									var obj=mapBgList[str(z,',',w)].duplicate(true)
+									var temp=background.instance()
+									temp.spriteIndex=obj['spriteIndex']
+									temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+									temp.position.y=obj['y']*blockSize+blockSize/2
+									temp.localx=obj['x']
+									temp.localy=obj['y']
+									obj['x']+=offsetx
+									_tile.add_child(temp)
+									mapBgData[str(temp.localx,",",temp.localy)]=temp
+									mapBgList[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
+									
 						#移动迷宫内敌人的位置
 						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
 							if enemyPosList.has(str(w)):
@@ -944,7 +981,6 @@ func loadMapFile(fileName:String):
 		print(marioStatus)
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
-#			if mode=='game' ||  mode=='show':
 			var temp=mario.instance()
 			temp.position.x=pos['x']*blockSize+blockSize/2
 			temp.position.y=pos['y']*blockSize+blockSize/2
@@ -1177,7 +1213,11 @@ func loadMapFile(fileName:String):
 				temp.spriteIndex=i['spriteIndex']
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.localx=i['x']
+				temp.localy=i['y']
 				_tile.add_child(temp)
+				mapBgData[str(i['x'],",",i['y'])]=temp
+				mapBgList[str(i['x'],",",i['y'])]=i #背景数据保存起来
 			elif i['type']=='goomba' || i['type']=='koopa'||\
 				i['type']==constants.plant||i['type']=='bowser'||\
 				i['type']=='cheapcheap'||i['type']=='bloober'||\
