@@ -99,10 +99,10 @@ var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
 #var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
-var mapObjList={} #地图对象以x,y为key value为对象
-var mapBgList={}	#背景的信息以x,y为key value为对象
-var mapBgData={}	#保存的是背景的节点数据
-var mapOtherList={} #一些平台或者其他需要保存的数据以x,y为key value为对象
+#var mapObjList={} #地图对象以x,y为key value为对象
+#var mapBgList={}	#背景的信息以x,y为key value为对象
+#var mapBgData={}	#保存的是背景的节点数据
+#var mapOtherList={} #一些平台或者其他需要保存的数据以x,y为key value为对象
 
 var mapObjData={'bg':{},'obj':{}}#地图中对象的node数据
 var mapObj={'tile':{},'bg':{},'obj':{}} #用来保存地图中一些对象的json数据
@@ -136,7 +136,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/8-4-1.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -427,31 +427,52 @@ func _physics_process(delta):
 									b.localx+=mazeLength
 									tempMapList.append(b)
 									mapData.erase(str(z,',',w))
-								if mapObjList.has(str(z,',',w)): #存的是地图方块json数据
-									var b=mapObjList[str(z,',',w)]
+#								if mapObjList.has(str(z,',',w)): #存的是地图方块json数据
+#									var b=mapObjList[str(z,',',w)]
+#									tempMapObjList.append(b)
+#									b.x+=mazeLength
+#									mapObjList.erase(str(z,',',w))
+								if mapObj.tile.has(str(z,',',w)): #存的是地图方块json数据
+									var b=mapObj.tile[str(z,',',w)]
 									tempMapObjList.append(b)
 									b.x+=mazeLength
-									mapObjList.erase(str(z,',',w))
-								if mapBgData.has(str(z,',',w)): #如果有背景
-									var b=mapBgData[str(z,',',w)]
+									mapObj.tile.erase(str(z,',',w))	
+									
+#								if mapBgData.has(str(z,',',w)): #如果有背景
+#									var b=mapBgData[str(z,',',w)]
+#									b.position.x+=mazeLength*blockSize
+#									b.localx+=mazeLength
+#									tempMapBgData.append(b)
+#									mapBgData.erase(str(z,',',w))
+#								if mapBgList.has(str(z,',',w)): #改变json数据
+#									var b=mapBgList[str(z,',',w)]
+#									tempMapBgList.append(b)
+#									b.x+=mazeLength
+#									mapBgList.erase(str(z,',',w))
+								if mapObj.bg.has(str(z,',',w)):
+									var b=mapObj.bg[str(z,',',w)]
+									tempMapBgList.append(b)
+									b.x+=mazeLength
+									mapObj.bg.erase(str(z,',',w))
+								if mapObjData.bg.has(str(z,',',w)):
+									var b=mapObjData.bg[str(z,',',w)]
 									b.position.x+=mazeLength*blockSize
 									b.localx+=mazeLength
 									tempMapBgData.append(b)
-									mapBgData.erase(str(z,',',w))
-								if mapBgList.has(str(z,',',w)): #改变json数据
-									var b=mapBgList[str(z,',',w)]
-									tempMapBgList.append(b)
-									b.x+=mazeLength
-									mapBgList.erase(str(z,',',w))
+									mapObjData.bg.erase(str(z,',',w))
 									
 						for t in tempMapList:	#重建方块的字典
 							mapData[str(t.localx,",",t.localy)]=t
 						for t in tempMapObjList:
-							mapObjList[str(t.x,",",t.y)]=t	
+							mapObj.tile[str(t.x,",",t.y)]=t	
+#						for t in tempMapBgData:
+#							mapBgData[str(t.localx,",",t.localy)]=t	
+#						for t in tempMapBgList:
+#							mapBgList[str(t.x,",",t.y)]=t	
+						for t in tempMapBgList: 
+							mapObj.bg[str(t.x,",",t.y)]=t	
 						for t in tempMapBgData:
-							mapBgData[str(t.localx,",",t.localy)]=t	
-						for t in tempMapBgList:
-							mapBgList[str(t.x,",",t.y)]=t	
+							mapObjData.bg[str(t.localx,",",t.localy)]=t	
 							
 						#移动屏幕外敌人的位置	
 						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
@@ -471,8 +492,8 @@ func _physics_process(delta):
 						for z in range(mazeList[m]['startX']/blockSize,
 							floor((_camera.position.x+winWidth)/blockSize)):
 							for w in range(0,winHeight/blockSize+1):
-								if mapObjList.has(str(z,',',w)):
-									var obj=mapObjList[str(z,',',w)].duplicate(true)
+								if mapObj.tile.has(str(z,',',w)):
+									var obj=mapObj.tile[str(z,',',w)].duplicate(true)
 									if obj['type'] =='brick':
 										var temp=brick.instance()
 										temp.spriteIndex=obj['spriteIndex']
@@ -483,7 +504,7 @@ func _physics_process(delta):
 										obj['x']+=offsetx
 										_tile.add_child(temp)
 										mapData[str(temp.localx,",",temp.localy)]=temp
-										mapObjList[str(temp.localx,",",temp.localy)]=obj
+										mapObj.tile[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']=='box':
 										var temp=box.instance()
 										temp.spriteIndex=obj['spriteIndex']
@@ -508,7 +529,7 @@ func _physics_process(delta):
 											temp.itemIndex=int(obj['itemIndex'])							
 										_tile.add_child(temp)
 										mapData[str(temp.localx,",",temp.localy)]=temp
-										mapObjList[str(temp.localx,",",temp.localy)]=obj
+										mapObj.tile[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']=='pipe':
 										var temp=pipe.instance()
 										temp.spriteIndex=obj['spriteIndex']
@@ -530,7 +551,7 @@ func _physics_process(delta):
 										if obj.has('warpzoneNum')&& obj['warpzoneNum']!='':
 											warpZone.append(obj)
 										mapData[str(temp.localx,",",temp.localy)]=temp
-										mapObjList[str(temp.localx,",",temp.localy)]=obj	
+										mapObj.tile[str(temp.localx,",",temp.localy)]=obj	
 									elif obj['type']=='collision' && obj['value']=='mazeGate':
 										var temp=mazeGate.instance()
 										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
@@ -542,20 +563,34 @@ func _physics_process(delta):
 										obj['x']+=offsetx
 										_tile.add_child(temp)
 										mapData[str(temp.localx,",",temp.localy)]=temp
-										mapObjList[str(temp.localx,",",temp.localy)]=obj
+										mapObj.tile[str(temp.localx,",",temp.localy)]=obj
 								
-								if mapBgList.has(str(z,',',w)):
-									var obj=mapBgList[str(z,',',w)].duplicate(true)
+#								if mapBgList.has(str(z,',',w)):
+#									var obj=mapBgList[str(z,',',w)].duplicate(true)
+#									var temp=background.instance()
+#									temp.spriteIndex=obj['spriteIndex']
+#									temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+#									temp.position.y=obj['y']*blockSize+blockSize/2
+#									temp.localx=obj['x']
+#									temp.localy=obj['y']
+#									obj['x']+=offsetx
+#									_tile.add_child(temp)
+#									mapBgData[str(temp.localx,",",temp.localy)]=temp
+#									mapBgList[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
+								if mapObj.bg.has(str(z,',',w)):
+									var obj=mapObj.bg[str(z,',',w)].duplicate(true)
 									var temp=background.instance()
 									temp.spriteIndex=obj['spriteIndex']
 									temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
 									temp.position.y=obj['y']*blockSize+blockSize/2
-									temp.localx=obj['x']
+									temp.localx=obj['x']+offsetx
 									temp.localy=obj['y']
 									obj['x']+=offsetx
 									_tile.add_child(temp)
-									mapBgData[str(temp.localx,",",temp.localy)]=temp
-									mapBgList[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
+									mapObjData.bg[str(temp.localx,",",temp.localy)]=temp
+									mapObj.bg[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
+								
+								
 									
 						#移动迷宫内敌人的位置
 						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
@@ -1012,7 +1047,8 @@ func loadMapFile(fileName:String):
 				temp.localy=i['y']
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
-				mapObjList[str(i['x'],",",i['y'])]=i
+#				mapObjList[str(i['x'],",",i['y'])]=i
+				mapObj.tile[str(i['x'],",",i['y'])]=i
 			elif i['type'] =='bridge':
 				var temp=bridge.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -1023,7 +1059,8 @@ func loadMapFile(fileName:String):
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
 				castleBridge.append(temp) #保存这些桥
-				mapObjList[str(i['x'],",",i['y'])]=i
+#				mapObjList[str(i['x'],",",i['y'])]=i
+				mapObj.tile[str(i['x'],",",i['y'])]=i
 			elif i['type']=='box':
 				var temp=box.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -1048,7 +1085,8 @@ func loadMapFile(fileName:String):
 					
 				_tile.add_child(temp)
 				mapData[str(i['x'],",",i['y'])]=temp
-				mapObjList[str(i['x'],",",i['y'])]=i
+#				mapObjList[str(i['x'],",",i['y'])]=i
+				mapObj.tile[str(i['x'],",",i['y'])]=i
 			elif i['type']=="platform":
 				var temp=platform.instance()
 				temp.spriteIndex=i['spriteIndex']
@@ -1063,6 +1101,8 @@ func loadMapFile(fileName:String):
 					temp.speed=int(i['speed'])
 						
 				_obj.add_child(temp)
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 			elif i['type']=='coin':
 				var temp=bigCoin.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1088,7 +1128,8 @@ func loadMapFile(fileName:String):
 					specialEntrance.append(i)
 				if i.has('warpzoneNum')	&& i['warpzoneNum']!='':
 					warpZone.append(i)
-				mapObjList[str(i['x'],",",i['y'])]=i	
+#				mapObjList[str(i['x'],",",i['y'])]=i	
+				mapObj.tile[str(i['x'],",",i['y'])]=i
 			elif  i['type']=='flag':  #旗杆
 				var temp = pole.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1201,7 +1242,8 @@ func loadMapFile(fileName:String):
 					temp.gateId=i['gateId']
 					_tile.add_child(temp)
 					mapData[str(i['x'],",",i['y'])]=temp
-					mapObjList[str(i['x'],",",i['y'])]=i
+#					mapObjList[str(i['x'],",",i['y'])]=i
+					mapObj.tile[str(i['x'],",",i['y'])]=i
 				else:
 					var temp=collision.instance()
 					temp.position.x=i['x']*blockSize+blockSize/2
@@ -1216,8 +1258,10 @@ func loadMapFile(fileName:String):
 				temp.localx=i['x']
 				temp.localy=i['y']
 				_tile.add_child(temp)
-				mapBgData[str(i['x'],",",i['y'])]=temp
-				mapBgList[str(i['x'],",",i['y'])]=i #背景数据保存起来
+#				mapBgData[str(i['x'],",",i['y'])]=temp
+#				mapBgList[str(i['x'],",",i['y'])]=i #背景数据保存起来
+				mapObjData.bg[str(i['x'],",",i['y'])]=temp
+				mapObj.bg[str(i['x'],",",i['y'])]=i
 			elif i['type']=='goomba' || i['type']=='koopa'||\
 				i['type']==constants.plant||i['type']=='bowser'||\
 				i['type']=='cheapcheap'||i['type']=='bloober'||\
@@ -1258,6 +1302,8 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 			elif i['type']=='vine':
 				var temp=vine.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1269,18 +1315,24 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize
 				_obj.add_child(temp)
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 			elif i['type']=='podoboo':
 				var temp=podoboo.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
-				_obj.add_child(temp)		
+				_obj.add_child(temp)	
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i	
 			elif i['type']=='cannon':
 				var temp=cannon.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
 				_obj.add_child(temp)	
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 			elif i['type']==constants.staticPlatform:
 				var temp=staticPlatform.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1289,6 +1341,8 @@ func loadMapFile(fileName:String):
 				temp.lens=int(i['lens'])
 				temp.status=i['status']
 				_obj.add_child(temp)
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 			elif i['type']==constants.linkPlatform:
 				var temp=linkPlatform.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1300,7 +1354,8 @@ func loadMapFile(fileName:String):
 				if i.has('lens'):
 					temp.lens=int(i['lens'])
 				_obj.add_child(temp)
-			
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
 				
 		file.close()
 #		print(mapData)
@@ -1345,20 +1400,7 @@ func loadMapFile(fileName:String):
 							obj.mazeId=m.mazeId
 							if !m['gate'].has(obj.gateId):
 								m['gate'][obj.gateId]=0
-		print(mazeList)						
-#		for i in mazeList:
-#			var m=mazeList[i]
-#			mazeObjList[i]=[]
-#			for y in range(m.startX/blockSize,m.endX/blockSize):
-#				for z in range(0,winHeight/blockSize+1):
-#					if mapData.has(str(y,',',z)):
-#						var obj=mapData[str(y,',',z)]
-#						var new=obj.duplicate()
-#						for property in obj.get_property_list():
-#							if(property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE): 
-#								new[property.name] = obj[property.name]
-#						mazeObjList[i].append(new)
-#		print(mazeObjList)		
+		print(mazeList)							
 	else:
 		print('文件不存在')
 		pass
