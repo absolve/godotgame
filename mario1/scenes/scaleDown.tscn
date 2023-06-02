@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/Button1.png" type="Texture" id=1]
+[ext_resource path="res://ui/Button2.png" type="Texture" id=2]
+[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=3]
+
+[node name="scaleDown" type="TextureButton"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 3 )
+text = "-"

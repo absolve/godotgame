@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/theme.tres" type="Theme" id=1]
+[ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=2]
+[ext_resource path="res://scripts/soundoption.gd" type="Script" id=3]
+
+[node name="VBoxContainer" type="VBoxContainer"]
+margin_right = 96.0
+margin_bottom = 32.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 96.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "master"
+align = 1
+uppercase = true
+
+[node name="HSlider" type="HSlider" parent="."]
+margin_top = 21.0
+margin_right = 96.0
+margin_bottom = 31.0
+step = 10.0
+value = 50.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

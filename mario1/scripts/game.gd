@@ -33,13 +33,60 @@ var fireball=preload("res://scenes/fireball.tscn")
 var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapName':"",
 				"time":0,
 				"mario":{"big":false,"fire":false}}
-
-
 var map  #地图
+var configFile='mario1.ini' #配置文件名字
+var config={'Resolution':{'Fullscreen':false,'Borderless':false,'Scale':1},
+'Volume':{'Master':1,'Bg':0.5,'Sfx':0.5}}
+
 
 func _ready():
 	printFont()
+#	print(OS.get_executable_path().get_base_dir())
+	getConfig()
+	
 	pass 
+
+func getConfig():
+	var cfg = ConfigFile.new()
+	# Load data from a file.
+	var err = cfg.load(OS.get_executable_path().get_base_dir()+"/"+configFile)
+
+	# If the file didn't load, ignore it.
+	if err != OK:
+		print(err)
+		newConfigFile()
+		return
+	for i in cfg.get_sections():
+		if i=='Resolution':
+			config.Resolution.Fullscreen=cfg.get_value(i,'Fullscreen')
+			config.Resolution.Borderless=cfg.get_value(i,'Borderless')
+			config.Resolution.Scale=cfg.get_value(i,'Scale')
+	print(config)
+	pass
+
+func newConfigFile():
+	var config = ConfigFile.new()
+	config.set_value("Resolution","Fullscreen",false)
+	config.set_value("Resolution","Borderless",false)
+	config.set_value("Resolution","Scale",1)
+	
+	config.set_value("Volume","Master",1)
+	config.set_value("Volume","Bg",0.5)
+	config.set_value("Volume","Sfx",0.5)
+	config.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
+
+
+func saveConfigFile():
+	var config = ConfigFile.new()
+	config.set_value("Resolution","Fullscreen",config.Resolution.Fullscreen)
+	config.set_value("Resolution","Borderless",config.Resolution.Borderless)
+	config.set_value("Resolution","Scale",config.Resolution.Scale)
+	
+	config.set_value("Volume","Master",config.Volume.Master)
+	config.set_value("Volume","Bg",config.Volume.Bg)
+	config.set_value("Volume","Sfx",config.Volume.Sfx)
+	config.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
+
 
 func setMap(obj):
 	self.map=obj

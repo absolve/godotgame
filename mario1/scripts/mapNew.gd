@@ -136,7 +136,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/test37.json")
+#	loadMapFile("res://levels/8-4-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -409,7 +409,8 @@ func _physics_process(delta):
 						var tempMapObjList=[]
 						var tempMapBgList=[]
 						var tempMapBgData=[]
-#						var mazeLength=(mazeList[m]['endX']-mazeList[m]['startX'])
+						var tempObj=[]
+						var tempObjData=[]
 						var mazeLength=floor((_camera.position.x+winWidth
 										-mazeList[m]['startX'])/blockSize)
 						print(_camera.position.x+winWidth)
@@ -438,17 +439,6 @@ func _physics_process(delta):
 									b.x+=mazeLength
 									mapObj.tile.erase(str(z,',',w))	
 									
-#								if mapBgData.has(str(z,',',w)): #如果有背景
-#									var b=mapBgData[str(z,',',w)]
-#									b.position.x+=mazeLength*blockSize
-#									b.localx+=mazeLength
-#									tempMapBgData.append(b)
-#									mapBgData.erase(str(z,',',w))
-#								if mapBgList.has(str(z,',',w)): #改变json数据
-#									var b=mapBgList[str(z,',',w)]
-#									tempMapBgList.append(b)
-#									b.x+=mazeLength
-#									mapBgList.erase(str(z,',',w))
 								if mapObj.bg.has(str(z,',',w)):
 									var b=mapObj.bg[str(z,',',w)]
 									tempMapBgList.append(b)
@@ -460,6 +450,17 @@ func _physics_process(delta):
 									b.localx+=mazeLength
 									tempMapBgData.append(b)
 									mapObjData.bg.erase(str(z,',',w))
+								if mapObj.obj.has(str(z,',',w)):
+									var b=mapObj.obj[str(z,',',w)]
+									tempObj.append(b)
+									b.x+=mazeLength
+									mapObj.obj.erase(str(z,',',w))
+								if mapObjData.obj.has(str(z,',',w)):
+									var b=mapObjData.obj[str(z,',',w)]
+									b.position.x+=mazeLength*blockSize
+									b.localx+=mazeLength
+									tempObjData.append(b)
+									mapObjData.obj.erase(str(z,',',w))
 									
 						for t in tempMapList:	#重建方块的字典
 							mapData[str(t.localx,",",t.localy)]=t
@@ -473,6 +474,10 @@ func _physics_process(delta):
 							mapObj.bg[str(t.x,",",t.y)]=t	
 						for t in tempMapBgData:
 							mapObjData.bg[str(t.localx,",",t.localy)]=t	
+						for t in tempObj:
+							mapObj.obj[str(t.x,",",t.y)]=t		
+						for t in tempObjData:
+							mapObjData.obj[str(t.localx,",",t.localy)]=t			
 							
 						#移动屏幕外敌人的位置	
 						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
@@ -564,19 +569,7 @@ func _physics_process(delta):
 										_tile.add_child(temp)
 										mapData[str(temp.localx,",",temp.localy)]=temp
 										mapObj.tile[str(temp.localx,",",temp.localy)]=obj
-								
-#								if mapBgList.has(str(z,',',w)):
-#									var obj=mapBgList[str(z,',',w)].duplicate(true)
-#									var temp=background.instance()
-#									temp.spriteIndex=obj['spriteIndex']
-#									temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
-#									temp.position.y=obj['y']*blockSize+blockSize/2
-#									temp.localx=obj['x']
-#									temp.localy=obj['y']
-#									obj['x']+=offsetx
-#									_tile.add_child(temp)
-#									mapBgData[str(temp.localx,",",temp.localy)]=temp
-#									mapBgList[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
+									
 								if mapObj.bg.has(str(z,',',w)):
 									var obj=mapObj.bg[str(z,',',w)].duplicate(true)
 									var temp=background.instance()
@@ -590,7 +583,81 @@ func _physics_process(delta):
 									mapObjData.bg[str(temp.localx,",",temp.localy)]=temp
 									mapObj.bg[str(temp.localx,",",temp.localy)]=obj #背景数据保存起来
 								
-								
+								if mapObj.obj.has(str(z,',',w)):
+									var obj=mapObj.obj[str(z,',',w)].duplicate(true)
+									if obj['type']=='platform':
+										var temp=platform.instance()
+										temp.spriteIndex=obj['spriteIndex']
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+8
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										temp.lens=int(obj['lens'])
+										if obj.has('platformType'):
+											temp.status=obj['platformType']
+										if obj.has('dir'):
+											temp.dir=obj['dir']
+										if obj.has('speed'):
+											temp.speed=int(obj['speed'])					
+										_obj.add_child(temp)
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']=='jumpingBoard':
+										var  temp=jumpingBoard.instance()
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										_obj.add_child(temp)
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']=='podoboo':
+										var temp=podoboo.instance()
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										temp.spriteIndex=i['spriteIndex']
+										_obj.add_child(temp)	
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj	
+									elif i['type']=='cannon':
+										var temp=cannon.instance()
+										temp.position.x=i['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=i['y']*blockSize+blockSize/2
+										temp.spriteIndex=i['spriteIndex']
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										_obj.add_child(temp)	
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']==constants.staticPlatform:
+										var temp=staticPlatform.instance()
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/4
+										temp.spriteIndex=obj['spriteIndex']
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										temp.lens=int(obj['lens'])
+										temp.status=obj['status']
+										_obj.add_child(temp)
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']==constants.linkPlatform:
+										var temp=linkPlatform.instance()
+										temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+										temp.position.y=obj['y']*blockSize+blockSize/2
+										temp.spriteIndex=obj['spriteIndex']
+										temp.distance=int(obj['distance'])*32
+										temp.leftHeight=int(obj['leftHeight'])
+										temp.rightHeight=int(obj['rightHeight'])
+										temp.localx=obj['x']+offsetx
+										temp.localy=obj['y']
+										if obj.has('lens'):
+											temp.lens=int(obj['lens'])
+										_obj.add_child(temp)
+										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
+										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									
 						#移动迷宫内敌人的位置
 						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
@@ -614,11 +681,6 @@ func _physics_process(delta):
 								mazeList[x].startX+=offsetx*blockSize
 								mazeList[x].endX+=offsetx*blockSize
 							
-#						print(mazeList[m])
-#						print(mazeList)
-#						if offsetx<16:
-#							mazeList[m].vaild=false	
-#						mazeList[m].vaild=false	
 									
 	#飞鱼
 	if flyingFishStart:
@@ -1296,7 +1358,9 @@ func loadMapFile(fileName:String):
 				temp.position.y=i['y']*blockSize+blockSize/2
 				castleEndX=temp.position.x+blockSize/2
 				_obj.add_child(temp)
-			elif i['type']=='figures':
+				mapObjData.obj[str(i['x'],",",i['y'])]=temp
+				mapObj.obj[str(i['x'],",",i['y'])]=i
+			elif i['type']=='figures':#人物
 				var temp=figures.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2

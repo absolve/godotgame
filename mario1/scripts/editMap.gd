@@ -429,7 +429,6 @@ func _draw():
 			if i.type=='goomba'||i.type=='axe'||i.type=='beetle':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
-				pass
 			elif i.type=='koopa':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize-12),Color(1,1,1,0.7))
@@ -460,7 +459,9 @@ func _draw():
 							draw_texture(constants.mapTiles['pipeOut']["0"],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.4))
 						if i.has('pipeNo')&&str(i.pipeNo)!='':
 							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize+blockSize),str(i.pipeNo),Color(1,1,1,0.9))
-
+						if i.has('level') &&str(i.level)!='':
+							draw_string(font,Vector2(i.x*blockSize+blockSize,i.y*blockSize+blockSize),str(i.level),Color(1,1,1,0.9))
+							
 			elif i.type=='bg':
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
@@ -473,6 +474,10 @@ func _draw():
 			elif i.type=="collision"||i.type=="castleFlag" :
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))	
+					if i.has('value') &&(i.value=='mazeStart' || i.value=='mazeEnd'):
+						if i.has('mazeId')&&str(i.mazeId)!='':
+							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.mazeId),Color(1,1,1,1))
+							
 			elif i.type==constants.platform||i.type==constants.staticPlatform:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
 #					draw_texture(constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.5))
