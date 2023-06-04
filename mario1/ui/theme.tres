@@ -31,31 +31,31 @@
 
 [sub_resource type="StyleBoxTexture" id=10]
 texture = ExtResource( 16 )
-region_rect = Rect2( 0, 0, 7, 6 )
-margin_left = 3.0
-margin_right = 3.0
-margin_top = 2.0
-margin_bottom = 2.0
+region_rect = Rect2( 0, 0, 14, 12 )
+margin_left = 6.0
+margin_right = 6.0
+margin_top = 4.0
+margin_bottom = 4.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id=12]
 texture = ExtResource( 16 )
-region_rect = Rect2( 0, 0, 7, 6 )
-margin_left = 3.0
-margin_right = 3.0
-margin_top = 2.0
-margin_bottom = 2.0
+region_rect = Rect2( 0, 0, 14, 12 )
+margin_left = 6.0
+margin_right = 6.0
+margin_top = 4.0
+margin_bottom = 4.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 
 [sub_resource type="StyleBoxTexture" id=11]
 texture = ExtResource( 15 )
-region_rect = Rect2( 0, 0, 7, 6 )
-margin_left = 3.0
-margin_right = 3.0
-margin_top = 2.0
-margin_bottom = 2.0
+region_rect = Rect2( 0, 0, 14, 12 )
+margin_left = 6.0
+margin_right = 6.0
+margin_top = 4.0
+margin_bottom = 4.0
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 

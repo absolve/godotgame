@@ -68,11 +68,24 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Label" type="Label" parent="."]
-margin_left = 230.0
+[node name="setting" type="Label" parent="."]
+margin_left = 251.0
 margin_top = 440.0
-margin_right = 422.0
+margin_right = 459.0
 margin_bottom = 456.0
+custom_fonts/font = ExtResource( 5 )
+text = "setting"
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Label" type="Label" parent="."]
+visible = false
+margin_left = 230.0
+margin_top = 460.0
+margin_right = 422.0
+margin_bottom = 476.0
 custom_fonts/font = ExtResource( 5 )
 text = "top - 000000"
 uppercase = true

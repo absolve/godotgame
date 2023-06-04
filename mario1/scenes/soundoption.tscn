@@ -21,7 +21,7 @@ uppercase = true
 [node name="HSlider" type="HSlider" parent="."]
 margin_top = 21.0
 margin_right = 96.0
-margin_bottom = 31.0
+margin_bottom = 41.0
 step = 10.0
 value = 50.0
 

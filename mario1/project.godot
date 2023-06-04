@@ -23,6 +23,7 @@ config/icon="res://mario1.png"
 constants="*res://scripts/constants.gd"
 Game="*res://scripts/game.gd"
 SoundsUtil="*res://scenes/soundsUtil.tscn"
+MainSetting="*res://scenes/mainSetting.tscn"
 
 [display]
 

@@ -20,12 +20,26 @@ func _ready():
 	_bg.setName('bg')
 	_sfx.setName('sfx')
 	
-	_master.slider.connect("value_changed",self,"_on_master_value_changed")
-	_bg.slider.connect("value_changed",self,"_on_bg_value_changed")
-	_sfx.slider.connect("value_changed",self,"_on_sfx_value_changed")
 	_master.sound.stream=beep
 	_bg.sound.stream=beep
 	_sfx.sound.stream=beep
+	_master.slider.value=Game.config.Volume.Master*100
+	_bg.slider.value=Game.config.Volume.Bg*100
+	_sfx.slider.value=Game.config.Volume.Sfx*100
+	_master.setVolume(Game.config.Volume.Master)
+	_bg.setVolume(Game.config.Volume.Bg)
+	_sfx.setVolume(Game.config.Volume.Sfx)
+	if Game.config.Resolution.Fullscreen:
+		setFullscreen(Game.config.Resolution.Fullscreen)
+	else:	
+#	setFullscreen(Game.config.Resolution.Fullscreen)
+		setScale(Game.config.Resolution.Scale)
+		setBorderless(Game.config.Resolution.Borderless)
+	
+	_master.slider.connect("value_changed",self,"_on_master_value_changed")
+	_bg.slider.connect("value_changed",self,"_on_bg_value_changed")
+	_sfx.slider.connect("value_changed",self,"_on_sfx_value_changed")
+	
 	pass
 
 func setFullscreen(value:bool):
@@ -112,3 +126,20 @@ func _on_sfx_value_changed(value):
 	_sfx.setVolume(value/100)
 	_sfx.sound.play()
 	pass
+
+
+func _on_save_pressed():
+	Game.config.Volume.Master=_master.slider.value/100
+	Game.config.Volume.Bg=_bg.slider.value/100
+	Game.config.Volume.Sfx=_sfx.slider.value/100
+	
+	Game.config.Resolution.Scale=scale
+	Game.config.Resolution.Fullscreen=fullscreen
+	Game.config.Resolution.Borderless=borderless
+	
+	Game.saveConfigFile()
+	
+
+
+func _on_close_pressed():
+	Game.emit_signal("btnClose")

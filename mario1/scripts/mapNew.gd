@@ -136,7 +136,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/8-4-1.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -349,7 +349,7 @@ func _physics_process(delta):
 					else:
 						_camera.position.x+=mario1.xVel*delta
 			#如果马里奥是最后通关的话 摄像机直接拉到最后	
-			if 	scrollEnd:
+			if scrollEnd:
 				if _camera.position.x<mapWidthSize*blockSize-winWidth:
 					_camera.position.x+=100*delta
 				else:
@@ -457,8 +457,14 @@ func _physics_process(delta):
 									mapObj.obj.erase(str(z,',',w))
 								if mapObjData.obj.has(str(z,',',w)):
 									var b=mapObjData.obj[str(z,',',w)]
-									b.position.x+=mazeLength*blockSize
-									b.localx+=mazeLength
+									if b.type==constants.spinFireball:
+										for x in b.list:
+											x.position.x+=mazeLength*blockSize
+											x.aroundPos.x+=mazeLength*blockSize
+										b.localx+=mazeLength	
+									else:	
+										b.position.x+=mazeLength*blockSize
+										b.localx+=mazeLength
 									tempObjData.append(b)
 									mapObjData.obj.erase(str(z,',',w))
 									
@@ -658,6 +664,22 @@ func _physics_process(delta):
 										_obj.add_child(temp)
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
+									elif obj['type']=='spinFireball': #旋转的火球
+										if int(obj['len'])>0:
+											var s={'localx':obj['x']+offsetx,'localy':obj['y'],
+											'type':'spinFireball','list':[]}
+											for x in range(int(obj['len'])):
+												var temp=spinFireball.instance()
+												temp.position.x=obj['x']*blockSize+blockSize/2+offsetx*blockSize
+												temp.position.y=obj['y']*blockSize+blockSize/2
+												temp.aroundPos=Vector2(obj['x']*blockSize+blockSize/2+offsetx*blockSize,
+													obj['y']*blockSize+blockSize/2)
+												temp.radius=x*18
+											
+												s.list.append(temp)
+												_obj.add_child(temp)
+											mapObjData.obj[str(obj['x']+offsetx,",",obj['y'])]=s
+											mapObj.obj[str(obj['x']+offsetx,",",obj['y'])]=obj	
 									
 						#移动迷宫内敌人的位置
 						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
@@ -1344,6 +1366,8 @@ func loadMapFile(fileName:String):
 				_obj.add_child(temp)
 			elif i['type']=='spinFireball': #旋转的火球
 				if int(i['len'])>0:
+					var s={'localx':i['x'],'localy':i['y'],
+					'type':'spinFireball','list':[]}
 					for x in range(int(i['len'])):
 						var temp=spinFireball.instance()
 						temp.position.x=i['x']*blockSize+blockSize/2
@@ -1351,7 +1375,10 @@ func loadMapFile(fileName:String):
 						temp.aroundPos=Vector2(i['x']*blockSize+blockSize/2,
 							i['y']*blockSize+blockSize/2)
 						temp.radius=x*18
+						s.list.append(temp)
 						_obj.add_child(temp)
+					mapObjData.obj[str(i['x'],",",i['y'])]=s
+					mapObj.obj[str(i['x'],",",i['y'])]=i	
 			elif i['type']=='axe':
 				var temp=axe.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -2006,6 +2033,3 @@ func _input(event):
 				SoundsUtil.playPause()
 				for i in _obj.get_children():
 					i.pause()
-				
-			
-

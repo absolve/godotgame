@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/setting.tscn" type="PackedScene" id=1]
+
+[node name="mainSetting" type="Node2D"]
+visible = false
+z_index = 100
+
+[node name="Control" type="Control" parent="."]
+
+[node name="setting" parent="Control" instance=ExtResource( 1 )]
+margin_left = 1.0
+margin_top = 6.0
+margin_right = 640.0
+margin_bottom = 480.0

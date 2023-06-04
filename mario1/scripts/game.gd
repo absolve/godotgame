@@ -22,6 +22,8 @@ signal marioGrapVineTop #马里奥爬到藤曼顶部
 signal vineEnd #藤蔓生长结束 只有藤蔓长度有限制的时候
 signal mazegate #碰到迷宫大门
 
+signal btnClose	#设置关闭按钮
+
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC',
 						'#000',
@@ -48,10 +50,8 @@ func _ready():
 
 func getConfig():
 	var cfg = ConfigFile.new()
-	# Load data from a file.
 	var err = cfg.load(OS.get_executable_path().get_base_dir()+"/"+configFile)
 
-	# If the file didn't load, ignore it.
 	if err != OK:
 		print(err)
 		newConfigFile()
@@ -61,6 +61,11 @@ func getConfig():
 			config.Resolution.Fullscreen=cfg.get_value(i,'Fullscreen')
 			config.Resolution.Borderless=cfg.get_value(i,'Borderless')
 			config.Resolution.Scale=cfg.get_value(i,'Scale')
+		elif i=='Volume':
+			config.Volume.Master=cfg.get_value(i,'Master')
+			config.Volume.Bg=cfg.get_value(i,'Bg')
+			config.Volume.Sfx=cfg.get_value(i,'Sfx')
+			
 	print(config)
 	pass
 

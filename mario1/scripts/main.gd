@@ -8,7 +8,7 @@ onready var _2p=$p2
 onready var _selectworld=$selectworld
 onready var _treeui=$treeUI
 
-var player=1	#默认选择1玩家  3地图编辑 4选择地图
+var player=1	#默认选择1玩家  3地图编辑 4选择地图  5设置
 var path="res://levels/show.json"
 var timer=0
 var tick=22
@@ -27,6 +27,7 @@ func _ready():
 	
 	_treeui.connect("selectMap",self,"selectMap")
 	_treeui.connect("cancel",self,"cancel")
+	Game.connect("btnClose",self,"btnClose")
 	pass 
 
 func startGame():
@@ -93,6 +94,9 @@ func _input(event):
 		elif player==3:	
 			player=4
 			_indicator.position.y=400
+		elif player==4:		
+			player=5
+			_indicator.position.y=440
 	elif Input.is_action_just_pressed("ui_up"):
 		if player==2:
 			player=1
@@ -103,6 +107,9 @@ func _input(event):
 		elif  player==4:
 			player=3
 			_indicator.position.y=360	
+		elif player==5:	
+			player=4
+			_indicator.position.y=400	
 	elif Input.is_action_just_pressed("ui_accept"):
 		if player==1||player==2:
 			startGame()
@@ -110,7 +117,10 @@ func _input(event):
 			editMap()	
 		elif player==4:	
 			_treeui.visible=true
-
+		elif player==5:		
+			if !MainSetting.visible:
+				MainSetting.visible=true
+				
 func selectMap(level):
 	print(level)
 	if level!='':
@@ -119,3 +129,6 @@ func selectMap(level):
 	
 func cancel():
 	_treeui.visible=false
+
+func btnClose():
+	MainSetting.visible=false

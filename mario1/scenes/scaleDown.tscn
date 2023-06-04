@@ -11,7 +11,9 @@ texture_normal = ExtResource( 1 )
 texture_pressed = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="."]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_right = 33.0
+margin_bottom = 33.0
 custom_fonts/font = ExtResource( 3 )
 text = "-"
+align = 1
+valign = 1
