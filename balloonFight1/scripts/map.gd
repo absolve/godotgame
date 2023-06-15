@@ -6,10 +6,6 @@ func _ready():
 	pass
 
 
-
-
-
-
 func _draw():
 	for i in range(27):
 		draw_line(Vector2(i*cellSize,0),Vector2(i*cellSize,cellSize*26),Color.gray,0.5,true)
