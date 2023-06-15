@@ -82,15 +82,15 @@ func newConfigFile():
 
 
 func saveConfigFile():
-	var config = ConfigFile.new()
-	config.set_value("Resolution","Fullscreen",config.Resolution.Fullscreen)
-	config.set_value("Resolution","Borderless",config.Resolution.Borderless)
-	config.set_value("Resolution","Scale",config.Resolution.Scale)
+	var cfg = ConfigFile.new()
+	cfg.set_value("Resolution","Fullscreen",config.Resolution.Fullscreen)
+	cfg.set_value("Resolution","Borderless",config.Resolution.Borderless)
+	cfg.set_value("Resolution","Scale",config.Resolution.Scale)
 	
-	config.set_value("Volume","Master",config.Volume.Master)
-	config.set_value("Volume","Bg",config.Volume.Bg)
-	config.set_value("Volume","Sfx",config.Volume.Sfx)
-	config.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
+	cfg.set_value("Volume","Master",config.Volume.Master)
+	cfg.set_value("Volume","Bg",config.Volume.Bg)
+	cfg.set_value("Volume","Sfx",config.Volume.Sfx)
+	cfg.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
 
 
 func setMap(obj):

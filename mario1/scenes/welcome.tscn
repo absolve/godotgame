@@ -7,6 +7,7 @@
 [ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=5]
 
 [node name="welcome" type="Node2D"]
+position = Vector2( 0, 2 )
 script = ExtResource( 4 )
 
 [node name="logo" type="Sprite" parent="."]
