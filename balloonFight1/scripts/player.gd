@@ -13,6 +13,7 @@ var upAccelerate=200
 var moveMaxSpeed=200
 var accelerate=120
 var moveSpeedInAir=70
+var life=2 #气球个数
 
 onready var _ani=$ani
 
@@ -22,7 +23,12 @@ func _ready():
 		keymap.right='p1_right'
 		keymap.left='p1_left'
 		keymap.accelerate='p1_action'
-	pass
+	elif playerId==2:
+		keymap.up="p2_up"
+		keymap.right='p2_right'
+		keymap.left='p2_left'
+		keymap.accelerate='p2_action'	
+
 	
 	
 func _physics_process(delta):
@@ -74,10 +80,7 @@ func _physics_process(delta):
 	else:
 		if !onFloor:
 			animation("fly")
-	
-	
 		
-			
 	vec=move_and_slide(vec,Vector2.UP)
 	
 	
