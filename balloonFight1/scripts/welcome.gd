@@ -7,6 +7,7 @@ var index=0
 onready var _ani=$ani
 
 func _ready():
+	VisualServer.set_default_clear_color(Color(0,0,0,1))
 	pass # Replace with function body.
 
 

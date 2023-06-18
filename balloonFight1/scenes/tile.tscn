@@ -1,7 +1,19 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://sprites/earthBlock1.png" type="Texture" id=1]
 [ext_resource path="res://scripts/tile.gd" type="Script" id=2]
+[ext_resource path="res://sprites/earthBlock4.png" type="Texture" id=3]
+[ext_resource path="res://sprites/tile#6.png" type="Texture" id=4]
+[ext_resource path="res://sprites/tile#3.png" type="Texture" id=5]
+[ext_resource path="res://sprites/tile#7.png" type="Texture" id=6]
+[ext_resource path="res://sprites/tile#4.png" type="Texture" id=7]
+[ext_resource path="res://sprites/tile#8.png" type="Texture" id=8]
+[ext_resource path="res://sprites/tile#11.png" type="Texture" id=9]
+[ext_resource path="res://sprites/earthBlock2.png" type="Texture" id=10]
+[ext_resource path="res://sprites/tile#10.png" type="Texture" id=11]
+[ext_resource path="res://sprites/earthBlock3.png" type="Texture" id=12]
+[ext_resource path="res://sprites/tile#5.png" type="Texture" id=13]
+[ext_resource path="res://sprites/tile#9.png" type="Texture" id=14]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 8 )
@@ -11,6 +23,66 @@ animations = [ {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
 "name": "0",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 10 ) ],
+"loop": true,
+"name": "1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 11 ) ],
+"loop": true,
+"name": "10",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ) ],
+"loop": true,
+"name": "11",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": true,
+"name": "12",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": true,
+"name": "3",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "4",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": true,
+"name": "5",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "6",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "7",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ) ],
+"loop": true,
+"name": "8",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ) ],
+"loop": true,
+"name": "9",
 "speed": 5.0
 } ]
 
@@ -22,4 +94,4 @@ shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "0"
+animation = "12"
