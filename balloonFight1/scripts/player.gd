@@ -10,10 +10,12 @@ var gravity=100
 var playerId=1  #1是1p 2是2p
 #var moveSpeed=70
 var upAccelerate=200
-var moveMaxSpeed=200
-var accelerate=120
+var moveMaxSpeed=260
+var accelerate=120		#当前加速度
 var moveSpeedInAir=70
 var life=2 #气球个数
+var runAccelerate=120
+var slideFriction=200
 
 onready var _ani=$ani
 
@@ -39,21 +41,35 @@ func _physics_process(delta):
 		onFloor=false	
 		
 	if Input.is_action_pressed(keymap.left):	
-		dir=Constants.left
+		
 		if onFloor:
-			animation("run")
+			if vec.x>0:
+				accelerate=slideFriction
+				animation("slide")
+			else:	
+				accelerate=runAccelerate
+				dir=Constants.left
+				animation("run")
+				
 			if vec.x>-moveMaxSpeed:
 				vec.x-=accelerate*delta
 		else:
+			dir=Constants.left
 			if vec.x>-moveMaxSpeed:
 				vec.x-=accelerate*delta		
-	elif  Input.is_action_pressed(keymap.right):	
-		dir=Constants.right
-		if onFloor:
-			animation("run")
+	elif  Input.is_action_pressed(keymap.right):		
+		if onFloor:	
+			if vec.x<0:
+				accelerate=slideFriction
+				animation("slide")
+			else:
+				accelerate=runAccelerate
+				dir=Constants.right
+				animation("run")
 			if vec.x<moveMaxSpeed:
 				vec.x+=accelerate*delta
 		else:
+			dir=Constants.right
 			if vec.x<moveMaxSpeed:
 				vec.x+=accelerate*delta		
 	else:
@@ -95,7 +111,8 @@ func animation(type):
 		_ani.play("fly_1")
 	elif type=='flap':
 		_ani.play("flap_1")	
-		
+	elif type=='slide':
+		_ani.play("slide_1")		
 	if dir==Constants.left:
 		_ani.flip_h=true
 	else:

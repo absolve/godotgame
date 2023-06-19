@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://sprites/bKidStatR2_0.png" type="Texture" id=1]
 [ext_resource path="res://sprites/bKidRunR2_1.png" type="Texture" id=2]
@@ -25,6 +25,8 @@
 [ext_resource path="res://sprites/bKidFlapR1_1.png" type="Texture" id=23]
 [ext_resource path="res://sprites/bKidAirR1_2.png" type="Texture" id=24]
 [ext_resource path="res://scripts/player.gd" type="Script" id=25]
+[ext_resource path="res://sprites/slide.png" type="Texture" id=26]
+[ext_resource path="res://sprites/slide1.png" type="Texture" id=27]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10, 24 )
@@ -70,6 +72,16 @@ animations = [ {
 "loop": true,
 "name": "run_2",
 "speed": 8.0
+}, {
+"frames": [ ExtResource( 27 ) ],
+"loop": true,
+"name": "slide_1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 26 ) ],
+"loop": true,
+"name": "slide_2",
+"speed": 5.0
 } ]
 
 [node name="player" type="KinematicBody2D"]
@@ -80,4 +92,4 @@ shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "flap_1"
+animation = "slide_1"
