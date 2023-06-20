@@ -119,6 +119,16 @@ const tilesAttribute={
 	},
 }
 
+#属性值的	类型
+const tilesAttributeType={
+	'spriteIndex':"int",
+	"x":"int",
+	"y":"int",
+	'layer':"int",
+	"offsetX":"int",
+	"offsetY":"int",
+}
+
 #载入方块图片
 func loadIcon():
 	var dic=Directory.new()
