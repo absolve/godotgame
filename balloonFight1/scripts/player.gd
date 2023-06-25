@@ -3,6 +3,7 @@ extends KinematicBody2D
 var dir=Constants.right
 var keymap={"up":0,"down":0,"left":0,"right":0,'accelerate':0}
 var vec=Vector2.ZERO
+var size=Vector2(10,24)
 var isInvincible=false #无敌
 var balloonNum=2#气球数量
 var onFloor=false
@@ -16,6 +17,7 @@ var moveSpeedInAir=70
 var life=2 #气球个数
 var runAccelerate=120
 var slideFriction=200
+var type=Constants.player
 
 onready var _ani=$ani
 
@@ -30,7 +32,7 @@ func _ready():
 		keymap.right='p2_right'
 		keymap.left='p2_left'
 		keymap.accelerate='p2_action'	
-
+	
 	
 	
 func _physics_process(delta):

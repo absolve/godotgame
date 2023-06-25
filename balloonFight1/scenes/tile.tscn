@@ -21,67 +21,67 @@ extents = Vector2( 8, 8 )
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 1 ) ],
-"loop": true,
+"loop": false,
 "name": "0",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 10 ) ],
-"loop": true,
+"loop": false,
 "name": "1",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 11 ) ],
-"loop": true,
+"loop": false,
 "name": "10",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 9 ) ],
-"loop": true,
+"loop": false,
 "name": "11",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 12 ) ],
-"loop": true,
+"loop": false,
 "name": "12",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 3 ) ],
-"loop": true,
+"loop": false,
 "name": "2",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 5 ) ],
-"loop": true,
+"loop": false,
 "name": "3",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 7 ) ],
-"loop": true,
+"loop": false,
 "name": "4",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 13 ) ],
-"loop": true,
+"loop": false,
 "name": "5",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 4 ) ],
-"loop": true,
+"loop": false,
 "name": "6",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 6 ) ],
-"loop": true,
+"loop": false,
 "name": "7",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 8 ) ],
-"loop": true,
+"loop": false,
 "name": "8",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 14 ) ],
-"loop": true,
+"loop": false,
 "name": "9",
 "speed": 5.0
 } ]

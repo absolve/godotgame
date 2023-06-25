@@ -3,6 +3,8 @@ extends Node
 
 const left='left'
 const right='right'
+const player='player'
+const enemy='enemy'
 
 const tilesType=['del','player','water','tile'] 
 var mapTiles={} #每个图块对应的图片

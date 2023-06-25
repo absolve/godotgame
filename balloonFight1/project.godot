@@ -21,6 +21,7 @@ config/icon="res://sprites/lifeBalloon1.png"
 [autoload]
 
 Constants="*res://scripts/constants.gd"
+Game="*res://scripts/game.gd"
 
 [display]
 
