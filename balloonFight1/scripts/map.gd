@@ -11,13 +11,13 @@ var mapDir="res://levels"	#内置地图路径
 onready var _obj=$obj
 onready var _camera=$Camera2D
 onready var _tile=$tile
-onready var player=preload("res://scenes/player.tscn")
-onready var enemy
-onready var bubble=preload("res://scenes/bubble.tscn")
-onready var cloud=preload("res://scenes/cloud.tscn")
-onready var tile=preload("res://scenes/tile.tscn")
-onready var splash=preload("res://scenes/splash.tscn")
-
+var player=preload("res://scenes/player.tscn")
+var enemy
+var bubble=preload("res://scenes/bubble.tscn")
+var cloud=preload("res://scenes/cloud.tscn")
+var tile=preload("res://scenes/tile.tscn")
+var splash=preload("res://scenes/splash.tscn")
+var spinBall=preload("res://scenes/spinBall.tscn")
 
 func _ready():
 	var viewRect=get_viewport_rect()
@@ -55,7 +55,13 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*cellSize+cellSize/2
 				temp.position.y=i['y']*cellSize+cellSize/2
 				_tile.add_child(temp)
-	
+			elif i['type']=='spinBall':
+				var temp=spinBall.instance()
+				temp.spriteIndex=i['spriteIndex']
+				temp.position.x=i['x']*cellSize+cellSize/2
+				temp.position.y=i['y']*cellSize+cellSize/2
+				_tile.add_child(temp)
+				
 	
 func _physics_process(delta):
 	
@@ -69,8 +75,9 @@ func _physics_process(delta):
 
 
 func _draw():
-	for i in range(width/cellSize):
-		draw_line(Vector2(i*cellSize,0),Vector2(i*cellSize,width),Color.gray,0.5,true)
-	for i in range(height/cellSize):
-		draw_line(Vector2(0,i*cellSize),Vector2(width,i*cellSize),Color.gray,0.5,true)
+	if debug:
+		for i in range(width/cellSize):
+			draw_line(Vector2(i*cellSize,0),Vector2(i*cellSize,width),Color.gray,0.5,true)
+		for i in range(height/cellSize):
+			draw_line(Vector2(0,i*cellSize),Vector2(width,i*cellSize),Color.gray,0.5,true)
 	

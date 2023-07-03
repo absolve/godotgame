@@ -9,7 +9,22 @@ extents = Vector2( 10, 16 )
 animations = [ {
 "frames": [  ],
 "loop": true,
-"name": "default",
+"name": "dead",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "fall",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "fly",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "onFloor",
 "speed": 5.0
 } ]
 
@@ -21,3 +36,4 @@ shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
+animation = "dead"

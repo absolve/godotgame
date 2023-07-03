@@ -6,7 +6,14 @@ const right='right'
 const player='player'
 const enemy='enemy'
 
-const tilesType=['del','player','water','tile'] 
+#状态
+const enemyOnFloor='enemyOnFloor'
+const enemyFall='enemyFall'
+const enemyDead='enemyDead'
+const enemyPumpUp='enemyPumpUp' #打气
+const enemyFly='enemyFly'
+
+const tilesType=['del','player','water','tile','spinBall'] 
 var mapTiles={} #每个图块对应的图片
 
 func _ready():
@@ -32,6 +39,24 @@ const tilesAttribute={
 	'water':{
 		"type": "water",
 		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+	},
+	'water1':{
+		"type": "water",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+	},
+	'water2':{
+		"type": "water",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+	},
+	'water3':{
+		"type": "water",
+		"spriteIndex": 3,
 		"x": 0,
 		"y": 0,
 	},
@@ -115,6 +140,34 @@ const tilesAttribute={
 	'tile11':{
 		"type": "tile",
 		"spriteIndex": 11,
+		"x": 0,
+		"y": 0,
+		'rotate':0
+	},
+	'spinBall':{
+		"type": "spinBall",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
+		'rotate':0
+	},
+	'spinBall1':{
+		"type": "spinBall",
+		"spriteIndex": 1,
+		"x": 0,
+		"y": 0,
+		'rotate':0
+	},
+	'spinBall2':{
+		"type": "spinBall",
+		"spriteIndex": 2,
+		"x": 0,
+		"y": 0,
+		'rotate':0
+	},
+	'spinBall3':{
+		"type": "spinBall",
+		"spriteIndex": 3,
 		"x": 0,
 		"y": 0,
 		'rotate':0

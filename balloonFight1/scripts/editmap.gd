@@ -18,6 +18,7 @@ var isPress=false
 var currMousePos=Vector2.ZERO  #当前鼠标位置
 var height
 var width
+var font
 
 func _ready():
 	VisualServer.set_default_clear_color(Color(0.1,0.1,0.1,0.1))
@@ -25,6 +26,9 @@ func _ready():
 	var viewRect=get_viewport_rect()
 	width=viewRect.size.x
 	height=viewRect.size.y
+	font=DynamicFont.new()
+	font.font_data = load("res://fonts/blocky.ttf")
+	font.size = 20
 	pass
 
 #载入文件
@@ -82,6 +86,8 @@ func checkHasItem(pos,selectType):
 #添加方块信息
 func addItem(type,key,pos):
 	if type=='del':
+		return
+	if type=='':
 		return
 	var g=Constants.tilesAttribute[key].duplicate()
 	g.x=pos.x
@@ -181,11 +187,18 @@ func _draw():
 		draw_line(Vector2(0,i*blockSize),Vector2(width,i*blockSize),Color.gray,0.5,true)
 		
 	for i in allTiles:
-		if i.type=='player'||i.type=='water'||i.type=='tile':
+		if i.type=='water'||i.type=='tile':
 			if Constants.mapTiles.has(i.type)&&Constants.mapTiles[i.type].has(str(i.spriteIndex)):
 				draw_texture(Constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize,i.y*blockSize),Color(1,1,1,0.7))
-		
-
+		elif i.type=='spinBall':
+			if Constants.mapTiles.has(i.type)&&Constants.mapTiles[i.type].has(str(i.spriteIndex)):
+				draw_texture(Constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize-30,i.y*blockSize),Color(1,1,1,0.7))
+		elif i.type=='player':
+			if Constants.mapTiles.has(i.type)&&Constants.mapTiles[i.type].has(str(i.spriteIndex)):
+				draw_texture(Constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize-5,i.y*blockSize-13),Color(1,1,1,0.7))
+			draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.id),Color.white)
+	draw_string(font,currMousePos+Vector2(16,0),'x:'+str(int(currMousePos.x)/blockSize)+" y:"
+			+str(int(currMousePos.y)/blockSize),Color.white)
 
 
 func _on_save_pressed():

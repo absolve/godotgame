@@ -16,6 +16,7 @@ _global_script_class_icons={
 
 config/name="balloonFight"
 run/main_scene="res://scenes/welcome.tscn"
+boot_splash/bg_color=Color( 0.141176, 0.141176, 0.141176, 1 )
 config/icon="res://sprites/lifeBalloon1.png"
 
 [autoload]
@@ -109,4 +110,5 @@ p2_action={
 
 [rendering]
 
+environment/default_clear_color=Color( 0, 0, 0, 1 )
 environment/default_environment="res://default_env.tres"

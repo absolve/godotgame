@@ -115,5 +115,5 @@ __meta__ = {
 [node name="ani" type="AnimatedSprite" parent="."]
 position = Vector2( 131, 295 )
 frames = SubResource( 1 )
-frame = 2
+frame = 3
 playing = true
