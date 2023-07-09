@@ -404,7 +404,7 @@ func _physics_process(delta):
 			for m in mazeList:
 				if mazeList[m].vaild:
 					if mazeList[m]['endX']<=i.position.x:
-						print(mazeList[m])		
+#						print(mazeList[m])		
 						var tempMapList=[]
 						var tempMapObjList=[]
 						var tempMapBgList=[]
@@ -413,13 +413,13 @@ func _physics_process(delta):
 						var tempObjData=[]
 						var mazeLength=floor((_camera.position.x+winWidth
 										-mazeList[m]['startX'])/blockSize)
-						print(_camera.position.x+winWidth)
-						print('result ',_camera.position.x+winWidth-mazeList[m]['startX'])
-						print('startX ',mazeList[m]['startX'])
-						print('mazeLength ',mazeLength)
-						print('mario ',i.position.x)
-						print('mapWidthSize ',mapWidthSize)
-						print('移动位置 ',floor((_camera.position.x+winWidth)/blockSize))
+#						print(_camera.position.x+winWidth)
+#						print('result ',_camera.position.x+winWidth-mazeList[m]['startX'])
+#						print('startX ',mazeList[m]['startX'])
+#						print('mazeLength ',mazeLength)
+#						print('mario ',i.position.x)
+#						print('mapWidthSize ',mapWidthSize)
+#						print('移动位置 ',floor((_camera.position.x+winWidth)/blockSize))
 						for z in range(floor((_camera.position.x+winWidth)/blockSize),mapWidthSize):
 							for w in range(0,winHeight/blockSize+1):
 								if mapData.has(str(z,',',w)):
@@ -486,12 +486,14 @@ func _physics_process(delta):
 							mapObjData.obj[str(t.localx,",",t.localy)]=t			
 							
 						#移动屏幕外敌人的位置	
-						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize)):
+						for z in range(mapWidthSize,floor((_camera.position.x+winWidth)/blockSize),-1):
 							if enemyPosList.has(str(z)):	
 								var temp=enemyPosList[str(z)]
 								enemyPosList[str(z+mazeLength)]=temp
+#								print(temp)
 								for e in temp:
 									e.x+=mazeLength
+#								print('last',temp)	
 								enemyPosList.erase(str(z))
 
 						mapWidthSize+=mazeLength
@@ -499,7 +501,7 @@ func _physics_process(delta):
 							castleEndX+=mazeLength*blockSize
 						#复制迷宫里面的场景信息
 						var offsetx=mazeLength
-						print('offsetx ',offsetx)
+#						print('offsetx ',offsetx)
 						for z in range(mazeList[m]['startX']/blockSize,
 							floor((_camera.position.x+winWidth)/blockSize)):
 							for w in range(0,winHeight/blockSize+1):
@@ -606,6 +608,7 @@ func _physics_process(delta):
 										if obj.has('speed'):
 											temp.speed=int(obj['speed'])					
 										_obj.add_child(temp)
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']=='jumpingBoard':
@@ -615,6 +618,7 @@ func _physics_process(delta):
 										temp.localx=obj['x']+offsetx
 										temp.localy=obj['y']
 										_obj.add_child(temp)
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']=='podoboo':
@@ -625,6 +629,7 @@ func _physics_process(delta):
 										temp.localy=obj['y']
 										temp.spriteIndex=i['spriteIndex']
 										_obj.add_child(temp)	
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj	
 									elif i['type']=='cannon':
@@ -635,6 +640,7 @@ func _physics_process(delta):
 										temp.localx=obj['x']+offsetx
 										temp.localy=obj['y']
 										_obj.add_child(temp)	
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']==constants.staticPlatform:
@@ -647,6 +653,7 @@ func _physics_process(delta):
 										temp.lens=int(obj['lens'])
 										temp.status=obj['status']
 										_obj.add_child(temp)
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']==constants.linkPlatform:
@@ -662,6 +669,7 @@ func _physics_process(delta):
 										if obj.has('lens'):
 											temp.lens=int(obj['lens'])
 										_obj.add_child(temp)
+										obj['x']+=offsetx
 										mapObjData.obj[str(temp.localx,",",temp.localy)]=temp
 										mapObj.obj[str(temp.localx,",",temp.localy)]=obj
 									elif obj['type']=='spinFireball': #旋转的火球
@@ -678,8 +686,9 @@ func _physics_process(delta):
 											
 												s.list.append(temp)
 												_obj.add_child(temp)
-											mapObjData.obj[str(obj['x']+offsetx,",",obj['y'])]=s
-											mapObj.obj[str(obj['x']+offsetx,",",obj['y'])]=obj	
+											obj['x']+=offsetx
+											mapObjData.obj[str(s.localx,",",s.localy)]=s
+											mapObj.obj[str(obj['x'],",",obj['y'])]=obj	
 									
 						#移动迷宫内敌人的位置
 						for w in range(mazeList[m].startX/blockSize,mazeList[m].endX/blockSize):
@@ -1097,7 +1106,7 @@ func loadMapFile(fileName:String):
 			if currentLevel['underwater']=='true':
 				underwater=true
 			
-		print(marioStatus)
+#		print(marioStatus)
 		var pos = currentLevel['marioPos']
 		if !pos.empty():  #添加mario
 			var temp=mario.instance()
@@ -1176,6 +1185,8 @@ func loadMapFile(fileName:String):
 				temp.spriteIndex=i['spriteIndex']
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+8
+				temp.localx=i['x']
+				temp.localy=i['y']
 				temp.lens=int(i['lens'])
 				if i.has('platformType'):
 					temp.status=i['platformType']
@@ -1342,8 +1353,6 @@ func loadMapFile(fileName:String):
 				temp.localx=i['x']
 				temp.localy=i['y']
 				_tile.add_child(temp)
-#				mapBgData[str(i['x'],",",i['y'])]=temp
-#				mapBgList[str(i['x'],",",i['y'])]=i #背景数据保存起来
 				mapObjData.bg[str(i['x'],",",i['y'])]=temp
 				mapObj.bg[str(i['x'],",",i['y'])]=i
 			elif i['type']=='goomba' || i['type']=='koopa'||\
@@ -1358,7 +1367,7 @@ func loadMapFile(fileName:String):
 					enemyPosList[str(i['x'])]=[]
 					enemyPosList[str(i['x'])].append(i)
 					
-				enemyList.append(i)
+#				enemyList.append(i)
 			elif i['type']=='castleFlag':
 				var temp=castleFlag.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
@@ -1383,6 +1392,8 @@ func loadMapFile(fileName:String):
 				var temp=axe.instance()
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
+				temp.localx=i['x']
+				temp.localy=i['y']
 				castleEndX=temp.position.x+blockSize/2
 				_obj.add_child(temp)
 				mapObjData.obj[str(i['x'],",",i['y'])]=temp
@@ -1392,6 +1403,8 @@ func loadMapFile(fileName:String):
 				temp.position.x=i['x']*blockSize+blockSize/2
 				temp.position.y=i['y']*blockSize+blockSize/2
 				temp.spriteIndex=i['spriteIndex']
+				temp.localx=i['x']
+				temp.localy=i['y']
 				_obj.add_child(temp)
 				mapObjData.obj[str(i['x'],",",i['y'])]=temp
 				mapObj.obj[str(i['x'],",",i['y'])]=i
@@ -1491,7 +1504,7 @@ func loadMapFile(fileName:String):
 							obj.mazeId=m.mazeId
 							if !m['gate'].has(obj.gateId):
 								m['gate'][obj.gateId]=0
-		print(mazeList)							
+#		print(mazeList)							
 	else:
 		print('文件不存在')
 		pass
@@ -1941,12 +1954,11 @@ func addNewMaze(obj):
 
 #设置迷宫门
 func mazegate(mazeId,gateId):
-	print(mazeId,gateId)
+#	print(mazeId,gateId)
 	if mazeList.has(mazeId):
 		if mazeList[mazeId].gate.has(gateId):
 			mazeList[mazeId].gate[gateId]=1
-			print(mazeList)
-			print(mazeList[mazeId].gate.size())
+#			print(mazeList[mazeId].gate.size())
 			var num=0
 			for i in  mazeList[mazeId].gate:
 				if mazeList[mazeId].gate[i]==1:

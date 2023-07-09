@@ -477,6 +477,11 @@ func _draw():
 					if i.has('value') &&(i.value=='mazeStart' || i.value=='mazeEnd'):
 						if i.has('mazeId')&&str(i.mazeId)!='':
 							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.mazeId),Color(1,1,1,1))
+					if i.has('value')&&i.value=='mazeGate':
+						if i.has('gateId')&&str(i.gateId)!='':
+							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.gateId),Color(1,1,1,1))
+					
+					
 							
 			elif i.type==constants.platform||i.type==constants.staticPlatform:
 				if constants.mapTiles.has(i.type)&&constants.mapTiles[i.type].has(str(i.spriteIndex)):
