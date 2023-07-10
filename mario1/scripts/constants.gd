@@ -944,6 +944,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'layer':0,
+		'useHammer':'f',
 	},
 	"bowser1":{
 		"type":"bowser",
@@ -953,6 +954,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'layer':0,
+		'useHammer':'f',
 	},
 	"bowser2":{
 		"type":"bowser",
@@ -962,6 +964,7 @@ const tilesAttribute={
 		"offsetX":0,
 		"offsetY":0,
 		'layer':0,
+		'useHammer':'f',
 	},
 	'spinFireball':{
 		"type": "spinFireball",

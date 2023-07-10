@@ -48,7 +48,7 @@ func setFullscreen(value:bool):
 	if value:
 		scale=maxScale
 	else:
-		OS.center_window()
+#		OS.center_window()
 		scale=OS.window_size.x/gameResolution.x
 
 func setBorderless(value:bool):
@@ -74,7 +74,7 @@ func setScale(value):
 	else:
 		OS.window_fullscreen = false	
 		OS.window_size = gameResolution * scale
-		OS.center_window()
+#		OS.center_window()
 	setResolution()
 
 func _input(event):

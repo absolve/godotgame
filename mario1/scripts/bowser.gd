@@ -22,9 +22,16 @@ var moveDir=constants.left
 var shot=false
 var preStatus   #之前状态
 var level=1  #关卡等级
+var useHammer=false #使用锤子
+var throwTimer=0	#扔锤子定时器
+var throwDelay=200#
+var perHammerDelay=15 #每个锤子延迟
+var maxHammerCount=4
+var hammerCount=0
+
 
 var fire=preload("res://scenes/fire.tscn")
-
+var hammer=preload("res://scenes/hammer.tscn")
 
 onready var ani=$ani
 
@@ -40,7 +47,6 @@ func _ready():
 	targetX=startX-32*(randi()%5)
 #	print(startX,' ',targetX)
 
-	pass 
 
 
 func _update(delta):
@@ -72,12 +78,21 @@ func _update(delta):
 		else:
 			animation('walk')
 		
-#		if moveDir==constants.left && position.x>startX-32*2:
-#			xVel=-moveVel
-#		elif moveDir==constants.right && position.x<startX+32*2:
-#			xVel=moveVel
-#		else:
-#			xVel=0	
+		if useHammer:
+			throwTimer+=1
+			if throwDelay<throwTimer:
+				if hammerCount>=maxHammerCount:
+					hammerCount=0
+					throwTimer=0
+				else:
+					if (throwTimer-throwDelay)%perHammerDelay==0:
+						var temp=hammer.instance()
+						temp.position=position
+						temp.position.y-=20
+						temp.dir=dir
+						Game.addObj(temp)
+						hammerCount+=1
+
 			
 		if position.x>targetX:
 			xVel=-moveVel
