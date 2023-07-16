@@ -347,14 +347,14 @@ func text_changed(str1):
 	print(str1)
 	mapWidthSize=int(str1)
 	
-func _update(delta):
+#func _update(delta):
 #	if mode=='edit':
 #		pass
 #	elif mode=='game':
 #			pass	
 #	elif mode=='show':
 #		pass
-	pass
+#	pass
 
 
 func _process(delta):
@@ -479,7 +479,7 @@ func _draw():
 							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.mazeId),Color(1,1,1,1))
 					if i.has('value')&&i.value=='mazeGate':
 						if i.has('gateId')&&str(i.gateId)!='':
-							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.gateId),Color(1,1,1,1))
+							draw_string(font,Vector2(i.x*blockSize,i.y*blockSize+10),str(i.gateId),Color(1,1,1,1))
 					
 					
 							

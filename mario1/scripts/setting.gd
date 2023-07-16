@@ -7,11 +7,13 @@ var maxScale
 var scale=1
 var fullscreen=false
 var borderless=false
-onready var _fullscreen=$HBoxContainer/Panel/VBoxContainer/VBoxContainer/fullscreen
-onready var _borderless=$HBoxContainer/Panel/VBoxContainer/VBoxContainer/borderless
-onready var _master=$HBoxContainer/Panel2/VBoxContainer/VBoxContainer4/master
-onready var _bg=$HBoxContainer/Panel2/VBoxContainer/VBoxContainer4/bg
-onready var _sfx=$HBoxContainer/Panel2/VBoxContainer/VBoxContainer4/sfx
+onready var _fullscreen=$TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/fullscreen
+onready var _borderless=$TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/borderless
+onready var _master=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/master
+onready var _bg=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/bg
+onready var _sfx=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/sfx
+
+
 var beep=preload("res://sounds/coin.ogg")
 
 func _ready():
@@ -39,8 +41,7 @@ func _ready():
 	_master.slider.connect("value_changed",self,"_on_master_value_changed")
 	_bg.slider.connect("value_changed",self,"_on_bg_value_changed")
 	_sfx.slider.connect("value_changed",self,"_on_sfx_value_changed")
-	
-	pass
+
 
 func setFullscreen(value:bool):
 	fullscreen=value
@@ -60,11 +61,11 @@ func setResolution():
 	gameResolution=rect.size
 	screenResolution=OS.get_screen_size(OS.current_screen)
 	windowResolution=OS.window_size
-	print('GameResolution',gameResolution)
-	print('WindowResolution',windowResolution)
-	print('ScreenResolution',screenResolution)
+#	print('GameResolution',gameResolution)
+#	print('WindowResolution',windowResolution)
+#	print('ScreenResolution',screenResolution)
 	maxScale=ceil(screenResolution.y/ gameResolution.y)
-	print('MaxScale',maxScale)
+#	print('MaxScale',maxScale)
 
 
 func setScale(value):
@@ -74,7 +75,7 @@ func setScale(value):
 	else:
 		OS.window_fullscreen = false	
 		OS.window_size = gameResolution * scale
-#		OS.center_window()
+		OS.center_window()
 	setResolution()
 
 func _input(event):

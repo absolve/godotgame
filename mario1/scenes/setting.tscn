@@ -8,39 +8,58 @@
 [ext_resource path="res://fonts/title.tres" type="DynamicFont" id=6]
 
 [node name="setting" type="VBoxContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -320.0
+margin_top = -188.0
+margin_right = 320.0
+margin_bottom = 188.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
 margin_right = 640.0
-margin_bottom = 450.0
+margin_bottom = 346.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Panel" type="Panel" parent="HBoxContainer"]
-margin_right = 318.0
-margin_bottom = 450.0
+[node name="main1" type="Control" parent="TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 34.0
+margin_right = -1.0
+margin_bottom = -1.0
+
+[node name="Main" type="HBoxContainer" parent="TabContainer/main1"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 10.0
+margin_right = -1.0
+margin_bottom = -13.0
+
+[node name="Panel" type="Panel" parent="TabContainer/main1/Main"]
+margin_right = 316.0
+margin_bottom = 288.0
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel"]
 margin_left = 48.0
 margin_top = 24.0
 margin_right = 298.0
-margin_bottom = 448.0
+margin_bottom = 336.0
 size_flags_vertical = 3
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Label" type="Label" parent="HBoxContainer/Panel/VBoxContainer"]
-margin_top = 57.0
+[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel/VBoxContainer"]
+margin_top = 38.0
 margin_right = 250.0
-margin_bottom = 82.0
+margin_bottom = 63.0
 size_flags_horizontal = 5
 size_flags_vertical = 6
 size_flags_stretch_ratio = 0.5
@@ -48,37 +67,37 @@ custom_fonts/font = ExtResource( 6 )
 text = "Resolution"
 align = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel/VBoxContainer"]
-margin_top = 144.0
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel/VBoxContainer"]
+margin_top = 107.0
 margin_right = 250.0
-margin_bottom = 424.0
+margin_bottom = 312.0
 size_flags_horizontal = 5
 size_flags_vertical = 3
 
-[node name="fullscreen" type="CheckButton" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer"]
+[node name="fullscreen" type="CheckButton" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_right = 250.0
 margin_bottom = 32.0
 text = "Fullscreen"
 align = 1
 
-[node name="borderless" type="CheckButton" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer"]
+[node name="borderless" type="CheckButton" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_top = 37.0
 margin_right = 250.0
 margin_bottom = 69.0
 text = "Borderless"
 align = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_top = 74.0
 margin_right = 250.0
 margin_bottom = 106.0
 alignment = 1
 
-[node name="scaleDown" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+[node name="scaleDown" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
 margin_right = 32.0
 margin_bottom = 32.0
 
-[node name="Label" type="Label" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
 margin_top = 4.0
 margin_right = 214.0
@@ -88,60 +107,99 @@ size_flags_stretch_ratio = 2.0
 text = "scale"
 align = 1
 
-[node name="ScaleUp" parent="HBoxContainer/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 4 )]
+[node name="ScaleUp" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 4 )]
 margin_left = 218.0
 margin_right = 250.0
 margin_bottom = 32.0
 
-[node name="Panel2" type="Panel" parent="HBoxContainer"]
-margin_left = 322.0
-margin_right = 640.0
-margin_bottom = 450.0
+[node name="Panel2" type="Panel" parent="TabContainer/main1/Main"]
+margin_left = 320.0
+margin_right = 636.0
+margin_bottom = 288.0
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Panel2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel2"]
 margin_left = 38.0
 margin_top = 24.0
 margin_right = 278.0
-margin_bottom = 448.0
+margin_bottom = 336.0
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Label" type="Label" parent="HBoxContainer/Panel2/VBoxContainer"]
-margin_top = 57.0
+[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel2/VBoxContainer"]
+margin_top = 38.0
 margin_right = 240.0
-margin_bottom = 82.0
+margin_bottom = 63.0
 size_flags_vertical = 6
 size_flags_stretch_ratio = 0.5
 custom_fonts/font = ExtResource( 6 )
 text = "Volume"
 align = 1
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="HBoxContainer/Panel2/VBoxContainer"]
-margin_top = 144.0
+[node name="VBoxContainer4" type="VBoxContainer" parent="TabContainer/main1/Main/Panel2/VBoxContainer"]
+margin_top = 107.0
 margin_right = 240.0
-margin_bottom = 277.0
+margin_bottom = 240.0
 size_flags_vertical = 2
 
-[node name="master" parent="HBoxContainer/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="master" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_right = 240.0
 margin_bottom = 41.0
 
-[node name="bg" parent="HBoxContainer/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="bg" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_top = 46.0
 margin_right = 240.0
 margin_bottom = 87.0
 
-[node name="sfx" parent="HBoxContainer/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="sfx" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_top = 92.0
 margin_right = 240.0
 margin_bottom = 133.0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-margin_top = 455.0
+[node name="Control" type="Control" parent="TabContainer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_stretch_ratio = 0.0
+
+[node name="Input" type="VBoxContainer" parent="TabContainer/Control"]
+margin_top = 8.0
 margin_right = 640.0
-margin_bottom = 480.0
+margin_bottom = 344.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Control/Input"]
+margin_right = 640.0
+margin_bottom = 23.0
+
+[node name="Label" type="Label" parent="TabContainer/Control/Input/PanelContainer"]
+margin_right = 640.0
+margin_bottom = 23.0
+size_flags_horizontal = 3
+text = "actions"
+align = 1
+uppercase = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Control/Input"]
+margin_top = 28.0
+margin_right = 640.0
+margin_bottom = 306.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Control/Input/ScrollContainer"]
+
+[node name="save" type="Button" parent="TabContainer/Control/Input"]
+margin_top = 311.0
+margin_right = 640.0
+margin_bottom = 336.0
+text = "save"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+margin_top = 351.0
+margin_right = 640.0
+margin_bottom = 376.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": true
@@ -159,9 +217,9 @@ margin_right = 383.0
 margin_bottom = 25.0
 text = "  save  "
 
-[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/VBoxContainer/fullscreen" to="." method="_on_fullscreen_pressed"]
-[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/VBoxContainer/borderless" to="." method="_on_borderless_pressed"]
-[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/VBoxContainer/HBoxContainer/scaleDown" to="." method="_on_scaleDown_pressed"]
-[connection signal="pressed" from="HBoxContainer/Panel/VBoxContainer/VBoxContainer/HBoxContainer/ScaleUp" to="." method="_on_ScaleUp_pressed"]
+[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/fullscreen" to="." method="_on_fullscreen_pressed"]
+[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/borderless" to="." method="_on_borderless_pressed"]
+[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/scaleDown" to="." method="_on_scaleDown_pressed"]
+[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/ScaleUp" to="." method="_on_ScaleUp_pressed"]
 [connection signal="pressed" from="HBoxContainer2/close" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="HBoxContainer2/save" to="." method="_on_save_pressed"]

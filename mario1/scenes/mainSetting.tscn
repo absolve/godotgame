@@ -7,9 +7,13 @@ visible = false
 z_index = 100
 
 [node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 
 [node name="setting" parent="Control" instance=ExtResource( 1 )]
 margin_left = 1.0
-margin_top = 6.0
-margin_right = 640.0
-margin_bottom = 480.0
+margin_top = 30.0
+margin_right = 641.0
+margin_bottom = 438.0

@@ -29,7 +29,7 @@
 
 [sub_resource type="StyleBoxEmpty" id=6]
 
-[sub_resource type="StyleBoxTexture" id=10]
+[sub_resource type="StyleBoxTexture" id=13]
 texture = ExtResource( 16 )
 region_rect = Rect2( 0, 0, 14, 12 )
 margin_left = 6.0
@@ -200,7 +200,7 @@ HSlider/icons/grabber = ExtResource( 13 )
 HSlider/icons/grabber_disabled = ExtResource( 13 )
 HSlider/icons/grabber_highlight = ExtResource( 14 )
 HSlider/icons/tick = ExtResource( 13 )
-HSlider/styles/grabber_area = SubResource( 10 )
+HSlider/styles/grabber_area = SubResource( 13 )
 HSlider/styles/grabber_area_highlight = SubResource( 12 )
 HSlider/styles/slider = SubResource( 11 )
 HSplitContainer/constants/autohide = 1

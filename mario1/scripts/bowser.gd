@@ -14,7 +14,7 @@ var targetX=0  #目标位置
 #var jump=false
 var timer=0
 var jumpTimerDelay=140
-var jumpVel=150
+var jumpVel=160
 var moveVel=30
 var fireTimer=0
 var fireTimerDelay=220
@@ -24,8 +24,8 @@ var preStatus   #之前状态
 var level=1  #关卡等级
 var useHammer=false #使用锤子
 var throwTimer=0	#扔锤子定时器
-var throwDelay=200#
-var perHammerDelay=15 #每个锤子延迟
+var throwDelay=180#
+var perHammerDelay=12 #每个锤子延迟
 var maxHammerCount=4
 var hammerCount=0
 
