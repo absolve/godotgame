@@ -25,11 +25,9 @@ signal mazegate #碰到迷宫大门
 signal btnClose	#设置关闭按钮
 
 #游戏的背景色 白天 黑夜 水下
-var  backgroundcolor = ['#5C94FC',
-						'#000',
-						'#2038EC']
+var  backgroundcolor = ['#5C94FC','#000','#2038EC']
 #var score =preload("res://scenes/score.tscn")
-var fireball=preload("res://scenes/fireball.tscn")
+#var fireball=preload("res://scenes/fireball.tscn")
 
 #保存的数据 level地图文件名  mapName显示的标题名字 subLevel 地图中可以进来或者出去的点
 var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapName':"",
@@ -38,20 +36,20 @@ var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapNam
 var map  #地图
 var configFile='mario1.ini' #配置文件名字
 var config={'Resolution':{'Fullscreen':false,'Borderless':false,'Scale':1},
-'Volume':{'Master':1,'Bg':0.5,'Sfx':0.5}}
-
+'Volume':{'Master':1,'Bg':0.5,'Sfx':0.5},'actions':{}}
+var controls =['p1_up','p1_down','p1_left','p1_right','p1_jump','p1_action']
+var actionEvent={}
 
 func _ready():
 	printFont()
 #	print(OS.get_executable_path().get_base_dir())
 	getConfig()
 	
-	pass 
 
 func getConfig():
 	var cfg = ConfigFile.new()
 	var err = cfg.load(OS.get_executable_path().get_base_dir()+"/"+configFile)
-
+	var input
 	if err != OK:
 		print(err)
 		newConfigFile()
@@ -65,9 +63,32 @@ func getConfig():
 			config.Volume.Master=cfg.get_value(i,'Master')
 			config.Volume.Bg=cfg.get_value(i,'Bg')
 			config.Volume.Sfx=cfg.get_value(i,'Sfx')
-			
-	print(config)
-	pass
+		elif i=='Actions':
+			input=parse_json(cfg.get_value(i,'Input'))
+	if 	input:
+		for i in controls:
+			if !input.has(i):
+				continue
+			var event=input[i]
+			actionEvent[i]=[]
+			for z in event:
+				var NewEvent:InputEvent
+				if z.eventtype == "InputEventKey":
+					NewEvent = InputEventKey.new()
+					NewEvent.scancode = z.scancode
+				elif z.eventtype == "InputEventJoypadButton":
+					NewEvent = InputEventJoypadButton.new()
+					NewEvent.device = z.device
+					NewEvent.button_index = z.button_index
+				elif z.eventtype=='InputEventJoypadMotion':
+					NewEvent = InputEventJoypadMotion.new()
+					NewEvent.device = z.device
+					NewEvent.axis = z.axis
+					NewEvent.axis_value = z.axis_value
+				actionEvent[i].append(NewEvent)
+		setActionEvent()	
+	else:
+		loadDefaultActions()
 
 func newConfigFile():
 	var config = ConfigFile.new()
@@ -78,6 +99,8 @@ func newConfigFile():
 	config.set_value("Volume","Master",1)
 	config.set_value("Volume","Bg",0.5)
 	config.set_value("Volume","Sfx",0.5)
+	
+	config.set_value("Actions","Input",'')
 	config.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
 
 
@@ -90,7 +113,22 @@ func saveConfigFile():
 	cfg.set_value("Volume","Master",config.Volume.Master)
 	cfg.set_value("Volume","Bg",config.Volume.Bg)
 	cfg.set_value("Volume","Sfx",config.Volume.Sfx)
+	
+	cfg.set_value("Actions","Input",to_json(actionEvent))
 	cfg.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
+	
+#设置inputmap的事件
+func setActionEvent():
+	for i in controls:
+		InputMap.action_erase_events(i)
+		for event in actionEvent[i]:
+			InputMap.action_add_event(i,event)	
+
+#加载默认的数据
+func loadDefaultActions():
+	InputMap.load_from_globals() #项目配置的信息
+	for i in controls:
+		actionEvent[i]=InputMap.get_action_list(i)
 
 
 func setMap(obj):
@@ -106,10 +144,11 @@ func addObj2Other(obj):
 	map.addObj2Other(obj)
 
 func addObj2Bullet(pos,dir):
-	var temp=fireball.instance()
-	temp.position=pos
-	temp.dir=dir
-	map.addObj2Bullet(temp)
+#	var temp=fireball.instance()
+#	temp.position=pos
+#	temp.dir=dir
+#	map.addObj2Bullet(temp)
+	pass
 
 func addObj(obj):
 	map.addObj(obj)

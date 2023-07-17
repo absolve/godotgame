@@ -11,7 +11,7 @@ var acceleration =constants.acceleration #加速度
 #var isOnFloor=false #是否在地面上
 var dir=constants.right
 var throwAniFinish=false
-var playerId=1  #玩家id
+var playerId=1  #玩家id 1 2 3 4
 var shootDelay=200 #发射延迟
 var shootStart=0
 var allowShoot=false
@@ -83,6 +83,8 @@ var swim_big_animation=['swim_big','swim_big_green',
 
 var ball=preload("res://scenes/fireball.tscn")
 var bubble=preload("res://scenes/bubble.tscn")
+
+var keymap={"up":0,"down":0,"left":0,"right":0,'jump':0,'action':0}
 							
 var aniIndex=0	#动画索引					
 onready var ani=$ani
@@ -150,8 +152,16 @@ func _ready():
 		status=constants.fall
 		animation('swim')
 #		ani.stop()
-	pass 
 
+#设置按键
+func setKeyMap(playerId:int):
+	if playerId==1:
+		keymap["up"]="p1_up"
+		keymap["down"]="p1_down"
+		keymap["left"]="p1_left"
+		keymap["right"]="p1_right"
+		keymap["jump"]="p1_jump"
+		keymap["action"]="p1_action"
 
 func _update(delta):
 	if status==constants.stand:
@@ -265,9 +275,6 @@ func setHurtInvincible():
 	
 	
 func stand(_delta):
-#	xVel=0
-#	yVel=0
-#	yVel+=gravity*delta
 	if ani.animation in throw_animation&&throwAniFinish:	
 		animation("stand")
 	elif !(ani.animation  in throw_animation):
