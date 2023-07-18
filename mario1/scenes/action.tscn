@@ -26,9 +26,10 @@ size_flags_vertical = 3
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 469.0
-margin_bottom = 21.0
-size_flags_vertical = 0
+margin_bottom = 25.0
+size_flags_vertical = 1
 text = "key"
+valign = 1
 uppercase = true
 
 [node name="button" parent="hbox" instance=ExtResource( 2 )]

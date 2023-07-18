@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/setting.gd" type="Script" id=1]
 [ext_resource path="res://ui/theme.tres" type="Theme" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://scenes/scaleUp.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/soundoption.tscn" type="PackedScene" id=5]
 [ext_resource path="res://fonts/title.tres" type="DynamicFont" id=6]
+[ext_resource path="res://scenes/Popup.tscn" type="PackedScene" id=7]
 
 [node name="setting" type="Control"]
 anchor_left = 0.5
@@ -35,7 +36,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="main1" type="Control" parent="TabContainer"]
+[node name="Main" type="HBoxContainer" parent="TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 1.0
@@ -43,20 +44,12 @@ margin_top = 34.0
 margin_right = -1.0
 margin_bottom = -1.0
 
-[node name="Main" type="HBoxContainer" parent="TabContainer/main1"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 1.0
-margin_top = -5.0
-margin_right = -1.0
-margin_bottom = -13.0
-
-[node name="Panel" type="Panel" parent="TabContainer/main1/Main"]
-margin_right = 316.0
-margin_bottom = 303.0
+[node name="Panel" type="Panel" parent="TabContainer/Main"]
+margin_right = 317.0
+margin_bottom = 311.0
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel"]
 margin_left = 48.0
 margin_top = 24.0
 margin_right = 298.0
@@ -66,7 +59,7 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Main/Panel/VBoxContainer"]
 margin_top = 38.0
 margin_right = 250.0
 margin_bottom = 63.0
@@ -77,37 +70,37 @@ custom_fonts/font = ExtResource( 6 )
 text = "Resolution"
 align = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel/VBoxContainer"]
 margin_top = 107.0
 margin_right = 250.0
 margin_bottom = 312.0
 size_flags_horizontal = 5
 size_flags_vertical = 3
 
-[node name="fullscreen" type="CheckButton" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
+[node name="fullscreen" type="CheckButton" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_right = 250.0
 margin_bottom = 32.0
 text = "Fullscreen"
 align = 1
 
-[node name="borderless" type="CheckButton" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
+[node name="borderless" type="CheckButton" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_top = 37.0
 margin_right = 250.0
 margin_bottom = 69.0
 text = "Borderless"
 align = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_top = 74.0
 margin_right = 250.0
 margin_bottom = 106.0
 alignment = 1
 
-[node name="scaleDown" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+[node name="scaleDown" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
 margin_right = 32.0
 margin_bottom = 32.0
 
-[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 36.0
 margin_top = 4.0
 margin_right = 214.0
@@ -117,18 +110,18 @@ size_flags_stretch_ratio = 2.0
 text = "scale"
 align = 1
 
-[node name="ScaleUp" parent="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 4 )]
+[node name="ScaleUp" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 4 )]
 margin_left = 218.0
 margin_right = 250.0
 margin_bottom = 32.0
 
-[node name="Panel2" type="Panel" parent="TabContainer/main1/Main"]
-margin_left = 320.0
-margin_right = 636.0
-margin_bottom = 303.0
+[node name="Panel2" type="Panel" parent="TabContainer/Main"]
+margin_left = 321.0
+margin_right = 638.0
+margin_bottom = 311.0
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/main1/Main/Panel2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel2"]
 margin_left = 38.0
 margin_top = 24.0
 margin_right = 278.0
@@ -137,7 +130,7 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Label" type="Label" parent="TabContainer/main1/Main/Panel2/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Main/Panel2/VBoxContainer"]
 margin_top = 38.0
 margin_right = 240.0
 margin_bottom = 63.0
@@ -147,34 +140,38 @@ custom_fonts/font = ExtResource( 6 )
 text = "Volume"
 align = 1
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="TabContainer/main1/Main/Panel2/VBoxContainer"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="TabContainer/Main/Panel2/VBoxContainer"]
 margin_top = 107.0
 margin_right = 240.0
 margin_bottom = 240.0
 size_flags_vertical = 2
 
-[node name="master" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="master" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_right = 240.0
 margin_bottom = 41.0
 
-[node name="bg" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="bg" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_top = 46.0
 margin_right = 240.0
 margin_bottom = 87.0
 
-[node name="sfx" parent="TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
+[node name="sfx" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_top = 92.0
 margin_right = 240.0
 margin_bottom = 133.0
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
 visible = false
-margin_right = 638.0
-margin_bottom = 345.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 34.0
+margin_right = -1.0
+margin_bottom = -1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Control"]
 margin_right = 638.0
-margin_bottom = 317.0
+margin_bottom = 311.0
 size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="TabContainer/Control/VBoxContainer"]
@@ -192,20 +189,35 @@ uppercase = true
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Control/VBoxContainer"]
 margin_top = 28.0
 margin_right = 638.0
-margin_bottom = 317.0
+margin_bottom = 311.0
 size_flags_vertical = 3
 
 [node name="actions" type="VBoxContainer" parent="TabContainer/Control/VBoxContainer/ScrollContainer"]
 margin_right = 638.0
-margin_bottom = 289.0
+margin_bottom = 283.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="save" type="Button" parent="TabContainer/Control"]
-margin_top = 322.0
-margin_right = 638.0
-margin_bottom = 345.0
-text = "save"
+[node name="About" type="MarginContainer" parent="TabContainer"]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 40
+custom_constants/margin_top = 20
+custom_constants/margin_left = 40
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/About"]
+margin_left = 40.0
+margin_top = 20.0
+margin_right = 40.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+text = "This is a Mario clone game.
+"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 anchor_top = 0.0984043
@@ -230,9 +242,11 @@ margin_right = 381.0
 margin_bottom = 25.0
 text = "  save  "
 
-[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/fullscreen" to="." method="_on_fullscreen_pressed"]
-[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/borderless" to="." method="_on_borderless_pressed"]
-[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/scaleDown" to="." method="_on_scaleDown_pressed"]
-[connection signal="pressed" from="TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/ScaleUp" to="." method="_on_ScaleUp_pressed"]
+[node name="Popup" parent="." instance=ExtResource( 7 )]
+
+[connection signal="pressed" from="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/fullscreen" to="." method="_on_fullscreen_pressed"]
+[connection signal="pressed" from="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/borderless" to="." method="_on_borderless_pressed"]
+[connection signal="pressed" from="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/scaleDown" to="." method="_on_scaleDown_pressed"]
+[connection signal="pressed" from="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer/ScaleUp" to="." method="_on_ScaleUp_pressed"]
 [connection signal="pressed" from="HBoxContainer2/close" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="HBoxContainer2/save" to="." method="_on_save_pressed"]

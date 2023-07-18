@@ -10,12 +10,13 @@ var borderless=false
 var actionEvent
 #var controls =['p1_up','p1_down','p1_left','p1_right','p1_jump','p1_action']
 
-onready var _fullscreen=$TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/fullscreen
-onready var _borderless=$TabContainer/main1/Main/Panel/VBoxContainer/VBoxContainer/borderless
-onready var _master=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/master
-onready var _bg=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/bg
-onready var _sfx=$TabContainer/main1/Main/Panel2/VBoxContainer/VBoxContainer4/sfx
+onready var _fullscreen=$TabContainer/Main/Panel/VBoxContainer/VBoxContainer/fullscreen
+onready var _borderless=$TabContainer/Main/Panel/VBoxContainer/VBoxContainer/borderless
+onready var _master=$TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4/master
+onready var _bg=$TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4/bg
+onready var _sfx=$TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4/sfx
 onready var _actions=$TabContainer/Control/VBoxContainer/ScrollContainer/actions
+onready var _popup=$Popup
 
 var beep=preload("res://sounds/coin.ogg")
 var action=preload("res://scenes/action.tscn")
@@ -54,6 +55,8 @@ func _ready():
 		var tempAction=action.instance()
 		_actions.add_child(tempAction)
 		tempAction.setAction(i)
+		var button=tempAction.find_node("button")
+		button.connect("pressed",self,"addActionEvent",[i,tempAction])
 		for z in list:
 			addEvent(i,z,tempAction)
 	
@@ -150,8 +153,8 @@ func _on_close_pressed():
 func addEvent(name,event,node):
 	var tempkey =keyList.instance()
 	node.addKeyList(tempkey)
-	var removeBtn=tempkey.find_node("Button")
-#	removeBtn.connect("pressed",self,"removeEvent",[name,event,tempkey])
+	var removeBtn=tempkey.find_node("button")
+	removeBtn.connect("pressed",self,"removeEvent",[name,event,tempkey])
 	
 	if event is InputEventKey:
 		tempkey.setKeyName("Keyboard: " + event.as_text())
@@ -180,3 +183,28 @@ func addEvent(name,event,node):
 		else:
 			text += str(round(event.axis_value))
 		tempkey.setKeyName(text)
+
+#添加action新的事件
+func addActionEvent(name,node):
+	_popup.visible=true
+	_popup.set_process_input(true)
+	yield(_popup, "finish")
+	if _popup.NewEvent == null:
+		return
+	var event:InputEvent = _popup.NewEvent
+	InputMap.action_add_event(name, event)
+	actionEvent[name].append(event) #增加一个新的事件
+	Game.actionEvent[name].append(event) #全局里面增加一个
+	addEvent(name, event,node)
+
+#移除inputmap中的事件
+func removeEvent(action,event,node):
+	var index=actionEvent[action].find(event)
+	if index!=-1:
+		actionEvent[action].remove(index)
+	var tempIndex=	Game.actionEvent[action].find(event)
+	if tempIndex!=-1:
+		Game.actionEvent[action].remove(index) #全局里面增加一个
+	InputMap.action_erase_event(action, event)
+	node.queue_free()
+	

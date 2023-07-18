@@ -36,13 +36,12 @@ var playerData={"score":0,"coin":0,"lives":3,"level":"1-1","subLevel":'','mapNam
 var map  #地图
 var configFile='mario1.ini' #配置文件名字
 var config={'Resolution':{'Fullscreen':false,'Borderless':false,'Scale':1},
-'Volume':{'Master':1,'Bg':0.5,'Sfx':0.5},'actions':{}}
+'Volume':{'Master':1,'Bg':0.5,'Sfx':0.5}}
 var controls =['p1_up','p1_down','p1_left','p1_right','p1_jump','p1_action']
-var actionEvent={}
+var actionEvent={} #按键事件集合
 
 func _ready():
 	printFont()
-#	print(OS.get_executable_path().get_base_dir())
 	getConfig()
 	
 
@@ -113,8 +112,28 @@ func saveConfigFile():
 	cfg.set_value("Volume","Master",config.Volume.Master)
 	cfg.set_value("Volume","Bg",config.Volume.Bg)
 	cfg.set_value("Volume","Sfx",config.Volume.Sfx)
+		
+	var data:Dictionary = {}
+	for i in controls:
+		data[i]=[]
+		var event=actionEvent[i]
+		for z in event:
+			var button_data:Dictionary = {}
+			if z is InputEventKey:
+				button_data["eventtype"] = "InputEventKey"
+				button_data["scancode"] = z.scancode
+			elif z is InputEventJoypadButton:
+				button_data["eventtype"] = "InputEventJoypadButton"
+				button_data["device"] = z.device
+				button_data["button_index"] = z.button_index
+			elif z is InputEventJoypadMotion:
+				button_data["eventtype"] = "InputEventJoypadMotion"
+				button_data["device"] = z.device
+				button_data["axis"] = z.axis
+				button_data["axis_value"] = z.axis_value
+			data[i].push_back(button_data)
+	cfg.set_value("Actions","Input",to_json(data))
 	
-	cfg.set_value("Actions","Input",to_json(actionEvent))
 	cfg.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
 	
 #设置inputmap的事件

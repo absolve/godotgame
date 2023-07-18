@@ -151,7 +151,8 @@ func _ready():
 		maxYVel=constants.underwatermarioMaxYVel
 		status=constants.fall
 		animation('swim')
-#		ani.stop()
+
+	setKeyMap(playerId)
 
 #设置按键
 func setKeyMap(playerId:int):
@@ -195,8 +196,6 @@ func _update(delta):
 	elif status==constants.walkInPipe:
 		walkIntoPipe(delta)
 	elif status==constants.pipeOut:
-#		yVel=-40
-#		position.y+=yVel*delta	
 		pipeOut(delta)	
 	elif status==constants.onlywalk:
 		onlywalk(delta)	
@@ -222,7 +221,7 @@ func _update(delta):
 	if debug:	
 		update()	
 	self._delta=delta
-	pass
+
 	
 func specialState(_delta):
 	if invincible:
@@ -260,7 +259,6 @@ func specialState(_delta):
 			hurtInvincibleStartTime=0
 			modulate.a=1
 		hurtInvincibleStartTime+=1
-		pass
 
 #设置无敌
 func setInvincible():
@@ -280,13 +278,13 @@ func stand(_delta):
 	elif !(ani.animation  in throw_animation):
 		animation("stand")
 		
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed(keymap["left"]):
 		dir=constants.left
 		status = constants.walk
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed(keymap["right"]):
 		dir=constants.right
 		status = constants.walk
-	elif Input.is_action_pressed("ui_jump"):	
+	elif Input.is_action_pressed(keymap["jump"]):	
 		if underwater:
 			status=constants.swim
 			pass
@@ -296,12 +294,12 @@ func stand(_delta):
 			status=constants.jump
 			playJumpSound()
 
-	if Input.is_action_just_pressed("ui_down") &&big:
+	if Input.is_action_just_pressed(keymap["down"]) &&big:
 		startCrouch()
 		return
-	if Input.is_action_just_pressed("ui_action")&&fire:
+	if Input.is_action_just_pressed(keymap["action"])&&fire:
 		shootFireball()
-		pass
+	
 	
 	if !isOnFloor:
 #		position.y+=yVel*delta	
@@ -312,7 +310,7 @@ func walk(delta):
 	if xVel>0 || xVel<0:
 		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed
 	
-	if Input.is_action_pressed("ui_action"):
+	if Input.is_action_pressed(keymap["action"]):
 		if underwater:
 			acceleration=constants.underwaterRunAcceleration
 			maxXVel=constants.underwaterRunMaxSpeed
@@ -332,7 +330,7 @@ func walk(delta):
 		allowShoot=true
 		
 	#跳跃
-	if Input.is_action_pressed("ui_jump"):
+	if Input.is_action_pressed(keymap["jump"]):
 		if underwater:
 			status=constants.swim
 		else:	
@@ -342,7 +340,7 @@ func walk(delta):
 			playJumpSound()
 		return
 	
-	if Input.is_action_pressed("ui_down") &&big:
+	if Input.is_action_pressed(keymap["down"]) &&big:
 		startCrouch()
 		return
 	elif isCrouch and big:
@@ -351,7 +349,7 @@ func walk(delta):
 		ani.position.y=0
 		isCrouch=false
 	
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed(keymap["left"]):
 		if xVel>0: #反方向
 			slide.play()
 			animation("slide")
@@ -369,7 +367,7 @@ func walk(delta):
 		else:
 			xVel=-maxXVel
 			
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed(keymap["right"]):
 		if xVel<0:
 			slide.play()
 			animation("slide")
@@ -424,16 +422,16 @@ func jump(delta):
 		status=constants.walk	
 		
 		
-	if Input.is_action_just_released("ui_jump"):#如果跳跃键放开重力修改
+	if Input.is_action_just_released(keymap["jump"]):#如果跳跃键放开重力修改
 		gravity=constants.marioGravity
 	
-	if Input.is_action_just_pressed("ui_action")&&fire:
+	if Input.is_action_just_pressed(keymap["action"])&&fire:
 		shootFireball(false)
 	
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed(keymap["left"]):
 		if xVel>-maxXVel:
 			xVel-=acceleration*delta
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed(keymap["right"]):
 		if xVel<maxXVel:
 			xVel+=acceleration*delta
 		
@@ -442,15 +440,15 @@ func fall(delta):
 #	if yVel<maxYVel:
 #		yVel+=gravity*delta
 	animation("fall")
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed(keymap["left"]):
 		if xVel>-maxXVel:
 			xVel-=acceleration*delta
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed(keymap["right"]):
 		if xVel<maxXVel:
 			xVel+=acceleration*delta
-	if Input.is_action_just_pressed("ui_action")&&fire:
+	if Input.is_action_just_pressed(keymap["action"])&&fire:
 		shootFireball(false)		
-	if underwater&& Input.is_action_pressed("ui_jump"):
+	if underwater&& Input.is_action_pressed(keymap["jump"]):
 		status = constants.swim
 	
 	if isOnFloor:
@@ -499,25 +497,22 @@ func startCrouch():
 func crouch(delta):
 #	yVel+=gravity*delta
 	animation("crouch")
-	if Input.is_action_just_pressed("ui_action")&&fire:
+	if Input.is_action_just_pressed(keymap["action"])&&fire:
 		shootFireball(false)
 		
-	if Input.is_action_just_released("ui_down"):
+	if Input.is_action_just_released(keymap["down"]):
 		status=constants.walk	
 #		rect=Rect2(Vector2(-12,-30),Vector2(24,60))	
 		adjustBigRect()
 		position.y-=14
 		ani.position.y=0
 		isCrouch=false
-		pass
-	elif Input.is_action_pressed("ui_jump"):
+	elif Input.is_action_pressed(keymap["jump"]):
 		yVel=-constants.marioJumpSpeed
 		gravity=constants.marioJumpGravity
 		status=constants.jump
 		playJumpSound()
-		pass
-	
-		
+
 	if dir==constants.right:
 		if	xVel>0:
 			xVel-=acceleration*delta
@@ -530,9 +525,7 @@ func crouch(delta):
 		else:
 			xVel=0
 			ani.speed_scale=1		
-#	position.x+=xVel*delta
-#	position.y+=yVel*delta
-	pass
+
 
 #设置水管出来的位置
 func setPipeOutStatus(y):
@@ -540,7 +533,6 @@ func setPipeOutStatus(y):
 	enterPipeY=y
 	status=constants.pipeOut
 	animation("stand")
-	pass
 
 #进入水管
 func pipeIn(delta):
@@ -550,7 +542,6 @@ func pipeIn(delta):
 		Game.emit_signal("marioIntoPipe",pipeNo)
 		status=constants.empty
 		print('end')	
-	pass
 
 func pipeOut(delta):
 	yVel=-40
@@ -560,7 +551,6 @@ func pipeOut(delta):
 	else:
 		active=true
 		status=constants.stand	
-	pass
 
 
 func walkIntoPipe(delta):
@@ -590,7 +580,6 @@ func onlywalk(delta):
 		ani.speed_scale=1+abs(xVel)/constants.marioAniSpeed	
 	animation('walk')	
 	
-	pass
 
 #变大
 func small2Big():
@@ -604,7 +593,7 @@ func small2Big():
 	ani.play("small2big")
 	ani.speed_scale=1
 	Game.emit_signal("marioStateChange")
-	pass
+	
 
 #变成开火状态
 func big2Fire():
@@ -665,7 +654,6 @@ func big2Small():
 	ani.speed_scale=1
 	ani.play("big2small")
 	Game.emit_signal("marioStateChange")
-	pass
 
 #开始在旗杆上滑动
 func startSliding(length=0):
@@ -678,15 +666,10 @@ func startSliding(length=0):
 	yVel=180
 	dir=constants.right
 	Game.emit_signal("marioStartSliding")
-#	ani.flip_h=true
-#	self.poleLength=length
-	pass
+
 
 func poleSliding(delta):
-#	yVel=220
-#	position.y+=yVel*delta
 	animation("poleSliding")
-	pass
 
 #这个是在旗杆的底部位置
 func setSitBottom():
@@ -743,27 +726,25 @@ func setGrabVine(obj):
 	animation("poleSliding")
 	status=constants.grabVine
 	ani.stop()
-	pass
 
 #爬藤曼的处理
 func grabVine(delta):
-	if Input.is_action_pressed("ui_up"):
+	if Input.is_action_pressed(keymap["up"]):
 		if getTop()>vineObj.getTop():
 			yVel=-100
 		else:
 			yVel=0	
 		if getTop()-getSizeY()/2<0:
 			Game.emit_signal("marioGrapVineTop",vineObj.level,vineObj.subLevel)
-			
 		animation("poleSliding")
-	elif Input.is_action_pressed("ui_down"):	
+	elif Input.is_action_pressed(keymap["down"]):	
 		if getBottom()<vineObj.getBottom():
 			yVel=100
 		else:
 			yVel=0		
 		animation("poleSliding")
-	elif Input.is_action_pressed("ui_right"):
-		if position.x>vineObj.position.x &&  Input.is_action_just_pressed("ui_right"): 
+	elif Input.is_action_pressed(keymap["right"]):
+		if position.x>vineObj.position.x &&  Input.is_action_just_pressed(keymap["right"]): 
 			animation("walk")
 			ani.frame=2
 			ani.stop()
@@ -775,8 +756,8 @@ func grabVine(delta):
 			dir=constants.left
 			animation("poleSliding")
 			ani.stop()
-	elif Input.is_action_pressed("ui_left"):
-		if position.x<vineObj.position.x && Input.is_action_just_pressed("ui_left"):
+	elif Input.is_action_pressed(keymap["left"]):
+		if position.x<vineObj.position.x && Input.is_action_just_pressed(keymap["left"]):
 			animation("walk")
 			ani.frame=2
 			ani.stop()
@@ -800,7 +781,6 @@ func setAutoGrabVine(obj):
 	position.x= obj.getLeft()-getSize()/2
 	ani.stop()
 	status=constants.autoGrabVine
-	pass
 
 #自动爬藤蔓
 func autoGrabVine(delta):
@@ -825,13 +805,12 @@ func setOnBoard(obj):
 	status=constants.onBoard
 	animation("walk")
 	ani.stop()
-	pass
 	
 #在跳板上
 func onBoard(delta):
 	onBoardTimer+=1
 	if onBoardTimer>onBoardDelta:
-		if Input.is_action_pressed("ui_jump"):
+		if Input.is_action_pressed(keymap["jump"]):
 			yVel=-1000
 		else:	
 			yVel=-500
@@ -839,13 +818,13 @@ func onBoard(delta):
 
 #水下
 func swim(delta):
-	if Input.is_action_pressed("ui_jump"):
+	if Input.is_action_pressed(keymap["jump"]):
 		yVel=-140
 		animation('swim')
 		if !_swim.playing:
 			_swim.play()
 
-	if Input.is_action_pressed("ui_left"):	
+	if Input.is_action_pressed(keymap["left"]):	
 		acceleration=constants.acceleration
 		dir=constants.left
 			
@@ -854,7 +833,7 @@ func swim(delta):
 		else:
 			xVel=-maxXVel
 			
-	elif Input.is_action_pressed("ui_right"):
+	elif Input.is_action_pressed(keymap["right"]):
 		dir=constants.right
 		acceleration=constants.acceleration
 			
@@ -875,7 +854,7 @@ func swim(delta):
 			else:
 				xVel=0
 				ani.speed_scale=1
-	if Input.is_action_just_pressed("ui_action")&&fire:
+	if Input.is_action_just_pressed(keymap["action"])&&fire:
 		shootFireball()
 	
 	if yVel>0:
@@ -945,7 +924,7 @@ func rightCollide(obj):
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
 			if status==constants.onlywalk || \
-			(isOnFloor&&obj.dir==constants.right&&Input.is_action_pressed("ui_right")):
+			(isOnFloor&&obj.dir==constants.right&&Input.is_action_pressed(keymap["right"])):
 				enterPipe(obj)
 			else:
 				return true		
@@ -1064,7 +1043,7 @@ func leftCollide(obj):
 		getItem(obj)
 	elif obj.type==constants.pipe:
 		if obj.pipeType==constants.pipeIn:
-			if isOnFloor&& obj.dir==constants.left&&Input.is_action_pressed("ui_left"):
+			if isOnFloor&& obj.dir==constants.left&&Input.is_action_pressed(keymap["left"]):
 				enterPipe(obj)
 			else:
 				return true		
@@ -1142,7 +1121,7 @@ func floorCollide(obj):
 	elif obj.type==constants.pipe:
 		combo=0	
 		if obj.pipeType==constants.pipeIn:
-			if obj.dir==constants.down&&Input.is_action_pressed("ui_down"):
+			if obj.dir==constants.down&&Input.is_action_pressed(keymap["down"]):
 				if position.x+rect.size.x<obj.position.x+obj.rect.size.x:
 					enterPipe(obj)
 				else:
@@ -1291,7 +1270,6 @@ func getItem(i):
 		i.destroy=true
 		SoundsUtil.playCoin()
 		Game.addCoin(Vector2(position.x,getTop()))	
-	pass
 
 #进入水管
 func enterPipe(obj): 
@@ -1534,8 +1512,7 @@ func _on_ani_animation_finished():
 		position.y-=17
 		Game.emit_signal('marioStateFinish')
 	elif status==constants.big2small:
-		hurtInvincible=true
-		
+		hurtInvincible=true	
 		big=false
 		fire=false
 		active=true
