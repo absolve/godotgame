@@ -145,7 +145,7 @@ func setActionEvent():
 
 #加载默认的数据
 func loadDefaultActions():
-	InputMap.load_from_globals() #项目配置的信息
+#	InputMap.load_from_globals() #项目配置的信息
 	for i in controls:
 		actionEvent[i]=InputMap.get_action_list(i)
 

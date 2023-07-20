@@ -16,21 +16,14 @@ onready var ani=$ani
 func _ready():
 #	type=constants.mushroom
 #	debug=true
-	mask=[constants.box,constants.brick,constants.platform,constants.goomba,
-		constants.koopa,constants.pipe]
+	mask=[constants.box,constants.brick,constants.platform,constants.pipe]
 	maxYVel=constants.marioMaxYVel 
 	active=false
 	rect=Rect2(Vector2(-13,-15),Vector2(26,30))	
 #	gravity=constants.enemyGravity
 	oldPos=position.y
 	yVel=-40
-#	if dir==constants.left:
-#		xVel=-speed
-#	else:
-#		xVel=speed
 
-#	xVel=-speed	
-#	ani.playing=true
 	if type==constants.mushroom:
 		ani.play("mush_room")
 	elif type==	constants.star:
