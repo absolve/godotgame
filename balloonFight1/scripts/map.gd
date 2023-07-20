@@ -34,8 +34,6 @@ func _ready():
 		print("文件不存在")
 	
 
-
-
 #载入文件
 func loadMapFile(fileName:String):
 	var file = File.new()
