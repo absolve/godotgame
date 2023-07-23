@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scripts/editMap.gd" type="Script" id=1]
 [ext_resource path="res://scenes/itemList.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/attr_dropDown.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/toolBtn.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/title.tscn" type="PackedScene" id=8]
+[ext_resource path="res://theme/myTheme.tres" type="Theme" id=9]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -29,81 +30,82 @@ current = true
 [node name="layer" type="CanvasLayer" parent="."]
 
 [node name="Control" type="Control" parent="layer"]
+theme = ExtResource( 9 )
 
 [node name="tab" type="TabContainer" parent="layer/Control"]
 margin_left = 408.0
+margin_top = 5.0
 margin_right = 638.0
 margin_bottom = 479.0
-theme = ExtResource( 4 )
 
 [node name="common" type="VBoxContainer" parent="layer/Control/tab"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.0
-margin_top = 34.0
-margin_right = -1.0
-margin_bottom = -1.0
+margin_left = 2.0
+margin_top = 29.0
+margin_right = -2.0
+margin_bottom = -2.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="vbox" type="VBoxContainer" parent="layer/Control/tab/common"]
-margin_right = 228.0
-margin_bottom = 355.0
+margin_right = 226.0
+margin_bottom = 326.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="mapWidth" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_right = 228.0
+margin_right = 226.0
 margin_bottom = 25.0
 key = "mapWidth"
 value = "20"
 
 [node name="time" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_top = 30.0
-margin_right = 228.0
-margin_bottom = 55.0
+margin_top = 29.0
+margin_right = 226.0
+margin_bottom = 54.0
 key = "gameTime"
 value = "400"
 
 [node name="mapName" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_top = 60.0
-margin_right = 228.0
-margin_bottom = 85.0
+margin_top = 58.0
+margin_right = 226.0
+margin_bottom = 83.0
 key = "mapName"
 
 [node name="nextLevel" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_top = 90.0
-margin_right = 228.0
-margin_bottom = 115.0
+margin_top = 87.0
+margin_right = 226.0
+margin_bottom = 112.0
 key = "nextLevel"
 
 [node name="subLevel" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_top = 120.0
-margin_right = 228.0
-margin_bottom = 145.0
+margin_top = 116.0
+margin_right = 226.0
+margin_bottom = 141.0
 key = "subLevel"
 
 [node name="status" parent="layer/Control/tab/common/vbox" instance=ExtResource( 5 )]
-margin_top = 150.0
-margin_right = 228.0
-margin_bottom = 175.0
+margin_top = 145.0
+margin_right = 226.0
+margin_bottom = 170.0
 key = "mStatus"
 
 [node name="background" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 180.0
-margin_right = 228.0
-margin_bottom = 203.0
+margin_top = 174.0
+margin_right = 226.0
+margin_bottom = 209.0
 key = "background"
 list = [ "overworld", "castle", "underwater" ]
 
 [node name="music" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 208.0
-margin_right = 228.0
-margin_bottom = 231.0
+margin_top = 213.0
+margin_right = 226.0
+margin_bottom = 248.0
 key = "music"
 list = [ "overworld", "castle", "underwater", "underground" ]
 
@@ -120,9 +122,9 @@ list = [ "overworld", "castle", "underwater" ]
 [node name="bonusLevel" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 236.0
-margin_right = 228.0
-margin_bottom = 259.0
+margin_top = 252.0
+margin_right = 226.0
+margin_bottom = 287.0
 alignment = 1
 key = "bonusLevel"
 list = [ "false", "true" ]
@@ -130,20 +132,20 @@ list = [ "false", "true" ]
 [node name="underwater" parent="layer/Control/tab/common/vbox" instance=ExtResource( 6 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 264.0
-margin_right = 228.0
-margin_bottom = 287.0
+margin_top = 291.0
+margin_right = 226.0
+margin_bottom = 326.0
 key = "underwater"
 list = [ "false", "true" ]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="layer/Control/tab/common"]
-margin_top = 360.0
-margin_right = 228.0
-margin_bottom = 444.0
+margin_top = 330.0
+margin_right = 226.0
+margin_bottom = 447.0
 size_flags_horizontal = 3
 
 [node name="hbox2" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
-margin_right = 228.0
+margin_right = 226.0
 
 [node name="apply" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox2"]
 visible = false
@@ -154,46 +156,42 @@ theme = ExtResource( 4 )
 text = "APPLY"
 
 [node name="hbox" type="HBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
-margin_top = 5.0
-margin_right = 228.0
-margin_bottom = 28.0
+margin_top = 4.0
+margin_right = 226.0
+margin_bottom = 39.0
 size_flags_vertical = 9
 
 [node name="save" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox"]
-margin_right = 112.0
-margin_bottom = 23.0
+margin_right = 111.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
-theme = ExtResource( 4 )
 text = "SAVE"
 
 [node name="hide" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox"]
-margin_left = 116.0
-margin_right = 228.0
-margin_bottom = 23.0
+margin_left = 115.0
+margin_right = 226.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource( 4 )
 text = "HIDE"
 
 [node name="hbox1" type="VBoxContainer" parent="layer/Control/tab/common/VBoxContainer"]
-margin_top = 33.0
-margin_right = 228.0
-margin_bottom = 84.0
+margin_top = 43.0
+margin_right = 226.0
+margin_bottom = 117.0
 size_flags_horizontal = 3
 
 [node name="load" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox1"]
-margin_right = 228.0
-margin_bottom = 23.0
+margin_right = 226.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
-theme = ExtResource( 4 )
 text = "LOAD"
 
 [node name="return" type="Button" parent="layer/Control/tab/common/VBoxContainer/hbox1"]
-margin_top = 28.0
-margin_right = 228.0
-margin_bottom = 51.0
+margin_top = 39.0
+margin_right = 226.0
+margin_bottom = 74.0
 size_flags_horizontal = 3
-theme = ExtResource( 4 )
 text = "RETURN"
 
 [node name="map" type="PanelContainer" parent="layer/Control/tab"]
@@ -212,10 +210,8 @@ __meta__ = {
 }
 
 [node name="vbox" type="VBoxContainer" parent="layer/Control/tab/map"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 213.0
-margin_bottom = 433.0
+margin_right = 222.0
+margin_bottom = 438.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
@@ -226,28 +222,27 @@ __meta__ = {
 [node name="itemList" parent="layer/Control/tab/map/vbox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 206.0
+margin_right = 222.0
 margin_bottom = 197.0
 size_flags_vertical = 3
 
 [node name="attribute" parent="layer/Control/tab/map/vbox" instance=ExtResource( 3 )]
 margin_top = 201.0
-margin_right = 206.0
+margin_right = 222.0
 margin_bottom = 399.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="layer/Control/tab/map/vbox"]
 margin_top = 403.0
-margin_right = 206.0
-margin_bottom = 426.0
+margin_right = 222.0
+margin_bottom = 438.0
 size_flags_horizontal = 3
 
 [node name="edit" type="Button" parent="layer/Control/tab/map/vbox/HBoxContainer"]
-margin_right = 206.0
-margin_bottom = 23.0
+margin_right = 222.0
+margin_bottom = 35.0
 size_flags_horizontal = 3
-theme = ExtResource( 4 )
 text = "EDIT"
 
 [node name="toolBtn" parent="layer/Control" instance=ExtResource( 7 )]

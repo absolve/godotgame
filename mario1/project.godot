@@ -24,6 +24,7 @@ constants="*res://scripts/constants.gd"
 Game="*res://scripts/game.gd"
 SoundsUtil="*res://scenes/soundsUtil.tscn"
 MainSetting="*res://scenes/mainSetting.tscn"
+Cursor="*res://theme/cursor/cursor.gd"
 
 [display]
 

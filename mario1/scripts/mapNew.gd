@@ -140,13 +140,13 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/4-4.json")
-	var dir = Directory.new()
-	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-		print("ok")
-		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-	else:
-		print("文件不存在")
+	loadMapFile("res://levels/4-4.json")
+#	var dir = Directory.new()
+#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+#		print("ok")
+#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+#	else:
+#		print("文件不存在")
 	
 	var tempTime=Game.playerData['time']
 	subLevel=Game.playerData['subLevel']
@@ -727,7 +727,7 @@ func _physics_process(delta):
 				i.offsetx*blockSize-blockSize*minWidthNum/2:
 				print('创建迷宫')
 				var mazeEnd=i.current+minWidthNum/2
-				if mazeEnd>i.endX:	#如果最后一个不超过一个屏幕就是endX位置
+				if mazeEnd>i.endX:	#如果最后一个不超过半个屏幕就是endX位置
 					mazeEnd=i.endX
 				addMaze(i.current,mazeEnd,i.offsetx,i.mazeId)	
 				i.current=mazeEnd

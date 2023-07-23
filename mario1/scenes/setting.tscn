@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/setting.gd" type="Script" id=1]
-[ext_resource path="res://ui/theme.tres" type="Theme" id=2]
+[ext_resource path="res://theme/myTheme.tres" type="Theme" id=2]
 [ext_resource path="res://scenes/scaleDown.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/scaleUp.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/soundoption.tscn" type="PackedScene" id=5]
@@ -39,14 +39,14 @@ __meta__ = {
 [node name="Main" type="HBoxContainer" parent="TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.0
-margin_top = 34.0
-margin_right = -1.0
-margin_bottom = -1.0
+margin_left = 2.0
+margin_top = 29.0
+margin_right = -2.0
+margin_bottom = -2.0
 
 [node name="Panel" type="Panel" parent="TabContainer/Main"]
-margin_right = 317.0
-margin_bottom = 311.0
+margin_right = 316.0
+margin_bottom = 315.0
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel"]
@@ -71,7 +71,7 @@ text = "Resolution"
 align = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel/VBoxContainer"]
-margin_top = 107.0
+margin_top = 106.0
 margin_right = 250.0
 margin_bottom = 312.0
 size_flags_horizontal = 5
@@ -79,21 +79,21 @@ size_flags_vertical = 3
 
 [node name="fullscreen" type="CheckButton" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
 margin_right = 250.0
-margin_bottom = 32.0
+margin_bottom = 44.0
 text = "Fullscreen"
 align = 1
 
 [node name="borderless" type="CheckButton" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
-margin_top = 37.0
+margin_top = 48.0
 margin_right = 250.0
-margin_bottom = 69.0
+margin_bottom = 92.0
 text = "Borderless"
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer"]
-margin_top = 74.0
+margin_top = 96.0
 margin_right = 250.0
-margin_bottom = 106.0
+margin_bottom = 128.0
 alignment = 1
 
 [node name="scaleDown" parent="TabContainer/Main/Panel/VBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
@@ -116,9 +116,9 @@ margin_right = 250.0
 margin_bottom = 32.0
 
 [node name="Panel2" type="Panel" parent="TabContainer/Main"]
-margin_left = 321.0
-margin_right = 638.0
-margin_bottom = 311.0
+margin_left = 320.0
+margin_right = 636.0
+margin_bottom = 315.0
 size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Main/Panel2"]
@@ -141,24 +141,24 @@ text = "Volume"
 align = 1
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="TabContainer/Main/Panel2/VBoxContainer"]
-margin_top = 107.0
+margin_top = 106.0
 margin_right = 240.0
-margin_bottom = 240.0
+margin_bottom = 222.0
 size_flags_vertical = 2
 
 [node name="master" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
 margin_right = 240.0
-margin_bottom = 41.0
+margin_bottom = 36.0
 
 [node name="bg" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
-margin_top = 46.0
+margin_top = 40.0
 margin_right = 240.0
-margin_bottom = 87.0
+margin_bottom = 76.0
 
 [node name="sfx" parent="TabContainer/Main/Panel2/VBoxContainer/VBoxContainer4" instance=ExtResource( 5 )]
-margin_top = 92.0
+margin_top = 80.0
 margin_right = 240.0
-margin_bottom = 133.0
+margin_bottom = 116.0
 
 [node name="Control" type="VBoxContainer" parent="TabContainer"]
 visible = false
@@ -231,15 +231,15 @@ __meta__ = {
 }
 
 [node name="close" type="Button" parent="HBoxContainer2"]
-margin_left = 259.0
+margin_left = 251.0
 margin_right = 318.0
-margin_bottom = 25.0
+margin_bottom = 35.0
 text = "  close "
 
 [node name="save" type="Button" parent="HBoxContainer2"]
 margin_left = 322.0
-margin_right = 381.0
-margin_bottom = 25.0
+margin_right = 389.0
+margin_bottom = 35.0
 text = "  save  "
 
 [node name="Popup" parent="." instance=ExtResource( 7 )]

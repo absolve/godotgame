@@ -347,6 +347,7 @@ func text_changed(str1):
 	print(str1)
 	mapWidthSize=int(str1)
 	
+	
 #func _update(delta):
 #	if mode=='edit':
 #		pass
