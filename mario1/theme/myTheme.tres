@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=18 format=2]
+[gd_resource type="Theme" load_steps=20 format=2]
 
 [ext_resource path="res://fonts/uifont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://theme/btn/btn_normal.tres" type="StyleBox" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://theme/tabContainer/panel.tres" type="StyleBox" id=9]
 [ext_resource path="res://theme/tabContainer/tab_fg.tres" type="StyleBox" id=10]
 [ext_resource path="res://theme/tabContainer/tab_bg.tres" type="StyleBox" id=11]
+[ext_resource path="res://theme/Toggle2.png" type="Texture" id=12]
+[ext_resource path="res://theme/Toggle1.png" type="Texture" id=13]
 [ext_resource path="res://theme/tree/bg.tres" type="StyleBox" id=15]
 [ext_resource path="res://theme/hslider/area.tres" type="StyleBox" id=18]
 [ext_resource path="res://theme/hslider/slider.tres" type="StyleBox" id=19]
@@ -41,10 +43,10 @@ CheckButton/colors/font_color_hover_pressed = Color( 0.168627, 0.168627, 0.16862
 CheckButton/colors/font_color_pressed = Color( 0.168627, 0.168627, 0.168627, 1 )
 CheckButton/constants/check_vadjust = 0
 CheckButton/constants/hseparation = 4
-CheckButton/icons/off = null
-CheckButton/icons/off_disabled = null
-CheckButton/icons/on = null
-CheckButton/icons/on_disabled = null
+CheckButton/icons/off = ExtResource( 13 )
+CheckButton/icons/off_disabled = ExtResource( 13 )
+CheckButton/icons/on = ExtResource( 12 )
+CheckButton/icons/on_disabled = ExtResource( 12 )
 CheckButton/styles/disabled = null
 CheckButton/styles/focus = null
 CheckButton/styles/hover = null
