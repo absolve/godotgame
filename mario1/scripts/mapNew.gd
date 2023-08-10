@@ -140,13 +140,13 @@ func _ready():
 		return
 		
 
-	loadMapFile("res://levels/4-4.json")
-#	var dir = Directory.new()
-#	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
-#		print("ok")
-#		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
-#	else:
-#		print("文件不存在")
+#	loadMapFile("res://levels/4-4.json")
+	var dir = Directory.new()
+	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
+		print("ok")
+		loadMapFile(mapDir+'/'+Game.playerData['level']+".json")
+	else:
+		print("文件不存在")
 	
 	var tempTime=Game.playerData['time']
 	subLevel=Game.playerData['subLevel']
