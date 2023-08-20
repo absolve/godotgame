@@ -25,6 +25,7 @@ Game="*res://scripts/game.gd"
 SoundsUtil="*res://scenes/soundsUtil.tscn"
 MainSetting="*res://scenes/mainSetting.tscn"
 Cursor="*res://theme/cursor/cursor.gd"
+ScreenCapture="*res://scenes/screenCapture.tscn"
 
 [display]
 
