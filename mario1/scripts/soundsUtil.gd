@@ -32,6 +32,7 @@ onready var castleend=$castleend
 onready var underwater=$underwater
 onready var underwater_fast=$underwater_fast
 onready var pause=$pause
+onready var finish=$finish
 
 var bgm="overworld"
 var lastBgm=''
@@ -100,6 +101,9 @@ func _ready():
 	
 	var pause1=pause.stream as AudioStreamOGGVorbis
 	pause1.set_loop(false)
+	
+	var finish1=finish.stream as AudioStreamOGGVorbis
+	finish1.set_loop(false)
 
 func playBgm():
 	if bgm=="overworld":
@@ -232,3 +236,7 @@ func playCastleEnd():
 	
 func playPause():
 	pause.play()
+
+func playFinish():
+	finish.play()
+	

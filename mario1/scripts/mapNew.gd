@@ -97,6 +97,7 @@ var bulletTimer=0
 var bulletDelay=80
 var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
+var gameFinish=false #游戏结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
 #var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
 #var mapObjList={} #地图对象以x,y为key value为对象
@@ -134,6 +135,7 @@ func _ready():
 	Game.connect('vineEnd',self,'vineEnd')
 	Game.connect('marioGrapVineTop',self,'marioGrapVineTop')
 	Game.connect('mazegate',self,'mazegate')
+	Game.connect('mazegate',self,'gameFinish')
 	
 	if isShow:
 		_fps.visible=false
@@ -1938,7 +1940,6 @@ func marioStateFinish():
 	for i in _obj.get_children():
 		if i.type!=constants.mario:
 			i.resume()
-	pass
 
 func invincibleFinish():
 #	SoundsUtil.stopSpecialBgm()
@@ -2112,6 +2113,10 @@ func marioCastleEnd():
 	saveMarioStatus()
 	_timer.start(3)
 
+#游戏结束
+func gameFinish():
+	gameFinish=true
+	
 
 #藤蔓已经长好
 func vineEnd():

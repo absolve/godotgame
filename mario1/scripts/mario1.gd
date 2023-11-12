@@ -979,6 +979,8 @@ func rightCollide(obj):
 	elif obj.type==constants.figures:
 		status=constants.stop
 		animation('stand')
+		if obj.spriteIndex==1:
+			Game.emit_signal('gameFinish')
 #		Game.emit_signal("marioCastleEnd")
 		return true
 	elif obj.type==constants.vine:
