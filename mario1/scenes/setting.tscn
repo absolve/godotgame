@@ -187,14 +187,14 @@ align = 1
 uppercase = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Control/VBoxContainer"]
-margin_top = 28.0
+margin_top = 27.0
 margin_right = 638.0
 margin_bottom = 311.0
 size_flags_vertical = 3
 
 [node name="actions" type="VBoxContainer" parent="TabContainer/Control/VBoxContainer/ScrollContainer"]
 margin_right = 638.0
-margin_bottom = 283.0
+margin_bottom = 284.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 

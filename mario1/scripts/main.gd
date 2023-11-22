@@ -81,7 +81,7 @@ func _physics_process(delta):
 					_2p.visible=false
 				else:
 					_2p.visible=true	
-	pass
+
 		
 func _input(event):
 	if Input.is_action_just_pressed("ui_down"):
