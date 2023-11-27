@@ -24,6 +24,8 @@ signal mazegate #碰到迷宫大门
 signal gameFinish #游戏结束
 
 signal btnClose	#设置关闭按钮
+signal resume  #继续游戏
+signal returnHome #返回
 
 #游戏的背景色 白天 黑夜 水下
 var  backgroundcolor = ['#5C94FC','#000','#2038EC']
@@ -65,6 +67,7 @@ func getConfig():
 			config.Volume.Sfx=cfg.get_value(i,'Sfx')
 		elif i=='Actions':
 			input=parse_json(cfg.get_value(i,'Input'))
+			print(input)
 	if 	input:
 		for i in controls:
 			if !input.has(i):

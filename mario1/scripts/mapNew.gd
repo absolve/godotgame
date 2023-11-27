@@ -52,6 +52,7 @@ onready var _camera=$camera
 onready var _timer=$Timer
 onready var _gameover=$gameover
 onready var _title=$title
+onready var _pauseLayer=$pauseLayer
 
 #var path="res://levels/1-1.json"
 var mapDir="res://levels"	#内置地图路径
@@ -136,6 +137,8 @@ func _ready():
 	Game.connect('marioGrapVineTop',self,'marioGrapVineTop')
 	Game.connect('mazegate',self,'mazegate')
 	Game.connect('mazegate',self,'gameFinish')
+	Game.connect('resume',self,'resume')
+	Game.connect('returnHome',self,'returnHome')
 	
 	if isShow:
 		_fps.visible=false
@@ -2177,6 +2180,26 @@ func mazegate(mazeId,gateId):
 			if num==mazeList[mazeId].gate.size():
 				mazeList[mazeId].vaild=false
 				print('迷宫',mazeId,'失效')
+	
+func resume():
+	print('resume')
+	_pauseLayer.visible=false
+	_title.startCountDown()
+	gamePause=false
+	SoundsUtil.playPause()
+	SoundsUtil.playBgm()
+	for i in _obj.get_children():
+		i.resume()
+		
+		
+func returnHome():
+	set_process_input(false)
+	var scene=load("res://scenes/welcome.tscn")
+	var temp=scene.instance()
+	queue_free()
+	get_tree().get_root().add_child(temp)
+	set_process_input(true)
+	pass		
 			
 func getObj():
 	return _obj
@@ -2241,16 +2264,19 @@ func _on_gameover_timeout():
 func _input(event):
 	if !isShow:
 		if !gameOver &&Input.is_action_just_pressed("ui_accept"):
-			if gamePause:
-				_title.startCountDown()
-				gamePause=false
-				SoundsUtil.playPause()
-				SoundsUtil.playBgm()
-				for i in _obj.get_children():
-					i.resume()
-			else:
+#			if gamePause:
+#				_title.startCountDown()
+#				gamePause=false
+#				SoundsUtil.playPause()
+#				SoundsUtil.playBgm()
+#				for i in _obj.get_children():
+#					i.resume()
+#			else:
+
+			if !gamePause:
 				_title.stopCountDown()	
 				gamePause=true
+				_pauseLayer.visible=true
 				SoundsUtil.stopBgm()
 				SoundsUtil.playPause()
 				for i in _obj.get_children():

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/mapNew.gd" type="Script" id=1]
 [ext_resource path="res://fonts/fonts.tres" type="DynamicFont" id=2]
 [ext_resource path="res://scenes/title.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/pauseLayer.tscn" type="PackedScene" id=4]
 
 [node name="mapNew" type="Node2D"]
 script = ExtResource( 1 )
@@ -34,6 +35,9 @@ one_shot = true
 [node name="gameover" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
+
+[node name="pauseLayer" parent="." instance=ExtResource( 4 )]
+visible = false
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="gameover" to="." method="_on_gameover_timeout"]
