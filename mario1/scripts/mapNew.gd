@@ -145,7 +145,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/4-4.json")
+#	loadMapFile("res://levels/1-2-1.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -726,7 +726,7 @@ func _physics_process(delta):
 							mazeList[m].gate[s]=0
 							
 						
-	if mazeInprogress:	#如果迷宫需要分段加载 每次加载一个屏幕大小的迷宫知道完成
+	if mazeInprogress:	#如果迷宫需要分段加载 每次加载一个屏幕大小的迷宫直到完成
 		for i in oldMazeList: #每次添加半个屏幕大小
 			if _camera.position.x+winWidth>i.current*blockSize+\
 				i.offsetx*blockSize-blockSize*minWidthNum/2:
@@ -816,7 +816,7 @@ func _physics_process(delta):
 		var ystart=floor((y.position.y-y.rect.size.y)/blockSize)
 		var yend=floor((y.position.y+y.rect.size.y)/blockSize)
 	
-		#与方块的配置 在这个循环中直接访问元素属性
+		#与方块的碰撞 在这个循环中直接访问元素属性
 		for a in range(xstart,xend+1):
 			for b in range(ystart,yend+1):
 				if mapData.get(str(a,",",b),null)!=null&&y.active:
@@ -850,9 +850,7 @@ func _physics_process(delta):
 						hCollision=true
 					if result[1]:
 						vCollision=true
-				
-			
-			pass
+
 		
 		if !vCollision&&y.active:
 			y.position.y+=y.yVel*delta
@@ -2184,7 +2182,8 @@ func mazegate(mazeId,gateId):
 func resume():
 	print('resume')
 	_pauseLayer.visible=false
-	_title.startCountDown()
+	if marioStatus!=constants.onlywalk&&!bonusLevel:
+		_title.startCountDown()
 	gamePause=false
 	SoundsUtil.playPause()
 	SoundsUtil.playBgm()

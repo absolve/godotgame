@@ -131,7 +131,9 @@ func playBgm():
 			underwater_fast.play()
 		else:
 			underwater.play()
-
+	elif bgm=='levelend':
+		levelend.play()
+	
 func stopBgm():
 	if bgm=="overworld":
 		overworldFast.stop()
@@ -148,6 +150,8 @@ func stopBgm():
 	elif bgm=='underwater':
 		underwater_fast.stop()
 		underwater.stop()
+	elif bgm=='levelend':
+		levelend.stop()
 
 #func playSpecialBgm():
 #	if isLowTime:

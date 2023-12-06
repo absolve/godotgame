@@ -935,8 +935,9 @@ func rightCollide(obj):
 			position.x=obj.getLeft()-getSize()/2+1
 			startSliding()
 			SoundsUtil.stopBgm()
-#			SoundsUtil.stopSpecialBgm()
-			SoundsUtil.playLevelend()
+#			SoundsUtil.playLevelend()
+			SoundsUtil.bgm='levelend'
+			SoundsUtil.playBgm()
 			addPoleScore(obj.position.y,obj)
 		elif status==constants.sitBottomOfPole:
 			if flagPoleTimer>=31:
@@ -991,7 +992,7 @@ func rightCollide(obj):
 		if obj.vaild:
 			obj.vaild=false
 			Game.emit_signal("mazegate",obj.mazeId,obj.gateId)
-		pass
+		
 
 #判断左边碰撞
 func leftCollide(obj):
@@ -1413,7 +1414,7 @@ func animation(type):
 		shadow.flip_h=ani.flip_h
 		shadow.speed_scale=ani.speed_scale
 		shadow.position.y=ani.position.y
-	pass
+	
 
 #获取掉落的之前的动画列表
 func getFallAni():
@@ -1478,9 +1479,10 @@ func pause():
 
 func resume():
 	status=preStatus
-	if status!=constants.small2big||status!=constants.big2small||\
-	status!=constants.deadJump||status!=constants.walkInPipe||\
-	status!=constants.pipeOut||status!=constants.pipeIn||status!=constants.big2fire:
+	if status!=constants.small2big&&status!=constants.big2small&&\
+	status!=constants.deadJump&&status!=constants.walkInPipe&&\
+	status!=constants.pipeOut&&status!=constants.pipeIn&&status!=constants.big2fire\
+	&&status!=constants.onlywalk:
 		active=true
 	ani.play()
 

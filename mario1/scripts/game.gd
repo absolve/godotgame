@@ -55,6 +55,7 @@ func getConfig():
 	if err != OK:
 		print(err)
 		newConfigFile()
+		loadDefaultActions()
 		return
 	for i in cfg.get_sections():
 		if i=='Resolution':
@@ -105,7 +106,8 @@ func newConfigFile():
 	
 	config.set_value("Actions","Input",'')
 	config.save(OS.get_executable_path().get_base_dir()+"/"+configFile)
-
+	
+	
 
 func saveConfigFile():
 	var cfg = ConfigFile.new()
