@@ -22,6 +22,7 @@ signal marioGrapVineTop #马里奥爬到藤曼顶部
 signal vineEnd #藤蔓生长结束 只有藤蔓长度有限制的时候
 signal mazegate #碰到迷宫大门
 signal gameFinish #游戏结束
+signal levelEnd #关卡结束
 
 signal btnClose	#设置关闭按钮
 signal resume  #继续游戏

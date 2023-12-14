@@ -136,7 +136,7 @@ func _ready():
 	Game.connect('vineEnd',self,'vineEnd')
 	Game.connect('marioGrapVineTop',self,'marioGrapVineTop')
 	Game.connect('mazegate',self,'mazegate')
-	Game.connect('mazegate',self,'gameFinish')
+	Game.connect('gameFinish',self,'gameFinish')
 	Game.connect('resume',self,'resume')
 	Game.connect('returnHome',self,'returnHome')
 	
@@ -145,7 +145,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/1-2-1.json")
+#	loadMapFile("res://levels/1-2.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -2047,7 +2047,7 @@ func marioStartSliding():
 #接触到斧头
 func marioContactAxe():
 	SoundsUtil.stopBgm()
-#	SoundsUtil.stopSpecialBgm()
+	_title.stopCountDown()
 	var hasBowser=false
 	for i in _obj.get_children():
 		i.pause()
@@ -2091,33 +2091,50 @@ func bowserDrop():
 #马里奥见到公主或者蘑菇人
 func marioCastleEnd():
 	print('marioCastleEnd')
+	#等待一个mario碰到公主或者蘑菇人的信号
+	yield(Game,"levelEnd")
 	var temp= label.instance()
 	temp.setLabel("thank you mario!")
-	temp.position.x=_camera.position.x+blockSize*7
+	temp.position.x=_camera.position.x+blockSize*10
 	temp.position.y=blockSize*5
 	_obj.add_child(temp)
 	for y in range(90):
 		yield(get_tree(),"idle_frame")
 	var temp1= label.instance()
-	temp1.setLabel("but our princess is in")
-	temp1.position.x=_camera.position.x+blockSize*6
+	if gameFinish:
+		temp1.setLabel("your quest is over.")
+	else:	
+		temp1.setLabel("but our princess is in")
+	temp1.position.x=_camera.position.x+blockSize*10
 	temp1.position.y=blockSize*7
 	_obj.add_child(temp1)
 	
 	var temp2= label.instance()
-	temp2.setLabel("another castle!")
-	temp2.position.x=_camera.position.x+blockSize*8
+	if gameFinish:
+		temp2.setLabel("we present you a new quest.")
+	else:	
+		temp2.setLabel("another castle!")
+	temp2.position.x=_camera.position.x+blockSize*10
 	temp2.position.y=blockSize*9
 	_obj.add_child(temp2)
-	#进入下一关
-	subLevel=''
-	saveMarioStatus()
-	_timer.start(3)
-
-#游戏结束
-func gameFinish():
-	gameFinish=true
 	
+	if gameFinish:
+		var temp3=label.instance()
+		temp3.setLabel("push button b to play as steve")
+		temp3.position.x=_camera.position.x+blockSize*10
+		temp3.position.y=blockSize*11
+		_obj.add_child(temp3)
+	
+	if !gameFinish:
+		#进入下一关
+		subLevel=''
+		saveMarioStatus()
+		_timer.start(3)
+
+#游戏结束 flag=true表示关卡为最后一关了
+func gameFinish(flag):
+	gameFinish=flag
+	Game.emit_signal("levelEnd")
 
 #藤蔓已经长好
 func vineEnd():
@@ -2136,13 +2153,13 @@ func addWarpZoneMsg():
 	if warpZone.size()>=3:
 		var temp= label.instance()
 		temp.setLabel("welcome to warp zone!")
-		temp.position.x=warpZone[0].x*blockSize-blockSize
-		temp.position.y=warpZone[0].y*blockSize-blockSize*4
+		temp.position.x=warpZone[1].x*blockSize
+		temp.position.y=warpZone[1].y*blockSize-blockSize*4
 		_obj.add_child(temp)
 	elif warpZone.size()>=2:
 		var temp= label.instance()
 		temp.setLabel("welcome to warp zone!")
-		temp.position.x=warpZone[0].x*blockSize-warpZone.size()*blockSize*3
+		temp.position.x=warpZone[0].x*blockSize+warpZone.size()*blockSize*2
 		temp.position.y=warpZone[0].y*blockSize-blockSize*5
 		_obj.add_child(temp)
 	elif warpZone.size()>=1:

@@ -8,4 +8,5 @@ func _ready():
 	rect=Rect2(Vector2(-24,-16),Vector2(48,32))
 #	if spriteIndex==0:
 	ani.position.y-=11	
+	ani.play(str(spriteIndex))
 	pass
