@@ -6,9 +6,9 @@ var player2={"up":KEY_UP,"down":KEY_DOWN,"left":KEY_LEFT,"right":KEY_RIGHT,'acce
 
 ''' 地图相关 '''
 var mapNum	#地图数量
-var playerData={'p1':{'score':0,'lives':3},
-				'p2':{'score':0,'lives':3}}
-var gameData={'level':0}
+var playerData={'p1':{'score':0,'lives':3,'balloonNum':2},
+				'p2':{'score':0,'lives':3,'balloonNum':2}}
+var gameData={'width':0,'height':0,'level':0}
 
 
 #切换场景

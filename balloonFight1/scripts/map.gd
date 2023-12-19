@@ -25,13 +25,15 @@ func _ready():
 	height=viewRect.size.y
 	print(width,height)
 	Game.gameData.level='1'
-	
+	Game.gameData.width=width
+	Game.gameData.height=height
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.gameData.level+".json"):
 		print("ok")
 		loadMapFile(mapDir+'/'+Game.gameData.level+".json")
 	else:
 		print("文件不存在")
+	
 	
 
 #载入文件
@@ -63,13 +65,13 @@ func loadMapFile(fileName:String):
 	
 func _physics_process(delta):
 	
-	for i in _obj.get_children():
-		if i.type==Constants.player:
-			if i.position.x+i.size.x/2<0:
-				i.position.x=width+i.size.x/2
-			if i.position.x-i.size.x/2>width:
-				i.position.x=-i.size.x/2
-	
+#	for i in _obj.get_children():
+#		if i.type==Constants.player:
+#			if i.position.x+i.size.x/2<0:
+#				i.position.x=width+i.size.x/2
+#			if i.position.x-i.size.x/2>width:
+#				i.position.x=-i.size.x/2
+	pass
 
 
 func _draw():

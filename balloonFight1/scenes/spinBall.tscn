@@ -56,3 +56,4 @@ node_b = NodePath("../RigidBody2D2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
 shape = SubResource( 7 )
+disabled = true
