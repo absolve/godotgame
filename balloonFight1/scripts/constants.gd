@@ -12,6 +12,8 @@ const enemyFall='enemyFall'
 const enemyDead='enemyDead'
 const enemyPumpUp='enemyPumpUp' #打气
 const enemyFly='enemyFly'
+const enemyIdle='enemyIdle'
+const enemySearch='enemySearch'
 
 const tilesType=['del','player','water','tile','spinBall'] 
 var mapTiles={} #每个图块对应的图片

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/map.gd" type="Script" id=1]
+[ext_resource path="res://scenes/title.tscn" type="PackedScene" id=2]
 
 [node name="map" type="Node2D"]
 script = ExtResource( 1 )
@@ -12,3 +13,5 @@ current = true
 [node name="obj" type="Node2D" parent="."]
 
 [node name="tile" type="Node2D" parent="."]
+
+[node name="title" parent="." instance=ExtResource( 2 )]

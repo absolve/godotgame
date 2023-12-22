@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/enemy.gd" type="Script" id=1]
+[ext_resource path="res://sprites/fox_1.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10, 16 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [  ],
+"frames": [ ExtResource( 2 ) ],
 "loop": true,
 "name": "dead",
 "speed": 5.0
@@ -26,6 +27,21 @@ animations = [ {
 "loop": true,
 "name": "onFloor",
 "speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "pump_1",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "pump_2",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "pump_3",
+"speed": 5.0
 } ]
 
 [node name="enemy" type="KinematicBody2D"]
@@ -36,4 +52,4 @@ shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "dead"
+animation = "pump_3"

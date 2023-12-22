@@ -19,6 +19,7 @@ var tile=preload("res://scenes/tile.tscn")
 var splash=preload("res://scenes/splash.tscn")
 var spinBall=preload("res://scenes/spinBall.tscn")
 
+
 func _ready():
 	var viewRect=get_viewport_rect()
 	width=viewRect.size.x

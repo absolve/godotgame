@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://fonts/blocky.tres" type="DynamicFont" id=1]
-[ext_resource path="res://sprites/lifeBalloon2.png" type="Texture" id=2]
 [ext_resource path="res://scripts/title.gd" type="Script" id=3]
 
 [node name="title" type="Control"]
@@ -25,7 +24,6 @@ size_flags_vertical = 3
 margin_right = 178.0
 margin_bottom = 16.0
 grow_horizontal = 0
-size_flags_vertical = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
@@ -36,25 +34,18 @@ custom_colors/font_color = Color( 0.847059, 0.25098, 0.376471, 1 )
 custom_fonts/font = ExtResource( 1 )
 text = "I-"
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="p1Score" type="Label" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 margin_left = 59.0
 margin_right = 155.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 1 )
 text = "000000"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VBoxContainer"]
+[node name="p1Live" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VBoxContainer"]
 margin_top = 20.0
 margin_right = 178.0
-margin_bottom = 48.0
+margin_bottom = 20.0
 alignment = 2
-
-[node name="TextureButton" type="TextureButton" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 158.0
-margin_right = 178.0
-margin_bottom = 28.0
-disabled = true
-texture_normal = ExtResource( 2 )
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
 margin_left = 182.0
@@ -74,14 +65,15 @@ custom_fonts/font = ExtResource( 1 )
 text = "top-"
 uppercase = true
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer2/HBoxContainer"]
+[node name="topScore" type="Label" parent="HBoxContainer/VBoxContainer2/HBoxContainer"]
 margin_left = 68.0
 margin_right = 164.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 1 )
 text = "000000"
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer2"]
+[node name="pauseLabel" type="Label" parent="HBoxContainer/VBoxContainer2"]
+visible = false
 margin_top = 20.0
 margin_right = 178.0
 margin_bottom = 36.0
@@ -107,22 +99,15 @@ custom_colors/font_color = Color( 0.376471, 0.627451, 1, 1 )
 custom_fonts/font = ExtResource( 1 )
 text = "II-"
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer4/VBoxContainer3"]
+[node name="p2Score" type="Label" parent="HBoxContainer/VBoxContainer4/VBoxContainer3"]
 margin_left = 52.0
 margin_right = 148.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 1 )
 text = "000000"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer4"]
+[node name="p2Live" type="HBoxContainer" parent="HBoxContainer/VBoxContainer4"]
 margin_top = 20.0
 margin_right = 148.0
 margin_bottom = 20.0
 alignment = 2
-
-[node name="Label2" type="Label" parent="."]
-margin_left = 54.0
-margin_right = 150.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 1 )
-text = "000000"

@@ -6,6 +6,7 @@ var status=Constants.enemyOnFloor
 var onReadyTime=130
 var timer=0
 var pumpUpTime=120	#大致120帧后起飞
+var target=null #目标
 
 func _ready():
 	type=Constants.enemy

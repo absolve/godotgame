@@ -104,7 +104,8 @@ func _physics_process(delta):
 		position.x=Game.gameData.width+size.x/2
 	if position.x-size.x/2>Game.gameData.width:
 		position.x=-size.x/2
-
+	if position.y<size.y/2:
+		position.y=size.y/2
 
 func animation(type):
 	if type=='idle':
