@@ -15,7 +15,7 @@ const enemyFly='enemyFly'
 const enemyIdle='enemyIdle'
 const enemySearch='enemySearch'
 
-const tilesType=['del','player','water','tile','spinBall'] 
+const tilesType=['del','player','enemy','water','tile','spinBall'] 
 var mapTiles={} #每个图块对应的图片
 
 func _ready():
@@ -37,6 +37,12 @@ const tilesAttribute={
 		"y": 0,
 		'id':1,
 		
+	},
+	'enemy':{
+		"type": "enemy",
+		"spriteIndex": 0,
+		"x": 0,
+		"y": 0,
 	},
 	'water':{
 		"type": "water",

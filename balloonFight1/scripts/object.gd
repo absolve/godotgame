@@ -8,6 +8,9 @@ var onFloor=false
 var gravity=100
 var type
 var upAccelerate=200
+var spriteIndex=0
+var moveMaxSpeed=160
+var accelerate=120	#x轴的加速度
 
 func _ready():
 	pass

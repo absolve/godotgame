@@ -12,7 +12,7 @@ onready var _obj=$obj
 onready var _camera=$Camera2D
 onready var _tile=$tile
 var player=preload("res://scenes/player.tscn")
-var enemy
+var enemy=preload("res://scenes/enemy.tscn")
 var bubble=preload("res://scenes/bubble.tscn")
 var cloud=preload("res://scenes/cloud.tscn")
 var tile=preload("res://scenes/tile.tscn")
@@ -25,7 +25,7 @@ func _ready():
 	width=viewRect.size.x
 	height=viewRect.size.y
 	print(width,height)
-	Game.gameData.level='1'
+	Game.gameData.level='level_1'
 	Game.gameData.width=width
 	Game.gameData.height=height
 	var dir = Directory.new()
@@ -49,6 +49,12 @@ func loadMapFile(fileName:String):
 #				temp.spriteIndex=i['spriteIndex']
 				temp.position.x=i['x']*cellSize+cellSize/2
 				temp.position.y=i['y']*cellSize+cellSize/2
+				_obj.add_child(temp)
+			elif i['type']=='enemy':
+				var temp=enemy.instance()
+				temp.spriteIndex=i['spriteIndex']
+				temp.position.x=i['x']*cellSize+cellSize/2
+				temp.position.y=i['y']*cellSize+cellSize/2-8
 				_obj.add_child(temp)
 			elif i['type']=='tile':
 				var temp=tile.instance()

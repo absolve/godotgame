@@ -15,3 +15,5 @@ current = true
 [node name="tile" type="Node2D" parent="."]
 
 [node name="title" parent="." instance=ExtResource( 2 )]
+margin_top = 10.0
+margin_bottom = 10.0

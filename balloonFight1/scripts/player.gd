@@ -100,7 +100,7 @@ func _physics_process(delta):
 			animation("fly")
 		
 	vec=move_and_slide(vec,Vector2.UP)
-	if position.x+size.x/2<0:
+	if position.x+size.x/2<0:#边界判断
 		position.x=Game.gameData.width+size.x/2
 	if position.x-size.x/2>Game.gameData.width:
 		position.x=-size.x/2

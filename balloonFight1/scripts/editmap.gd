@@ -197,6 +197,10 @@ func _draw():
 			if Constants.mapTiles.has(i.type)&&Constants.mapTiles[i.type].has(str(i.spriteIndex)):
 				draw_texture(Constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize-5,i.y*blockSize-13),Color(1,1,1,0.7))
 			draw_string(font,Vector2(i.x*blockSize,i.y*blockSize),str(i.id),Color.white)
+		elif i.type=='enemy':
+			if Constants.mapTiles.has(i.type)&&Constants.mapTiles[i.type].has(str(i.spriteIndex)):
+				draw_texture(Constants.mapTiles[i.type][str(i.spriteIndex)],Vector2(i.x*blockSize-5,i.y*blockSize-13),Color(1,1,1,0.7))
+		
 	draw_string(font,currMousePos+Vector2(16,0),'x:'+str(int(currMousePos.x)/blockSize)+" y:"
 			+str(int(currMousePos.y)/blockSize),Color.white)
 
@@ -209,6 +213,7 @@ func _on_save_pressed():
 
 
 func _on_hide_pressed():
+	
 	pass # Replace with function body.
 
 
