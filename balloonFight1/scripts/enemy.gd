@@ -8,15 +8,19 @@ var timer=0
 var pumpUpTime=120	#大致120帧后起飞
 var target=null #目标
 var speedUp=80	#加速
-var keepDirectionTime=0
+var keepDirectionTime=0	#保持方向时间
 var directionTime=0
+var keepFlyTime=0	#保持加速时间
+var flyTime=0
+var flyFlag=false
 
 func _ready():
 	randomize()
 	type=Constants.enemy
 	animation("onFloor")
 	dir=Constants.right
-	keepDirectionTime = randi()%500+200	
+	keepDirectionTime = randi()%200+40
+	keepFlyTime=randi()%60+10	
 	pass
 
 
@@ -73,7 +77,7 @@ func _physics_process(delta):
 			status=	Constants.enemyFly	
 		directionTime+=1
 		if directionTime>keepDirectionTime:
-			keepDirectionTime=randi()%500+200	
+			keepDirectionTime=randi()%200+40
 			directionTime=0
 			var num=randi()%10
 			if num>5:
@@ -87,8 +91,21 @@ func _physics_process(delta):
 		else:
 			if vec.x>-moveMaxSpeed:
 				vec.x-=accelerate*delta
-		
-		animation('fly')				
+		flyTime+=1
+		if flyTime>keepFlyTime:
+			flyTime=0
+			keepFlyTime=randi()%60+10	
+			var num=randf()
+			if num<0.6:
+				if position.y<size.y:
+					flyFlag=false
+				else:	
+					flyFlag=!flyFlag
+		if flyFlag:
+			vec.y-=upAccelerate*delta		
+			animation('fly')
+		else:
+			ani.stop()			
 		vec=move_and_slide(vec,Vector2.UP)
 		
 		

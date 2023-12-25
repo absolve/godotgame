@@ -7,7 +7,7 @@
 [ext_resource path="res://sprites/seaBlock3.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 8, 8 )
+extents = Vector2( 256, 16 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -36,8 +36,10 @@ animations = [ {
 script = ExtResource( 1 )
 
 [node name="shape" type="CollisionShape2D" parent="."]
+position = Vector2( 256, 16 )
 shape = SubResource( 1 )
 
 [node name="ani" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "3"
+centered = false
