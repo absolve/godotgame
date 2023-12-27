@@ -33,13 +33,13 @@ animations = [ {
 } ]
 
 [sub_resource type="RectangleShape2D" id=7]
-extents = Vector2( 1, 1 )
+extents = Vector2( 4, 4 )
 
 [node name="spinBall" type="Node2D"]
 script = ExtResource( 5 )
 
 [node name="RigidBody2D" type="RigidBody2D" parent="."]
-gravity_scale = 0.0
+mass = 0.01
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
 shape = SubResource( 1 )
@@ -53,7 +53,8 @@ node_a = NodePath("../RigidBody2D")
 node_b = NodePath("../RigidBody2D2")
 
 [node name="RigidBody2D2" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D2"]
 shape = SubResource( 7 )
-disabled = true

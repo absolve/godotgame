@@ -25,7 +25,8 @@ func _ready():
 	width=viewRect.size.x
 	height=viewRect.size.y
 	print(width,height)
-	Game.gameData.level='level_1'
+#	Game.gameData.level='level_1'
+	Game.gameData.level='1'
 	Game.gameData.width=width
 	Game.gameData.height=height
 	var dir = Directory.new()
