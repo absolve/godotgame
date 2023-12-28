@@ -14,6 +14,8 @@ current = true
 margin_top = 10.0
 margin_bottom = 10.0
 
+[node name="obther" type="Node2D" parent="."]
+
 [node name="obj" type="Node2D" parent="."]
 
 [node name="tile" type="Node2D" parent="."]

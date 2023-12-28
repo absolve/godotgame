@@ -11,6 +11,8 @@ var mapDir="res://levels"	#内置地图路径
 onready var _obj=$obj
 onready var _camera=$Camera2D
 onready var _tile=$tile
+onready var _other=$obther
+onready var _title=$title
 var player=preload("res://scenes/player.tscn")
 var enemy=preload("res://scenes/enemy.tscn")
 var bubble=preload("res://scenes/bubble.tscn")
@@ -18,9 +20,10 @@ var cloud=preload("res://scenes/cloud.tscn")
 var tile=preload("res://scenes/tile.tscn")
 var splash=preload("res://scenes/splash.tscn")
 var spinBall=preload("res://scenes/spinBall.tscn")
-
+var star=preload("res://scenes/star.tscn")
 
 func _ready():
+	randomize()
 	var viewRect=get_viewport_rect()
 	width=viewRect.size.x
 	height=viewRect.size.y
@@ -36,8 +39,13 @@ func _ready():
 	else:
 		print("文件不存在")
 	
-	
-
+	for i in range(10):
+		var temp=star.instance()
+		temp.position.x=randi()%490+10
+		temp.position.y=randi()%350+30
+		_other.add_child(temp)
+	_title.setPlayerLives(1,1)
+		
 #载入文件
 func loadMapFile(fileName:String):
 	var file = File.new()
