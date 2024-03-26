@@ -14,7 +14,7 @@ var timer=0
 var tick=22
 var status=constants.empty
 var level='1-1' #当前的关卡
-
+var title
 
 func _ready():
 	var scene=load("res://scenes/mapNew.tscn").instance()
@@ -24,11 +24,12 @@ func _ready():
 	scene.show_behind_parent=true
 	scene.set_process_input(false)
 	scene.z_index=-1
+	title=scene.find_node('title')
 	
 	_treeui.connect("selectMap",self,"selectMap")
 	_treeui.connect("cancel",self,"cancel")
 	Game.connect("btnClose",self,"btnClose")
-	pass 
+	
 
 func startGame():
 	print("开始游戏")
@@ -125,6 +126,7 @@ func selectMap(level):
 	print(level)
 	if level!='':
 		self.level=level
+		title.setLevel(level)
 		_treeui.visible=false
 	
 func cancel():

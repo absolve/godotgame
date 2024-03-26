@@ -163,3 +163,5 @@ bus = "sfx"
 
 [node name="finish" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 33 )
+
+[connection signal="finished" from="lowtime" to="." method="_on_lowtime_finished"]

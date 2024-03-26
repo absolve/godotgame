@@ -34,76 +34,29 @@ onready var underwater_fast=$underwater_fast
 onready var pause=$pause
 onready var finish=$finish
 
-var bgm="overworld"
+var bgm="overworld"	#背景音
 var lastBgm=''
 var isLowTime=false
+var sfx=''#特效
+
 
 func _ready():
-	var lowTime1=lowTime.stream as AudioStreamOGGVorbis
-	lowTime1.set_loop(false)
+	var overworld1=overworld.stream as AudioStreamOGGVorbis
+	overworld1.set_loop(true)
+	var overworldFast1=overworldFast.stream as AudioStreamOGGVorbis
+	overworldFast1.set_loop(true)
+	var underground1=underground.stream as AudioStreamOGGVorbis
+	underground1.set_loop(true)
+	var undergroundFast1=undergroundFast.stream as AudioStreamOGGVorbis
+	undergroundFast1.set_loop(true)
+	var  castle1=castle.stream as AudioStreamOGGVorbis
+	castle1.set_loop(true)
+	var castleFast1=castleFast.stream as AudioStreamOGGVorbis
+	castleFast1.set_loop(true)
+	var underwater1=underwater.stream as AudioStreamOGGVorbis
+	underwater1.set_loop(true)
 	
-	var konami1=konami.stream as AudioStreamOGGVorbis
-	konami1.set_loop(false)
-	
-	var brick1=brick.stream as AudioStreamOGGVorbis
-	brick1.set_loop(false)
-	
-	var brickHit1=brickHit.stream as AudioStreamOGGVorbis
-	brickHit1.set_loop(false)
-	
-	var coin1=coin.stream as AudioStreamOGGVorbis
-	coin1.set_loop(false)
-	
-	var item1=item.stream as AudioStreamOGGVorbis
-	item1.set_loop(false)
-	
-	var item1up1=item1up.stream as AudioStreamOGGVorbis
-	item1up1.set_loop(false)
-	
-	var mushroom1=mushroom.stream as AudioStreamOGGVorbis
-	mushroom1.set_loop(false)
-	
-	var boom1=boom.stream as AudioStreamOGGVorbis
-	boom1.set_loop(false)
-	
-	var shoot1=shoot.stream as AudioStreamOGGVorbis
-	shoot1.set_loop(false)
-	
-	var stomp1=stomp.stream as AudioStreamOGGVorbis
-	stomp1.set_loop(false)
-	
-	var big2small1=big2small.stream as AudioStreamOGGVorbis
-	big2small1.set_loop(false)
-	
-	var score1=score.stream as AudioStreamOGGVorbis
-	score1.set_loop(false)
-	
-	var gameover1=gameover.stream as AudioStreamOGGVorbis
-	gameover1.set_loop(false)
-	
-	var death1=death.stream as AudioStreamOGGVorbis
-	death1.set_loop(false)
-	
-	var levelend1=levelend.stream as AudioStreamOGGVorbis
-	levelend1.set_loop(false)
-	
-	var pipe1=pipe.stream as AudioStreamOGGVorbis
-	pipe1.set_loop(false)
-	
-	var bridgebreak1=bridgebreak.stream as AudioStreamOGGVorbis
-	bridgebreak1.set_loop(false)
-	
-	var bowserfall1 = bowserfall.stream as AudioStreamOGGVorbis
-	bowserfall1.set_loop(false)
-	
-	var castleend1=castleend.stream as AudioStreamOGGVorbis
-	castleend1.set_loop(false)
-	
-	var pause1=pause.stream as AudioStreamOGGVorbis
-	pause1.set_loop(false)
-	
-	var finish1=finish.stream as AudioStreamOGGVorbis
-	finish1.set_loop(false)
+
 
 func playBgm():
 	if bgm=="overworld":
@@ -133,6 +86,11 @@ func playBgm():
 			underwater.play()
 	elif bgm=='levelend':
 		levelend.play()
+	elif bgm=='lowTime':
+		if lowTime.playing:
+			lowTime.stream_paused=false
+		else:	
+			lowTime.play()
 	
 func stopBgm():
 	if bgm=="overworld":
@@ -152,13 +110,10 @@ func stopBgm():
 		underwater.stop()
 	elif bgm=='levelend':
 		levelend.stop()
+	elif bgm=='lowTime':
+		lowTime.stream_paused=true
 
-#func playSpecialBgm():
-#	if isLowTime:
-#		starFast.play()
-#	else:
-#		star.play()
-
+	
 func changeBgm(newBgm):
 	stopBgm()
 	lastBgm=bgm
@@ -178,11 +133,13 @@ func playKonamiMusic():
 	konami.play()
 
 func playLowTime():
-	stopBgm()
-	lowTime.play()
-	yield(lowTime,"finished")
-	isLowTime=true
-	playBgm()
+	changeBgm('lowTime')
+#	stopBgm()
+#	bgm='lowTime'
+#	playBgm()
+#	lowTime.play()
+#	yield(lowTime,"finished")
+	
 	
 func playBrickBreak():
 	brick.play()
@@ -244,3 +201,7 @@ func playPause():
 func playFinish():
 	finish.play()
 	
+
+func _on_lowtime_finished():
+	isLowTime=true
+	playLastBgm()
