@@ -37,6 +37,7 @@ wait_time = 3.0
 one_shot = true
 
 [node name="pauseLayer" parent="." instance=ExtResource( 4 )]
+pause_mode = 2
 visible = false
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

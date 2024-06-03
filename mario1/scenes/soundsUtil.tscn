@@ -158,6 +158,7 @@ stream = ExtResource( 31 )
 bus = "bg"
 
 [node name="pause" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
 stream = ExtResource( 32 )
 bus = "sfx"
 
