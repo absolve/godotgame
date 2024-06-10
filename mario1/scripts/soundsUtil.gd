@@ -55,8 +55,13 @@ func _ready():
 	castleFast1.set_loop(true)
 	var underwater1=underwater.stream as AudioStreamOGGVorbis
 	underwater1.set_loop(true)
+	var star1=star.stream as AudioStreamOGGVorbis
+	star1.set_loop(true)
+	var starFaset1=starFast.stream as AudioStreamOGGVorbis
+	starFaset1.set_loop(true)
+	var finish1=finish.stream as AudioStreamOGGVorbis
+	finish1.set_loop(true)
 	
-
 
 func playBgm():
 	if bgm=="overworld":
