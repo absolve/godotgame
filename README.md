@@ -34,7 +34,7 @@ TODO
 
 <img src="https://github.com/absolve/godotgame/blob/master/2021-03-24%20221318.png" />  
 
-mario1文件夹里面就是超级马里奥的程序，游戏当前只有1-1,1-2,1-3的关卡,后续关卡持续更新  
+mario1文件夹里面就是超级马里奥的程序，游戏当前有所有的关卡,最后通关的那个功能还没有完成  
 wsad 移动 z加速 x跳跃  
   
 <img src="https://github.com/absolve/godotgame/blob/master/mario1.png" />  
