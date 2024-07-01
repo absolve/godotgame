@@ -98,7 +98,7 @@ var bulletTimer=0
 var bulletDelay=80
 var gamePause=false  #游戏暂停
 var gameOver=false #游戏结束
-var gameFinish=false #游戏结束
+var gameFinish=false #游戏通关结束
 var mazeList={}  #迷宫列表  key 迷宫id value 迷宫数据
 #var mazeObjList={} #迷宫中场景的方块和箱子的数据 key 迷宫id value 迷宫场景数据
 #var mapObjList={} #地图对象以x,y为key value为对象
@@ -145,7 +145,7 @@ func _ready():
 		return
 		
 
-#	loadMapFile("res://levels/1-2.json")
+#	loadMapFile("res://levels/test37.json")
 	var dir = Directory.new()
 	if dir.file_exists(mapDir+'/'+Game.playerData['level']+".json"):
 		print("ok")
@@ -1933,7 +1933,7 @@ func marioCastleEnd():
 	
 	if gameFinish:
 		var temp3=label.instance()
-		temp3.setLabel("push button b to play as steve")
+		temp3.setLabel("push [Enter] to play as steve")
 		temp3.position.x=_camera.position.x+blockSize*10
 		temp3.position.y=blockSize*11
 		_obj.add_child(temp3)
@@ -2049,7 +2049,6 @@ func _draw():
 	
 	if underwater:
 		draw_rect(Rect2(Vector2.ZERO,Vector2(mapWidthSize*32,32*2)),Color('#5C94FC'))
-	pass
 
 
 func _on_Timer_timeout():
@@ -2070,7 +2069,6 @@ func _on_Timer_timeout():
 		set_process_input(false)
 		get_tree().get_root().add_child(temp)
 		set_process_input(true)
-		pass
 
 
 
@@ -2094,23 +2092,25 @@ func _on_gameover_timeout():
 func _input(event):
 	if !isShow:
 		if !gameOver &&Input.is_action_just_pressed("ui_accept"):
-#			if gamePause:
-#				_title.startCountDown()
-#				gamePause=false
-#				SoundsUtil.playPause()
-#				SoundsUtil.playBgm()
-#				for i in _obj.get_children():
-#					i.resume()
-#			else:
-
+			if gameFinish:  #游戏通关结束
+				Game.playerData['mario']['big']=false
+				Game.playerData['mario']['fire']=false
+				Game.playerData['lives']-=1
+				Game.playerData['score']=_title.score
+				Game.playerData['coin']=_title.coinNum
+				Game.playerData['subLevel']=''
+				Game.playerData['time']=0
+				#返回欢迎界面
+				var scene=load("res://scenes/welcome.tscn")
+				var temp=scene.instance()
+				queue_free()
+				set_process_input(false)
+				get_tree().get_root().add_child(temp)
+				set_process_input(true)
+				return
+			
 			if !gamePause:
 				SoundsUtil.playPause()
 				_pauseLayer.visible=true
 				get_tree().paused=true
-#				_title.stopCountDown()	
-#				gamePause=true
-#				_pauseLayer.visible=true
-#				SoundsUtil.stopBgm()
-#				SoundsUtil.playPause()
-#				for i in _obj.get_children():
-#					i.pause()
+
