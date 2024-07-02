@@ -2108,7 +2108,7 @@ func _input(event):
 				get_tree().get_root().add_child(temp)
 				set_process_input(true)
 				return
-			
+
 			if !gamePause:
 				SoundsUtil.playPause()
 				_pauseLayer.visible=true
