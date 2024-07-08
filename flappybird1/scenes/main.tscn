@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://sprites/background_night1.png" type="Texture" id=1]
 [ext_resource path="res://scenes/ground.tscn" type="PackedScene" id=2]
@@ -16,7 +16,6 @@
 [ext_resource path="res://sprites/spark_21.png" type="Texture" id=15]
 [ext_resource path="res://sprites/instructions1.png" type="Texture" id=16]
 [ext_resource path="res://sprites/button_pause1.png" type="Texture" id=17]
-[ext_resource path="res://scenes/pipe.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scenes/bird.tscn" type="PackedScene" id=19]
 [ext_resource path="res://sprites/spark_01.png" type="Texture" id=20]
 [ext_resource path="res://sprites/spark_11.png" type="Texture" id=21]
@@ -101,14 +100,7 @@ centered = false
 [node name="game" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
 
-[node name="pipe" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 334, 80 )
-
-[node name="pipe2" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 516, 80 )
-
-[node name="pipe3" parent="game" instance=ExtResource( 18 )]
-position = Vector2( 698, 80 )
+[node name="pipes" type="Node2D" parent="game"]
 
 [node name="ground" parent="game" instance=ExtResource( 2 )]
 position = Vector2( 0, 387 )
@@ -127,9 +119,6 @@ margin_top = 10.0
 margin_right = 288.0
 margin_bottom = 28.0
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="TextureRect" type="TextureRect" parent="game/score"]
 margin_left = 132.0
@@ -331,9 +320,14 @@ anims/fade_out = SubResource( 3 )
 offset = Vector2( 144, 256 )
 current = true
 
+[node name="Timer2" type="Timer" parent="game"]
+process_mode = 0
+wait_time = 1.8
+
 [connection signal="pressed" from="game/btnPause" to="." method="_on_btnPause_pressed"]
 [connection signal="pressed" from="game/tipBtn" to="." method="_on_tipBtn_pressed"]
 [connection signal="animation_finished" from="game/gameOverPanel/panel/medal/spark" to="game/gameOverPanel/panel/medal/spark" method="_on_spark_animation_finished"]
 [connection signal="pressed" from="game/gameOverPanel/btn/btnRestart" to="." method="_on_btnRestart_pressed"]
 [connection signal="pressed" from="game/pausePanel/btnResume" to="." method="_on_btnResume_pressed"]
 [connection signal="pressed" from="game/pausePanel/btnMenu" to="." method="_on_btnMenu_pressed"]
+[connection signal="timeout" from="game/Timer2" to="." method="_on_Timer2_timeout"]

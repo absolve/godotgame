@@ -39,27 +39,35 @@ var state=game.startGame	#默认游戏开始状态
 var offsetNum=16	#摄像机偏移次数
 var magnitude = 4  #偏移
 var num=0
+var width
+
+var pipe=preload("res://scenes/pipe.tscn")
+onready var pipes=$game/pipes
+onready var timer=$game/Timer2
 
 func _ready():
 	randomize()
 	game.connect("scoreChange",self,"_on_score_changed")
-	$game/pipe.setRandomYpos()
-	$game/pipe2.setRandomYpos()
-	$game/pipe3.setRandomYpos()
+#	$game/pipe.setRandomYpos()
+#	$game/pipe2.setRandomYpos()
+#	$game/pipe3.setRandomYpos()
+	
+		
+		
 	game.score=0
 	$game/bird.connect("birdStateChange",self,"_on_bird_state_change")
 	$game/Timer.connect("timeout",self,"_on_timeout") 
 	$game/bird.setState(game.fly)
-
+	width=get_viewport_rect().size.x
 
 #游戏开始
 func startGame()->void:
-	$game/pipe.state=game.move
-	$game/pipe2.state=game.move
-	$game/pipe3.state=game.move
+#	$game/pipe.state=game.move
+#	$game/pipe2.state=game.move
+#	$game/pipe3.state=game.move
 	$game/ground.state=game.fast
 	$game/ground1.state=game.fast
-	
+	timer.start()
 
 #游戏结束
 func gameOver()->void:
@@ -69,9 +77,12 @@ func gameOver()->void:
 	$game/score.visible=false
 	$game/btnPause.visible=false
 	state=game.endGame
-	$game/pipe.setState(game.stop)
-	$game/pipe2.setState(game.stop)
-	$game/pipe3.setState(game.stop)
+#	$game/pipe.setState(game.stop)
+#	$game/pipe2.setState(game.stop)
+#	$game/pipe3.setState(game.stop)
+	timer.stop()
+	for i in pipes.get_children():
+		i.setState(game.stop)
 	$game/ground.setState(game.stop)
 	$game/ground1.setState(game.stop)
 	$game/bird.setState(game.dead)
@@ -207,3 +218,11 @@ func _on_tipBtn_pressed():
 	$game/tipBtn.hide()
 	$game/bird.setState(game.play)
 	$game/Timer.start()
+
+#添加水管的定时器
+func _on_Timer2_timeout():
+	var temp=pipe.instance()
+	temp.setRandomYpos()
+	temp.position.x=temp.PIPE_WIDTH+width
+	temp.state=game.move
+	pipes.add_child(temp)
