@@ -395,8 +395,6 @@ func turnDir():
 		position.y=round((position.y)/16)*16
 	else:
 		position.x=round((position.x)/16)*16
-	pass
-
 	
 
 
