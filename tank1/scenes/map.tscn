@@ -21,9 +21,6 @@ show_behind_parent = true
 margin_right = 512.0
 margin_bottom = 448.0
 color = Color( 0.392157, 0.392157, 0.392157, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="mapbg" type="ColorRect" parent="."]
 show_behind_parent = true
@@ -384,25 +381,23 @@ text = "back"
 [node name="FileDialog" type="FileDialog" parent="tools"]
 margin_right = 403.0
 margin_bottom = 209.0
+rect_min_size = Vector2( 300, 105 )
 popup_exclusive = true
 window_title = "保存文件"
 resizable = true
 dialog_text = "save data to file"
 dialog_hide_on_ok = true
 access = 2
-current_dir = "/godotgame/tank1"
-current_path = "/godotgame/tank1/"
 
 [node name="loadDialog" type="FileDialog" parent="tools"]
 margin_right = 416.0
 margin_bottom = 201.0
+rect_min_size = Vector2( 300, 105 )
 popup_exclusive = true
 window_title = "打开文件"
 resizable = true
 mode = 0
 access = 2
-current_dir = "/godotgame/tank1"
-current_path = "/godotgame/tank1/"
 
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton" to="." method="_on_TextureButton_pressed"]
 [connection signal="pressed" from="tools/bricks/GridContainer/TextureButton2" to="." method="_on_TextureButton2_pressed"]

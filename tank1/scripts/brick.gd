@@ -67,27 +67,23 @@ func hit(dir,power):
 				_sprite.position.y-=size/4
 #				rect.size=Vector2(size,size/2)
 #				offset.y=-size/4
-				pass
 			elif dir==Game.down:#下
 				_sprite.region_rect = Rect2(0,size/2,size,size/2)
 				_sprite.position.y+=size/4
 #				rect.size=Vector2(size,size/2)
 #				rect.position.y+=size/2
 #				offset.y=size/4
-				pass
 			elif dir==Game.left:	#左
 				_sprite.region_rect = Rect2(0,0,size/2,size)
 				_sprite.position.x-=size/4
 #				rect.size=Vector2(size/2,size)
 #				offset.x=-size/4
-				pass
 			elif dir==Game.right:#右
 				_sprite.region_rect = Rect2(0,0,size/2,size)
 				_sprite.position.x+=size/4
 #				rect.size=Vector2(size/2,size)
 #				rect.position=Vector2(0,-size/2)
 #				offset.x=size/4
-				pass	
 			lastDir=dir	
 			hitCount+=1
 			update()
@@ -101,12 +97,10 @@ func hit(dir,power):
 					_sprite.region_rect = Rect2(0,size/2,size/2,size/2)
 					_sprite.position.y-=size/4
 #					rect.size=Vector2(size/2,size/2)
-					pass
 				elif lastDir==Game.right:
 					_sprite.region_rect = Rect2(0,size/2,size/2,size/2)
 					_sprite.position.y+=size/4
 #					rect.size=Vector2(size/2,size/2)
-					pass
 			elif dir==Game.down:	#下
 			#	offset.y=size/4
 				if lastDir==Game.up or lastDir==Game.down:
@@ -116,12 +110,10 @@ func hit(dir,power):
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.y+=size/4
 #					rect.position.y=0
-					pass
 				elif lastDir==Game.right:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.y+=size/4
-#					rect.position.y=0
-					pass	
+#					rect.position.y=0	
 			elif dir==Game.left:#左
 	#			offset.x=-size/4
 				if lastDir==Game.left or lastDir==Game.right:
@@ -130,11 +122,9 @@ func hit(dir,power):
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x-=size/4
 			#		rect.position.y=0
-					pass
 				elif lastDir==Game.down:
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x-=size/4
-					pass
 			elif dir==Game.right:#右
 	#			offset.x=size/4
 				if lastDir==Game.left or lastDir==Game.right:
@@ -144,23 +134,18 @@ func hit(dir,power):
 					_sprite.position.x+=size/4
 					#rect.position=Vector2(0,-size/2)
 #					rect.position.y=0
-					pass
 				elif lastDir==Game.down:  #下
 	#				print("lastDir==1")
 					_sprite.region_rect = Rect2(size/2,0,size/2,size/2)
 					_sprite.position.x+=size/4					
 			hitCount+=1
 			update()
-			pass	
 		else: #第三次击中自动消失 
 			queue_free()
-			pass
-		pass
+
 	elif type==1:#石头
 		if power==Game.bulletPower.super:
 			queue_free()		
-		pass
-	pass
 
 				
 
@@ -179,7 +164,7 @@ func setType(type:int):
 		_sprite.texture=Game.ice	
 #		rect= Rect2(Vector2(-8,-8),Vector2(16,16))
 #		offset=Vector2.ZERO	
-	pass
+
 
 #改变类型
 func changeType(type:int):
