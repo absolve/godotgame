@@ -1,0 +1,59 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="mario new"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=480
+window/stretch/mode="viewport"
+
+[input]
+
+p1_left={
+"deadzone": 0.2,
+"events": []
+}
+p1_right={
+"deadzone": 0.2,
+"events": []
+}
+p1_up={
+"deadzone": 0.2,
+"events": []
+}
+p1_down={
+"deadzone": 0.2,
+"events": []
+}
+p1_action={
+"deadzone": 0.2,
+"events": []
+}
+pi_jump={
+"deadzone": 0.2,
+"events": []
+}
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
