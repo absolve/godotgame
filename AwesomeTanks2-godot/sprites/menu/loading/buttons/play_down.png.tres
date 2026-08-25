@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://sprites/menu/loading.png" id="1_ippoi"]
+
+[resource]
+atlas = ExtResource("1_ippoi")
+region = Rect2(268, 402, 132, 55)

@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" format=3]
+
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts.png" id="1_dyi26"]
+
+[resource]
+atlas = ExtResource("1_dyi26")
+region = Rect2(422, 559, 209, 55)

@@ -1,0 +1,266 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/upgrades.gd" id="1_up"]
+
+[node name="Upgrades" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_up")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.1, 0.06, 1)
+
+[node name="Design" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Title" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
+theme_override_font_sizes/font_size = 22
+text = "Upgrades"
+
+[node name="Spacer" type="Control" parent="Design/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Money" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.71, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "$0"
+
+[node name="Sound" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "SFX"
+
+[node name="Music" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Music"
+
+[node name="Tabs" type="HBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 48.0
+offset_bottom = 88.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Performance" type="Button" parent="Design/Tabs"]
+layout_mode = 2
+toggle_mode = true
+text = "Performance"
+
+[node name="Weapons" type="Button" parent="Design/Tabs"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Weapons"
+
+[node name="TabContent" type="Control" parent="Design"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 96.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PerformancePanel" type="VBoxContainer" parent="Design/TabContent"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Gauges" type="HBoxContainer" parent="Design/TabContent/PerformancePanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="Armor" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
+layout_mode = 2
+text = "Armor"
+
+[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
+custom_minimum_size = Vector2(80, 16)
+layout_mode = 2
+max_value = 5.0
+value = 0.0
+show_percentage = false
+
+[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
+text = "$0"
+
+[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
+layout_mode = 2
+text = "Buy"
+
+[node name="Sight" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
+layout_mode = 2
+text = "Sight"
+
+[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
+custom_minimum_size = Vector2(80, 16)
+layout_mode = 2
+max_value = 5.0
+value = 0.0
+show_percentage = false
+
+[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
+text = "$0"
+
+[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
+layout_mode = 2
+text = "Buy"
+
+[node name="Turret" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
+layout_mode = 2
+text = "Turret"
+
+[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
+custom_minimum_size = Vector2(80, 16)
+layout_mode = 2
+max_value = 5.0
+value = 0.0
+show_percentage = false
+
+[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
+text = "$0"
+
+[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
+layout_mode = 2
+text = "Buy"
+
+[node name="Speed" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
+layout_mode = 2
+alignment = 1
+
+[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
+layout_mode = 2
+text = "Speed"
+
+[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
+custom_minimum_size = Vector2(80, 16)
+layout_mode = 2
+max_value = 5.0
+value = 0.0
+show_percentage = false
+
+[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
+text = "$0"
+
+[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
+layout_mode = 2
+text = "Buy"
+
+[node name="WeaponsPanel" type="VBoxContainer" parent="Design/TabContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="WeaponGrid" type="GridContainer" parent="Design/TabContent/WeaponsPanel"]
+layout_mode = 2
+columns = 5
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="BottomBar" type="HBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -56.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Menu" type="Button" parent="Design/BottomBar"]
+layout_mode = 2
+text = "Menu"
+
+[node name="Stats" type="Button" parent="Design/BottomBar"]
+layout_mode = 2
+text = "Stats"
+
+[node name="Difficulty" type="Button" parent="Design/BottomBar"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="Play" type="Button" parent="Design/BottomBar"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Play"
+
+[connection signal="toggled" from="Design/TopBar/Sound" to="." method="_on_sound_toggled"]
+[connection signal="toggled" from="Design/TopBar/Music" to="." method="_on_music_toggled"]
+[connection signal="toggled" from="Design/Tabs/Performance" to="." method="_on_performance_tab_toggled"]
+[connection signal="toggled" from="Design/Tabs/Weapons" to="." method="_on_weapons_tab_toggled"]
+[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Armor/Buy" to="." method="_on_armor_buy"]
+[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Sight/Buy" to="." method="_on_sight_buy"]
+[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Turret/Buy" to="." method="_on_turret_buy"]
+[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Speed/Buy" to="." method="_on_speed_buy"]
+[connection signal="pressed" from="Design/BottomBar/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Design/BottomBar/Stats" to="." method="_on_stats_pressed"]
+[connection signal="pressed" from="Design/BottomBar/Difficulty" to="." method="_on_difficulty_pressed"]
+[connection signal="pressed" from="Design/BottomBar/Play" to="." method="_on_play_pressed"]

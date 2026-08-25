@@ -1,0 +1,107 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/title.gd" id="1_title"]
+
+[node name="Title" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_title")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.13, 0.09, 1)
+
+[node name="Design" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="VBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TopGap" type="Control" parent="Design/Center"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Logo" type="Label" parent="Design/Center"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.71, 0, 1)
+theme_override_font_sizes/font_size = 40
+text = "AWESOME TANKS 2"
+horizontal_alignment = 1
+
+[node name="TankIcon" type="ColorRect" parent="Design/Center"]
+custom_minimum_size = Vector2(100, 70)
+layout_mode = 2
+color = Color(0.45, 0.38, 0.26, 1)
+
+[node name="UpgradesLabel" type="Label" parent="Design/Center"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
+theme_override_font_sizes/font_size = 22
+text = "Upgrades & Battle"
+horizontal_alignment = 1
+
+[node name="Play" type="Button" parent="Design/Center"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Play"
+
+[node name="BottomGap" type="Control" parent="Design/Center"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="About" type="Button" parent="Design/Center"]
+layout_mode = 2
+text = "About"
+
+[node name="TopRight" type="HBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Sound" type="Button" parent="Design/TopRight"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "SFX"
+
+[node name="Music" type="Button" parent="Design/TopRight"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Music"
+
+[connection signal="pressed" from="Design/Center/Play" to="." method="_on_play_pressed"]
+[connection signal="toggled" from="Design/TopRight/Sound" to="." method="_on_sound_toggled"]
+[connection signal="toggled" from="Design/TopRight/Music" to="." method="_on_music_toggled"]
+[connection signal="pressed" from="Design/Center/About" to="." method="_on_about_pressed"]

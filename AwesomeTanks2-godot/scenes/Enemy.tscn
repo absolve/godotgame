@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="1_enemy"]
+
+[node name="Enemy" type="RigidBody2D"]
+script = ExtResource("1_enemy")
+gravity_scale = 0.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+
+[node name="BodySprite" type="Sprite2D" parent="."]
+centered = true
+
+[node name="TurretSprite" type="Sprite2D" parent="."]
+centered = true

@@ -1,0 +1,68 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/level/level.gd" id="1_level"]
+[ext_resource type="Script" path="res://scripts/level/tile_map.gd" id="2_tilemap"]
+[ext_resource type="Script" path="res://scripts/level/hud.gd" id="3_hud"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_level")
+
+[node name="TileMap" type="Node2D" parent="."]
+script = ExtResource("2_tilemap")
+
+[node name="StaticLayer" type="TileMapLayer" parent="TileMap"]
+
+[node name="ObjectsLayer" type="Node2D" parent="."]
+
+[node name="TopLayer" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("3_hud")
+
+[node name="TopBar" type="HBoxContainer" parent="HUD"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+
+[node name="HealthLabel" type="Label" parent="HUD/TopBar"]
+theme_override_colors/font_color = Color(0.3, 0.9, 0.3, 1)
+text = "HP"
+
+[node name="HealthBar" type="ProgressBar" parent="HUD/TopBar"]
+custom_minimum_size = Vector2(180, 20)
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Spacer" type="Control" parent="HUD/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AmmoLabel" type="Label" parent="HUD/TopBar"]
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "Ammo"
+
+[node name="MoneyLabel" type="Label" parent="HUD/TopBar"]
+theme_override_colors/font_color = Color(1, 0.71, 0, 1)
+text = "$0"
+
+[node name="Pause" type="Button" parent="HUD/TopBar"]
+text = "II"
+
+[node name="WeaponSlots" type="HBoxContainer" parent="HUD"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -56.0
+grow_horizontal = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[connection signal="pressed" from="HUD/TopBar/Pause" to="." method="_on_pause_pressed"]

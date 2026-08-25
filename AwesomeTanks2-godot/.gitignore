@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+/builds/
+
+# Imported resources (auto-generated)
+*.import
+
+# OS/editor
+.DS_Store
+Thumbs.db
+
+# Local config / save
+*.local

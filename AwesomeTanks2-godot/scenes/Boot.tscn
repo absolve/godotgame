@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/boot.gd" id="1_boot"]
+
+[node name="Boot" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_boot")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.07, 0.06, 0.04, 1)
+
+[node name="Design" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Spacer" type="Control" parent="Design/VBox"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="TankIcon" type="ColorRect" parent="Design/VBox"]
+custom_minimum_size = Vector2(120, 80)
+layout_mode = 2
+color = Color(0.4, 0.34, 0.24, 1)
+
+[node name="Progress" type="ProgressBar" parent="Design/VBox"]
+custom_minimum_size = Vector2(212, 0)
+layout_mode = 2
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="Title" type="Label" parent="Design/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "AWESOME TANKS 2"
+horizontal_alignment = 1
+
+[node name="Play" type="Button" parent="Design/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Play"
+visible = false
+
+[connection signal="pressed" from="Design/VBox/Play" to="." method="_on_play_pressed"]

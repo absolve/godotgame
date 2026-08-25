@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/congratulations.gd" id="1_cong"]
+
+[node name="Congratulations" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cong")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.09, 0.05, 1)
+
+[node name="Design" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Design"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Design/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 40
+text = "Congratulations!"
+horizontal_alignment = 1
+
+[node name="Sub" type="Label" parent="Design/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
+theme_override_font_sizes/font_size = 20
+text = "You completed all 15 levels"
+horizontal_alignment = 1
+
+[node name="TotalScore" type="Label" parent="Design/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.71, 0, 1)
+theme_override_font_sizes/font_size = 26
+text = "Total score: 0 Pts."
+horizontal_alignment = 1
+
+[node name="Continue" type="Button" parent="Design/VBox"]
+custom_minimum_size = Vector2(160, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Back to Title"
+
+[connection signal="pressed" from="Design/VBox/Continue" to="." method="_on_continue_pressed"]
