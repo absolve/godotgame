@@ -88,7 +88,7 @@ func _turn_body_to_velocity() -> void:
 	if speed > 1.0:
 		var target := v.angle()
 		var diff := wrapf(target - _body_sprite.rotation, -PI, PI)
-		var step := deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
+		var step = deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
 		_body_sprite.rotation += clamp(diff, -step, step)
 
 func _sync_turret() -> void:

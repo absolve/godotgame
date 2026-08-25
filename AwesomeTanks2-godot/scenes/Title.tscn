@@ -1,8 +1,23 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bhaajh3x5u6n6"]
 
-[ext_resource type="Script" path="res://scripts/menu/title.gd" id="1_title"]
+[ext_resource type="Script" uid="uid://kb8j2yvfu47k" path="res://scripts/menu/title.gd" id="1_title"]
+[ext_resource type="Texture2D" uid="uid://d2bv6dn8m3s3m" path="res://sprites/menu/title/background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/logo.png.tres" id="3_logo"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/tank.png.tres" id="4_tank"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/upgrades.png.tres" id="6_upgrades"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_normal.png.tres" id="7_play_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_hover.png.tres" id="8_play_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_down.png.tres" id="9_play_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/about_normal.png.tres" id="10_about_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/about_hover.png.tres" id="11_about_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/about_down.png.tres" id="12_about_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/sound_on.png.tres" id="13_sound_on"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/music_on.png.tres" id="15_music_on"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/credits.png.tres" id="17_credits"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/x_normal.png.tres" id="18_x_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/x_hover.png.tres" id="19_x_h"]
 
-[node name="Title" type="Control"]
+[node name="Title" type="Control" unique_id=625504548]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,97 +26,166 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_title")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="BG" type="TextureRect" parent="." unique_id=492968393]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.15, 0.13, 0.09, 1)
+texture = ExtResource("2_bg")
+stretch_mode = 6
+metadata/_edit_lock_ = true
 
-[node name="Design" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -300.0
-offset_right = 300.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Center" type="VBoxContainer" parent="Design"]
+[node name="Center" type="VBoxContainer" parent="." unique_id=1341133692]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 37.0
+offset_top = 67.0
+offset_right = -3.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="TopGap" type="Control" parent="Design/Center"]
-custom_minimum_size = Vector2(0, 60)
+[node name="Logo" type="TextureRect" parent="Center" unique_id=1611207679]
+custom_minimum_size = Vector2(620, 242)
 layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_logo")
 
-[node name="Logo" type="Label" parent="Design/Center"]
+[node name="TankStage" type="Control" parent="Center" unique_id=494199100]
+custom_minimum_size = Vector2(760, 280)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.71, 0, 1)
-theme_override_font_sizes/font_size = 40
-text = "AWESOME TANKS 2"
-horizontal_alignment = 1
+size_flags_horizontal = 4
 
-[node name="TankIcon" type="ColorRect" parent="Design/Center"]
-custom_minimum_size = Vector2(100, 70)
-layout_mode = 2
-color = Color(0.45, 0.38, 0.26, 1)
+[node name="Tank" type="TextureRect" parent="Center/TankStage" unique_id=941605266]
+layout_mode = 0
+offset_left = 56.0
+offset_top = -18.0
+offset_right = 776.0
+offset_bottom = 232.0
+texture = ExtResource("4_tank")
 
-[node name="UpgradesLabel" type="Label" parent="Design/Center"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 22
-text = "Upgrades & Battle"
-horizontal_alignment = 1
+[node name="UpgradesBadge" type="TextureRect" parent="Center/TankStage" unique_id=1797967008]
+layout_mode = 0
+offset_left = 394.0
+offset_top = -82.0
+offset_right = 776.0
+offset_bottom = 19.0
+texture = ExtResource("6_upgrades")
 
-[node name="Play" type="Button" parent="Design/Center"]
-custom_minimum_size = Vector2(180, 50)
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "Play"
-
-[node name="BottomGap" type="Control" parent="Design/Center"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-
-[node name="About" type="Button" parent="Design/Center"]
-layout_mode = 2
-text = "About"
-
-[node name="TopRight" type="HBoxContainer" parent="Design"]
+[node name="TopRight" type="HBoxContainer" parent="." unique_id=162806238]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -150.0
-offset_bottom = 40.0
+offset_left = -172.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 70.0
 grow_horizontal = 0
+theme_override_constants/separation = 14
 
-[node name="Sound" type="Button" parent="Design/TopRight"]
+[node name="SoundBtn" type="TextureButton" parent="TopRight" unique_id=243226523]
+custom_minimum_size = Vector2(56, 50)
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
-text = "SFX"
+texture_normal = ExtResource("13_sound_on")
 
-[node name="Music" type="Button" parent="Design/TopRight"]
+[node name="MusicBtn" type="TextureButton" parent="TopRight" unique_id=159311057]
+custom_minimum_size = Vector2(56, 50)
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
-text = "Music"
+texture_normal = ExtResource("15_music_on")
 
-[connection signal="pressed" from="Design/Center/Play" to="." method="_on_play_pressed"]
-[connection signal="toggled" from="Design/TopRight/Sound" to="." method="_on_sound_toggled"]
-[connection signal="toggled" from="Design/TopRight/Music" to="." method="_on_music_toggled"]
-[connection signal="pressed" from="Design/Center/About" to="." method="_on_about_pressed"]
+[node name="AboutBtn" type="TextureButton" parent="." unique_id=1330385002]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -766.0
+offset_top = -52.0
+offset_right = -692.0
+offset_bottom = -21.0
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("10_about_n")
+texture_pressed = ExtResource("12_about_d")
+texture_hover = ExtResource("11_about_h")
+
+[node name="PlayBtn" type="TextureButton" parent="." unique_id=376314954]
+custom_minimum_size = Vector2(286, 142)
+layout_mode = 0
+offset_left = 265.0
+offset_top = 428.0
+offset_right = 551.0
+offset_bottom = 570.0
+size_flags_horizontal = 4
+texture_normal = ExtResource("7_play_n")
+texture_pressed = ExtResource("9_play_d")
+texture_hover = ExtResource("8_play_h")
+stretch_mode = 3
+
+[node name="CreditsLayer" type="Control" parent="." unique_id=1757039158]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="CreditsLayer" unique_id=1504983259]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
+
+[node name="CreditsCenter" type="CenterContainer" parent="CreditsLayer" unique_id=1481128824]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsHolder" type="Control" parent="CreditsLayer/CreditsCenter" unique_id=545052521]
+custom_minimum_size = Vector2(480, 480)
+layout_mode = 2
+
+[node name="Credits" type="TextureRect" parent="CreditsLayer/CreditsCenter/CreditsHolder" unique_id=957985278]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_credits")
+stretch_mode = 6
+
+[node name="CloseBtn" type="TextureButton" parent="CreditsLayer/CreditsCenter/CreditsHolder" unique_id=338364635]
+layout_mode = 0
+offset_left = 444.0
+offset_top = -24.0
+offset_right = 508.0
+offset_bottom = 40.0
+texture_normal = ExtResource("18_x_n")
+texture_hover = ExtResource("19_x_h")
+
+[connection signal="pressed" from="TopRight/SoundBtn" to="." method="_on_sound_toggled"]
+[connection signal="pressed" from="TopRight/MusicBtn" to="." method="_on_music_toggled"]
+[connection signal="pressed" from="AboutBtn" to="." method="_on_about_pressed"]
+[connection signal="pressed" from="PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CreditsLayer/CreditsCenter/CreditsHolder/CloseBtn" to="." method="_on_credits_close_pressed"]

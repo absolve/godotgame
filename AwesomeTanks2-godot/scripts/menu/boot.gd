@@ -1,28 +1,45 @@
 extends Control
-## Boot — 加载场景（对应原项目 MenuLoading）
-## 原流程：加载所有图集/音效 → 解码 → 显示 Play 按钮 → 点击进入 Boot(logo 闪现) → Title
-## 这里用模拟进度填充，资源就绪后改用 ResourceLoader.load_threaded_request。
+## Boot — 加载场景（与 H5 效果图一致）
+## 状态 1：Loading... 文字 + 绿色进度条推进
+## 状态 2：进度满 → Loading 组隐藏 → Play 按钮显示 → 点按进 Title
 
-@onready var _progress: ProgressBar = $Design/VBox/Progress
-@onready var _play: Button = $Design/VBox/Play
+# ProgressHolder 宽度 360，BarAmmoClip 左右各 3px 内边距 → 填充宽 354
+const _INNER_PAD_LEFT: float = 3.0
+const _INNER_WIDTH: float = 354.0
+const _PROGRESS_SPEED: float = 1.5
 
+@onready var _ammo_clip: Control = $ProgressHolder/BarAmmoClip
+@onready var _loading_group = $ProgressHolder
+@onready var _play_btn: TextureButton = $PlayBtn
+
+var _progress: float = 0.0
 var _loaded: bool = false
 
 func _ready() -> void:
-	_play.visible = false
-	# Play 按钮信号由 Boot.tscn 的 [connection] 自动连接，无需手动 connect
-	# 模拟加载（无资源时快速填满）
+	# 初始：Loading 组显示，Play 隐藏
+	_loading_group.visible = true
+	_play_btn.visible = false
+	_update_progress_visual(0.0)
 	_load_assets()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _loaded:
-		_progress.value = move_toward(_progress.value, 100.0, 2.0)
-		if _progress.value >= 100.0:
+		_progress = min(100.0, _progress + _PROGRESS_SPEED * 60.0 * delta)
+		_update_progress_visual(_progress)
+		if _progress >= 100.0:
 			_loaded = true
-			_play.visible = true
+			_on_load_finished()
+
+func _update_progress_visual(pct: float) -> void:
+	var right: float = _INNER_PAD_LEFT + _INNER_WIDTH * clamp(pct, 0.0, 100.0) / 100.0
+	_ammo_clip.offset_right = right
+
+func _on_load_finished() -> void:
+	_loading_group.visible = false
+	_play_btn.visible = true
 
 func _load_assets() -> void:
-	# TODO: 用 ResourceLoader.load_threaded_request 预加载图集/音效
+	# TODO: ResourceLoader.load_threaded_request 预加载图集/音效
 	pass
 
 func _on_play_pressed() -> void:

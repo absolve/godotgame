@@ -23,7 +23,7 @@ func _ready() -> void:
 ## 解析关卡数据（来自 ATLevels.LEVELS 的元素）
 func parse(level_data: Array) -> void:
 	var name: String = level_data[0]
-	theme = ATConst.THEME_NAMES.get(level_data[1], ATConst.Theme.GRASS)
+	theme = ATConst.THEME_NAMES.get(level_data[1], ATConst.gameTheme.GRASS)
 	var rows: Array = level_data.slice(2)
 	height = rows.size()
 	width = 0

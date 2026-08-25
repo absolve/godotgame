@@ -1,8 +1,39 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://w5b106i6sm80"]
 
-[ext_resource type="Script" path="res://scripts/menu/upgrades.gd" id="1_up"]
+[ext_resource type="Script" uid="uid://i8eqppyb5l0a" path="res://scripts/menu/upgrades.gd" id="1_up"]
+[ext_resource type="Texture2D" uid="uid://cxjrc4oq0y3lj" path="res://sprites/menu/upgrades/background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/sound_normal.png.tres" id="3_sound_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/sound_hover.png.tres" id="4_sound_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/music_normal.png.tres" id="6_music_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/music_hover.png.tres" id="7_music_h"]
+[ext_resource type="Texture2D" uid="uid://x6qjfxs3v21j" path="res://sprites/menu/upgrades/weapons.png" id="9_weapons_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_normal.png.tres" id="10_menu_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_hover.png.tres" id="11_menu_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_down.png.tres" id="12_menu_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_normal.png.tres" id="13_stats_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_hover.png.tres" id="14_stats_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_down.png.tres" id="15_stats_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_normal.png.tres" id="16_diff_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_hover.png.tres" id="17_diff_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_down.png.tres" id="18_diff_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_normal.png.tres" id="19_play_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_hover.png.tres" id="20_play_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_down.png.tres" id="21_play_d"]
+[ext_resource type="Texture2D" uid="uid://djbtw8phbi11y" path="res://sprites/menu/upgrades/difficulty.png" id="22_diff_bg"]
+[ext_resource type="Texture2D" uid="uid://b351wdvug8664" path="res://sprites/menu/upgrades/stats.png" id="23_stats_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_normal.png.tres" id="24_easy_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_hover.png.tres" id="25_easy_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_down.png.tres" id="26_easy_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_normal.png.tres" id="27_med_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_hover.png.tres" id="28_med_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_down.png.tres" id="29_med_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_normal.png.tres" id="30_hard_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_hover.png.tres" id="31_hard_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_down.png.tres" id="32_hard_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="33_x_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="34_x_h"]
 
-[node name="Upgrades" type="Control"]
+[node name="Upgrades" type="Control" unique_id=471314442]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,95 +42,149 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_up")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="BG" type="TextureRect" parent="." unique_id=1713430224]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.12, 0.1, 0.06, 1)
+texture = ExtResource("2_bg")
 
-[node name="Design" type="Control" parent="."]
+[node name="TopBar" type="HBoxContainer" parent="." unique_id=74733645]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = 76.0
+grow_horizontal = 2
+theme_override_constants/separation = 12
+
+[node name="SoundBtn" type="TextureButton" parent="TopBar" unique_id=874131292]
+custom_minimum_size = Vector2(48, 50)
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("3_sound_n")
+texture_pressed = ExtResource("4_sound_h")
+texture_hover = ExtResource("4_sound_h")
+stretch_mode = 1
+
+[node name="MusicBtn" type="TextureButton" parent="TopBar" unique_id=1889584151]
+custom_minimum_size = Vector2(48, 52)
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("6_music_n")
+texture_pressed = ExtResource("7_music_h")
+texture_hover = ExtResource("7_music_h")
+stretch_mode = 1
+
+[node name="Spacer" type="Control" parent="TopBar" unique_id=1061643447]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MoneyLabel" type="Label" parent="TopBar" unique_id=230972959]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.2, 1)
+theme_override_font_sizes/font_size = 36
+text = "$0"
+
+[node name="WeaponsCenter" type="CenterContainer" parent="." unique_id=1480166976]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -300.0
-offset_right = 300.0
-offset_bottom = 300.0
+offset_left = -470.0
+offset_top = -240.0
+offset_right = 470.0
+offset_bottom = 240.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TopBar" type="HBoxContainer" parent="Design"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 40.0
-grow_horizontal = 2
-
-[node name="Title" type="Label" parent="Design/TopBar"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 22
-text = "Upgrades"
-
-[node name="Spacer" type="Control" parent="Design/TopBar"]
+[node name="WeaponsPanel" type="Control" parent="WeaponsCenter" unique_id=1317590515]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Money" type="Label" parent="Design/TopBar"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.71, 0, 1)
-theme_override_font_sizes/font_size = 24
-text = "$0"
-
-[node name="Sound" type="Button" parent="Design/TopBar"]
-layout_mode = 2
-toggle_mode = true
-button_pressed = true
-text = "SFX"
-
-[node name="Music" type="Button" parent="Design/TopBar"]
-layout_mode = 2
-toggle_mode = true
-button_pressed = true
-text = "Music"
-
-[node name="Tabs" type="HBoxContainer" parent="Design"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 48.0
-offset_bottom = 88.0
-grow_horizontal = 2
-alignment = 1
-
-[node name="Performance" type="Button" parent="Design/Tabs"]
-layout_mode = 2
-toggle_mode = true
-text = "Performance"
-
-[node name="Weapons" type="Button" parent="Design/Tabs"]
-layout_mode = 2
-toggle_mode = true
-button_pressed = true
-text = "Weapons"
-
-[node name="TabContent" type="Control" parent="Design"]
+[node name="WeaponsBg" type="TextureRect" parent="WeaponsCenter/WeaponsPanel" unique_id=1476166150]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 96.0
-offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("9_weapons_bg")
+stretch_mode = 5
 
-[node name="PerformancePanel" type="VBoxContainer" parent="Design/TabContent"]
+[node name="WeaponGrid" type="GridContainer" parent="WeaponsCenter/WeaponsPanel" unique_id=2014784009]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -200.0
+offset_right = 390.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 12
+
+[node name="BottomBar" type="HBoxContainer" parent="." unique_id=616037252]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -764.0
+offset_top = -96.0
+offset_right = -16.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 14
+alignment = 2
+
+[node name="MenuBtn" type="TextureButton" parent="BottomBar" unique_id=424690133]
+custom_minimum_size = Vector2(168, 74)
+layout_mode = 2
+texture_normal = ExtResource("10_menu_n")
+texture_pressed = ExtResource("12_menu_d")
+texture_hover = ExtResource("11_menu_h")
+stretch_mode = 3
+
+[node name="StatsBtn" type="TextureButton" parent="BottomBar" unique_id=1517311413]
+custom_minimum_size = Vector2(174, 74)
+layout_mode = 2
+texture_normal = ExtResource("13_stats_n")
+texture_pressed = ExtResource("15_stats_d")
+texture_hover = ExtResource("14_stats_h")
+stretch_mode = 3
+
+[node name="DifficultyBtn" type="TextureButton" parent="BottomBar" unique_id=640725461]
+custom_minimum_size = Vector2(211, 73)
+layout_mode = 2
+texture_normal = ExtResource("16_diff_n")
+texture_pressed = ExtResource("18_diff_d")
+texture_hover = ExtResource("17_diff_h")
+stretch_mode = 3
+
+[node name="PlayBtn" type="TextureButton" parent="BottomBar" unique_id=1457892798]
+custom_minimum_size = Vector2(153, 76)
+layout_mode = 2
+texture_normal = ExtResource("19_play_n")
+texture_pressed = ExtResource("21_play_d")
+texture_hover = ExtResource("20_play_h")
+stretch_mode = 3
+
+[node name="DifficultyLayer" type="Control" parent="." unique_id=88868722]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -107,160 +192,164 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-alignment = 1
 
-[node name="Gauges" type="HBoxContainer" parent="Design/TabContent/PerformancePanel"]
-layout_mode = 2
-alignment = 1
-
-[node name="Armor" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
-layout_mode = 2
-alignment = 1
-
-[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
-layout_mode = 2
-text = "Armor"
-
-[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
-custom_minimum_size = Vector2(80, 16)
-layout_mode = 2
-max_value = 5.0
-value = 0.0
-show_percentage = false
-
-[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
-text = "$0"
-
-[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Armor"]
-layout_mode = 2
-text = "Buy"
-
-[node name="Sight" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
-layout_mode = 2
-alignment = 1
-
-[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
-layout_mode = 2
-text = "Sight"
-
-[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
-custom_minimum_size = Vector2(80, 16)
-layout_mode = 2
-max_value = 5.0
-value = 0.0
-show_percentage = false
-
-[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
-text = "$0"
-
-[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Sight"]
-layout_mode = 2
-text = "Buy"
-
-[node name="Turret" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
-layout_mode = 2
-alignment = 1
-
-[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
-layout_mode = 2
-text = "Turret"
-
-[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
-custom_minimum_size = Vector2(80, 16)
-layout_mode = 2
-max_value = 5.0
-value = 0.0
-show_percentage = false
-
-[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
-text = "$0"
-
-[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Turret"]
-layout_mode = 2
-text = "Buy"
-
-[node name="Speed" type="VBoxContainer" parent="Design/TabContent/PerformancePanel/Gauges"]
-layout_mode = 2
-alignment = 1
-
-[node name="Name" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
-layout_mode = 2
-text = "Speed"
-
-[node name="Bar" type="ProgressBar" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
-custom_minimum_size = Vector2(80, 16)
-layout_mode = 2
-max_value = 5.0
-value = 0.0
-show_percentage = false
-
-[node name="Price" type="Label" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.7, 0, 1)
-text = "$0"
-
-[node name="Buy" type="Button" parent="Design/TabContent/PerformancePanel/Gauges/Speed"]
-layout_mode = 2
-text = "Buy"
-
-[node name="WeaponsPanel" type="VBoxContainer" parent="Design/TabContent"]
+[node name="Dim" type="ColorRect" parent="DifficultyLayer" unique_id=893506922]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-alignment = 1
+mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
 
-[node name="WeaponGrid" type="GridContainer" parent="Design/TabContent/WeaponsPanel"]
-layout_mode = 2
-columns = 5
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="BottomBar" type="HBoxContainer" parent="Design"]
+[node name="Center" type="CenterContainer" parent="DifficultyLayer" unique_id=323732285]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -56.0
 grow_horizontal = 2
-alignment = 1
+grow_vertical = 2
 
-[node name="Menu" type="Button" parent="Design/BottomBar"]
+[node name="Panel" type="Control" parent="DifficultyLayer/Center" unique_id=423532091]
+custom_minimum_size = Vector2(540, 500)
 layout_mode = 2
-text = "Menu"
 
-[node name="Stats" type="Button" parent="Design/BottomBar"]
+[node name="DiffBg" type="TextureRect" parent="DifficultyLayer/Center/Panel" unique_id=1325267792]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -192.0
+offset_right = 192.0
+offset_bottom = 192.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_diff_bg")
+stretch_mode = 5
+
+[node name="CloseBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel" unique_id=2020541429]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 2.0
+offset_top = -14.0
+offset_right = 76.0
+offset_bottom = 60.0
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("33_x_n")
+texture_pressed = ExtResource("34_x_h")
+texture_hover = ExtResource("34_x_h")
+stretch_mode = 1
+
+[node name="ButtonsV" type="VBoxContainer" parent="DifficultyLayer/Center/Panel" unique_id=1434830735]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.5
+offset_top = -49.5
+offset_right = 104.5
+offset_bottom = 143.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="EasyBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1302771828]
 layout_mode = 2
-text = "Stats"
+texture_normal = ExtResource("24_easy_n")
+texture_pressed = ExtResource("26_easy_d")
+texture_hover = ExtResource("25_easy_h")
+stretch_mode = 3
 
-[node name="Difficulty" type="Button" parent="Design/BottomBar"]
+[node name="MediumBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=782237720]
 layout_mode = 2
-text = "Difficulty"
+texture_normal = ExtResource("27_med_n")
+texture_pressed = ExtResource("29_med_d")
+texture_hover = ExtResource("28_med_h")
+stretch_mode = 3
 
-[node name="Play" type="Button" parent="Design/BottomBar"]
-custom_minimum_size = Vector2(120, 0)
+[node name="HardBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=804520695]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Play"
+texture_normal = ExtResource("30_hard_n")
+texture_pressed = ExtResource("32_hard_d")
+texture_hover = ExtResource("31_hard_h")
+stretch_mode = 3
 
-[connection signal="toggled" from="Design/TopBar/Sound" to="." method="_on_sound_toggled"]
-[connection signal="toggled" from="Design/TopBar/Music" to="." method="_on_music_toggled"]
-[connection signal="toggled" from="Design/Tabs/Performance" to="." method="_on_performance_tab_toggled"]
-[connection signal="toggled" from="Design/Tabs/Weapons" to="." method="_on_weapons_tab_toggled"]
-[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Armor/Buy" to="." method="_on_armor_buy"]
-[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Sight/Buy" to="." method="_on_sight_buy"]
-[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Turret/Buy" to="." method="_on_turret_buy"]
-[connection signal="pressed" from="Design/TabContent/PerformancePanel/Gauges/Speed/Buy" to="." method="_on_speed_buy"]
-[connection signal="pressed" from="Design/BottomBar/Menu" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="Design/BottomBar/Stats" to="." method="_on_stats_pressed"]
-[connection signal="pressed" from="Design/BottomBar/Difficulty" to="." method="_on_difficulty_pressed"]
-[connection signal="pressed" from="Design/BottomBar/Play" to="." method="_on_play_pressed"]
+[node name="StatsLayer" type="Control" parent="." unique_id=1253417378]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim2" type="ColorRect" parent="StatsLayer" unique_id=14812762]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center2" type="CenterContainer" parent="StatsLayer" unique_id=478796737]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel2" type="Control" parent="StatsLayer/Center2" unique_id=1459921846]
+custom_minimum_size = Vector2(680, 520)
+layout_mode = 2
+
+[node name="StatsBg" type="TextureRect" parent="StatsLayer/Center2/Panel2" unique_id=792326293]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_stats_bg")
+stretch_mode = 5
+
+[node name="CloseBtn2" type="TextureButton" parent="StatsLayer/Center2/Panel2" unique_id=1060109763]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 2.0
+offset_top = -14.0
+offset_right = 76.0
+offset_bottom = 60.0
+grow_horizontal = 0
+grow_vertical = 0
+texture_normal = ExtResource("33_x_n")
+texture_pressed = ExtResource("34_x_h")
+texture_hover = ExtResource("34_x_h")
+stretch_mode = 1
+
+[connection signal="pressed" from="TopBar/SoundBtn" to="." method="_on_sound_toggled"]
+[connection signal="pressed" from="TopBar/MusicBtn" to="." method="_on_music_toggled"]
+[connection signal="pressed" from="BottomBar/MenuBtn" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="BottomBar/StatsBtn" to="." method="_on_stats_pressed"]
+[connection signal="pressed" from="BottomBar/DifficultyBtn" to="." method="_on_difficulty_pressed"]
+[connection signal="pressed" from="BottomBar/PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="DifficultyLayer/Center/Panel/CloseBtn" to="." method="_on_difficulty_close_pressed"]
+[connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/EasyBtn" to="." method="_on_difficulty_easy_pressed"]
+[connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/MediumBtn" to="." method="_on_difficulty_medium_pressed"]
+[connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/HardBtn" to="." method="_on_difficulty_hard_pressed"]
+[connection signal="pressed" from="StatsLayer/Center2/Panel2/CloseBtn2" to="." method="_on_stats_close_pressed"]

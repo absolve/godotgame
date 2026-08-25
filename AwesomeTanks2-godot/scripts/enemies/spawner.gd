@@ -14,7 +14,7 @@ var _spawned: Array[Node2D] = []
 func _ready() -> void:
 	super._ready()
 	# 生成器不可移动，冻结为静态
-	freeze = true
+	#freeze = true
 	freeze_mode = RigidBody2D.FREEZE_MODE_STATIC
 
 func _process(delta: float) -> void:

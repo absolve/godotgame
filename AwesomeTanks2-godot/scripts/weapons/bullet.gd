@@ -49,6 +49,6 @@ func _on_hit(other: Node) -> void:
 			other.on_bullet_hit(damage, null, self)
 	_die(true)
 
-func _die(hit_something: bool) -> void:
+func _die(_hit_something: bool) -> void:
 	# TODO: 火花粒子 + 警报音
 	queue_free()

@@ -7,13 +7,13 @@ class_name ATTurretEnemy
 func _ready() -> void:
 	super._ready()
 	# 固定不动
-	freeze = true
+	#freeze = true
 	freeze_mode = RigidBody2D.FREEZE_MODE_STATIC
 
 func _process(delta: float) -> void:
 	# 不调用 super 的 AI 巡逻；只旋转炮塔朝玩家
 	if level and is_instance_valid(level.player):
-		var aim := (level.player.global_position - global_position).angle()
+		var aim = (level.player.global_position - global_position).angle()
 		rotate_turret(aim, delta)
 		if _has_line_of_sight():
 			start_fire()

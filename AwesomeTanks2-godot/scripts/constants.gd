@@ -172,9 +172,10 @@ static func is_spawner(tile: int) -> bool:
 # ============================================================
 # 关卡主题
 # ============================================================
-enum Theme { GRASS, SNOW, DESERT }
+enum gameTheme { GRASS, SNOW, DESERT }
+
 const THEME_NAMES: Dictionary = {
-	"grass": Theme.GRASS,
-	"snow": Theme.SNOW,
-	"desert": Theme.DESERT,
+	"grass": gameTheme.GRASS,
+	"snow": gameTheme.SNOW,
+	"desert": gameTheme.DESERT,
 }

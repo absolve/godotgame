@@ -1,8 +1,15 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://b7vm5pni5jbaq"]
 
-[ext_resource type="Script" path="res://scripts/menu/boot.gd" id="1_boot"]
+[ext_resource type="Script" uid="uid://834gi6y4mg5h" path="res://scripts/menu/boot.gd" id="1_boot"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/tank.png.tres" id="2_tank"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/bar_empty.png.tres" id="3_empty"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/bar_ammo.png.tres" id="4_ammo"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/bar_frame.png.tres" id="5_frame"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/buttons/play_normal.png.tres" id="6_play_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/buttons/play_hover.png.tres" id="7_play_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/loading/buttons/play_down.png.tres" id="8_play_d"]
 
-[node name="Boot" type="Control"]
+[node name="Boot" type="Control" unique_id=486399804]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,65 +18,94 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_boot")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="BG" type="ColorRect" parent="." unique_id=2045958818]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.07, 0.06, 0.04, 1)
+color = Color(0, 0, 0, 1)
 
-[node name="Design" type="Control" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -300.0
-offset_right = 300.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="Design"]
+[node name="Center" type="CenterContainer" parent="." unique_id=1868921338]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center" unique_id=718912699]
+layout_mode = 2
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Spacer" type="Control" parent="Design/VBox"]
-custom_minimum_size = Vector2(0, 100)
+[node name="TankLogo" type="TextureRect" parent="Center/VBox" unique_id=796923243]
+custom_minimum_size = Vector2(560, 560)
 layout_mode = 2
+texture = ExtResource("2_tank")
+stretch_mode = 5
 
-[node name="TankIcon" type="ColorRect" parent="Design/VBox"]
-custom_minimum_size = Vector2(120, 80)
-layout_mode = 2
-color = Color(0.4, 0.34, 0.24, 1)
+[node name="ProgressHolder" type="Control" parent="." unique_id=355510760]
+custom_minimum_size = Vector2(360, 60)
+anchors_preset = 0
+offset_left = 288.0
+offset_top = 496.0
+offset_right = 648.0
+offset_bottom = 556.0
+scale = Vector2(0.6, 0.6)
+size_flags_horizontal = 4
+metadata/_edit_group_ = true
 
-[node name="Progress" type="ProgressBar" parent="Design/VBox"]
-custom_minimum_size = Vector2(212, 0)
-layout_mode = 2
-max_value = 100.0
-value = 0.0
-show_percentage = false
+[node name="BarEmpty" type="TextureRect" parent="ProgressHolder" unique_id=550214331]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_empty")
 
-[node name="Title" type="Label" parent="Design/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 28
-text = "AWESOME TANKS 2"
-horizontal_alignment = 1
+[node name="BarAmmoClip" type="Control" parent="ProgressHolder" unique_id=780181515]
+clip_contents = true
+anchors_preset = 0
+offset_left = 3.0
+offset_right = 357.0
+offset_bottom = 60.0
 
-[node name="Play" type="Button" parent="Design/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Play"
+[node name="BarAmmo" type="TextureRect" parent="ProgressHolder/BarAmmoClip" unique_id=65026096]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -30.0
+offset_bottom = 30.0
+grow_horizontal = 2
+texture = ExtResource("4_ammo")
+
+[node name="BarFrame" type="TextureRect" parent="ProgressHolder" unique_id=439524047]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_frame")
+
+[node name="PlayBtn" type="TextureButton" parent="." unique_id=440911813]
 visible = false
+layout_mode = 0
+offset_left = 280.0
+offset_top = 452.0
+offset_right = 512.0
+offset_bottom = 532.0
+size_flags_horizontal = 4
+texture_normal = ExtResource("6_play_n")
+texture_pressed = ExtResource("8_play_d")
+texture_hover = ExtResource("7_play_h")
+ignore_texture_size = true
+stretch_mode = 5
 
-[connection signal="pressed" from="Design/VBox/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="PlayBtn" to="." method="_on_play_pressed"]
