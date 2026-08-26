@@ -22,7 +22,7 @@ func _process(delta: float) -> void:
 	if smoke_timer <= 0:
 		smoke_timer = 0.03
 		# TODO: spawn 烟雾粒子
-	super._process(delta)
+	#super._process(delta)
 
 func _die(hit_something: bool) -> void:
 	if hit_something:

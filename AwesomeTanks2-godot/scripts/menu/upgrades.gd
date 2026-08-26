@@ -4,7 +4,7 @@ extends Control
 ## 功能：顶栏(Money + Sound/Music) + 武器购买/升级/补弹 + 底栏(Menu/Stats/Difficulty/Play) + 难度/统计弹窗
 ## 武器卡使用 weapon_card.tscn 实例化（参考 sound_btn.tscn 的"最小场景+脚本+实例化"模式）
 
-const FONT: Font = preload("res://fonts/gunplay.ttf")
+#const FONT: Font = preload("res://fonts/gunplay.ttf")
 const CARD_SCENE: PackedScene = preload("res://scenes/weapon_card.tscn")
 
 # 10 张武器卡在 WeaponsPanel(581x309) 内的左上角坐标（对应 H5 weapons 组 (10,192) 内的相对坐标）
@@ -33,7 +33,7 @@ var _cards_by_key: Dictionary = {}   # key -> WeaponCard 实例
 
 func _ready() -> void:
 	Audio.play_music("music_menu.mp3")
-	_money_label.add_theme_font_override("font", FONT)
+	#_money_label.add_theme_font_override("font", FONT)
 	_populate_cards()
 	# Sound/Music 状态（SoundBtn 脚本已自带 button_down 音效，此处不再播）
 	_refresh_sound_btn(bool(Game.current.get("game", {}).get("sound", true)))

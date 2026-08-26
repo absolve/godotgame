@@ -1,10 +1,124 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c8gwx074c12ml"]
 
-[ext_resource type="Script" path="res://scripts/ui/weapon_card.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://cftkx88qrnf3r" path="res://scripts/ui/weapon_card.gd" id="1_card"]
+[ext_resource type="Texture2D" uid="uid://cqpkjgku4ey8g" path="res://sprites/menu/upgrades/parts/frame.png.tres" id="2_frame"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/off.png.tres" id="3_pip_off"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/ammo_small.png.tres" id="4_ammo_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/ammo_bar.png.tres" id="5_ammo_bar"]
 
-[node name="WeaponCard" type="TextureButton"]
+[node name="WeaponCard" type="TextureButton" unique_id=1748877020]
 custom_minimum_size = Vector2(93, 79)
-layout_mode = 0
 offset_right = 93.0
 offset_bottom = 79.0
+texture_normal = ExtResource("2_frame")
+texture_pressed = ExtResource("2_frame")
+texture_hover = ExtResource("2_frame")
 script = ExtResource("1_card")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=1430869888]
+custom_maximum_size = Vector2(45, 45)
+layout_mode = 1
+offset_left = 8.0
+offset_top = 20.0
+offset_right = 98.0
+offset_bottom = 110.0
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="." unique_id=1656749809]
+layout_mode = 1
+offset_top = 4.0
+offset_right = 93.0
+offset_bottom = 20.0
+theme_override_colors/font_color = Color(0.91, 0.7, 0, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pip0" type="TextureRect" parent="." unique_id=1554668957]
+visible = false
+layout_mode = 1
+offset_left = 62.0
+offset_top = 63.0
+offset_right = 77.0
+offset_bottom = 77.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_pip_off")
+stretch_mode = 5
+
+[node name="Pip1" type="TextureRect" parent="." unique_id=642118377]
+visible = false
+layout_mode = 1
+offset_left = 62.0
+offset_top = 52.0
+offset_right = 77.0
+offset_bottom = 66.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_pip_off")
+stretch_mode = 5
+
+[node name="Pip2" type="TextureRect" parent="." unique_id=1169968256]
+visible = false
+layout_mode = 1
+offset_left = 62.0
+offset_top = 42.0
+offset_right = 77.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_pip_off")
+stretch_mode = 5
+
+[node name="Pip3" type="TextureRect" parent="." unique_id=960875484]
+visible = false
+layout_mode = 1
+offset_left = 62.0
+offset_top = 32.0
+offset_right = 77.0
+offset_bottom = 46.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_pip_off")
+stretch_mode = 5
+
+[node name="Pip4" type="TextureRect" parent="." unique_id=1587263658]
+visible = false
+layout_mode = 1
+offset_left = 62.0
+offset_top = 21.0
+offset_right = 77.0
+offset_bottom = 35.0
+scale = Vector2(0.5, 0.5)
+mouse_filter = 2
+texture = ExtResource("3_pip_off")
+stretch_mode = 5
+
+[node name="AmmoBg" type="TextureRect" parent="." unique_id=1187870214]
+visible = false
+layout_mode = 1
+offset_left = 73.0
+offset_top = 22.0
+offset_right = 85.0
+offset_bottom = 70.0
+mouse_filter = 2
+texture = ExtResource("4_ammo_bg")
+stretch_mode = 5
+
+[node name="AmmoBar" type="TextureRect" parent="." unique_id=1597839757]
+visible = false
+layout_mode = 1
+offset_left = 75.0
+offset_top = 23.0
+offset_right = 85.0
+offset_bottom = 68.0
+mouse_filter = 2
+texture = ExtResource("5_ammo_bar")
+
+[node name="Price" type="Label" parent="." unique_id=447616806]
+layout_mode = 1
+offset_top = 84.0
+offset_right = 93.0
+offset_bottom = 106.0
+theme_override_colors/font_color = Color(0.91, 0.7, 0, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
