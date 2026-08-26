@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://k6a7bpop75gx"]
+
+[ext_resource type="Script" uid="uid://dnf6mnwwwa52q" path="res://scripts/ui/sound_btn.gd" id="1_oaxhh"]
+
+[node name="SoundBtn" type="TextureButton" unique_id=534465444]
+custom_minimum_size = Vector2(56, 50)
+toggle_mode = true
+button_pressed = true
+script = ExtResource("1_oaxhh")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

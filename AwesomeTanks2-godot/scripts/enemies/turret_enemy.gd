@@ -6,9 +6,7 @@ class_name ATTurretEnemy
 
 func _ready() -> void:
 	super._ready()
-	# 固定不动
-	#freeze = true
-	freeze_mode = RigidBody2D.FREEZE_MODE_STATIC
+	# 固定不动（CharacterBody2D 不调用 move，velocity 保持为 0）
 
 func _process(delta: float) -> void:
 	# 不调用 super 的 AI 巡逻；只旋转炮塔朝玩家

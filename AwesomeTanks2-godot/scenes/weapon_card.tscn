@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/weapon_card.gd" id="1_card"]
+
+[node name="WeaponCard" type="TextureButton"]
+custom_minimum_size = Vector2(93, 79)
+layout_mode = 0
+offset_right = 93.0
+offset_bottom = 79.0
+script = ExtResource("1_card")

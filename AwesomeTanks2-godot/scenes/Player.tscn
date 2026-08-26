@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/tank/player.gd" id="1_player"]
 
-[node name="Player" type="RigidBody2D"]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_player")
-gravity_scale = 0.0
 
 [node name="Body" type="CollisionShape2D" parent="."]
 

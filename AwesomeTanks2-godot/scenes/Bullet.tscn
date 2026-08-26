@@ -1,10 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://ylqne7ch0vx5"]
 
-[ext_resource type="Script" path="res://scripts/weapons/bullet.gd" id="1_bullet"]
+[ext_resource type="Script" uid="uid://cg18yksojr4ph" path="res://scripts/weapons/bullet.gd" id="1_bullet"]
 
-[node name="Bullet" type="RigidBody2D"]
+[node name="Bullet" type="Area2D" unique_id=727015668]
 script = ExtResource("1_bullet")
-gravity_scale = 0.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-centered = true
+[node name="shape" type="CollisionShape2D" parent="." unique_id=824774574]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1412698550]

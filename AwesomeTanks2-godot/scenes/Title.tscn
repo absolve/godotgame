@@ -4,8 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://d2bv6dn8m3s3m" path="res://sprites/menu/title/background.png" id="2_bg"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/logo.png.tres" id="3_logo"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/tank.png.tres" id="4_tank"]
+[ext_resource type="PackedScene" uid="uid://k6a7bpop75gx" path="res://scenes/sound_btn.tscn" id="6_6rdx8"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/upgrades.png.tres" id="6_upgrades"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/sound_off.png.tres" id="7_i0bw3"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_normal.png.tres" id="7_play_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/music_off.png.tres" id="8_ostn1"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_hover.png.tres" id="8_play_h"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/play_down.png.tres" id="9_play_d"]
 [ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/about_normal.png.tres" id="10_about_n"]
@@ -90,19 +93,15 @@ offset_bottom = 70.0
 grow_horizontal = 0
 theme_override_constants/separation = 14
 
-[node name="SoundBtn" type="TextureButton" parent="TopRight" unique_id=243226523]
-custom_minimum_size = Vector2(56, 50)
+[node name="SoundBtn" parent="TopRight" unique_id=534465444 instance=ExtResource("6_6rdx8")]
 layout_mode = 2
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("13_sound_on")
+texture_normal = ExtResource("7_i0bw3")
+texture_pressed = ExtResource("13_sound_on")
 
-[node name="MusicBtn" type="TextureButton" parent="TopRight" unique_id=159311057]
-custom_minimum_size = Vector2(56, 50)
+[node name="MusicBtn" parent="TopRight" unique_id=1561513121 instance=ExtResource("6_6rdx8")]
 layout_mode = 2
-toggle_mode = true
-button_pressed = true
-texture_normal = ExtResource("15_music_on")
+texture_normal = ExtResource("8_ostn1")
+texture_pressed = ExtResource("15_music_on")
 
 [node name="AboutBtn" type="TextureButton" parent="." unique_id=1330385002]
 layout_mode = 1

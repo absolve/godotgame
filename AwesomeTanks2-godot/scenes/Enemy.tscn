@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="1_enemy"]
 
-[node name="Enemy" type="RigidBody2D"]
+[node name="Enemy" type="CharacterBody2D"]
 script = ExtResource("1_enemy")
-gravity_scale = 0.0
 
 [node name="Body" type="CollisionShape2D" parent="."]
 

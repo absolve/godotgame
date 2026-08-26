@@ -1,4 +1,4 @@
-extends RigidBody2D
+extends CharacterBody2D
 ## Tank — 坦克基类（玩家与敌人共用）
 ## 对应原项目 window.AT.Tank：车体精灵 + 炮塔精灵 + 武器组。
 ##
@@ -35,11 +35,6 @@ var _turret_offset: Vector2 = Vector2.ZERO
 var kill_delay: float = 0.12
 
 func _ready() -> void:
-	gravity_scale = 0.0
-	linear_damp = 0.0
-	angular_damp = 0.0
-	contact_monitor = true
-	max_contacts_reported = 4
 	# 圆形碰撞
 	var shape := CircleShape2D.new()
 	shape.radius = 22.0
@@ -69,12 +64,13 @@ func _physics_process(_delta: float) -> void:
 		return
 	_turn_body_to_velocity()
 	_sync_turret()
+	move_and_slide()
 
 # ============================================================
 # 移动 / 炮塔
 # ============================================================
 func move(dir: Vector2) -> void:
-	linear_velocity = dir * move_speed
+	velocity = dir * move_speed
 
 func rotate_turret(target_angle: float, delta: float) -> void:
 	var cur := _turret_sprite.rotation
@@ -83,7 +79,7 @@ func rotate_turret(target_angle: float, delta: float) -> void:
 	_turret_sprite.rotation = cur + clamp(diff, -step, step)
 
 func _turn_body_to_velocity() -> void:
-	var v := linear_velocity
+	var v := velocity
 	var speed := v.length()
 	if speed > 1.0:
 		var target := v.angle()

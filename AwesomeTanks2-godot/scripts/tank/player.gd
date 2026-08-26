@@ -36,7 +36,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if dir != Vector2.ZERO:
 		move(dir.normalized())
 	else:
-		linear_velocity = linear_velocity.lerp(Vector2.ZERO, 0.2)
+		velocity = velocity.lerp(Vector2.ZERO, 0.2)
 	# 瞄准
 	if event is InputEventMouseMotion:
 		var aim := (get_global_mouse_position() - global_position).angle()

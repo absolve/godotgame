@@ -12,12 +12,11 @@ func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Colo
 	super.setup(team_, damage_, speed_, life_, color_, alert_)
 
 func _process(delta: float) -> void:
-	# 追踪：朝目标转向
+	# 追踪：朝目标转向（移动由基类 _physics_process 按 rotation 前进）
 	if is_instance_valid(target):
 		var desired := (target.global_position - global_position).angle()
 		var diff := wrapf(desired - rotation, -PI, PI)
 		rotation += clamp(diff, -deg_to_rad(3.0), deg_to_rad(3.0))
-		linear_velocity = Vector2.RIGHT.rotated(rotation) * speed
 	# 烟雾尾迹
 	smoke_timer -= delta
 	if smoke_timer <= 0:

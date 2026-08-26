@@ -2,38 +2,39 @@
 
 [ext_resource type="Script" uid="uid://i8eqppyb5l0a" path="res://scripts/menu/upgrades.gd" id="1_up"]
 [ext_resource type="Texture2D" uid="uid://cxjrc4oq0y3lj" path="res://sprites/menu/upgrades/background.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/sound_normal.png.tres" id="3_sound_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/sound_hover.png.tres" id="4_sound_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/music_normal.png.tres" id="6_music_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/music_hover.png.tres" id="7_music_h"]
-[ext_resource type="Texture2D" uid="uid://x6qjfxs3v21j" path="res://sprites/menu/upgrades/weapons.png" id="9_weapons_bg"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_normal.png.tres" id="10_menu_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_hover.png.tres" id="11_menu_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_down.png.tres" id="12_menu_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_normal.png.tres" id="13_stats_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_hover.png.tres" id="14_stats_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_down.png.tres" id="15_stats_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_normal.png.tres" id="16_diff_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_hover.png.tres" id="17_diff_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_down.png.tres" id="18_diff_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_normal.png.tres" id="19_play_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_hover.png.tres" id="20_play_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_down.png.tres" id="21_play_d"]
-[ext_resource type="Texture2D" uid="uid://djbtw8phbi11y" path="res://sprites/menu/upgrades/difficulty.png" id="22_diff_bg"]
-[ext_resource type="Texture2D" uid="uid://b351wdvug8664" path="res://sprites/menu/upgrades/stats.png" id="23_stats_bg"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_normal.png.tres" id="24_easy_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_hover.png.tres" id="25_easy_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_down.png.tres" id="26_easy_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_normal.png.tres" id="27_med_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_hover.png.tres" id="28_med_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_down.png.tres" id="29_med_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_normal.png.tres" id="30_hard_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_hover.png.tres" id="31_hard_h"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_down.png.tres" id="32_hard_d"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="33_x_n"]
-[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="34_x_h"]
+[ext_resource type="PackedScene" uid="uid://k6a7bpop75gx" path="res://scenes/sound_btn.tscn" id="3_soundbtn"]
+[ext_resource type="Texture2D" uid="uid://x6qjfxs3v21j" path="res://sprites/menu/upgrades/weapons.png" id="4_weapons_bg"]
+[ext_resource type="Texture2D" uid="uid://djbtw8phbi11y" path="res://sprites/menu/upgrades/difficulty.png" id="5_diff_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/sound_on.png.tres" id="5_o85pm"]
+[ext_resource type="Texture2D" uid="uid://b351wdvug8664" path="res://sprites/menu/upgrades/stats.png" id="6_stats_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/sound_off.png.tres" id="7_sound_off"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/music_on.png.tres" id="7_yxxwd"]
+[ext_resource type="Texture2D" path="res://sprites/menu/title/parts/buttons/music_off.png.tres" id="10_music_off"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_normal.png.tres" id="13_menu_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_hover.png.tres" id="14_menu_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/menu_down.png.tres" id="15_menu_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_normal.png.tres" id="16_stats_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_hover.png.tres" id="17_stats_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/stats_down.png.tres" id="18_stats_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_normal.png.tres" id="19_diff_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_hover.png.tres" id="20_diff_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/difficulty_down.png.tres" id="21_diff_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_normal.png.tres" id="22_play_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_hover.png.tres" id="23_play_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/play_down.png.tres" id="24_play_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_normal.png.tres" id="25_easy_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_hover.png.tres" id="26_easy_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/easy_down.png.tres" id="27_easy_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_normal.png.tres" id="28_med_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_hover.png.tres" id="29_med_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/medium_down.png.tres" id="30_med_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_normal.png.tres" id="31_hard_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_hover.png.tres" id="32_hard_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_down.png.tres" id="33_hard_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="34_x_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="35_x_h"]
 
-[node name="Upgrades" type="Control" unique_id=471314442]
+[node name="Upgrades" type="Control" unique_id=243739076]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -42,7 +43,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_up")
 
-[node name="BG" type="TextureRect" parent="." unique_id=1713430224]
+[node name="BG" type="TextureRect" parent="." unique_id=804114404]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,140 +52,127 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_bg")
 
-[node name="TopBar" type="HBoxContainer" parent="." unique_id=74733645]
+[node name="Design" type="Control" parent="." unique_id=1439482173]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -300.0
+offset_right = 300.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="Design" unique_id=1349523785]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 24.0
+offset_left = 20.0
 offset_top = 20.0
-offset_right = -24.0
-offset_bottom = 76.0
+offset_right = -20.0
+offset_bottom = 90.0
 grow_horizontal = 2
-theme_override_constants/separation = 12
+grow_vertical = 2
+theme_override_constants/separation = 14
 
-[node name="SoundBtn" type="TextureButton" parent="TopBar" unique_id=874131292]
-custom_minimum_size = Vector2(48, 50)
-layout_mode = 2
-toggle_mode = true
-texture_normal = ExtResource("3_sound_n")
-texture_pressed = ExtResource("4_sound_h")
-texture_hover = ExtResource("4_sound_h")
-stretch_mode = 1
-
-[node name="MusicBtn" type="TextureButton" parent="TopBar" unique_id=1889584151]
-custom_minimum_size = Vector2(48, 52)
-layout_mode = 2
-toggle_mode = true
-texture_normal = ExtResource("6_music_n")
-texture_pressed = ExtResource("7_music_h")
-texture_hover = ExtResource("7_music_h")
-stretch_mode = 1
-
-[node name="Spacer" type="Control" parent="TopBar" unique_id=1061643447]
+[node name="MoneyLabel" type="Label" parent="Design/TopBar" unique_id=1560968416]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="MoneyLabel" type="Label" parent="TopBar" unique_id=230972959]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.2, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(1, 0.71, 0, 1)
+theme_override_font_sizes/font_size = 30
 text = "$0"
+horizontal_alignment = 2
 
-[node name="WeaponsCenter" type="CenterContainer" parent="." unique_id=1480166976]
+[node name="SoundBtn" parent="Design/TopBar" unique_id=1736011596 instance=ExtResource("3_soundbtn")]
+layout_mode = 2
+texture_normal = ExtResource("7_sound_off")
+texture_pressed = ExtResource("5_o85pm")
+
+[node name="MusicBtn" parent="Design/TopBar" unique_id=2093840584 instance=ExtResource("3_soundbtn")]
+layout_mode = 2
+texture_normal = ExtResource("10_music_off")
+texture_pressed = ExtResource("7_yxxwd")
+
+[node name="WeaponsPanel" type="Control" parent="Design" unique_id=739305059]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -470.0
-offset_top = -240.0
-offset_right = 470.0
-offset_bottom = 240.0
+offset_left = -290.0
+offset_top = -108.0
+offset_right = 291.0
+offset_bottom = 201.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WeaponsPanel" type="Control" parent="WeaponsCenter" unique_id=1317590515]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="WeaponsBg" type="TextureRect" parent="WeaponsCenter/WeaponsPanel" unique_id=1476166150]
+[node name="WeaponsBg" type="TextureRect" parent="Design/WeaponsPanel" unique_id=608632033]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("9_weapons_bg")
+texture = ExtResource("4_weapons_bg")
 stretch_mode = 5
 
-[node name="WeaponGrid" type="GridContainer" parent="WeaponsCenter/WeaponsPanel" unique_id=2014784009]
-visible = false
+[node name="Cards" type="Control" parent="Design/WeaponsPanel" unique_id=177047145]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -200.0
-offset_right = 390.0
-offset_bottom = 200.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 12
-
-[node name="BottomBar" type="HBoxContainer" parent="." unique_id=616037252]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -764.0
-offset_top = -96.0
-offset_right = -16.0
-offset_bottom = -20.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_constants/separation = 14
-alignment = 2
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="MenuBtn" type="TextureButton" parent="BottomBar" unique_id=424690133]
-custom_minimum_size = Vector2(168, 74)
-layout_mode = 2
-texture_normal = ExtResource("10_menu_n")
-texture_pressed = ExtResource("12_menu_d")
-texture_hover = ExtResource("11_menu_h")
-stretch_mode = 3
+[node name="MenuBtn" type="TextureButton" parent="Design" unique_id=254623737]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 522.0
+offset_right = 149.0
+offset_bottom = 577.0
+texture_normal = ExtResource("13_menu_n")
+texture_pressed = ExtResource("15_menu_d")
+texture_hover = ExtResource("14_menu_h")
+stretch_mode = 0
 
-[node name="StatsBtn" type="TextureButton" parent="BottomBar" unique_id=1517311413]
-custom_minimum_size = Vector2(174, 74)
-layout_mode = 2
-texture_normal = ExtResource("13_stats_n")
-texture_pressed = ExtResource("15_stats_d")
-texture_hover = ExtResource("14_stats_h")
-stretch_mode = 3
+[node name="StatsBtn" type="TextureButton" parent="Design" unique_id=1046203953]
+layout_mode = 0
+offset_left = 156.0
+offset_top = 522.0
+offset_right = 285.0
+offset_bottom = 577.0
+texture_normal = ExtResource("16_stats_n")
+texture_pressed = ExtResource("18_stats_d")
+texture_hover = ExtResource("17_stats_h")
+stretch_mode = 0
 
-[node name="DifficultyBtn" type="TextureButton" parent="BottomBar" unique_id=640725461]
-custom_minimum_size = Vector2(211, 73)
-layout_mode = 2
-texture_normal = ExtResource("16_diff_n")
-texture_pressed = ExtResource("18_diff_d")
-texture_hover = ExtResource("17_diff_h")
-stretch_mode = 3
+[node name="DifficultyBtn" type="TextureButton" parent="Design" unique_id=666737595]
+layout_mode = 0
+offset_left = 294.0
+offset_top = 522.0
+offset_right = 450.0
+offset_bottom = 576.0
+texture_normal = ExtResource("19_diff_n")
+texture_pressed = ExtResource("21_diff_d")
+texture_hover = ExtResource("20_diff_h")
+stretch_mode = 0
 
-[node name="PlayBtn" type="TextureButton" parent="BottomBar" unique_id=1457892798]
-custom_minimum_size = Vector2(153, 76)
-layout_mode = 2
-texture_normal = ExtResource("19_play_n")
-texture_pressed = ExtResource("21_play_d")
-texture_hover = ExtResource("20_play_h")
-stretch_mode = 3
+[node name="PlayBtn" type="TextureButton" parent="Design" unique_id=2091672238]
+layout_mode = 0
+offset_left = 458.0
+offset_top = 521.0
+offset_right = 571.0
+offset_bottom = 577.0
+texture_normal = ExtResource("22_play_n")
+texture_pressed = ExtResource("24_play_d")
+texture_hover = ExtResource("23_play_h")
+stretch_mode = 0
 
-[node name="DifficultyLayer" type="Control" parent="." unique_id=88868722]
+[node name="DifficultyLayer" type="Control" parent="." unique_id=1325624250]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -193,17 +181,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="DifficultyLayer" unique_id=893506922]
+[node name="Dim" type="ColorRect" parent="DifficultyLayer" unique_id=954798733]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 color = Color(0, 0, 0, 0.6)
 
-[node name="Center" type="CenterContainer" parent="DifficultyLayer" unique_id=323732285]
+[node name="Center" type="CenterContainer" parent="DifficultyLayer" unique_id=2109853883]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -211,44 +198,36 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Control" parent="DifficultyLayer/Center" unique_id=423532091]
-custom_minimum_size = Vector2(540, 500)
+[node name="Panel" type="Control" parent="DifficultyLayer/Center" unique_id=1378262049]
+custom_minimum_size = Vector2(273, 277)
 layout_mode = 2
 
-[node name="DiffBg" type="TextureRect" parent="DifficultyLayer/Center/Panel" unique_id=1325267792]
+[node name="DiffBg" type="TextureRect" parent="DifficultyLayer/Center/Panel" unique_id=628169982]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -192.0
-offset_top = -192.0
-offset_right = 192.0
-offset_bottom = 192.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("22_diff_bg")
+texture = ExtResource("5_diff_bg")
 stretch_mode = 5
 
-[node name="CloseBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel" unique_id=2020541429]
-custom_minimum_size = Vector2(70, 70)
+[node name="CloseBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel" unique_id=2027871759]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 2.0
+offset_left = -25.0
 offset_top = -14.0
-offset_right = 76.0
-offset_bottom = 60.0
+offset_right = 26.0
+offset_bottom = 37.0
 grow_horizontal = 0
-grow_vertical = 0
-texture_normal = ExtResource("33_x_n")
-texture_pressed = ExtResource("34_x_h")
-texture_hover = ExtResource("34_x_h")
-stretch_mode = 1
+texture_normal = ExtResource("34_x_n")
+texture_pressed = ExtResource("35_x_h")
+texture_hover = ExtResource("35_x_h")
+stretch_mode = 0
 
-[node name="ButtonsV" type="VBoxContainer" parent="DifficultyLayer/Center/Panel" unique_id=1434830735]
+[node name="ButtonsV" type="VBoxContainer" parent="DifficultyLayer/Center/Panel" unique_id=633172965]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -256,35 +235,38 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -104.5
-offset_top = -49.5
+offset_top = -92.5
 offset_right = 104.5
-offset_bottom = 143.5
+offset_bottom = 92.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
-[node name="EasyBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1302771828]
+[node name="EasyBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1140556172]
+custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
-texture_normal = ExtResource("24_easy_n")
-texture_pressed = ExtResource("26_easy_d")
-texture_hover = ExtResource("25_easy_h")
-stretch_mode = 3
+texture_normal = ExtResource("25_easy_n")
+texture_pressed = ExtResource("27_easy_d")
+texture_hover = ExtResource("26_easy_h")
+stretch_mode = 0
 
-[node name="MediumBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=782237720]
+[node name="MediumBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=535756038]
+custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
-texture_normal = ExtResource("27_med_n")
-texture_pressed = ExtResource("29_med_d")
-texture_hover = ExtResource("28_med_h")
-stretch_mode = 3
+texture_normal = ExtResource("28_med_n")
+texture_pressed = ExtResource("30_med_d")
+texture_hover = ExtResource("29_med_h")
+stretch_mode = 0
 
-[node name="HardBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=804520695]
+[node name="HardBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1225115028]
+custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
-texture_normal = ExtResource("30_hard_n")
-texture_pressed = ExtResource("32_hard_d")
-texture_hover = ExtResource("31_hard_h")
-stretch_mode = 3
+texture_normal = ExtResource("31_hard_n")
+texture_pressed = ExtResource("33_hard_d")
+texture_hover = ExtResource("32_hard_h")
+stretch_mode = 0
 
-[node name="StatsLayer" type="Control" parent="." unique_id=1253417378]
+[node name="StatsLayer" type="Control" parent="." unique_id=1801355431]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -293,17 +275,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim2" type="ColorRect" parent="StatsLayer" unique_id=14812762]
+[node name="Dim2" type="ColorRect" parent="StatsLayer" unique_id=7661861]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 color = Color(0, 0, 0, 0.6)
 
-[node name="Center2" type="CenterContainer" parent="StatsLayer" unique_id=478796737]
+[node name="Center2" type="CenterContainer" parent="StatsLayer" unique_id=1052614156]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -311,43 +292,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel2" type="Control" parent="StatsLayer/Center2" unique_id=1459921846]
-custom_minimum_size = Vector2(680, 520)
+[node name="Panel2" type="Control" parent="StatsLayer/Center2" unique_id=2033981611]
+custom_minimum_size = Vector2(514, 573)
 layout_mode = 2
 
-[node name="StatsBg" type="TextureRect" parent="StatsLayer/Center2/Panel2" unique_id=792326293]
+[node name="StatsBg" type="TextureRect" parent="StatsLayer/Center2/Panel2" unique_id=949717302]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("23_stats_bg")
+texture = ExtResource("6_stats_bg")
 stretch_mode = 5
 
-[node name="CloseBtn2" type="TextureButton" parent="StatsLayer/Center2/Panel2" unique_id=1060109763]
-custom_minimum_size = Vector2(70, 70)
+[node name="CloseBtn2" type="TextureButton" parent="StatsLayer/Center2/Panel2" unique_id=49475554]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 2.0
+offset_left = -25.0
 offset_top = -14.0
-offset_right = 76.0
-offset_bottom = 60.0
+offset_right = 26.0
+offset_bottom = 37.0
 grow_horizontal = 0
-grow_vertical = 0
-texture_normal = ExtResource("33_x_n")
-texture_pressed = ExtResource("34_x_h")
-texture_hover = ExtResource("34_x_h")
-stretch_mode = 1
+texture_normal = ExtResource("34_x_n")
+texture_pressed = ExtResource("35_x_h")
+texture_hover = ExtResource("35_x_h")
+stretch_mode = 0
 
-[connection signal="pressed" from="TopBar/SoundBtn" to="." method="_on_sound_toggled"]
-[connection signal="pressed" from="TopBar/MusicBtn" to="." method="_on_music_toggled"]
-[connection signal="pressed" from="BottomBar/MenuBtn" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="BottomBar/StatsBtn" to="." method="_on_stats_pressed"]
-[connection signal="pressed" from="BottomBar/DifficultyBtn" to="." method="_on_difficulty_pressed"]
-[connection signal="pressed" from="BottomBar/PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Design/TopBar/SoundBtn" to="." method="_on_sound_toggled"]
+[connection signal="pressed" from="Design/TopBar/MusicBtn" to="." method="_on_music_toggled"]
+[connection signal="pressed" from="Design/MenuBtn" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Design/StatsBtn" to="." method="_on_stats_pressed"]
+[connection signal="pressed" from="Design/DifficultyBtn" to="." method="_on_difficulty_pressed"]
+[connection signal="pressed" from="Design/PlayBtn" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/CloseBtn" to="." method="_on_difficulty_close_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/EasyBtn" to="." method="_on_difficulty_easy_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/MediumBtn" to="." method="_on_difficulty_medium_pressed"]
