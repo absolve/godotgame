@@ -1,0 +1,210 @@
+[gd_scene format=3 uid="uid://dth0uqemnxtgr"]
+
+[ext_resource type="Script" uid="uid://d0gy50twq4nx0" path="res://scripts/ui/weapon_upgrade_alert.gd" id="1_alert"]
+[ext_resource type="Texture2D" uid="uid://b4wm0lx48rb8x" path="res://sprites/menu/upgrades/upgrade.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://b15iv5af5s13u" path="res://fonts/gunplay.ttf" id="3_font"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="4_x_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="5_x_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/upgrade_normal.png.tres" id="9_up_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/upgrade_hover.png.tres" id="10_up_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/upgrade_down.png.tres" id="11_up_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/refill_normal.png.tres" id="12_ref_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/refill_hover.png.tres" id="13_ref_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/refill_down.png.tres" id="14_ref_d"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/off.png.tres" id="15_pip_off"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/ammo_big.png.tres" id="16_ammo_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/ammo_bar.png.tres" id="17_ammo_bar"]
+
+[node name="WeaponAlert" type="Control" unique_id=1343763675]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_alert")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=41266853]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=519017098]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="Center" unique_id=2100743295]
+custom_minimum_size = Vector2(451, 296)
+layout_mode = 2
+
+[node name="Bg" type="TextureRect" parent="Center/Panel" unique_id=17111929]
+layout_mode = 0
+offset_right = 451.0
+offset_bottom = 296.0
+texture = ExtResource("2_bg")
+
+[node name="CloseBtn" type="TextureButton" parent="Center/Panel" unique_id=592851823]
+layout_mode = 0
+offset_left = 386.0
+offset_top = 14.0
+offset_right = 437.0
+offset_bottom = 65.0
+texture_normal = ExtResource("4_x_n")
+texture_pressed = ExtResource("5_x_h")
+texture_hover = ExtResource("5_x_h")
+
+[node name="Title" type="Label" parent="Center/Panel" unique_id=1164075428]
+layout_mode = 0
+offset_top = 14.0
+offset_right = 451.0
+offset_bottom = 46.0
+theme_override_colors/font_color = Color(0.627451, 0.658824, 0.0392157, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Desc" type="Label" parent="Center/Panel" unique_id=1222633582]
+layout_mode = 0
+offset_left = 156.0
+offset_top = 88.0
+offset_right = 386.0
+offset_bottom = 170.0
+theme_override_colors/font_color = Color(1, 0.713726, 0, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 18
+
+[node name="Icon" type="TextureRect" parent="Center/Panel" unique_id=1191723029]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 88.0
+offset_right = 116.0
+offset_bottom = 178.0
+stretch_mode = 5
+
+[node name="Pip0" type="TextureRect" parent="Center/Panel" unique_id=1855691740]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 165.0
+offset_right = 143.0
+offset_bottom = 179.0
+texture = ExtResource("15_pip_off")
+stretch_mode = 4
+
+[node name="Pip1" type="TextureRect" parent="Center/Panel" unique_id=888232198]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 146.0
+offset_right = 143.0
+offset_bottom = 160.0
+texture = ExtResource("15_pip_off")
+stretch_mode = 4
+
+[node name="Pip2" type="TextureRect" parent="Center/Panel" unique_id=1967024666]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 127.0
+offset_right = 143.0
+offset_bottom = 141.0
+texture = ExtResource("15_pip_off")
+stretch_mode = 4
+
+[node name="Pip3" type="TextureRect" parent="Center/Panel" unique_id=1541203201]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 108.0
+offset_right = 143.0
+offset_bottom = 122.0
+texture = ExtResource("15_pip_off")
+stretch_mode = 4
+
+[node name="Pip4" type="TextureRect" parent="Center/Panel" unique_id=212227084]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 89.0
+offset_right = 143.0
+offset_bottom = 103.0
+texture = ExtResource("15_pip_off")
+stretch_mode = 4
+
+[node name="Price" type="Label" parent="Center/Panel" unique_id=1972502106]
+layout_mode = 0
+offset_top = 188.0
+offset_right = 141.0
+offset_bottom = 212.0
+theme_override_colors/font_color = Color(0.627451, 0.658824, 0.0392157, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BuyBtn" type="TextureButton" parent="Center/Panel" unique_id=794237450]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 218.0
+offset_right = 149.0
+offset_bottom = 273.0
+texture_normal = ExtResource("9_up_n")
+texture_pressed = ExtResource("11_up_d")
+texture_hover = ExtResource("10_up_h")
+
+[node name="RefillBtn" type="TextureButton" parent="Center/Panel" unique_id=1963776832]
+layout_mode = 0
+offset_left = 308.0
+offset_top = 218.0
+offset_right = 431.0
+offset_bottom = 273.0
+texture_normal = ExtResource("12_ref_n")
+texture_pressed = ExtResource("14_ref_d")
+texture_hover = ExtResource("13_ref_h")
+
+[node name="AmmoTitle" type="Label" parent="Center/Panel" unique_id=1032909597]
+layout_mode = 0
+offset_left = 298.0
+offset_top = 74.0
+offset_right = 449.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(0.627451, 0.658824, 0.0392157, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 20
+text = "Ammo"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmmoPrice" type="Label" parent="Center/Panel" unique_id=318111421]
+layout_mode = 0
+offset_left = 298.0
+offset_top = 188.0
+offset_right = 449.0
+offset_bottom = 212.0
+theme_override_colors/font_color = Color(0.627451, 0.658824, 0.0392157, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmmoBg" type="TextureRect" parent="Center/Panel" unique_id=1582105149]
+layout_mode = 0
+offset_left = 362.0
+offset_top = 105.0
+offset_right = 384.0
+offset_bottom = 176.0
+texture = ExtResource("16_ammo_bg")
+stretch_mode = 4
+
+[node name="AmmoBar" type="TextureRect" parent="Center/Panel" unique_id=1863294921]
+layout_mode = 0
+offset_left = 365.0
+offset_top = 108.0
+offset_right = 381.0
+offset_bottom = 173.0
+texture = ExtResource("17_ammo_bar")

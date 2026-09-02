@@ -94,6 +94,19 @@ func _process(delta: float) -> void:
 			refill_held.emit(weapon_key)
 
 
+# ---------- 闪烁提示（对应 H5 flashElement） ----------
+func flash() -> void:
+	FlashFx.flash(self)        # 整卡：购买/升级成功
+
+
+func flash_price() -> void:
+	FlashFx.flash(_price)      # 价签：钱不够
+
+
+func flash_ammo() -> void:
+	FlashFx.flash(_ammo_bar)   # 弹药条：补弹成功
+
+
 static func _format_money(v: int) -> String:
 	if v >= 1000000000:
 		return "$%.3fb" % (v / 1000000000.0)

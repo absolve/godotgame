@@ -37,8 +37,8 @@ const TAB_WP: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons
 const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres")
 
 @onready var _money_label: Label = $Design/TopBar/MoneyLabel
-@onready var _sound_btn: TextureButton = $Design/TopBar/SoundBtn
-@onready var _music_btn: TextureButton = $Design/TopBar/MusicBtn
+@onready var _sound_btn: TextureButton = $Design/SoundBtn
+@onready var _music_btn: TextureButton = $Design/MusicBtn
 @onready var _cards: Control = $Design/WeaponsPanel/Cards
 @onready var _perf_cards: Control = $Design/PerformancePanel/PerfCards
 @onready var _tab_perf: TextureButton = $Design/TabPerformance
@@ -47,6 +47,7 @@ const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapo
 @onready var _perf_panel: Control = $Design/PerformancePanel
 @onready var _difficulty_layer: Control = $DifficultyLayer
 @onready var _stats_layer: Control = $StatsLayer
+@onready var _weapon_alert: Control = $WeaponAlert
 
 var _cards_by_key: Dictionary = {}   # key -> WeaponCard 实例
 var _stats_by_key: Dictionary = {}   # key -> StatCard 实例
@@ -71,6 +72,8 @@ func _ready() -> void:
 	_refresh_music_btn(bool(Game.current.get("game", {}).get("music", true)))
 	_refresh()
 	Game.money_changed.connect(_on_money_changed)
+	_weapon_alert.purchased.connect(_on_weapon_alert_purchased)
+	_weapon_alert.failed.connect(_on_weapon_alert_failed)
 
 
 # ---------- Tab 切换 ----------
@@ -115,12 +118,19 @@ func _on_stat_clicked(key: String) -> void:
 	if level >= 5:
 		return
 	var price: int = int(Settings.PRICES[key][level])
+	var stat_card: Control = _stats_by_key.get(key)
 	if Game.spend(price):
 		Game.set_performance_level(key, level + 1)
 		Game.save()
 		Audio.play_sfx("buy.mp3")
+		FlashFx.flash(_money_label)
+		if stat_card != null:
+			stat_card.increase()  # 闪烁 + 刷新仪表盘贴图（对应 H5 Gauge.increase）
 	else:
 		Audio.play_sfx("not_available.mp3")
+		FlashFx.flash(_money_label)
+		if stat_card != null:
+			stat_card.flash_price()  # 闪价签（对应 H5 a(this[key+"Price"])）
 	_refresh()
 
 
@@ -136,27 +146,30 @@ func _populate_cards() -> void:
 		_cards_by_key[key] = card
 
 
-# ---------- 武器卡：单击=购买/升级 ----------
+# ---------- 武器卡：单击=打开 购买/升级 弹窗（对应 H5 weaponClick→BuyUpgradeAlert） ----------
 func _on_card_clicked(key: String) -> void:
-	var level: int = Game.get_weapon_level(key)
-	if level >= 5:
-		return
-	var price: int
-	if level < 0:
-		price = int(Settings.PRICES[key][0])
-	else:
-		price = int(Settings.PRICES[key][level + 1])
-	if Game.spend(price):
-		if level < 0:
-			Game.set_weapon_level(key, 0)
-			Game.set_weapon_ammo(key, int(Settings.AMMO_LIMITS.get(key, 0)))
-		else:
-			Game.set_weapon_level(key, level + 1)
-		Game.save()
-		Audio.play_sfx("buy.mp3")
-	else:
-		Audio.play_sfx("not_available.mp3")
+	_weapon_alert.open(key)
+
+
+# ---------- 弹窗购买结果：金额与对应武器卡闪烁（对应 H5 weaponUpgrade/ammoBuy） ----------
+func _on_weapon_alert_purchased(key: String, is_refill: bool) -> void:
 	_refresh()
+	FlashFx.flash(_money_label)
+	var card = _cards_by_key.get(key)
+	if card == null:
+		return
+	if is_refill:
+		card.flash_ammo()   # 补弹成功：闪卡的弹药条
+	else:
+		card.flash()        # 购买/升级成功：闪整张武器卡
+
+
+func _on_weapon_alert_failed(key: String, is_refill: bool) -> void:
+	FlashFx.flash(_money_label)
+	if not is_refill:
+		var card = _cards_by_key.get(key)
+		if card != null:
+			card.flash_price()  # 购买失败：闪卡的价签
 
 
 # ---------- 武器卡：长按=补弹（仅拥有且非 minigun） ----------
@@ -171,8 +184,12 @@ func _on_card_refill(key: String) -> void:
 		Game.set_weapon_ammo(key, ammo + amount)
 		Game.save()
 		Audio.play_sfx("buy.mp3")
+		FlashFx.flash(_money_label)
+		if _cards_by_key.has(key):
+			_cards_by_key[key].flash_ammo()
 	else:
 		Audio.play_sfx("not_available.mp3")
+		FlashFx.flash(_money_label)
 	_refresh()
 
 

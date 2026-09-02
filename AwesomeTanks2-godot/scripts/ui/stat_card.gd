@@ -51,6 +51,8 @@ func _on_down() -> void:
 func _on_up() -> void:
 	clicked.emit(stat_key)
 
+func flash_price():
+	FlashFx.flash(_price)
 
 static func _format_money(v: int) -> String:
 	if v >= 1000000000:

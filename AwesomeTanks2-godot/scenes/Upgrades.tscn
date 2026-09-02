@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/tab_performance.png.tres" id="36_tab_perf"]
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres" id="39_tab_wp_a"]
 [ext_resource type="Texture2D" uid="uid://ybowjwgs20hy" path="res://sprites/menu/upgrades/performance.png" id="40_perf_bg"]
+[ext_resource type="PackedScene" uid="uid://dth0uqemnxtgr" path="res://scenes/weapon_upgrade_alert.tscn" id="41_alert"]
 
 [node name="Upgrades" type="Control" unique_id=243739076]
 layout_mode = 3
@@ -72,14 +73,15 @@ offset_right = 300.0
 offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="TopBar" type="HBoxContainer" parent="Design" unique_id=1349523785]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 432.0
+offset_left = 288.0
 offset_top = 37.0
-offset_right = 7.0
+offset_right = -137.0
 offset_bottom = 107.0
 grow_horizontal = 2
 theme_override_constants/separation = 14
@@ -93,13 +95,21 @@ theme_override_font_sizes/font_size = 30
 text = "$0"
 horizontal_alignment = 2
 
-[node name="SoundBtn" parent="Design/TopBar" unique_id=1736011596 instance=ExtResource("3_soundbtn")]
-layout_mode = 2
+[node name="SoundBtn" parent="Design" unique_id=1736011596 instance=ExtResource("3_soundbtn")]
+layout_mode = 0
+offset_left = 497.0
+offset_top = 45.0
+offset_right = 553.0
+offset_bottom = 95.0
 texture_normal = ExtResource("7_sound_off")
 texture_pressed = ExtResource("5_o85pm")
 
-[node name="MusicBtn" parent="Design/TopBar" unique_id=2093840584 instance=ExtResource("3_soundbtn")]
-layout_mode = 2
+[node name="MusicBtn" parent="Design" unique_id=2093840584 instance=ExtResource("3_soundbtn")]
+layout_mode = 0
+offset_left = 559.0
+offset_top = 45.0
+offset_right = 615.0
+offset_bottom = 95.0
 texture_normal = ExtResource("10_music_off")
 texture_pressed = ExtResource("7_yxxwd")
 
@@ -137,20 +147,20 @@ grow_vertical = 2
 
 [node name="TabPerformance" type="TextureButton" parent="Design" unique_id=1796235758]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 131.0
-offset_right = 298.0
-offset_bottom = 184.0
+offset_left = 9.0
+offset_top = 139.0
+offset_right = 300.0
+offset_bottom = 192.0
 texture_normal = ExtResource("36_tab_perf")
 texture_pressed = ExtResource("36_tab_perf")
 texture_hover = ExtResource("36_tab_perf")
 
 [node name="TabWeapons" type="TextureButton" parent="Design" unique_id=810950583]
 layout_mode = 0
-offset_left = 298.0
-offset_top = 131.0
-offset_right = 588.0
-offset_bottom = 184.0
+offset_left = 300.0
+offset_top = 139.0
+offset_right = 590.0
+offset_bottom = 192.0
 texture_normal = ExtResource("39_tab_wp_a")
 texture_pressed = ExtResource("39_tab_wp_a")
 texture_hover = ExtResource("39_tab_wp_a")
@@ -191,9 +201,9 @@ grow_vertical = 2
 [node name="MenuBtn" type="TextureButton" parent="Design" unique_id=254623737]
 layout_mode = 0
 offset_left = 25.0
-offset_top = 522.0
+offset_top = 523.0
 offset_right = 149.0
-offset_bottom = 577.0
+offset_bottom = 578.0
 texture_normal = ExtResource("13_menu_n")
 texture_pressed = ExtResource("15_menu_d")
 texture_hover = ExtResource("14_menu_h")
@@ -202,9 +212,9 @@ stretch_mode = 0
 [node name="StatsBtn" type="TextureButton" parent="Design" unique_id=1046203953]
 layout_mode = 0
 offset_left = 156.0
-offset_top = 522.0
+offset_top = 523.0
 offset_right = 285.0
-offset_bottom = 577.0
+offset_bottom = 578.0
 texture_normal = ExtResource("16_stats_n")
 texture_pressed = ExtResource("18_stats_d")
 texture_hover = ExtResource("17_stats_h")
@@ -213,9 +223,9 @@ stretch_mode = 0
 [node name="DifficultyBtn" type="TextureButton" parent="Design" unique_id=666737595]
 layout_mode = 0
 offset_left = 294.0
-offset_top = 522.0
+offset_top = 523.0
 offset_right = 450.0
-offset_bottom = 576.0
+offset_bottom = 577.0
 texture_normal = ExtResource("19_diff_n")
 texture_pressed = ExtResource("21_diff_d")
 texture_hover = ExtResource("20_diff_h")
@@ -224,15 +234,15 @@ stretch_mode = 0
 [node name="PlayBtn" type="TextureButton" parent="Design" unique_id=2091672238]
 layout_mode = 0
 offset_left = 458.0
-offset_top = 521.0
+offset_top = 522.0
 offset_right = 571.0
-offset_bottom = 577.0
+offset_bottom = 578.0
 texture_normal = ExtResource("22_play_n")
 texture_pressed = ExtResource("24_play_d")
 texture_hover = ExtResource("23_play_h")
 stretch_mode = 0
 
-[node name="EditorBtn" type="Button" parent="Design"]
+[node name="EditorBtn" type="Button" parent="Design" unique_id=1923636304]
 layout_mode = 0
 offset_left = 580.0
 offset_top = 528.0
@@ -382,8 +392,11 @@ texture_pressed = ExtResource("35_x_h")
 texture_hover = ExtResource("35_x_h")
 stretch_mode = 0
 
-[connection signal="pressed" from="Design/TopBar/SoundBtn" to="." method="_on_sound_toggled"]
-[connection signal="pressed" from="Design/TopBar/MusicBtn" to="." method="_on_music_toggled"]
+[node name="WeaponAlert" parent="." unique_id=2015145372 instance=ExtResource("41_alert")]
+layout_mode = 1
+
+[connection signal="pressed" from="Design/SoundBtn" to="." method="_on_sound_toggled"]
+[connection signal="pressed" from="Design/MusicBtn" to="." method="_on_music_toggled"]
 [connection signal="pressed" from="Design/TabPerformance" to="." method="_on_performance_tab_pressed"]
 [connection signal="pressed" from="Design/TabWeapons" to="." method="_on_weapons_tab_pressed"]
 [connection signal="pressed" from="Design/MenuBtn" to="." method="_on_menu_pressed"]
