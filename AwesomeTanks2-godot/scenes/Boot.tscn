@@ -82,6 +82,7 @@ anchor_bottom = 0.5
 offset_top = -30.0
 offset_bottom = 30.0
 grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("4_ammo")
 
 [node name="BarFrame" type="TextureRect" parent="ProgressHolder" unique_id=439524047]

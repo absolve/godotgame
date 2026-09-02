@@ -2,7 +2,7 @@ extends Control
 ## Upgrades —— 升级商店主菜单（对应 H5 MenuUpgrades）
 ## 双 Tab：Weapons（武器购买/升级/补弹）、Performance（属性升级）
 
-const FONT: Font = preload("res://fonts/gunplay.ttf")
+#const FONT: Font = preload("res://fonts/gunplay.ttf")
 const CARD_SCENE: PackedScene = preload("res://scenes/weapon_card.tscn")
 const STAT_CARD_SCENE: PackedScene = preload("res://scenes/stat_card.tscn")
 
@@ -54,7 +54,7 @@ var _stats_by_key: Dictionary = {}   # key -> StatCard 实例
 
 func _ready() -> void:
 	Audio.play_music("music_menu.mp3")
-	_money_label.add_theme_font_override("font", FONT)
+	#_money_label.add_theme_font_override("font", FONT)
 	_populate_cards()
 	_populate_stat_cards()
 	# 默认显示武器 Tab

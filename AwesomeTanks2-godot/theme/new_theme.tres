@@ -1,0 +1,6 @@
+[gd_resource type="Theme" format=3 uid="uid://b8sqbd1lp03rs"]
+
+[ext_resource type="FontFile" uid="uid://b15iv5af5s13u" path="res://fonts/gunplay.ttf" id="1_f7io8"]
+
+[resource]
+default_font = ExtResource("1_f7io8")

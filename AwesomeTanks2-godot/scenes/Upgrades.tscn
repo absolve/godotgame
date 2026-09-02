@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://w5b106i6sm80"]
 
 [ext_resource type="Script" uid="uid://i8eqppyb5l0a" path="res://scripts/menu/upgrades.gd" id="1_up"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="1_yxxwd"]
 [ext_resource type="Texture2D" uid="uid://cxjrc4oq0y3lj" path="res://sprites/menu/upgrades/background.png" id="2_bg"]
 [ext_resource type="PackedScene" uid="uid://k6a7bpop75gx" path="res://scenes/sound_btn.tscn" id="3_soundbtn"]
 [ext_resource type="Texture2D" uid="uid://x6qjfxs3v21j" path="res://sprites/menu/upgrades/weapons.png" id="4_weapons_bg"]
@@ -44,6 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_yxxwd")
 script = ExtResource("1_up")
 
 [node name="BG" type="TextureRect" parent="." unique_id=804114404]
@@ -51,6 +53,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -15.0
+offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_bg")
@@ -73,13 +77,13 @@ grow_vertical = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 90.0
+offset_left = 432.0
+offset_top = 37.0
+offset_right = 7.0
+offset_bottom = 107.0
 grow_horizontal = 2
-grow_vertical = 2
 theme_override_constants/separation = 14
+metadata/_edit_group_ = true
 
 [node name="MoneyLabel" type="Label" parent="Design/TopBar" unique_id=1560968416]
 layout_mode = 2
@@ -274,7 +278,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_diff_bg")
-stretch_mode = 5
+stretch_mode = 2
 
 [node name="CloseBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel" unique_id=2027871759]
 layout_mode = 1
@@ -293,42 +297,35 @@ stretch_mode = 0
 
 [node name="ButtonsV" type="VBoxContainer" parent="DifficultyLayer/Center/Panel" unique_id=633172965]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 offset_left = -104.5
-offset_top = -92.5
+offset_top = -185.0
 offset_right = 104.5
-offset_bottom = 92.5
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 theme_override_constants/separation = 10
 
 [node name="EasyBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1140556172]
-custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
 texture_normal = ExtResource("25_easy_n")
 texture_pressed = ExtResource("27_easy_d")
 texture_hover = ExtResource("26_easy_h")
-stretch_mode = 0
 
 [node name="MediumBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=535756038]
-custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
 texture_normal = ExtResource("28_med_n")
 texture_pressed = ExtResource("30_med_d")
 texture_hover = ExtResource("29_med_h")
-stretch_mode = 0
 
 [node name="HardBtn" type="TextureButton" parent="DifficultyLayer/Center/Panel/ButtonsV" unique_id=1225115028]
-custom_minimum_size = Vector2(209, 55)
 layout_mode = 2
 texture_normal = ExtResource("31_hard_n")
 texture_pressed = ExtResource("33_hard_d")
 texture_hover = ExtResource("32_hard_h")
-stretch_mode = 0
 
 [node name="StatsLayer" type="Control" parent="." unique_id=1801355431]
 visible = false
