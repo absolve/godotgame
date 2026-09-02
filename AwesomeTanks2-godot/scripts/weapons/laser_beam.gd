@@ -5,7 +5,7 @@ extends Node2D
 
 class_name ATLaserBeam
 
-var team: int = ATConst.Team.CPU
+var team: int = Constants.Team.CPU
 var damage: float = 10.0
 var hit_color: Color = Color(1, 0, 0)
 var sound_alert_radius: float = 0.0
@@ -20,7 +20,7 @@ func setup(team_: int, damage_: float, _speed: float, _life: float, color_: Colo
 	hit_color = color_
 	sound_alert_radius = alert_
 
-func _process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	_ray.force_raycast_update()
 	var end: Vector2 = _ray.target_position
 	if _ray.is_colliding():
@@ -28,9 +28,9 @@ func _process(_delta: float) -> void:
 		end = p
 		var collider := _ray.get_collider()
 		if collider and collider.has_method("on_bullet_hit"):
-			var ot: int = collider.team if "team" in collider else ATConst.Team.CPU
+			var ot: int = collider.team if "team" in collider else Constants.Team.CPU
 			if ot != team:
-				collider.on_bullet_hit(damage * get_process_delta_time(), null, self)
+				collider.on_bullet_hit(damage * delta, null, self)
 	_line.clear()
 	_line.add_point(Vector2.ZERO)
 	_line.add_point(end)

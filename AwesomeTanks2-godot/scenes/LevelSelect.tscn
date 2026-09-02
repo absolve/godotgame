@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/menu/level_select.gd" id="1_ls"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/background.png.tres" id="2_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_normal.png.tres" id="3_back_n"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_hover.png.tres" id="4_back_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_down.png.tres" id="5_back_d"]
+[ext_resource type="PackedScene" path="res://scenes/level_btn.tscn" id="6_lb"]
 
 [node name="LevelSelect" type="Control"]
 layout_mode = 3
@@ -10,15 +15,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ls")
-
-[node name="BG" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.11, 0.1, 0.06, 1)
 
 [node name="Design" type="Control" parent="."]
 layout_mode = 1
@@ -34,53 +30,157 @@ offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="Design"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 40.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 24
-text = "Select Level"
-horizontal_alignment = 1
+[node name="BG" type="TextureRect" parent="Design"]
+layout_mode = 0
+offset_left = -24.0
+offset_top = -13.0
+offset_right = 624.0
+offset_bottom = 635.0
+texture = ExtResource("2_bg")
+stretch_mode = 5
 
-[node name="Grid" type="GridContainer" parent="Design"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 56.0
-offset_bottom = -80.0
-grow_horizontal = 2
-grow_vertical = 2
-columns = 5
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
+[node name="Btn1" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 133.0
+offset_top = 244.0
+offset_right = 203.0
+offset_bottom = 304.0
+level_num = 1
+
+[node name="Btn2" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 213.0
+offset_top = 244.0
+offset_right = 283.0
+offset_bottom = 304.0
+level_num = 2
+
+[node name="Btn3" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 293.0
+offset_top = 244.0
+offset_right = 363.0
+offset_bottom = 304.0
+level_num = 3
+
+[node name="Btn4" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 373.0
+offset_top = 244.0
+offset_right = 443.0
+offset_bottom = 304.0
+level_num = 4
+
+[node name="Btn5" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 453.0
+offset_top = 244.0
+offset_right = 523.0
+offset_bottom = 304.0
+level_num = 5
+
+[node name="Btn6" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 133.0
+offset_top = 324.0
+offset_right = 203.0
+offset_bottom = 384.0
+level_num = 6
+
+[node name="Btn7" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 213.0
+offset_top = 324.0
+offset_right = 283.0
+offset_bottom = 384.0
+level_num = 7
+
+[node name="Btn8" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 293.0
+offset_top = 324.0
+offset_right = 363.0
+offset_bottom = 384.0
+level_num = 8
+
+[node name="Btn9" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 373.0
+offset_top = 324.0
+offset_right = 443.0
+offset_bottom = 384.0
+level_num = 9
+
+[node name="Btn10" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 453.0
+offset_top = 324.0
+offset_right = 523.0
+offset_bottom = 384.0
+level_num = 10
+
+[node name="Btn11" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 133.0
+offset_top = 404.0
+offset_right = 203.0
+offset_bottom = 464.0
+level_num = 11
+
+[node name="Btn12" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 213.0
+offset_top = 404.0
+offset_right = 283.0
+offset_bottom = 464.0
+level_num = 12
+
+[node name="Btn13" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 293.0
+offset_top = 404.0
+offset_right = 363.0
+offset_bottom = 464.0
+level_num = 13
+
+[node name="Btn14" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 373.0
+offset_top = 404.0
+offset_right = 443.0
+offset_bottom = 464.0
+level_num = 14
+
+[node name="Btn15" parent="Design" instance=ExtResource("6_lb")]
+offset_left = 453.0
+offset_top = 404.0
+offset_right = 523.0
+offset_bottom = 464.0
+level_num = 15
 
 [node name="TotalScore" type="Label" parent="Design"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -56.0
-offset_bottom = -32.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.71, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "Total score: 0 Pts."
+layout_mode = 0
+offset_left = 100.0
+offset_top = 470.0
+offset_right = 500.0
+offset_bottom = 500.0
 horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(1, 0.71, 0.004, 1)
+text = " Total score: 0 Pts. "
 
-[node name="Back" type="Button" parent="Design"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -30.0
-grow_horizontal = 2
-text = "Back to Upgrades"
+[node name="BackBtn" type="TextureButton" parent="Design"]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 500.0
+offset_right = 435.0
+offset_bottom = 554.0
+texture_normal = ExtResource("3_back_n")
+texture_hover = ExtResource("4_back_h")
+texture_pressed = ExtResource("5_back_d")
+texture_disabled = ExtResource("3_back_n")
+stretch_mode = 2
 
-[connection signal="pressed" from="Design/Back" to="." method="_on_back_pressed"]
+[connection signal="clicked" from="Design/Btn1" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn2" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn3" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn4" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn5" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn6" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn7" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn8" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn9" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn10" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn11" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn12" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn13" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn14" to="." method="_on_level_clicked"]
+[connection signal="clicked" from="Design/Btn15" to="." method="_on_level_clicked"]
+[connection signal="pressed" from="Design/BackBtn" to="." method="_on_back_pressed"]

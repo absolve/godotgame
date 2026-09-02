@@ -15,7 +15,7 @@ func _ready() -> void:
 	super._ready()
 	# 生成器不可移动（CharacterBody2D 不调用 move，velocity 保持为 0）
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	# 不调用 super（不跑 AI），只管生成
 	_timer -= delta
 	if _timer <= 0:

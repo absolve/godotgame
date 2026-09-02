@@ -4,7 +4,7 @@ extends Area2D
 
 class_name ATBullet
 
-var team: int = ATConst.Team.CPU
+var team: int = Constants.Team.CPU
 var damage: float = 10.0
 var speed: float = 600.0
 var life: float = 1.0
@@ -19,8 +19,8 @@ func _ready() -> void:
 	#var col := CollisionShape2D.new()
 	#col.shape = shape
 	#add_child(col)
-	collision_layer = 1 << (ATConst.Layer.PROJECTILE - 1)
-	collision_mask = ATConst.layer_mask([ATConst.Layer.WALL, ATConst.Layer.OBSTACLE, ATConst.Layer.PLAYER, ATConst.Layer.ENEMY])
+	collision_layer = 1 << (Constants.Layer.PROJECTILE - 1)
+	collision_mask = Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE, Constants.Layer.PLAYER, Constants.Layer.ENEMY])
 	body_entered.connect(_on_hit)
 
 func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Color, alert_: float) -> void:
@@ -30,11 +30,6 @@ func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Colo
 	life = life_
 	hit_color = color_
 	sound_alert_radius = alert_
-
-#func _process(delta: float) -> void:
-	#life -= delta
-	#if life <= 0:
-		#_die(false)
 
 func _physics_process(delta: float) -> void:
 	life -= delta
@@ -46,7 +41,7 @@ func _physics_process(delta: float) -> void:
 func _on_hit(other: Node) -> void:
 	# 判断对方阵营
 	if other.has_method("on_bullet_hit"):
-		var other_team: int = other.team if "team" in other else ATConst.Team.CPU
+		var other_team: int = other.team if "team" in other else Constants.Team.CPU
 		if other_team != team:
 			other.on_bullet_hit(damage, null, self)
 	_die(true)

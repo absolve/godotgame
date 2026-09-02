@@ -342,3 +342,50 @@ static func get_level(index: int) -> Array:
 ## 正式关卡数量
 static func main_level_count() -> int:
 	return 15
+
+## 列出自定义关卡目录中所有 .json 文件名（不含扩展名）
+static func list_custom_levels() -> Array[String]:
+	var out: Array[String] = []
+	var dir := DirAccess.open(Settings.CUSTOM_LEVELS_DIR)
+	if dir == null:
+		return out
+	dir.list_dir_begin()
+	var name := dir.get_next()
+	while name != "":
+		if not dir.current_is_dir() and name.ends_with(".json"):
+			out.append(name.get_basename())
+		name = dir.get_next()
+	return out
+
+## 从 JSON 文件加载自定义关卡，返回 [name, theme, ...rows] 格式（与 LEVELS 元素一致）
+## 文件格式: {"name": "...", "theme": "grass|snow|desert", "tiles": ["...", "..."]}
+static func load_custom_json(file_name: String) -> Array:
+	var path := Settings.CUSTOM_LEVELS_DIR + file_name + ".json"
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return ["Custom", "grass", "█"]
+	var text := f.get_as_text()
+	f.close()
+	var parsed = JSON.parse_string(text)
+	if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("tiles"):
+		return ["Custom", "grass", "█"]
+	var name: String = parsed.get("name", file_name)
+	var theme: String = parsed.get("theme", "grass")
+	var rows: Array = parsed["tiles"]
+	return [name, theme] + rows
+
+## 保存关卡到 JSON 文件
+static func save_custom_json(file_name: String, name: String, theme: String, rows: Array) -> bool:
+	DirAccess.make_dir_recursive_absolute(Settings.CUSTOM_LEVELS_DIR)
+	var path := Settings.CUSTOM_LEVELS_DIR + file_name + ".json"
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f == null:
+		return false
+	var data := {
+		"name": name,
+		"theme": theme,
+		"tiles": rows,
+	}
+	f.store_string(JSON.stringify(data, "\t"))
+	f.close()
+	return true

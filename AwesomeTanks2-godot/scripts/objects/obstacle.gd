@@ -7,13 +7,13 @@ class_name ATObstacle
 var health: float = 30.0
 var max_health: float = 30.0
 var destructible: bool = true
-var tile_type: int = ATConst.Tile.EMPTY
+var tile_type: int = Constants.Tile.EMPTY
 
 signal destroyed(obstacle)
 
 func _ready() -> void:
-	collision_layer = 1 << (ATConst.Layer.OBSTACLE - 1)
-	collision_mask = ATConst.layer_mask([ATConst.Layer.PLAYER, ATConst.Layer.ENEMY, ATConst.Layer.PROJECTILE])
+	collision_layer = 1 << (Constants.Layer.OBSTACLE - 1)
+	collision_mask = Constants.layer_mask([Constants.Layer.PLAYER, Constants.Layer.ENEMY, Constants.Layer.PROJECTILE])
 
 func on_bullet_hit(damage: float, _src: Node, _bullet: Node) -> void:
 	if not destructible:

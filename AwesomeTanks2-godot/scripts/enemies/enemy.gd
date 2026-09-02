@@ -11,11 +11,11 @@ var level: Node2D = null            # 指向 Level，用于查询瓦片/玩家
 
 func _ready() -> void:
 	super._ready()
-	team = ATConst.Team.CPU
+	team = Constants.Team.CPU
 	machine = ATAIMachine.new(self)
 
-func _process(delta: float) -> void:
-	super._process(delta)
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if alive and machine:
 		machine.update(delta)
 

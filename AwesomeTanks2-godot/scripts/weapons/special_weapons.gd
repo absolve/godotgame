@@ -11,8 +11,9 @@ var smoke_timer: float = 0.0
 func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Color, alert_: float) -> void:
 	super.setup(team_, damage_, speed_, life_, color_, alert_)
 
-func _process(delta: float) -> void:
-	# 追踪：朝目标转向（移动由基类 _physics_process 按 rotation 前进）
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	# 追踪：朝目标转向（移动 + 寿命由基类 _physics_process 处理）
 	if is_instance_valid(target):
 		var desired := (target.global_position - global_position).angle()
 		var diff := wrapf(desired - rotation, -PI, PI)
@@ -22,7 +23,7 @@ func _process(delta: float) -> void:
 	if smoke_timer <= 0:
 		smoke_timer = 0.03
 		# TODO: spawn 烟雾粒子
-	super._process(delta)
+	
 
 func _die(hit_something: bool) -> void:
 	if hit_something:

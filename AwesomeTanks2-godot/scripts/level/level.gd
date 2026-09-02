@@ -24,9 +24,13 @@ var freeze_time: float = 0.0
 var free_camera: bool = false
 var difficulty_mult: float = 1.0
 
-# 预加载场景（待创建后填入实际路径）
-# const PlayerScene := preload("res://scenes/Player.tscn")
-# const EnemyScene := preload("res://scenes/Enemy.tscn")
+# 预加载场景
+const SCENE_BARREL := preload("res://scenes/objects/barrel.tscn")
+const SCENE_CRATE := preload("res://scenes/objects/crate.tscn")
+const SCENE_BRICKS := preload("res://scenes/objects/bricks.tscn")
+const SCENE_WOOD := preload("res://scenes/objects/wood.tscn")
+const SCENE_GATE := preload("res://scenes/objects/gate.tscn")
+
 
 func _ready() -> void:
 	level_index = Game.consume_pending_level_index()
@@ -38,36 +42,39 @@ func _ready() -> void:
 	level_started.emit()
 	Audio.play_music("music_game.mp3")
 
+
 func _spawn_objects() -> void:
 	_tile_map.for_each_object(_spawn_object_at)
+
 
 func _spawn_object_at(tile: int, x: int, y: int) -> void:
 	var pos := _tile_map.cell_center(x, y)
 	match tile:
-		ATConst.Tile.PLAYER:
-			_spawn_player(pos)
-		ATConst.Tile.BARREL:
-			_spawn_object("barrel", pos)
-		ATConst.Tile.CRATE:
-			_spawn_object("crate", pos)
-		ATConst.Tile.GATE:
-			_spawn_object("gate", pos)
-		ATConst.Tile.BRICKS_1, ATConst.Tile.BRICKS_2, ATConst.Tile.WOOD:
-			_spawn_object("bricks", pos)
-		# 生成器 / 炮塔 / Boss / 坦克 -> _spawn_enemy
+		Constants.Tile.PLAYER:
+			# TODO: 玩家场景就绪后实现
+			pass
+		Constants.Tile.BARREL:
+			_spawn_obstacle(SCENE_BARREL, pos, tile)
+		Constants.Tile.CRATE:
+			_spawn_obstacle(SCENE_CRATE, pos, tile)
+		Constants.Tile.GATE:
+			_spawn_obstacle(SCENE_GATE, pos, tile)
+		Constants.Tile.WOOD:
+			_spawn_obstacle(SCENE_WOOD, pos, tile)
+		Constants.Tile.BRICKS_1, Constants.Tile.BRICKS_2:
+			_spawn_obstacle(SCENE_BRICKS, pos, tile)
 		_:
-			if ATConst.is_enemy(tile):
-				_spawn_enemy(tile, pos)
+			if Constants.is_enemy(tile):
+				# TODO: 敌人/炮塔/生成器/Boss 场景就绪后实现
+				pass
 
-# TODO: 实例化各类节点（场景文件就绪后取消注释）
-func _spawn_player(pos: Vector2) -> void:
-	pass
 
-func _spawn_enemy(tile: int, pos: Vector2) -> void:
-	enemies_alive += 1
+func _spawn_obstacle(scene: PackedScene, pos: Vector2, tile: int) -> void:
+	var obj := scene.instantiate()
+	obj.position = pos
+	obj.tile_type = tile
+	_objects_layer.add_child(obj)
 
-func _spawn_object(kind: String, pos: Vector2) -> void:
-	pass
 
 # ============================================================
 # 战斗循环

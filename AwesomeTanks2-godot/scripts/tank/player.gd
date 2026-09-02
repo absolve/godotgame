@@ -9,7 +9,7 @@ var auto_aim_target: Node2D = null
 
 func _ready() -> void:
 	super._ready()
-	team = ATConst.Team.PLAYER
+	team = Constants.Team.PLAYER
 	name = "player"
 	# 根据存档设置性能等级
 	var g: Dictionary = Game.current["game"]
@@ -40,7 +40,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	# 瞄准
 	if event is InputEventMouseMotion:
 		var aim := (get_global_mouse_position() - global_position).angle()
-		rotate_turret(aim, get_process_delta_time())
+		rotate_turret(aim, get_physics_process_delta_time())
 	# 开火
 	if Input.is_action_pressed("fire"):
 		start_fire()
@@ -50,8 +50,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("next_weapon"):
 		next_weapon()
 
-func _process(delta: float) -> void:
-	super._process(delta)
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	# 鼠标瞄准（持续跟随）
 	var aim := (get_global_mouse_position() - global_position).angle()
 	rotate_turret(aim, delta)

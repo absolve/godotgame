@@ -20,7 +20,7 @@ var health: float = 100.0
 var view_angle: float = 90.0
 var view_distance: float = 300.0
 
-var team: int = ATConst.Team.CPU
+var team: int = Constants.Team.CPU
 var weapon_index: int = 0
 var weapons: Array = []             # 武器节点数组（可为 null 占位）
 var weapon: Node = null
@@ -43,27 +43,31 @@ func _ready() -> void:
 	collision_mask = _my_mask()
 
 func _my_layer() -> int:
-	return 1 << (ATConst.Layer.PLAYER - 1) if team == ATConst.Team.PLAYER else 1 << (ATConst.Layer.ENEMY - 1)
+	return 1 << (Constants.Layer.PLAYER - 1) if team == Constants.Team.PLAYER else 1 << (Constants.Layer.ENEMY - 1)
 
 func _my_mask() -> int:
 	# 坦克碰墙 + 障碍物 + 对方队伍
-	return ATConst.layer_mask([ATConst.Layer.WALL, ATConst.Layer.OBSTACLE, ATConst.Layer.ENEMY_SPAWNER, ATConst.Layer.PLAYER, ATConst.Layer.ENEMY])
+	return Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER, Constants.Layer.PLAYER, Constants.Layer.ENEMY])
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	# 受击闪光衰减
 	hit_flash = max(0.0, hit_flash - delta / 0.2)
-	var tint := _lerp_color(Color.WHITE, hit_color, hit_flash)
+	var tint := Color.WHITE.lerp(hit_color, clamp(hit_flash, 0.0, 1.0))
 	_body_sprite.modulate = tint
 	_turret_sprite.modulate = tint
-	# 后坐力恢复
+	# 后坐力恢复 + 炮塔位置同步
 	_recoil = max(0.0, _recoil - 0.3)
 	_turret_sprite.position = -Vector2(cos(_turret_sprite.rotation), sin(_turret_sprite.rotation)) * _recoil
-
-func _physics_process(_delta: float) -> void:
 	if not alive:
 		return
-	_turn_body_to_velocity()
-	_sync_turret()
+	# 车体朝速度方向旋转
+	var v := velocity
+	var speed := v.length()
+	if speed > 1.0:
+		var target := v.angle()
+		var diff := wrapf(target - _body_sprite.rotation, -PI, PI)
+		var step = deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
+		_body_sprite.rotation += clamp(diff, -step, step)
 	move_and_slide()
 
 # ============================================================
@@ -77,18 +81,6 @@ func rotate_turret(target_angle: float, delta: float) -> void:
 	var diff := wrapf(target_angle - cur, -PI, PI)
 	var step := deg_to_rad(turret_speed) * delta
 	_turret_sprite.rotation = cur + clamp(diff, -step, step)
-
-func _turn_body_to_velocity() -> void:
-	var v := velocity
-	var speed := v.length()
-	if speed > 1.0:
-		var target := v.angle()
-		var diff := wrapf(target - _body_sprite.rotation, -PI, PI)
-		var step = deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
-		_body_sprite.rotation += clamp(diff, -step, step)
-
-func _sync_turret() -> void:
-	_turret_sprite.position = Vector2.ZERO - Vector2(cos(_turret_sprite.rotation), sin(_turret_sprite.rotation)) * _recoil
 
 func get_turret_position(offset: float) -> Vector2:
 	var r := _turret_sprite.rotation
@@ -155,9 +147,3 @@ func freeze() -> void:
 
 func unfreeze() -> void:
 	pass
-
-# ============================================================
-# 工具
-# ============================================================
-func _lerp_color(a: Color, b: Color, t: float) -> Color:
-	return a.lerp(b, clamp(t, 0.0, 1.0))

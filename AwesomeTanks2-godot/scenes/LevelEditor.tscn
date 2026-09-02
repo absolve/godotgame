@@ -1,0 +1,188 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/editor/editor.gd" id="1_editor"]
+[ext_resource type="Script" path="res://scripts/editor/level_canvas.gd" id="2_canvas"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/background.png.tres" id="3_bg"]
+[ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_normal.png.tres" id="4_back"]
+
+[node name="LevelEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_editor")
+
+[node name="BG" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_bg")
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Design" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="HBoxContainer" parent="Design"]
+layout_mode = 2
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/separation = 6
+
+[node name="NewBtn" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+text = "New"
+
+[node name="LoadOption" type="OptionButton" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 0)
+
+[node name="LoadBtn" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+text = "Load"
+
+[node name="FileEdit" type="LineEdit" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(100, 0)
+placeholder_text = "file name"
+
+[node name="SaveBtn" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+text = "Save"
+
+[node name="Sep1" type="VSeparator" parent="Design/TopBar"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameEdit" type="LineEdit" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 0)
+text = "Custom Level"
+
+[node name="ThemeLabel" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+text = "Theme:"
+
+[node name="ThemeOption" type="OptionButton" parent="Design/TopBar"]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "grass"
+popup/item_1/text = "snow"
+popup/item_2/text = "desert"
+
+[node name="Sep2" type="VSeparator" parent="Design/TopBar"]
+layout_mode = 2
+
+[node name="WidthLabel" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+text = "W:"
+
+[node name="WidthSpin" type="SpinBox" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+min_value = 5.0
+max_value = 40.0
+value = 15.0
+
+[node name="HeightLabel" type="Label" parent="Design/TopBar"]
+layout_mode = 2
+text = "H:"
+
+[node name="HeightSpin" type="SpinBox" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+min_value = 5.0
+max_value = 30.0
+value = 12.0
+
+[node name="Sep3" type="VSeparator" parent="Design/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackBtn" type="Button" parent="Design/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 0)
+text = "Back to Title"
+texture_normal = ExtResource("4_back")
+expand_icon = true
+
+[node name="Main" type="HSplitContainer" parent="Design"]
+layout_mode = 2
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+split_offset = 200
+
+[node name="Side" type="VBoxContainer" parent="Design/Main"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 0)
+
+[node name="BrushLabel" type="Label" parent="Design/Main/Side"]
+layout_mode = 2
+text = "Brush: Wall"
+horizontal_alignment = 1
+
+[node name="PaletteScroll" type="ScrollContainer" parent="Design/Main/Side"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PaletteGrid" type="GridContainer" parent="Design/Main/Side/PaletteScroll"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="PaletteCanvas" type="VBoxContainer" parent="Design/Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Design/Main/PaletteCanvas"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Canvas" type="Control" parent="Design/Main/PaletteCanvas/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_canvas")
+
+[node name="StatusBar" type="Label" parent="Design"]
+layout_mode = 2
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Status:"
+
+[connection signal="pressed" from="Design/TopBar/NewBtn" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="Design/TopBar/LoadBtn" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="Design/TopBar/SaveBtn" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Design/TopBar/BackBtn" to="." method="_on_back_pressed"]
+[connection signal="value_changed" from="Design/TopBar/WidthSpin" to="." method="_on_width_value_changed"]
+[connection signal="value_changed" from="Design/TopBar/HeightSpin" to="." method="_on_height_value_changed"]

@@ -10,7 +10,7 @@ script = ExtResource("1_level")
 [node name="TileMap" type="Node2D" parent="."]
 script = ExtResource("2_tilemap")
 
-[node name="StaticLayer" type="TileMapLayer" parent="TileMap"]
+[node name="StaticLayer" type="Node2D" parent="TileMap"]
 
 [node name="ObjectsLayer" type="Node2D" parent="."]
 

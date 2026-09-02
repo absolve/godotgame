@@ -1,7 +1,7 @@
+extends Node
 ## Constants — 全局常量（瓦片字符 / 碰撞层 / 队伍）
 ## 对应原项目 window.AT.common / window.AT.TILES
-
-class_name ATConst
+## 已注册为 Autoload 全局节点，可直接用 Constants.XXX 访问。
 
 # ============================================================
 # 碰撞层（与 project.godot 的 layer_names 一一对应）
@@ -122,15 +122,15 @@ const CHAR_TO_TILE: Dictionary = {
 }
 
 ## 判断瓦片是否为静态墙体（不可破坏）
-static func is_static_wall(tile: int) -> bool:
+func is_static_wall(tile: int) -> bool:
 	return tile == Tile.WALL or tile == Tile.SECRET
 
 ## 判断瓦片是否为可破坏障碍物
-static func is_destructible(tile: int) -> bool:
+func is_destructible(tile: int) -> bool:
 	return tile in [Tile.BRICKS_1, Tile.BRICKS_2, Tile.WOOD, Tile.CRATE, Tile.BARREL]
 
 ## 判断瓦片是否为敌人单位
-static func is_enemy(tile: int) -> bool:
+func is_enemy(tile: int) -> bool:
 	return tile in [
 		Tile.SPAWNER_1, Tile.SPAWNER_2, Tile.SPAWNER_3, Tile.SPAWNER_4,
 		Tile.SPAWNER_5, Tile.SPAWNER_6, Tile.SPAWNER_7,
@@ -147,7 +147,7 @@ static func is_enemy(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为炮塔（固定）
-static func is_turret(tile: int) -> bool:
+func is_turret(tile: int) -> bool:
 	return tile in [
 		Tile.TURRET_MINIGUN, Tile.TURRET_SHOTGUN, Tile.TURRET_CANNON,
 		Tile.TURRET_ROCKETS, Tile.TURRET_LASER, Tile.TURRET_FLAMETHROWER,
@@ -155,7 +155,7 @@ static func is_turret(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为 Boss
-static func is_boss(tile: int) -> bool:
+func is_boss(tile: int) -> bool:
 	return tile in [
 		Tile.BOSS_SHOTGUN, Tile.BOSS_CANNON, Tile.BOSS_ROCKETS,
 		Tile.BOSS_LASER, Tile.BOSS_RICOCHET, Tile.BOSS_FLAMETHROWER,
@@ -163,7 +163,7 @@ static func is_boss(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为生成器
-static func is_spawner(tile: int) -> bool:
+func is_spawner(tile: int) -> bool:
 	return tile in [
 		Tile.SPAWNER_1, Tile.SPAWNER_2, Tile.SPAWNER_3, Tile.SPAWNER_4,
 		Tile.SPAWNER_5, Tile.SPAWNER_6, Tile.SPAWNER_7,

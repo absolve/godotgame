@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/obstacle.gd" id="1_obs"]
+[ext_resource type="Texture2D" path="res://sprites/game/crate.png.tres" id="2_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectShape"]
+size = Vector2(48, 48)
+
+[node name="Crate" type="StaticBody2D"]
+script = ExtResource("1_obs")
+
+[node name="BodySprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+centered = true
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("RectShape")

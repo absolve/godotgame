@@ -1,13 +1,12 @@
 extends Control
 ## Upgrades —— 升级商店主菜单（对应 H5 MenuUpgrades）
-## 简化版：移除 Tab 切换，中间直接显示武器面板（weapons.png 底图 + 10 张武器卡）
-## 功能：顶栏(Money + Sound/Music) + 武器购买/升级/补弹 + 底栏(Menu/Stats/Difficulty/Play) + 难度/统计弹窗
-## 武器卡使用 weapon_card.tscn 实例化（参考 sound_btn.tscn 的"最小场景+脚本+实例化"模式）
+## 双 Tab：Weapons（武器购买/升级/补弹）、Performance（属性升级）
 
 const FONT: Font = preload("res://fonts/gunplay.ttf")
 const CARD_SCENE: PackedScene = preload("res://scenes/weapon_card.tscn")
+const STAT_CARD_SCENE: PackedScene = preload("res://scenes/stat_card.tscn")
 
-# 10 张武器卡在 WeaponsPanel(581x309) 内的左上角坐标（对应 H5 weapons 组 (10,192) 内的相对坐标）
+# 10 张武器卡在 WeaponsPanel(581x309) 内的左上角坐标
 const CARD_POSITIONS: Dictionary = {
 	"minigun": Vector2(20, 30),
 	"shotgun": Vector2(130, 30),
@@ -21,40 +20,120 @@ const CARD_POSITIONS: Dictionary = {
 	"mines": Vector2(460, 170),
 }
 
+# 4 张属性卡在 PerformancePanel(581x309) 内的左上角坐标
+# 参考 H5: armor(60,80), sight(181,80), turret(301,80), speed(421,80)
+const STAT_KEYS: Array[String] = ["armor", "sight", "turret", "speed"]
+const STAT_POSITIONS: Dictionary = {
+	"armor": Vector2(60, 80),
+	"sight": Vector2(181, 80),
+	"turret": Vector2(301, 80),
+	"speed": Vector2(421, 80),
+}
+
+# Tab 贴图
+const TAB_PERF: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_performance.png.tres")
+const TAB_PERF_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_performance_active.png.tres")
+const TAB_WP: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons.png.tres")
+const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres")
+
 @onready var _money_label: Label = $Design/TopBar/MoneyLabel
 @onready var _sound_btn: TextureButton = $Design/TopBar/SoundBtn
 @onready var _music_btn: TextureButton = $Design/TopBar/MusicBtn
 @onready var _cards: Control = $Design/WeaponsPanel/Cards
+@onready var _perf_cards: Control = $Design/PerformancePanel/PerfCards
+@onready var _tab_perf: TextureButton = $Design/TabPerformance
+@onready var _tab_wp: TextureButton = $Design/TabWeapons
+@onready var _weapons_panel: Control = $Design/WeaponsPanel
+@onready var _perf_panel: Control = $Design/PerformancePanel
 @onready var _difficulty_layer: Control = $DifficultyLayer
 @onready var _stats_layer: Control = $StatsLayer
 
 var _cards_by_key: Dictionary = {}   # key -> WeaponCard 实例
+var _stats_by_key: Dictionary = {}   # key -> StatCard 实例
 
 
 func _ready() -> void:
 	Audio.play_music("music_menu.mp3")
 	_money_label.add_theme_font_override("font", FONT)
 	_populate_cards()
-	# Sound/Music 状态（SoundBtn 脚本已自带 button_down 音效，此处不再播）
+	_populate_stat_cards()
+	# 默认显示武器 Tab
+	_tab_perf.texture_normal = TAB_PERF
+	_tab_perf.texture_hover = TAB_PERF
+	_tab_perf.texture_pressed = TAB_PERF
+	_tab_wp.texture_normal = TAB_WP_A
+	_tab_wp.texture_hover = TAB_WP_A
+	_tab_wp.texture_pressed = TAB_WP_A
+	_perf_panel.visible = false
+	_weapons_panel.visible = true
+	# Sound/Music 状态
 	_refresh_sound_btn(bool(Game.current.get("game", {}).get("sound", true)))
 	_refresh_music_btn(bool(Game.current.get("game", {}).get("music", true)))
 	_refresh()
 	Game.money_changed.connect(_on_money_changed)
 
 
+# ---------- Tab 切换 ----------
+func _on_performance_tab_pressed() -> void:
+	Audio.play_button_down()
+	_tab_perf.texture_normal = TAB_PERF_A
+	_tab_perf.texture_hover = TAB_PERF_A
+	_tab_perf.texture_pressed = TAB_PERF_A
+	_tab_wp.texture_normal = TAB_WP
+	_tab_wp.texture_hover = TAB_WP
+	_tab_wp.texture_pressed = TAB_WP
+	_perf_panel.visible = true
+	_weapons_panel.visible = false
+
+
+func _on_weapons_tab_pressed() -> void:
+	Audio.play_button_down()
+	_tab_perf.texture_normal = TAB_PERF
+	_tab_perf.texture_hover = TAB_PERF
+	_tab_perf.texture_pressed = TAB_PERF
+	_tab_wp.texture_normal = TAB_WP_A
+	_tab_wp.texture_hover = TAB_WP_A
+	_tab_wp.texture_pressed = TAB_WP_A
+	_perf_panel.visible = false
+	_weapons_panel.visible = true
+
+
+# ---------- 属性卡实例化 ----------
+func _populate_stat_cards() -> void:
+	for key in STAT_KEYS:
+		var card = STAT_CARD_SCENE.instantiate()
+		card.stat_key = key
+		_perf_cards.add_child(card)
+		card.position = STAT_POSITIONS[key]
+		card.clicked.connect(_on_stat_clicked)
+		_stats_by_key[key] = card
+
+
+# ---------- 属性升级 ----------
+func _on_stat_clicked(key: String) -> void:
+	var level: int = Game.get_performance_level(key)
+	if level >= 5:
+		return
+	var price: int = int(Settings.PRICES[key][level])
+	if Game.spend(price):
+		Game.set_performance_level(key, level + 1)
+		Game.save()
+		Audio.play_sfx("buy.mp3")
+	else:
+		Audio.play_sfx("not_available.mp3")
+	_refresh()
+
+
 # ---------- 武器卡实例化 ----------
 func _populate_cards() -> void:
 	for key in CARD_POSITIONS:
-		# 不强类型为 TextureButton：要访问 weapon_card.gd 自定义成员(weapon_key/clicked/refill_held/refresh)
 		var card = CARD_SCENE.instantiate()
-		# 先设 weapon_key 再 add_child，_ready() 里会据此调用 setup()
 		card.weapon_key = key
 		_cards.add_child(card)
 		card.position = CARD_POSITIONS[key]
 		card.clicked.connect(_on_card_clicked)
 		card.refill_held.connect(_on_card_refill)
 		_cards_by_key[key] = card
-	_refresh_cards()
 
 
 # ---------- 武器卡：单击=购买/升级 ----------
@@ -101,6 +180,7 @@ func _on_card_refill(key: String) -> void:
 func _refresh() -> void:
 	_money_label.text = _format_money(Game.get_money())
 	_refresh_cards()
+	_refresh_stat_cards()
 
 
 func _refresh_cards() -> void:
@@ -108,11 +188,16 @@ func _refresh_cards() -> void:
 		_cards_by_key[key].refresh()
 
 
+func _refresh_stat_cards() -> void:
+	for key in _stats_by_key:
+		_stats_by_key[key].refresh()
+
+
 func _on_money_changed(_value: int) -> void:
 	_money_label.text = _format_money(Game.get_money())
 
 
-# ---------- Sound/Music（贴图靠 toggle 自动显示，_refresh 仅同步 button_pressed） ----------
+# ---------- Sound/Music ----------
 func _refresh_sound_btn(on: bool) -> void:
 	_sound_btn.button_pressed = on
 
@@ -122,7 +207,6 @@ func _refresh_music_btn(on: bool) -> void:
 
 
 func _on_sound_toggled() -> void:
-	# SoundBtn 脚本已播 button_down，此处只切换状态
 	var want_on: bool = _sound_btn.button_pressed
 	_refresh_sound_btn(want_on)
 	Audio.set_sound_enabled(want_on)
@@ -143,6 +227,11 @@ func _on_play_pressed() -> void:
 func _on_menu_pressed() -> void:
 	Audio.play_button_down()
 	Game.change_scene(Settings.SCENE_TITLE)
+
+
+func _on_editor_pressed() -> void:
+	Audio.play_button_down()
+	Game.change_scene(Settings.SCENE_EDITOR)
 
 
 func _on_stats_pressed() -> void:
@@ -166,7 +255,6 @@ func _on_difficulty_close_pressed() -> void:
 
 
 func _set_difficulty(idx: int) -> void:
-	# 0=Easy 1=Medium 2=Hard，对应 H5 DIFFICULTIES[3] = [0.65, 0.85, 1.0]
 	Game.current["game"]["difficulty"] = idx
 	Game.save()
 	_difficulty_layer.visible = false

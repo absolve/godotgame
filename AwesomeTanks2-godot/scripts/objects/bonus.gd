@@ -11,8 +11,8 @@ enum Kind { COIN, AMMO, HEALTH, FREEZE, BOMB }
 @export var amount: int = 1
 
 func _ready() -> void:
-	collision_layer = 1 << (ATConst.Layer.OBSTACLE - 1)
-	collision_mask = ATConst.layer_mask([ATConst.Layer.PLAYER])
+	collision_layer = 1 << (Constants.Layer.OBSTACLE - 1)
+	collision_mask = Constants.layer_mask([Constants.Layer.PLAYER])
 	body_entered.connect(_pick_up)
 
 func _pick_up(body: Node) -> void:

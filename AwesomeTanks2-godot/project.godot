@@ -25,6 +25,7 @@ config/icon="res://icon.svg"
 Settings="*res://scripts/autoload/settings.gd"
 Game="*res://scripts/autoload/game.gd"
 Audio="*res://scripts/autoload/audio.gd"
+Constants="*uid://btkfp47lg0ieh"
 
 [display]
 

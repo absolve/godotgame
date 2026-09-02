@@ -130,6 +130,10 @@ const SCENE_UPGRADES := "res://scenes/Upgrades.tscn"
 const SCENE_LEVEL_SELECT := "res://scenes/LevelSelect.tscn"
 const SCENE_LEVEL := "res://scenes/Level.tscn"
 const SCENE_CONGRATULATIONS := "res://scenes/Congratulations.tscn"
+const SCENE_EDITOR := "res://scenes/LevelEditor.tscn"
 
 # 关卡总数（正式关卡）
 const LEVEL_COUNT: int = 15
+
+# 自定义关卡目录（编辑器保存的关卡存放处）
+const CUSTOM_LEVELS_DIR := "user://custom_levels/"

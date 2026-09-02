@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/menu/congratulations.gd" id="1_cong"]
+[ext_resource type="Texture2D" path="res://sprites/menu/congratulations.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_normal.png.tres" id="3_cont_n"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_hover.png.tres" id="4_cont_h"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_down.png.tres" id="5_cont_d"]
 
 [node name="Congratulations" type="Control"]
 layout_mode = 3
@@ -10,15 +14,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cong")
-
-[node name="BG" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.1, 0.09, 0.05, 1)
 
 [node name="Design" type="Control" parent="."]
 layout_mode = 1
@@ -34,41 +29,39 @@ offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Design"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-theme_override_constants/separation = 24
+[node name="BG" type="TextureRect" parent="Design"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 600.0
+offset_bottom = 600.0
+texture = ExtResource("2_bg")
+stretch_mode = 5
 
-[node name="Title" type="Label" parent="Design/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+[node name="TotalScore" type="Label" parent="Design"]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 220.0
+offset_right = 500.0
+offset_bottom = 280.0
+horizontal_alignment = 1
+vertical_alignment = 1
 theme_override_font_sizes/font_size = 40
-text = "Congratulations!"
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.71, 0.004, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+text = " 0 Points "
 
-[node name="Sub" type="Label" parent="Design/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.78, 0.6, 1)
-theme_override_font_sizes/font_size = 20
-text = "You completed all 15 levels"
-horizontal_alignment = 1
+[node name="ContinueBtn" type="TextureButton" parent="Design"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 380.0
+offset_right = 400.0
+offset_bottom = 460.0
+texture_normal = ExtResource("3_cont_n")
+texture_hover = ExtResource("4_cont_h")
+texture_pressed = ExtResource("5_cont_d")
+texture_disabled = ExtResource("3_cont_n")
+stretch_mode = 2
 
-[node name="TotalScore" type="Label" parent="Design/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.71, 0, 1)
-theme_override_font_sizes/font_size = 26
-text = "Total score: 0 Pts."
-horizontal_alignment = 1
-
-[node name="Continue" type="Button" parent="Design/VBox"]
-custom_minimum_size = Vector2(160, 44)
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Back to Title"
-
-[connection signal="pressed" from="Design/VBox/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Design/ContinueBtn" to="." method="_on_continue_pressed"]

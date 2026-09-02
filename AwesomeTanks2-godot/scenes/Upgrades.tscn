@@ -33,6 +33,9 @@
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/hard_down.png.tres" id="33_hard_d"]
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="34_x_n"]
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="35_x_h"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/tab_performance.png.tres" id="36_tab_perf"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres" id="39_tab_wp_a"]
+[ext_resource type="Texture2D" uid="uid://ybowjwgs20hy" path="res://sprites/menu/upgrades/performance.png" id="40_perf_bg"]
 
 [node name="Upgrades" type="Control" unique_id=243739076]
 layout_mode = 3
@@ -128,6 +131,59 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="TabPerformance" type="TextureButton" parent="Design" unique_id=1796235758]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 131.0
+offset_right = 298.0
+offset_bottom = 184.0
+texture_normal = ExtResource("36_tab_perf")
+texture_pressed = ExtResource("36_tab_perf")
+texture_hover = ExtResource("36_tab_perf")
+
+[node name="TabWeapons" type="TextureButton" parent="Design" unique_id=810950583]
+layout_mode = 0
+offset_left = 298.0
+offset_top = 131.0
+offset_right = 588.0
+offset_bottom = 184.0
+texture_normal = ExtResource("39_tab_wp_a")
+texture_pressed = ExtResource("39_tab_wp_a")
+texture_hover = ExtResource("39_tab_wp_a")
+
+[node name="PerformancePanel" type="Control" parent="Design" unique_id=1394146410]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -108.0
+offset_right = 291.0
+offset_bottom = 201.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PerfBg" type="TextureRect" parent="Design/PerformancePanel" unique_id=684547727]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("40_perf_bg")
+stretch_mode = 5
+
+[node name="PerfCards" type="Control" parent="Design/PerformancePanel" unique_id=910032000]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="MenuBtn" type="TextureButton" parent="Design" unique_id=254623737]
 layout_mode = 0
 offset_left = 25.0
@@ -171,6 +227,14 @@ texture_normal = ExtResource("22_play_n")
 texture_pressed = ExtResource("24_play_d")
 texture_hover = ExtResource("23_play_h")
 stretch_mode = 0
+
+[node name="EditorBtn" type="Button" parent="Design"]
+layout_mode = 0
+offset_left = 580.0
+offset_top = 528.0
+offset_right = 700.0
+offset_bottom = 570.0
+text = "Editor"
 
 [node name="DifficultyLayer" type="Control" parent="." unique_id=1325624250]
 visible = false
@@ -323,10 +387,13 @@ stretch_mode = 0
 
 [connection signal="pressed" from="Design/TopBar/SoundBtn" to="." method="_on_sound_toggled"]
 [connection signal="pressed" from="Design/TopBar/MusicBtn" to="." method="_on_music_toggled"]
+[connection signal="pressed" from="Design/TabPerformance" to="." method="_on_performance_tab_pressed"]
+[connection signal="pressed" from="Design/TabWeapons" to="." method="_on_weapons_tab_pressed"]
 [connection signal="pressed" from="Design/MenuBtn" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="Design/StatsBtn" to="." method="_on_stats_pressed"]
 [connection signal="pressed" from="Design/DifficultyBtn" to="." method="_on_difficulty_pressed"]
 [connection signal="pressed" from="Design/PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Design/EditorBtn" to="." method="_on_editor_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/CloseBtn" to="." method="_on_difficulty_close_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/EasyBtn" to="." method="_on_difficulty_easy_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/MediumBtn" to="." method="_on_difficulty_medium_pressed"]

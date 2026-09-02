@@ -51,7 +51,9 @@ const _DEFAULT: Dictionary = {
 	},
 }
 
-const SAVE_PATH := "user://save.json"
+# 存档文件名（位置由 _resolve_save_path 动态决定）
+const SAVE_FILE_NAME := "save.json"
+var SAVE_PATH: String = "user://save.json"
 
 # 运行时数据（深拷贝自 _DEFAULT）
 var current: Dictionary = {}
@@ -60,7 +62,16 @@ var current: Dictionary = {}
 # 生命周期
 # ============================================================
 func _ready() -> void:
+	SAVE_PATH = _resolve_save_path()
 	load_profile()
+
+## 存档路径解析：
+## - 编辑器 / H5 网页版：用 Godot 标准 user://（跨平台安全）
+## - 桌面导出版（Windows/macOS/Linux）：放在可执行文件同目录，方便备份/分发
+func _resolve_save_path() -> String:
+	if OS.has_feature("editor") or OS.has_feature("web"):
+		return "user://" + SAVE_FILE_NAME
+	return OS.get_executable_path().get_base_dir().path_join(SAVE_FILE_NAME)
 
 # ============================================================
 # 存档 I/O
@@ -151,6 +162,9 @@ func set_weapon_ammo(weapon_key: String, ammo: int) -> void:
 
 func get_performance_level(stat: String) -> int:
 	return int(current["game"].get(stat, 0))
+
+func set_performance_level(stat: String, level: int) -> void:
+	current["game"][stat] = level
 
 ## 关卡结算：记录分数、解锁进度
 func finish_level(index: int, points: int, success: bool) -> void:

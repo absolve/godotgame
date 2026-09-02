@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/menu/level_btn.gd" id="1_lb"]
+
+[node name="LevelBtn" type="TextureButton"]
+layout_mode = 0
+stretch_mode = 2
+script = ExtResource("1_lb")

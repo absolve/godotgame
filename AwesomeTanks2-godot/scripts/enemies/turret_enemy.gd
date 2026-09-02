@@ -8,7 +8,7 @@ func _ready() -> void:
 	super._ready()
 	# 固定不动（CharacterBody2D 不调用 move，velocity 保持为 0）
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	# 不调用 super 的 AI 巡逻；只旋转炮塔朝玩家
 	if level and is_instance_valid(level.player):
 		var aim = (level.player.global_position - global_position).angle()

@@ -5,7 +5,7 @@ extends Node2D
 class_name ATWeapon
 
 var tank: Node2D = null
-var team: int = ATConst.Team.CPU
+var team: int = Constants.Team.CPU
 var id: String = ""
 var ammo: int = 999999       # minigun 无限
 var max_ammo: int = 999999
@@ -33,7 +33,7 @@ func _ready() -> void:
 func activate() -> void: pass
 func deactivate() -> void: stop_fire()
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if _fire_delay > 0:
 		_fire_delay -= delta
 	if _fire and _fire_delay <= 0:
