@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/health_vial.gd" id="1_vial"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/bar_empty.png.tres" id="2_empty"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/bar_health.png.tres" id="3_fill"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/bar_frame.png.tres" id="4_frame"]
+
+[node name="HealthVial" type="Control"]
+custom_minimum_size = Vector2(109, 21)
+mouse_filter = 2
+script = ExtResource("1_vial")
+
+[node name="Empty" type="TextureRect" parent="."]
+offset_left = 2.0
+offset_top = 0.0
+offset_right = 108.0
+offset_bottom = 21.0
+mouse_filter = 2
+texture = ExtResource("2_empty")
+
+[node name="Fill" type="TextureRect" parent="."]
+offset_left = 2.0
+offset_top = 0.0
+offset_right = 108.0
+offset_bottom = 21.0
+mouse_filter = 2
+texture = ExtResource("3_fill")
+
+[node name="Frame" type="TextureRect" parent="."]
+offset_right = 109.0
+offset_bottom = 21.0
+mouse_filter = 2
+texture = ExtResource("4_frame")

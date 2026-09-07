@@ -1,0 +1,12 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://sprites/game/player/body_0.png.tres" id="1_f0"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/body_1.png.tres" id="2_f1"]
+
+[resource]
+animations = [{
+"frames": [ExtResource("1_f0"), ExtResource("2_f1")],
+"loop": true,
+"name": &"move",
+"speed": 20.0
+}]

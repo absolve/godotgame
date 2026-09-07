@@ -1,0 +1,74 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/help_alert.gd" id="1_help"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_normal.png.tres" id="3_xn"]
+[ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/buttons/x_hover.png.tres" id="4_xh"]
+
+[node name="HelpAlert" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_help")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="Center"]
+custom_minimum_size = Vector2(660, 470)
+layout_mode = 2
+
+[node name="Back" type="ColorRect" parent="Center/Panel"]
+offset_right = 660.0
+offset_bottom = 470.0
+color = Color(0.05, 0.06, 0.08, 0.94)
+
+[node name="Image" type="TextureRect" parent="Center/Panel"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 640.0
+offset_bottom = 416.0
+mouse_filter = 2
+stretch_mode = 5
+
+[node name="Catcher" type="TextureButton" parent="Center/Panel"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 640.0
+offset_bottom = 416.0
+focus_mode = 0
+
+[node name="Counter" type="Label" parent="Center/Panel"]
+offset_left = 24.0
+offset_top = 426.0
+offset_right = 200.0
+offset_bottom = 460.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.81, 0.81, 0.81, 1)
+theme_override_font_sizes/font_size = 18
+vertical_alignment = 1
+
+[node name="CloseBtn" type="TextureButton" parent="Center/Panel"]
+offset_left = 601.0
+offset_top = 6.0
+offset_right = 652.0
+offset_bottom = 57.0
+focus_mode = 0
+texture_normal = ExtResource("3_xn")
+texture_pressed = ExtResource("4_xh")
+texture_hover = ExtResource("4_xh")

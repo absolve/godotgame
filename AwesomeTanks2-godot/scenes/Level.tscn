@@ -1,68 +1,254 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://dvvu7dx6mt53n"]
 
-[ext_resource type="Script" path="res://scripts/level/level.gd" id="1_level"]
-[ext_resource type="Script" path="res://scripts/level/tile_map.gd" id="2_tilemap"]
-[ext_resource type="Script" path="res://scripts/level/hud.gd" id="3_hud"]
+[ext_resource type="Script" uid="uid://ceqnu5dref87h" path="res://scripts/level/level.gd" id="1_level"]
+[ext_resource type="PackedScene" uid="uid://ds3rg5fr5uedy" path="res://scenes/custom_camera.tscn" id="2_wsd7d"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://scenes/hud/health_vial.tscn" id="4_vial"]
+[ext_resource type="PackedScene" path="res://scenes/hud/weapon_slot.tscn" id="5_slot"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/background.png.tres" id="6_bg"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/menu_normal.png.tres" id="7_menu_n"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/menu_hover.png.tres" id="8_menu_h"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/menu_down.png.tres" id="9_menu_d"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/help.png.tres" id="10_help"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/pause.png.tres" id="11_pause"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/music_on.png.tres" id="12_music"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/sound_on.png.tres" id="13_sound"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/profit.png.tres" id="14_profit"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/fight.png.tres" id="15_fight"]
+[ext_resource type="PackedScene" uid="uid://6djt56ov2jfw" path="res://scenes/hud/pause_alert.tscn" id="16_pause"]
+[ext_resource type="PackedScene" path="res://scenes/hud/abandon_alert.tscn" id="17_abandon"]
+[ext_resource type="PackedScene" path="res://scenes/hud/help_alert.tscn" id="18_help"]
+[ext_resource type="PackedScene" path="res://scenes/hud/summary_alert.tscn" id="19_summary"]
 
-[node name="Level" type="Node2D"]
+[node name="Level" type="Node2D" unique_id=58889741]
 script = ExtResource("1_level")
 
-[node name="TileMap" type="Node2D" parent="."]
-script = ExtResource("2_tilemap")
+[node name="StaticLayer" type="Node2D" parent="." unique_id=719341152]
 
-[node name="StaticLayer" type="Node2D" parent="TileMap"]
+[node name="ObjectsLayer" type="Node2D" parent="." unique_id=1256775711]
 
-[node name="ObjectsLayer" type="Node2D" parent="."]
+[node name="TopLayer" type="Node2D" parent="." unique_id=2053700251]
 
-[node name="TopLayer" type="Node2D" parent="."]
+[node name="customCamera" parent="." unique_id=55155326 instance=ExtResource("2_wsd7d")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position_smoothing_enabled = true
-position_smoothing_speed = 6.0
+[node name="HUD" type="CanvasLayer" parent="." unique_id=123405350]
+process_mode = 3
 
-[node name="HUD" type="CanvasLayer" parent="."]
-script = ExtResource("3_hud")
-
-[node name="TopBar" type="HBoxContainer" parent="HUD"]
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 40.0
-grow_horizontal = 2
-theme_override_constants/separation = 12
-
-[node name="HealthLabel" type="Label" parent="HUD/TopBar"]
-theme_override_colors/font_color = Color(0.3, 0.9, 0.3, 1)
-text = "HP"
-
-[node name="HealthBar" type="ProgressBar" parent="HUD/TopBar"]
-custom_minimum_size = Vector2(180, 20)
-max_value = 100.0
-value = 100.0
-show_percentage = false
-
-[node name="Spacer" type="Control" parent="HUD/TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="AmmoLabel" type="Label" parent="HUD/TopBar"]
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-text = "Ammo"
-
-[node name="MoneyLabel" type="Label" parent="HUD/TopBar"]
-theme_override_colors/font_color = Color(1, 0.71, 0, 1)
-text = "$0"
-
-[node name="Pause" type="Button" parent="HUD/TopBar"]
-text = "II"
-
-[node name="WeaponSlots" type="HBoxContainer" parent="HUD"]
-anchors_preset = 12
-anchor_top = 1.0
+[node name="HudRoot" type="Control" parent="HUD" unique_id=677888890]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -56.0
 grow_horizontal = 2
-alignment = 1
-theme_override_constants/separation = 6
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_theme")
 
-[connection signal="pressed" from="HUD/TopBar/Pause" to="." method="_on_pause_pressed"]
+[node name="Bottom" type="Control" parent="HUD/HudRoot" unique_id=1566529465]
+anchors_preset = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Bg" type="TextureRect" parent="HUD/HudRoot/Bottom" unique_id=710549446]
+layout_mode = 0
+offset_left = -293.5
+offset_top = -96.0
+offset_right = 293.5
+mouse_filter = 2
+texture = ExtResource("6_bg")
+
+[node name="HealthVial" parent="HUD/HudRoot/Bottom" unique_id=195520361 instance=ExtResource("4_vial")]
+anchors_preset = 0
+offset_left = -240.0
+offset_top = -80.0
+offset_right = -131.0
+offset_bottom = -59.0
+
+[node name="Slot_minigun" parent="HUD/HudRoot/Bottom" unique_id=2022505484 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = -287.5
+offset_top = -52.0
+offset_right = -232.5
+offset_bottom = -10.0
+
+[node name="Slot_shotgun" parent="HUD/HudRoot/Bottom" unique_id=590154592 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = -229.5
+offset_top = -52.0
+offset_right = -174.5
+offset_bottom = -10.0
+weapon_key = "shotgun"
+
+[node name="Slot_ricochet" parent="HUD/HudRoot/Bottom" unique_id=88213454 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = -171.5
+offset_top = -52.0
+offset_right = -116.5
+offset_bottom = -10.0
+weapon_key = "ricochet"
+
+[node name="Slot_flamethrower" parent="HUD/HudRoot/Bottom" unique_id=20667862 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = -112.5
+offset_top = -52.0
+offset_right = -57.5
+offset_bottom = -10.0
+weapon_key = "flamethrower"
+
+[node name="Slot_cannon" parent="HUD/HudRoot/Bottom" unique_id=586981931 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = -54.5
+offset_top = -52.0
+offset_right = 0.5
+offset_bottom = -10.0
+weapon_key = "cannon"
+
+[node name="Slot_shock" parent="HUD/HudRoot/Bottom" unique_id=233310291 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = 3.5
+offset_top = -52.0
+offset_right = 58.5
+offset_bottom = -10.0
+weapon_key = "shock"
+
+[node name="Slot_rockets" parent="HUD/HudRoot/Bottom" unique_id=120560253 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = 59.5
+offset_top = -52.0
+offset_right = 114.5
+offset_bottom = -10.0
+weapon_key = "rockets"
+
+[node name="Slot_laser" parent="HUD/HudRoot/Bottom" unique_id=803883491 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = 117.5
+offset_top = -52.0
+offset_right = 172.5
+offset_bottom = -10.0
+weapon_key = "laser"
+
+[node name="Slot_railgun" parent="HUD/HudRoot/Bottom" unique_id=1233415055 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = 175.5
+offset_top = -52.0
+offset_right = 230.5
+offset_bottom = -10.0
+weapon_key = "railgun"
+
+[node name="Slot_mines" parent="HUD/HudRoot/Bottom" unique_id=588001079 instance=ExtResource("5_slot")]
+layout_mode = 0
+offset_left = 233.5
+offset_top = -52.0
+offset_right = 288.5
+offset_bottom = -10.0
+weapon_key = "mines"
+
+[node name="MenuBtn" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=543181300]
+layout_mode = 0
+offset_left = 205.0
+offset_top = -90.0
+offset_right = 287.0
+offset_bottom = -54.0
+focus_mode = 0
+texture_normal = ExtResource("7_menu_n")
+texture_pressed = ExtResource("9_menu_d")
+texture_hover = ExtResource("8_menu_h")
+
+[node name="HelpIcon" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=1763039746]
+layout_mode = 0
+offset_left = 182.5
+offset_top = -89.0
+offset_right = 203.5
+offset_bottom = -57.0
+focus_mode = 0
+texture_normal = ExtResource("10_help")
+texture_pressed = ExtResource("10_help")
+texture_hover = ExtResource("10_help")
+
+[node name="PauseIcon" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=65827808]
+layout_mode = 0
+offset_left = 159.5
+offset_top = -89.0
+offset_right = 180.5
+offset_bottom = -57.0
+focus_mode = 0
+texture_normal = ExtResource("11_pause")
+texture_pressed = ExtResource("11_pause")
+texture_hover = ExtResource("11_pause")
+
+[node name="MusicIcon" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=276936259]
+layout_mode = 0
+offset_left = 126.5
+offset_top = -89.5
+offset_right = 163.5
+offset_bottom = -56.5
+focus_mode = 0
+texture_normal = ExtResource("12_music")
+texture_pressed = ExtResource("12_music")
+texture_hover = ExtResource("12_music")
+
+[node name="SoundIcon" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=1561923945]
+layout_mode = 0
+offset_left = 96.5
+offset_top = -89.5
+offset_right = 133.5
+offset_bottom = -56.5
+focus_mode = 0
+texture_normal = ExtResource("13_sound")
+texture_pressed = ExtResource("13_sound")
+texture_hover = ExtResource("13_sound")
+
+[node name="Profit" type="TextureRect" parent="HUD/HudRoot/Bottom" unique_id=1240283035]
+visible = false
+layout_mode = 0
+offset_left = -118.0
+offset_top = -65.0
+offset_right = 92.0
+offset_bottom = -38.0
+mouse_filter = 2
+texture = ExtResource("14_profit")
+
+[node name="Value" type="Label" parent="HUD/HudRoot/Bottom/Profit" unique_id=1193276760]
+layout_mode = 0
+offset_right = 204.0
+offset_bottom = 27.0
+theme_override_colors/font_color = Color(0.858824, 0.705882, 0, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Fight" type="TextureRect" parent="HUD/HudRoot/Bottom" unique_id=1027852112]
+visible = false
+layout_mode = 0
+offset_left = -105.0
+offset_top = -700.0
+offset_right = 105.0
+offset_bottom = -609.0
+mouse_filter = 2
+texture = ExtResource("15_fight")
+
+[node name="PauseAlert" parent="HUD" unique_id=631537214 instance=ExtResource("16_pause")]
+visible = false
+
+[node name="AbandonAlert" parent="HUD" unique_id=1876596150 instance=ExtResource("17_abandon")]
+visible = false
+layout_mode = 3
+
+[node name="HelpAlert" parent="HUD" unique_id=1432934612 instance=ExtResource("18_help")]
+visible = false
+layout_mode = 3
+
+[node name="SummaryAlert" parent="HUD" unique_id=437228848 instance=ExtResource("19_summary")]
+visible = false
+layout_mode = 3
+
+[connection signal="pressed" from="HUD/HudRoot/Bottom/MenuBtn" to="." method="_on_hud_menu_pressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/HelpIcon" to="." method="_on_hud_help_pressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/PauseIcon" to="." method="_on_hud_pause_pressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/MusicIcon" to="." method="_on_hud_music_pressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/SoundIcon" to="." method="_on_hud_sound_pressed"]

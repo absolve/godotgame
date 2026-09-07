@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/flamethrower.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/flame_bullet.tscn" id="3_bs"]
+
+[node name="Flamethrower" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "flamethrower"
+damage = 6.0
+rate = 26.0
+life = 0.32
+velocity = 240.0
+spread = 0.12
+spawn_distance = 26.0
+sound_alert_radius = 80.0
+bullet_scene = ExtResource("3_bs")

@@ -1,14 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="1_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/tanks/tank.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="2_enemy"]
 
-[node name="Enemy" type="CharacterBody2D"]
-script = ExtResource("1_enemy")
-
-[node name="Body" type="CollisionShape2D" parent="."]
-
-[node name="BodySprite" type="Sprite2D" parent="."]
-centered = true
-
-[node name="TurretSprite" type="Sprite2D" parent="."]
-centered = true
+[node name="Enemy" instance=ExtResource("1_base")]
+collision_layer = 32
+script = ExtResource("2_enemy")

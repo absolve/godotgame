@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://xlwnii7qiii7"]
+
+[ext_resource type="Script" uid="uid://cjkk1vtaurgxv" path="res://scripts/weapons/weapon.gd" id="1_w"]
+
+[node name="Weapon" type="Node2D" unique_id=472542483]
+script = ExtResource("1_w")
+
+[node name="FireTimer" type="Timer" parent="." unique_id=1932007675]
+one_shot = true
+
+[node name="FireSound" type="AudioStreamPlayer" parent="." unique_id=884788443]
+volume_db = -6.0
+
+[connection signal="timeout" from="FireTimer" to="." method="_on_fire_timer_timeout"]

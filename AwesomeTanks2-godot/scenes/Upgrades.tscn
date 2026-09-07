@@ -38,6 +38,7 @@
 [ext_resource type="Texture2D" path="res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres" id="39_tab_wp_a"]
 [ext_resource type="Texture2D" uid="uid://ybowjwgs20hy" path="res://sprites/menu/upgrades/performance.png" id="40_perf_bg"]
 [ext_resource type="PackedScene" uid="uid://dth0uqemnxtgr" path="res://scenes/weapon_upgrade_alert.tscn" id="41_alert"]
+[ext_resource type="Script" uid="uid://cjsu28ok5cnib" path="res://scripts/ui/stats_layer.gd" id="42_stats"]
 
 [node name="Upgrades" type="Control" unique_id=243739076]
 layout_mode = 3
@@ -147,9 +148,9 @@ grow_vertical = 2
 
 [node name="TabPerformance" type="TextureButton" parent="Design" unique_id=1796235758]
 layout_mode = 0
-offset_left = 9.0
+offset_left = 10.0
 offset_top = 139.0
-offset_right = 300.0
+offset_right = 301.0
 offset_bottom = 192.0
 texture_normal = ExtResource("36_tab_perf")
 texture_pressed = ExtResource("36_tab_perf")
@@ -157,9 +158,9 @@ texture_hover = ExtResource("36_tab_perf")
 
 [node name="TabWeapons" type="TextureButton" parent="Design" unique_id=810950583]
 layout_mode = 0
-offset_left = 300.0
+offset_left = 301.0
 offset_top = 139.0
-offset_right = 590.0
+offset_right = 591.0
 offset_bottom = 192.0
 texture_normal = ExtResource("39_tab_wp_a")
 texture_pressed = ExtResource("39_tab_wp_a")
@@ -243,6 +244,7 @@ texture_hover = ExtResource("23_play_h")
 stretch_mode = 0
 
 [node name="EditorBtn" type="Button" parent="Design" unique_id=1923636304]
+visible = false
 layout_mode = 0
 offset_left = 580.0
 offset_top = 528.0
@@ -345,6 +347,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("42_stats")
 
 [node name="Dim2" type="ColorRect" parent="StatsLayer" unique_id=7661861]
 layout_mode = 1
@@ -408,4 +411,3 @@ layout_mode = 1
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/EasyBtn" to="." method="_on_difficulty_easy_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/MediumBtn" to="." method="_on_difficulty_medium_pressed"]
 [connection signal="pressed" from="DifficultyLayer/Center/Panel/ButtonsV/HardBtn" to="." method="_on_difficulty_hard_pressed"]
-[connection signal="pressed" from="StatsLayer/Center2/Panel2/CloseBtn2" to="." method="_on_stats_close_pressed"]

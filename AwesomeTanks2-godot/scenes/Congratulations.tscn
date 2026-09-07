@@ -1,12 +1,12 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://b7o1ytp6iao1c"]
 
-[ext_resource type="Script" path="res://scripts/menu/congratulations.gd" id="1_cong"]
-[ext_resource type="Texture2D" path="res://sprites/menu/congratulations.png" id="2_bg"]
+[ext_resource type="Script" uid="uid://bfkiffr52bq3q" path="res://scripts/menu/congratulations.gd" id="1_cong"]
+[ext_resource type="Texture2D" uid="uid://48vvcj3bqa5c" path="res://sprites/menu/congratulations.png" id="2_bg"]
 [ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_normal.png.tres" id="3_cont_n"]
 [ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_hover.png.tres" id="4_cont_h"]
 [ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_down.png.tres" id="5_cont_d"]
 
-[node name="Congratulations" type="Control"]
+[node name="Congratulations" type="Control" unique_id=913597889]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cong")
 
-[node name="Design" type="Control" parent="."]
+[node name="Design" type="Control" parent="." unique_id=885189011]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -29,39 +29,36 @@ offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BG" type="TextureRect" parent="Design"]
+[node name="BG" type="TextureRect" parent="Design" unique_id=262219218]
 layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 600.0
 offset_bottom = 600.0
 texture = ExtResource("2_bg")
 stretch_mode = 5
 
-[node name="TotalScore" type="Label" parent="Design"]
+[node name="TotalScore" type="Label" parent="Design" unique_id=132692974]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 220.0
-offset_right = 500.0
-offset_bottom = 280.0
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 40
+offset_left = 108.0
+offset_top = 444.0
+offset_right = 508.0
+offset_bottom = 504.0
 theme_override_colors/font_color = Color(1, 0.71, 0.004, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
 text = " 0 Points "
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ContinueBtn" type="TextureButton" parent="Design"]
+[node name="ContinueBtn" type="TextureButton" parent="Design" unique_id=95408831]
 layout_mode = 0
 offset_left = 200.0
-offset_top = 380.0
-offset_right = 400.0
-offset_bottom = 460.0
+offset_top = 521.0
+offset_right = 389.0
+offset_bottom = 575.0
 texture_normal = ExtResource("3_cont_n")
-texture_hover = ExtResource("4_cont_h")
 texture_pressed = ExtResource("5_cont_d")
+texture_hover = ExtResource("4_cont_h")
 texture_disabled = ExtResource("3_cont_n")
-stretch_mode = 2
 
 [connection signal="pressed" from="Design/ContinueBtn" to="." method="_on_continue_pressed"]

@@ -6,12 +6,12 @@ extends TextureButton
 signal clicked(level_num: int)
 
 @export var level_num: int = 1
-
+@onready var player=$player
 
 func _ready() -> void:
 	button_down.connect(_on_down)
 	button_up.connect(_on_up)
-
+	pivot_offset = size / 2
 
 func refresh_state(unlocked: int) -> void:
 	# unlocked = 已通关关卡数（0 表示还没玩过第 1 关）
@@ -41,3 +41,13 @@ func _on_down() -> void:
 func _on_up() -> void:
 	if not disabled:
 		clicked.emit(level_num - 1)
+
+
+func _on_mouse_entered() -> void:
+	if !disabled:
+		player.play("zoomIn")
+
+
+func _on_mouse_exited() -> void:
+	if !disabled:
+		player.play("zoomOut")

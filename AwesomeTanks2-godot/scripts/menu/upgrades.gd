@@ -5,6 +5,7 @@ extends Control
 #const FONT: Font = preload("res://fonts/gunplay.ttf")
 const CARD_SCENE: PackedScene = preload("res://scenes/weapon_card.tscn")
 const STAT_CARD_SCENE: PackedScene = preload("res://scenes/stat_card.tscn")
+const StatsLayerScript := preload("res://scripts/ui/stats_layer.gd")
 
 # 10 张武器卡在 WeaponsPanel(581x309) 内的左上角坐标
 const CARD_POSITIONS: Dictionary = {
@@ -46,7 +47,7 @@ const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapo
 @onready var _weapons_panel: Control = $Design/WeaponsPanel
 @onready var _perf_panel: Control = $Design/PerformancePanel
 @onready var _difficulty_layer: Control = $DifficultyLayer
-@onready var _stats_layer: Control = $StatsLayer
+@onready var _stats_layer: StatsLayerScript = $StatsLayer
 @onready var _weapon_alert: Control = $WeaponAlert
 
 var _cards_by_key: Dictionary = {}   # key -> WeaponCard 实例
@@ -253,12 +254,7 @@ func _on_editor_pressed() -> void:
 
 func _on_stats_pressed() -> void:
 	Audio.play_button_down()
-	_stats_layer.visible = true
-
-
-func _on_stats_close_pressed() -> void:
-	Audio.play_button_down()
-	_stats_layer.visible = false
+	_stats_layer.open()  # 打开时重新读取统计/成就数据
 
 
 func _on_difficulty_pressed() -> void:

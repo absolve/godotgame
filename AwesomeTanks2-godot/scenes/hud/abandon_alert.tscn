@@ -1,0 +1,65 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/abandon_alert.gd" id="1_alert"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://sprites/game/alerts/abandon.png.tres" id="3_bg"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/yes_normal.png.tres" id="4_yn"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/yes_hover.png.tres" id="5_yh"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/yes_down.png.tres" id="6_yd"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/no_normal.png.tres" id="7_nn"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/no_hover.png.tres" id="8_nh"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/no_down.png.tres" id="9_nd"]
+
+[node name="AbandonAlert" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_alert")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="Center"]
+custom_minimum_size = Vector2(320, 252)
+layout_mode = 2
+
+[node name="Bg" type="TextureRect" parent="Center/Panel"]
+offset_right = 320.0
+offset_bottom = 252.0
+mouse_filter = 2
+texture = ExtResource("3_bg")
+
+[node name="YesBtn" type="TextureButton" parent="Center/Panel"]
+offset_left = 27.0
+offset_top = 166.0
+offset_right = 151.0
+offset_bottom = 221.0
+focus_mode = 0
+texture_normal = ExtResource("4_yn")
+texture_hover = ExtResource("5_yh")
+texture_pressed = ExtResource("6_yd")
+
+[node name="NoBtn" type="TextureButton" parent="Center/Panel"]
+offset_left = 165.0
+offset_top = 166.0
+offset_right = 289.0
+offset_bottom = 221.0
+focus_mode = 0
+texture_normal = ExtResource("7_nn")
+texture_hover = ExtResource("8_nh")
+texture_pressed = ExtResource("9_nd")

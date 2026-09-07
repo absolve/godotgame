@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/projectiles/bullet.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/shotgun.png.tres" id="t1"]
+
+[sub_resource type="CircleShape2D" id="ShapeBullet"]
+radius = 5
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{"frames": [ExtResource("t1")], "loop": false, "name": &"default", "speed": 1}]
+
+[node name="ShotgunBullet" instance=ExtResource("1_base")]
+
+[node name="AnimatedSprite" parent="."]
+sprite_frames = SubResource("Frames")
+
+[node name="Shape" parent="."]
+shape = SubResource("ShapeBullet")

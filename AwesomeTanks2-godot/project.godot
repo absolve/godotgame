@@ -27,6 +27,7 @@ Game="*res://scripts/autoload/game.gd"
 Audio="*res://scripts/autoload/audio.gd"
 Constants="*uid://btkfp47lg0ieh"
 FlashFx="*uid://chis38vv1lks5"
+Fx="*res://scripts/autoload/fx.gd"
 
 [display]
 

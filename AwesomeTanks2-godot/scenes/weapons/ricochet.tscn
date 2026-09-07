@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/ricochet.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/ricochet_bullet.tscn" id="3_bs"]
+
+[node name="Ricochet" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "ricochet"
+damage = 75.0
+rate = 5.0
+life = 1.4
+velocity = 480.0
+spawn_distance = 20.0
+sound_alert_radius = 120.0
+bullet_scene = ExtResource("3_bs")

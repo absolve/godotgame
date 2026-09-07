@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/railgun.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/pierce_bullet.tscn" id="3_bs"]
+
+[node name="Railgun" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "railgun"
+damage = 800.0
+rate = 1.2
+life = 0.16
+velocity = 4200.0
+spawn_distance = 22.0
+sound_alert_radius = 120.0
+bullet_scene = ExtResource("3_bs")

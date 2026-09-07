@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bt5bhxqr0n4ll"]
+
+[ext_resource type="Script" uid="uid://dqrs6n6spml17" path="res://scripts/tank/tank.gd" id="1_tank"]
+[ext_resource type="Shader" uid="uid://cq5bxn6b0ro1j" path="res://shaders/hit_flash.gdshader" id="2_fwlk1"]
+
+[sub_resource type="CircleShape2D" id="CircleBody"]
+radius = 22.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5efal"]
+resource_local_to_scene = true
+shader = ExtResource("2_fwlk1")
+shader_parameter/flash_amount = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
+
+[node name="Tank" type="CharacterBody2D" unique_id=1648966353]
+script = ExtResource("1_tank")
+
+[node name="Body" type="CollisionShape2D" parent="." unique_id=1334008395]
+shape = SubResource("CircleBody")
+
+[node name="BodySprite" type="AnimatedSprite2D" parent="." unique_id=146121314]
+material = SubResource("ShaderMaterial_5efal")
+
+[node name="TurretSprite" type="AnimatedSprite2D" parent="." unique_id=1814935764]

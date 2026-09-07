@@ -1,22 +1,24 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://bj2xvw1shq3fv"]
 
-[ext_resource type="Script" path="res://scripts/menu/level_select.gd" id="1_ls"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="1_3p8qn"]
+[ext_resource type="Script" uid="uid://dtw7a4sbjxn2h" path="res://scripts/menu/level_select.gd" id="1_ls"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/background.png.tres" id="2_bg"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_normal.png.tres" id="3_back_n"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_hover.png.tres" id="4_back_h"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_down.png.tres" id="5_back_d"]
-[ext_resource type="PackedScene" path="res://scenes/level_btn.tscn" id="6_lb"]
+[ext_resource type="PackedScene" uid="uid://dskw1ya6xx3o3" path="res://scenes/level_btn.tscn" id="6_lb"]
 
-[node name="LevelSelect" type="Control"]
+[node name="LevelSelect" type="Control" unique_id=567715099]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_3p8qn")
 script = ExtResource("1_ls")
 
-[node name="Design" type="Control" parent="."]
+[node name="Design" type="Control" parent="." unique_id=2006680214]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -30,7 +32,7 @@ offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BG" type="TextureRect" parent="Design"]
+[node name="BG" type="TextureRect" parent="Design" unique_id=602184430]
 layout_mode = 0
 offset_left = -24.0
 offset_top = -13.0
@@ -39,134 +41,147 @@ offset_bottom = 635.0
 texture = ExtResource("2_bg")
 stretch_mode = 5
 
-[node name="Btn1" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn1" parent="Design" unique_id=2081292427 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 133.0
 offset_top = 244.0
 offset_right = 203.0
 offset_bottom = 304.0
-level_num = 1
 
-[node name="Btn2" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn2" parent="Design" unique_id=1154054508 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 213.0
 offset_top = 244.0
 offset_right = 283.0
 offset_bottom = 304.0
 level_num = 2
 
-[node name="Btn3" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn3" parent="Design" unique_id=1790530690 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 293.0
 offset_top = 244.0
 offset_right = 363.0
 offset_bottom = 304.0
 level_num = 3
 
-[node name="Btn4" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn4" parent="Design" unique_id=1925650239 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 373.0
 offset_top = 244.0
 offset_right = 443.0
 offset_bottom = 304.0
 level_num = 4
 
-[node name="Btn5" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn5" parent="Design" unique_id=566082529 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 453.0
 offset_top = 244.0
 offset_right = 523.0
 offset_bottom = 304.0
 level_num = 5
 
-[node name="Btn6" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn6" parent="Design" unique_id=710418580 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 133.0
 offset_top = 324.0
 offset_right = 203.0
 offset_bottom = 384.0
 level_num = 6
 
-[node name="Btn7" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn7" parent="Design" unique_id=1302931801 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 213.0
 offset_top = 324.0
 offset_right = 283.0
 offset_bottom = 384.0
 level_num = 7
 
-[node name="Btn8" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn8" parent="Design" unique_id=1923948433 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 293.0
 offset_top = 324.0
 offset_right = 363.0
 offset_bottom = 384.0
 level_num = 8
 
-[node name="Btn9" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn9" parent="Design" unique_id=562497067 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 373.0
 offset_top = 324.0
 offset_right = 443.0
 offset_bottom = 384.0
 level_num = 9
 
-[node name="Btn10" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn10" parent="Design" unique_id=232170291 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 453.0
 offset_top = 324.0
 offset_right = 523.0
 offset_bottom = 384.0
 level_num = 10
 
-[node name="Btn11" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn11" parent="Design" unique_id=1553970269 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 133.0
 offset_top = 404.0
 offset_right = 203.0
 offset_bottom = 464.0
 level_num = 11
 
-[node name="Btn12" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn12" parent="Design" unique_id=275373287 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 213.0
 offset_top = 404.0
 offset_right = 283.0
 offset_bottom = 464.0
 level_num = 12
 
-[node name="Btn13" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn13" parent="Design" unique_id=483576736 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 293.0
 offset_top = 404.0
 offset_right = 363.0
 offset_bottom = 464.0
 level_num = 13
 
-[node name="Btn14" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn14" parent="Design" unique_id=1059071638 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 373.0
 offset_top = 404.0
 offset_right = 443.0
 offset_bottom = 464.0
 level_num = 14
 
-[node name="Btn15" parent="Design" instance=ExtResource("6_lb")]
+[node name="Btn15" parent="Design" unique_id=171212905 instance=ExtResource("6_lb")]
+layout_mode = 0
 offset_left = 453.0
 offset_top = 404.0
 offset_right = 523.0
 offset_bottom = 464.0
 level_num = 15
 
-[node name="TotalScore" type="Label" parent="Design"]
+[node name="TotalScore" type="Label" parent="Design" unique_id=1924720292]
 layout_mode = 0
 offset_left = 100.0
 offset_top = 470.0
 offset_right = 500.0
 offset_bottom = 500.0
+theme_override_colors/font_color = Color(1, 0.71, 0.004, 1)
+theme_override_font_sizes/font_size = 27
+text = " Total score: 0 Pts. "
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 27
-theme_override_colors/font_color = Color(1, 0.71, 0.004, 1)
-text = " Total score: 0 Pts. "
 
-[node name="BackBtn" type="TextureButton" parent="Design"]
+[node name="BackBtn" type="TextureButton" parent="Design" unique_id=583221466]
 layout_mode = 0
 offset_left = 164.0
-offset_top = 500.0
+offset_top = 529.0
 offset_right = 435.0
-offset_bottom = 554.0
+offset_bottom = 583.0
 texture_normal = ExtResource("3_back_n")
-texture_hover = ExtResource("4_back_h")
 texture_pressed = ExtResource("5_back_d")
+texture_hover = ExtResource("4_back_h")
 texture_disabled = ExtResource("3_back_n")
-stretch_mode = 2
 
 [connection signal="clicked" from="Design/Btn1" to="." method="_on_level_clicked"]
 [connection signal="clicked" from="Design/Btn2" to="." method="_on_level_clicked"]

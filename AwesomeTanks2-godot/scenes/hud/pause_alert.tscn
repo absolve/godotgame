@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://6djt56ov2jfw"]
+
+[ext_resource type="Script" uid="uid://bm61y4uptqt0e" path="res://scripts/ui/pause_alert.gd" id="1_pause"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://k6a7bpop75gx" path="res://scenes/sound_btn.tscn" id="3_soundbtn"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/pause_label.png.tres" id="4_label"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_normal.png.tres" id="5_cn"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_hover.png.tres" id="6_ch"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_down.png.tres" id="7_cd"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/sound_off.png.tres" id="8_s_off"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/sound_on.png.tres" id="9_s_on"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/music_off.png.tres" id="10_m_off"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/music_on.png.tres" id="11_m_on"]
+
+[node name="PauseAlert" type="Control" unique_id=601553389]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_pause")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=760246900]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1754987334]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="Center" unique_id=374853420]
+custom_minimum_size = Vector2(620, 420)
+layout_mode = 2
+
+[node name="PauseImg" type="TextureRect" parent="Center/Panel" unique_id=1217578219]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 232.0
+offset_right = 391.0
+offset_bottom = 278.0
+mouse_filter = 2
+texture = ExtResource("4_label")
+
+[node name="Toggles" type="Control" parent="Center/Panel" unique_id=839891854]
+visible = false
+anchors_preset = 0
+offset_top = 180.0
+offset_right = 620.0
+offset_bottom = 230.0
+mouse_filter = 2
+
+[node name="SoundBtn" parent="Center/Panel/Toggles" unique_id=665514718 instance=ExtResource("3_soundbtn")]
+layout_mode = 0
+offset_right = 56.0
+offset_bottom = 50.0
+texture_normal = ExtResource("8_s_off")
+texture_pressed = ExtResource("9_s_on")
+texture_hover = ExtResource("8_s_off")
+
+[node name="MusicBtn" parent="Center/Panel/Toggles" unique_id=1320627976 instance=ExtResource("3_soundbtn")]
+layout_mode = 0
+offset_left = 62.0
+offset_right = 118.0
+offset_bottom = 50.0
+texture_normal = ExtResource("10_m_off")
+texture_pressed = ExtResource("11_m_on")
+texture_hover = ExtResource("10_m_off")
+
+[node name="ContinueBtn" type="TextureButton" parent="Center/Panel" unique_id=795799776]
+layout_mode = 0
+offset_left = 215.5
+offset_top = 320.0
+offset_right = 404.5
+offset_bottom = 374.0
+focus_mode = 0
+texture_normal = ExtResource("5_cn")
+texture_pressed = ExtResource("7_cd")
+texture_hover = ExtResource("6_ch")

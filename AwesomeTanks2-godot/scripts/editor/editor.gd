@@ -104,12 +104,12 @@ func _on_save_pressed() -> void:
 	if file_name.is_empty():
 		_status.text = "Status: 请输入文件名"
 		return
-	var name := _name_edit.text.strip_edges()
+	var name = _name_edit.text.strip_edges()
 	if name.is_empty():
 		name = file_name
 	_current_level_name = name
 	_current_theme = _theme_option.get_item_text(_theme_option.selected)
-	var rows := _canvas.get_rows()
+	var rows = _canvas.get_rows()
 	var ok := ATLevels.save_custom_json(file_name, name, _current_theme, rows)
 	if ok:
 		_status.text = "Status: 已保存 %s.json" % file_name

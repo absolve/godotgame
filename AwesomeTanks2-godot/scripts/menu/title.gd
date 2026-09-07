@@ -12,11 +12,42 @@ extends Control
 @onready var _music_btn: TextureButton = $TopRight/MusicBtn
 @onready var _credits_layer: Control = $CreditsLayer
 
+# 开场动画元素（H5 MenuTitle：logo / 坦克 / UPGRADES 依次缩小淡入）
+@onready var _logo: TextureRect = $Center/Logo
+@onready var _tank: TextureRect = $Center/TankStage/Tank
+@onready var _upgrades: TextureRect = $Center/TankStage/UpgradesBadge
+
 func _ready() -> void:
 	Audio.play_music("music_menu.mp3")
 	# 从存档读取 sound/music 开关状态 → 设置 button_pressed + 贴图
 	_refresh_sound_btn(bool(Game.current.get("game", {}).get("sound", true)))
 	_refresh_music_btn(bool(Game.current.get("game", {}).get("music", true)))
+	_play_intro()
+
+
+# ---------- 开场动画（对应 H5 MenuTitle.create 的逐项入场） ----------
+## 依次执行：元素动画 → 播放 mouth_pop → 下一个元素
+func _play_intro() -> void:
+	# 等一帧让容器布局完成，取到元素尺寸作为缩放中心
+	await get_tree().process_frame
+	await _reveal(_logo)
+	Audio.play_sfx("mouth_pop.mp3")
+	await _reveal(_tank)
+	Audio.play_sfx("mouth_pop.mp3")
+	await _reveal(_upgrades)
+	Audio.play_sfx("mouth_pop.mp3")
+
+
+## 单个元素：从 1.5 倍缩小到 1，并 0.2s 内从黑色淡入；动画结束后返回
+func _reveal(item: TextureRect) -> void:
+	item.pivot_offset = item.size * 0.5
+	item.modulate = Color(0, 0, 0, 0)
+	item.scale = Vector2(1.5, 1.5)
+	var tw := create_tween()
+	tw.tween_property(item,"visible",true,0.1)
+	tw.parallel().tween_property(item, "modulate", Color.WHITE, 0.4)
+	tw.parallel().tween_property(item, "scale", Vector2.ONE, 0.4)
+	await tw.finished
 
 # ---------- 按钮贴图刷新 ----------
 func _refresh_sound_btn(on: bool) -> void:

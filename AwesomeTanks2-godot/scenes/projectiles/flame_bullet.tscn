@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/projectiles/bullet.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/flame_0.png.tres" id="t1"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/flame_1.png.tres" id="t2"]
+
+[sub_resource type="CircleShape2D" id="ShapeBullet"]
+radius = 5
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{"frames": [ExtResource("t1"), ExtResource("t2")], "loop": true, "name": &"default", "speed": 26}]
+
+[node name="FlameBullet" instance=ExtResource("1_base")]
+
+[node name="AnimatedSprite" parent="."]
+sprite_frames = SubResource("Frames")
+
+[node name="Shape" parent="."]
+shape = SubResource("ShapeBullet")

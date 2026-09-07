@@ -1,0 +1,22 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/projectiles/bullet.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/rocket_0.png.tres" id="t1"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/rocket_1.png.tres" id="t2"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/rocket_2.png.tres" id="t3"]
+[ext_resource type="Script" path="res://scripts/weapons/special_weapons.gd" id="script"]
+
+[sub_resource type="CircleShape2D" id="ShapeBullet"]
+radius = 7
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{"frames": [ExtResource("t1"), ExtResource("t2"), ExtResource("t3")], "loop": true, "name": &"default", "speed": 12}]
+
+[node name="Rocket" instance=ExtResource("1_base")]
+script = ExtResource("script")
+
+[node name="AnimatedSprite" parent="."]
+sprite_frames = SubResource("Frames")
+
+[node name="Shape" parent="."]
+shape = SubResource("ShapeBullet")

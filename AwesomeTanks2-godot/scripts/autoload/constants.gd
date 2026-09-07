@@ -17,7 +17,7 @@ enum Layer {
 }
 
 # 常用碰撞掩码工具
-static func layer_mask(layers: Array) -> int:
+func layer_mask(layers: Array) -> int:
 	var mask := 0
 	for l in layers:
 		mask |= 1 << (l - 1)

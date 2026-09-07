@@ -1,14 +1,25 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://4ilqhpdnf5rb"]
 
-[ext_resource type="Script" path="res://scripts/tank/player.gd" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://bt5bhxqr0n4ll" path="res://scenes/tanks/tank.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://cumb3negtvyio" path="res://scripts/tank/player.gd" id="2_player"]
+[ext_resource type="SpriteFrames" path="res://sprites/game/player/body_frames.tres" id="3_body"]
+[ext_resource type="Shader" uid="uid://cq5bxn6b0ro1j" path="res://shaders/hit_flash.gdshader" id="3_qu4a1"]
+[ext_resource type="SpriteFrames" path="res://sprites/game/player/turret_frames.tres" id="4_turret"]
 
-[node name="Player" type="CharacterBody2D"]
-script = ExtResource("1_player")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qu4a1"]
+resource_local_to_scene = true
+shader = ExtResource("3_qu4a1")
+shader_parameter/flash_amount = 0.0
+shader_parameter/flash_color = Color(1, 1, 1, 1)
 
-[node name="Body" type="CollisionShape2D" parent="."]
+[node name="Player" unique_id=310059283 instance=ExtResource("1_base")]
+collision_layer = 2
+script = ExtResource("2_player")
 
-[node name="BodySprite" type="Sprite2D" parent="."]
-centered = true
+[node name="BodySprite" parent="." index="1" unique_id=146121314]
+material = SubResource("ShaderMaterial_qu4a1")
+sprite_frames = ExtResource("3_body")
+animation = &"move"
 
-[node name="TurretSprite" type="Sprite2D" parent="."]
-centered = true
+[node name="TurretSprite" parent="." index="2" unique_id=1814935764]
+sprite_frames = ExtResource("4_turret")

@@ -70,9 +70,17 @@ func start_loop(key: String, file: String) -> void:
 		var p := AudioStreamPlayer.new()
 		p.stream = load(SOUND_DIR + file)
 		p.bus = "SFX"
+		p.finished.connect(_on_loop_finished.bind(p))
 		add_child(p)
 		p.play()
 		_loops[key] = p
+
+## MP3 不会自动循环：每播完一遍立即重播，直到 stop_loop/cancel_loop 移除
+func _on_loop_finished(p: AudioStreamPlayer) -> void:
+	if not is_instance_valid(p):
+		return
+	if _loops.values().has(p):
+		p.play()
 
 func stop_loop(key: String) -> void:
 	_loop_refs[key] = max(0, int(_loop_refs.get(key, 0)) - 1)

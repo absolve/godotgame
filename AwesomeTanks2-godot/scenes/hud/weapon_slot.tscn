@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dltyyymb47vkq"]
+
+[ext_resource type="Script" uid="uid://c64ri6tonja02" path="res://scripts/ui/weapon_slot.gd" id="1_slot"]
+[ext_resource type="Texture2D" path="res://sprites/game/hud/bar_ammo_small.png.tres" id="2_ammo"]
+
+[node name="WeaponSlot" type="TextureButton" unique_id=1511674472]
+custom_minimum_size = Vector2(55, 42)
+focus_mode = 0
+stretch_mode = 5
+script = ExtResource("1_slot")
+
+[node name="AmmoBar" type="TextureRect" parent="." unique_id=1592878814]
+visible = false
+layout_mode = 0
+mouse_filter = 2
+texture = ExtResource("2_ammo")
+expand_mode = 1

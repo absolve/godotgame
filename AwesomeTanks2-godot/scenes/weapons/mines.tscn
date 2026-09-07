@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/weapon_mines.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/mine.tscn" id="3_mine"]
+
+[node name="Mines" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "mines"
+damage = 80.0
+ammo = 20
+max_ammo = 20
+mine_radius = 85.0
+mine_scene = ExtResource("3_mine")

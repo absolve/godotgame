@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/mine.gd" id="1_mine"]
+[ext_resource type="Texture2D" path="res://sprites/game/projectiles/mine.png.tres" id="2_tex"]
+
+[sub_resource type="CircleShape2D" id="ShapeMine"]
+radius = 20.0
+
+[node name="Mine" type="Area2D"]
+script = ExtResource("1_mine")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("ShapeMine")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_tex")
+centered = true

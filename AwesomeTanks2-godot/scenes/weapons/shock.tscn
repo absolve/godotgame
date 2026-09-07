@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/shock.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/shock_bullet.tscn" id="3_bs"]
+
+[node name="Shock" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "shock"
+damage = 150.0
+rate = 2.2
+life = 0.12
+velocity = 800.0
+spawn_distance = 24.0
+sound_alert_radius = 80.0
+bullet_scene = ExtResource("3_bs")

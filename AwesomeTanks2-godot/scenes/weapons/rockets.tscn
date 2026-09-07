@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/weapons/rockets.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/rocket_bullet.tscn" id="3_bs"]
+
+[node name="Rockets" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+id = "rockets"
+damage = 500.0
+rate = 2.0
+life = 2.5
+velocity = 320.0
+spawn_distance = 24.0
+sound_alert_radius = 120.0
+bullet_scene = ExtResource("3_bs")

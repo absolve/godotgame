@@ -1,0 +1,64 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3]
+
+[ext_resource type="Texture2D" path="res://sprites/game/player/minigun.png.tres" id="1_minigun"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/shotgun.png.tres" id="2_shotgun"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/ricochet.png.tres" id="3_ricochet"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/flamethrower.png.tres" id="4_flame"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/cannon.png.tres" id="5_cannon"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/shock.png.tres" id="6_shock"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/rockets.png.tres" id="7_rockets"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/laser.png.tres" id="8_laser"]
+[ext_resource type="Texture2D" path="res://sprites/game/player/railgun.png.tres" id="9_railgun"]
+
+[resource]
+animations = [{
+"frames": [ExtResource("1_minigun")],
+"loop": false,
+"name": &"default",
+"speed": 1.0
+}, {
+"frames": [ExtResource("1_minigun")],
+"loop": false,
+"name": &"minigun",
+"speed": 1.0
+}, {
+"frames": [ExtResource("2_shotgun")],
+"loop": false,
+"name": &"shotgun",
+"speed": 1.0
+}, {
+"frames": [ExtResource("3_ricochet")],
+"loop": false,
+"name": &"ricochet",
+"speed": 1.0
+}, {
+"frames": [ExtResource("4_flame")],
+"loop": false,
+"name": &"flamethrower",
+"speed": 1.0
+}, {
+"frames": [ExtResource("5_cannon")],
+"loop": false,
+"name": &"cannon",
+"speed": 1.0
+}, {
+"frames": [ExtResource("6_shock")],
+"loop": false,
+"name": &"shock",
+"speed": 1.0
+}, {
+"frames": [ExtResource("7_rockets")],
+"loop": false,
+"name": &"rockets",
+"speed": 1.0
+}, {
+"frames": [ExtResource("8_laser")],
+"loop": false,
+"name": &"laser",
+"speed": 1.0
+}, {
+"frames": [ExtResource("9_railgun")],
+"loop": false,
+"name": &"railgun",
+"speed": 1.0
+}]

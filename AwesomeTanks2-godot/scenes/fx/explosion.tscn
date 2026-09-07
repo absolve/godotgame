@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/fx/fx_burst.gd" id="1_fx"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/smoke_0.png.tres" id="2_smoke"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/spark_0.png.tres" id="3_spark"]
+
+[node name="Explosion" type="Node2D"]
+script = ExtResource("1_fx")
+
+[node name="Smoke" type="CPUParticles2D" parent="."]
+emitting = true
+amount = 14
+lifetime = 0.55
+one_shot = true
+explosiveness = 0.7
+spread = 180.0
+gravity = Vector2(0, -30)
+initial_velocity_min = 40.0
+initial_velocity_max = 120.0
+scale_amount_min = 0.7
+scale_amount_max = 1.4
+texture = ExtResource("2_smoke")
+
+[node name="Sparks" type="CPUParticles2D" parent="."]
+emitting = true
+amount = 12
+lifetime = 0.35
+one_shot = true
+explosiveness = 0.8
+spread = 180.0
+gravity = Vector2(0, 80)
+initial_velocity_min = 90.0
+initial_velocity_max = 220.0
+scale_amount_min = 0.4
+scale_amount_max = 0.9
+texture = ExtResource("3_spark")

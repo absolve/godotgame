@@ -105,13 +105,13 @@ func reset() -> void:
 		g[key + "Ammo"] = Settings.AMMO_LIMITS[key]
 	save()
 
-func is_achievement_completed(name: String) -> bool:
-	return int(current["achievements"].get(name, 0)) >= Settings.ACHIEVEMENTS_LIMITS.get(name, 1)
+func is_achievement_completed(_name: String) -> bool:
+	return int(current["achievements"].get(_name, 0)) >= Settings.ACHIEVEMENTS_LIMITS.get(name, 1)
 
-func increase_achievement(name: String) -> bool:
+func increase_achievement(_name: String) -> bool:
 	var a: Dictionary = current["achievements"]
-	a[name] = int(a.get(name, 0)) + 1
-	return a[name] >= Settings.ACHIEVEMENTS_LIMITS.get(name, 1)
+	a[_name] = int(a.get(_name, 0)) + 1
+	return a[_name] >= Settings.ACHIEVEMENTS_LIMITS.get(_name, 1)
 
 func get_total_points() -> int:
 	var total := 0

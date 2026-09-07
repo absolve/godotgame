@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cqghkq8mqfm8y"]
+
+[ext_resource type="Script" uid="uid://cg18yksojr4ph" path="res://scripts/weapons/bullet.gd" id="1_bullet"]
+
+[sub_resource type="CircleShape2D" id="ShapeBullet"]
+radius = 5.0
+
+[node name="Bullet" type="Area2D" unique_id=146588880]
+script = ExtResource("1_bullet")
+
+[node name="Shape" type="CollisionShape2D" parent="." unique_id=60826249]
+shape = SubResource("ShapeBullet")
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="."]

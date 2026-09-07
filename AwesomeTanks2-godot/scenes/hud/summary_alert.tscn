@@ -1,0 +1,74 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/summary_alert.gd" id="1_summary"]
+[ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://sprites/game/summary/header_complete.png.tres" id="3_hc"]
+[ext_resource type="Texture2D" path="res://sprites/game/summary/header_failed.png.tres" id="4_hf"]
+[ext_resource type="Texture2D" path="res://sprites/game/summary/profit.png.tres" id="5_profit"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_normal.png.tres" id="6_cn"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_hover.png.tres" id="7_ch"]
+[ext_resource type="Texture2D" path="res://sprites/game/buttons/continue_down.png.tres" id="8_cd"]
+
+[node name="SummaryAlert" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_summary")
+
+[node name="Dim" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="Center"]
+custom_minimum_size = Vector2(640, 470)
+layout_mode = 2
+
+[node name="Header" type="TextureRect" parent="Center/Panel"]
+offset_left = 140.0
+offset_top = 40.0
+offset_right = 500.0
+offset_bottom = 131.0
+mouse_filter = 2
+texture = ExtResource("3_hc")
+
+[node name="Profit" type="TextureRect" parent="Center/Panel"]
+offset_left = 140.5
+offset_top = 180.0
+offset_right = 499.5
+offset_bottom = 255.0
+mouse_filter = 2
+texture = ExtResource("5_profit")
+
+[node name="Value" type="Label" parent="Center/Panel/Profit"]
+offset_right = 331.0
+offset_bottom = 75.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.655, 0, 1)
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ContinueBtn" type="TextureButton" parent="Center/Panel"]
+visible = false
+offset_left = 225.5
+offset_top = 320.0
+offset_right = 414.5
+offset_bottom = 374.0
+focus_mode = 0
+texture_normal = ExtResource("6_cn")
+texture_hover = ExtResource("7_ch")
+texture_pressed = ExtResource("8_cd")

@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c7mtcbx0swk64"]
+
+[ext_resource type="PackedScene" uid="uid://xlwnii7qiii7" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://b2tq57oex0gv4" path="res://scripts/weapons/weapon_laser.gd" id="2_script"]
+
+[node name="Laser" unique_id=1456387278 instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+beam_range = 620.0
+beam_dps = 900.0
+drain_per_sec = 60.0
+spawn_distance = 30.0
+
+[node name="Ray" type="RayCast2D" parent="." index="2" unique_id=53866911]
+target_position = Vector2(620, 0)
+collision_mask = 43
+
+[node name="Line" type="Line2D" parent="." index="3" unique_id=3675357]
+visible = false
+points = PackedVector2Array(0, 0, 200, 0)
+width = 3.0
+default_color = Color(1, 0.15, 0.15, 1)
