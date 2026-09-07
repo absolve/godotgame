@@ -1,16 +1,35 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://mrg57v28ot8h"]
 
-[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
-[ext_resource type="Script" path="res://scripts/weapons/railgun.gd" id="2_script"]
-[ext_resource type="PackedScene" path="res://scenes/projectiles/pierce_bullet.tscn" id="3_bs"]
+[ext_resource type="PackedScene" uid="uid://xlwnii7qiii7" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://by1hw6v7s2g78" path="res://scripts/weapons/railgun.gd" id="2_script"]
 
-[node name="Railgun" instance=ExtResource("1_base")]
+[sub_resource type="RectangleShape2D" id="Rect_hit"]
+size = Vector2(1200, 20)
+
+[node name="Railgun" unique_id=485862177 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-id = "railgun"
+beam_range = 1200.0
+beam_width = 20.0
 damage = 800.0
 rate = 1.2
 life = 0.16
-velocity = 4200.0
 spawn_distance = 22.0
 sound_alert_radius = 120.0
-bullet_scene = ExtResource("3_bs")
+
+[node name="WallRay" type="RayCast2D" parent="." index="2" unique_id=290742217]
+target_position = Vector2(1200, 0)
+
+[node name="HitArea" type="Area2D" parent="." index="3" unique_id=710436801]
+visible = false
+collision_layer = 0
+collision_mask = 58
+monitoring = false
+
+[node name="HitShape" type="CollisionShape2D" parent="HitArea" index="0" unique_id=1304097251]
+shape = SubResource("Rect_hit")
+
+[node name="Beam" type="Line2D" parent="." index="4" unique_id=388820088]
+visible = false
+points = PackedVector2Array(0, 0, 200, 0)
+width = 20.0
+texture_mode = 1

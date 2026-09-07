@@ -70,7 +70,7 @@
 - [ ] 🔲 **Shock**：闪电链式跳跃多目标（需目标查找算法）
 - [ ] 🔲 **Rockets**：[special_weapons.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/special_weapons.gd) 追踪 + 烟雾尾迹（L25）+ 范围爆炸（L36）
 - [ ] 🔲 **Laser**：[laser_beam.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/laser_beam.gd) 射线即时命中（骨架已有，需 `laser_loop` 音频 + 视觉）
-- [ ] 🔲 **Railgun**：射线穿透多目标
+- [x] ✅ **Railgun**：已改造为武器内置 RayCast2D(WallRay 找墙定长) + Area2D(HitArea 段内命中全部目标) + Line2D(Beam 双帧贴图交替+收缩淡出动画)；见 `scenes/weapons/railgun.tscn` / `scripts/weapons/railgun.gd`（原 pierce_bullet 场景/脚本已删除）
 - [ ] 🔲 **Mines**：[mine.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/mine.gd) 范围伤害（L39）+ 链式
 
 ### 通用完善
