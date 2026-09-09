@@ -13,4 +13,5 @@ life = 1.4
 velocity = 480.0
 spawn_distance = 20.0
 sound_alert_radius = 120.0
+recoil = 5.0
 bullet_scene = ExtResource("3_bs")

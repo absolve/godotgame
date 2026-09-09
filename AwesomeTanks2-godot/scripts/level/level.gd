@@ -85,6 +85,10 @@ var map_width: int = 0
 var map_height: int = 0
 var map_theme: int = 0 # Constants.gameTheme
 var occupancy: Array = [] # 动态对象占据标记（tiles 同尺寸）
+var _fog_solid: Array = [] # 迷雾遮挡标记（静态墙/可破坏障碍；玩家/敌人不挡视线）
+
+var _fog: Node = null        # ATFog 实例（_ready 中创建）
+var _fog_frame: int = 0      # 惰性更新计数（H5 updateFogLazy ≈ 每 3 帧一次）
 
 var _slot_nodes: Array = []
 var _last_hp_ratio: float = -1.0
@@ -112,6 +116,7 @@ func _ready() -> void:
 		if int(Game.current["game"]["difficulty"]) >= 0 else 1.0
 	parse(level_data)
 	_spawn_objects()
+	_setup_fog()
 	_collect_hud_nodes()
 	_sync_audio_icons()
 	_connect_popups()
@@ -143,16 +148,22 @@ func parse(_level_data: Array) -> void:
 		map_width = max(map_width, (r as String).length())
 	tiles.clear()
 	occupancy.clear()
+	_fog_solid.clear()
 	for y in range(map_height):
 		var row_arr: Array = []
 		var occ_row: Array = []
+		var solid_row: Array = []
 		var row_str: String = rows[y]
 		for x in range(map_width):
 			var ch: String = " " if x >= row_str.length() else row_str[x]
-			row_arr.append(Constants.CHAR_TO_TILE.get(ch, Constants.Tile.EMPTY))
+			var tile: int = int(Constants.CHAR_TO_TILE.get(ch, Constants.Tile.EMPTY))
+			row_arr.append(tile)
 			occ_row.append(false)
+			# 静态墙挡视线；可破坏障碍(bricks/wood/crate/barrel/gate)由 _spawn_object_at 再标
+			solid_row.append(Constants.is_static_wall(tile))
 		tiles.append(row_arr)
 		occupancy.append(occ_row)
+		_fog_solid.append(solid_row)
 	_build_static_tiles()
 
 
@@ -269,6 +280,52 @@ func _process(delta: float) -> void:
 		if freeze_time <= 0:
 			_unfreeze_enemies()
 	_refresh_hud()
+	# 迷雾惰性更新（H5 updateFogLazy：约每 3 帧一次）
+	_fog_frame += 1
+	if _fog != null and player != null and is_instance_valid(player) \
+			and _fog_frame % 3 == 0:
+		_update_fog()
+
+
+## 按玩家当前位置/朝向刷新雾（出生后先执行一次让出生点周围可见）
+func _update_fog() -> void:
+	if _fog == null or player == null or not is_instance_valid(player):
+		return
+	# H5 updateFog：先无条件揭玩家脚下大圈，再做扇形射线揭示
+	var pt := px_to_tile(player.global_position.x)
+	var pp := px_to_tile(player.global_position.y)
+	_fog.reveal_tile_area(pt, pp)
+	var view_angle := float(player.get("view_angle")) if "view_angle" in player else PI / 4.0
+	var view_dist := float(player.get("view_distance")) if "view_distance" in player else 300.0
+	var aim: float = player.get_turret_rotation() if player.has_method("get_turret_rotation") \
+		else float(player.rotation)
+	_fog.update_fov(player.global_position, aim, view_angle, view_dist)
+
+
+## 出生后立即揭示出生点周边（关卡开始时没有全图视野）
+func _setup_fog() -> void:
+	_fog = ATFog.new()
+	_fog.name = "Fog"
+	add_child(_fog)
+	_fog.configure(0, 0, map_width, map_height)
+	_fog.set_blocked_cb(_fog_is_blocked)
+	_fog.z_index = 100   # 盖在静态层/物体层之上
+	# 玩家尚未生成? — _spawn_objects 已先跑，但玩家位置绑定在 bind_player；
+	# 等首帧 player 就绪后再揭。标记立即尝试一次（有 player 则立刻可见）
+	_update_fog()
+
+
+## Fog 遮挡查询：静态墙或仍存活的可破坏障碍挡住视线（玩家/敌人不挡，同 H5）
+func _fog_is_blocked(x: int, y: int) -> bool:
+	if x < 0 or y < 0 or x >= map_width or y >= map_height:
+		return true   # 越界视为墙
+	return bool(_fog_solid[y][x])
+
+
+func _mark_fog_blocker(x: int, y: int, on: bool) -> void:
+	if x < 0 or y < 0 or x >= map_width or y >= map_height:
+		return
+	_fog_solid[y][x] = on
 
 
 ## 每帧同步血瓶 / 武器槽（幂等；数据没变化时开销可忽略）
@@ -453,13 +510,15 @@ func _spawn_object_at(tile: int, x: int, y: int) -> void:
 	if tile == Constants.Tile.PLAYER:
 		_spawn_player(pos, x, y)
 		return
-	# 2) 障碍物（油桶/木箱/门/木板/砖墙）
+	# 2) 障碍物（油桶/木箱/门/木板/砖墙）——挡视线（可被摧毁后解除）
 	if OBJECT_SCENES.has(tile):
 		var obj: Node2D = (OBJECT_SCENES[tile] as PackedScene).instantiate()
 		obj.position = pos
 		if "tile_type" in obj:
 			obj.tile_type = tile
 		_objects_layer.add_child(obj)
+		_mark_fog_blocker(x, y, true)
+		obj.tree_exiting.connect(func() -> void: _mark_fog_blocker(x, y, false))
 		return
 	# 3) 敌人（敌人场景族就绪后按 tile 映射对应派生场景）
 	if Constants.is_enemy(tile):

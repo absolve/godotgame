@@ -68,6 +68,7 @@ func _shoot() -> void:
 		if ammo <= 0:
 			ammo = 0
 			out_of_ammo.emit(self)
+	_apply_recoil()
 	shot.emit(self)
 
 

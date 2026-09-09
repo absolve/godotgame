@@ -15,4 +15,5 @@ spread = 0.628
 spawn_count = 4
 spawn_distance = 20.0
 sound_alert_radius = 120.0
+recoil = 5.0
 bullet_scene = ExtResource("3_bs")

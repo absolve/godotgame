@@ -8,6 +8,7 @@ var health: float = 30.0
 var max_health: float = 30.0
 var destructible: bool = true
 var tile_type: int = Constants.Tile.EMPTY
+var conducts_current: bool = false  # H5 conductsCurrent：crate/木箱/砖默认绝缘；油桶(barrel)导电=true
 
 signal destroyed(obstacle)
 

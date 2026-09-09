@@ -9,7 +9,8 @@ func _ready() -> void:
 	# 固定不动（CharacterBody2D 不调用 move，velocity 保持为 0）
 
 func _physics_process(delta: float) -> void:
-	# 不调用 super 的 AI 巡逻；只旋转炮塔朝玩家
+	# 不调用 super 的 AI 巡逻；只旋转炮塔朝玩家 + 后坐力偏移
+	_update_turret_recoil(delta)
 	if level and is_instance_valid(level.player):
 		var aim = (level.player.global_position - global_position).angle()
 		rotate_turret(aim, delta)

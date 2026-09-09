@@ -67,7 +67,7 @@
 - [ ] 🔲 **Ricochet**：子弹碰墙弹跳（需覆盖 bullet 的 `_on_hit`，墙体反弹而非销毁）
 - [ ] 🔲 **Flamethrower**：火焰粒子流 + 持续伤害（需粒子 + `flame_loop` 音频已备）
 - [ ] 🔲 **Cannon**：等离子弹（普通子弹加大伤害）
-- [ ] 🔲 **Shock**：闪电链式跳跃多目标（需目标查找算法）
+- [x] ✅ **Shock**：已重做为武器内置持续武器（无子弹）——RayCast2D(主射线找最近命中体) + Area2D(Chain，命中点附近检测敌人/油桶, 半径200) + Beam/Arc1..3(Line2D, 帧图按段长交替+alpha抖动)；首目标+最多3跳、逐跳最近优先+视线校验；见 `scenes/weapons/shock.tscn` / `scripts/weapons/shock.gd`（原 shock_bullet 场景/脚本已删除；tank/obstacle 增加 H5 conducts_current 导电标记）
 - [ ] 🔲 **Rockets**：[special_weapons.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/special_weapons.gd) 追踪 + 烟雾尾迹（L25）+ 范围爆炸（L36）
 - [ ] 🔲 **Laser**：[laser_beam.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/laser_beam.gd) 射线即时命中（骨架已有，需 `laser_loop` 音频 + 视觉）
 - [x] ✅ **Railgun**：已改造为武器内置 RayCast2D(WallRay 找墙定长) + Area2D(HitArea 段内命中全部目标) + Line2D(Beam 双帧贴图交替+收缩淡出动画)；见 `scenes/weapons/railgun.tscn` / `scripts/weapons/railgun.gd`（原 pierce_bullet 场景/脚本已删除）
@@ -136,10 +136,11 @@
 
 文件：[fog.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/level/fog.gd)
 
-- [ ] 🔲 搭建 `SubViewport` 节点结构（L6）
-- [ ] 🔲 `reveal()` 圆形擦除绘制（L35）
-- [ ] 🔲 `_process` 逐格揭开跟随玩家（L40）
-- [ ] 🔲 视野角度/距离限制下的可见区域计算
+- [x] ✅ 已重写：`tiles` 永久揭示网格 + 每格羽化圆洞黑色 ImageTexture（无需 SubViewport/shader）
+- [x] ✅ `reveal_tile()` 单格揭示 / `reveal_tile_area()` 玩家脚下大圈（H5 revealTileArea）
+- [x] ✅ 扇形视野 `update_fov()`：按炮塔朝向 ±view_angle、view_distance，36 条射线×20 步逐格揭雾，遇墙/可破坏障碍即停（墙后、箱子后不揭）
+- [x] ✅ Level 接入：出生点立即揭雾 + `_process` 每 3 帧惰性更新；障碍被摧毁后解除遮挡
+- 待办：敌人开火/受击时 `revealFogAtLocation` 暴露自己（接口已留 `Level._update_fog`/fog API，可后续在敌人命中处调用 `reveal_tile`）
 
 ---
 

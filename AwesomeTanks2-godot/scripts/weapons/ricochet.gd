@@ -88,8 +88,6 @@ func _fire_charged() -> void:
 		if tank.has_method("get_turret_position") else tank.global_position
 	b.global_position = pos
 	b.rotation = _get_aim_angle()
-	if bullet_texture != null and b.has_node("Sprite2D"):
-		(b.get_node("Sprite2D") as Sprite2D).texture = bullet_texture
 	if b.has_method("setup"):
 		b.setup(team, dmg, velocity, life, Color.WHITE, sound_alert_radius)
 	if "owner_actor" in b:
@@ -102,6 +100,7 @@ func _fire_charged() -> void:
 		holder.add_child(b)
 	if _fire_sound != null and _fire_sound.stream != null:
 		_fire_sound.play()
+	_apply_recoil()
 	shot.emit(self)
 	charge = 0.0
 

@@ -11,6 +11,7 @@ var _exploded := false
 
 func _ready() -> void:
 	super._ready()
+	conducts_current = true  # H5：油桶导电，被 Shock 电到会传导（父类默认 false）
 	health = 1.0
 	max_health = 1.0
 

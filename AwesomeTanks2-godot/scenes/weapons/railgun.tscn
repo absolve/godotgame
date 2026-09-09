@@ -15,6 +15,7 @@ rate = 1.2
 life = 0.16
 spawn_distance = 22.0
 sound_alert_radius = 120.0
+recoil = 5.0
 
 [node name="WallRay" type="RayCast2D" parent="." index="2" unique_id=290742217]
 target_position = Vector2(1200, 0)

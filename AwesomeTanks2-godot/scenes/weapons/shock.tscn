@@ -1,16 +1,57 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://0lbtlunc68xy"]
 
-[ext_resource type="PackedScene" path="res://scenes/weapons/weapon.tscn" id="1_base"]
-[ext_resource type="Script" path="res://scripts/weapons/shock.gd" id="2_script"]
-[ext_resource type="PackedScene" path="res://scenes/projectiles/shock_bullet.tscn" id="3_bs"]
+[ext_resource type="PackedScene" uid="uid://xlwnii7qiii7" path="res://scenes/weapons/weapon.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://csinjd7wkp3t2" path="res://scripts/weapons/shock.gd" id="2_script"]
 
-[node name="Shock" instance=ExtResource("1_base")]
+[sub_resource type="CircleShape2D" id="Circle_chain"]
+radius = 200.0
+
+[node name="Shock" unique_id=953918711 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-id = "shock"
-damage = 150.0
-rate = 2.2
-life = 0.12
-velocity = 800.0
+beam_range = 900.0
+chain_radius = 200.0
+chain_max_hops = 3
+drain_per_sec = 60.0
+damage = 2.0
+rate = 0.0
+velocity = 0.0
 spawn_distance = 24.0
-sound_alert_radius = 80.0
-bullet_scene = ExtResource("3_bs")
+sound_alert_radius = 100.0
+
+[node name="Ray" type="RayCast2D" parent="." index="2" unique_id=1554075075]
+target_position = Vector2(900, 0)
+collision_mask = 59
+
+[node name="Chain" type="Area2D" parent="." index="3" unique_id=2141791001]
+visible = false
+collision_layer = 0
+collision_mask = 58
+monitoring = false
+
+[node name="Shape" type="CollisionShape2D" parent="Chain" index="0" unique_id=115946297]
+shape = SubResource("Circle_chain")
+
+[node name="Beam" type="Line2D" parent="." index="4" unique_id=706821789]
+visible = false
+points = PackedVector2Array(0, 0, 100, 0)
+width = 20.0
+default_color = Color(0.7, 0.95, 1, 1)
+texture_mode = 2
+
+[node name="Arc1" type="Line2D" parent="." index="5" unique_id=14175373]
+visible = false
+points = PackedVector2Array(0, 0, 60, 0)
+default_color = Color(0.7, 0.95, 1, 1)
+texture_mode = 2
+
+[node name="Arc2" type="Line2D" parent="." index="6" unique_id=1170098834]
+visible = false
+points = PackedVector2Array(0, 0, 60, 0)
+default_color = Color(0.7, 0.95, 1, 1)
+texture_mode = 2
+
+[node name="Arc3" type="Line2D" parent="." index="7" unique_id=1668235927]
+visible = false
+points = PackedVector2Array(0, 0, 60, 0)
+default_color = Color(0.7, 0.95, 1, 1)
+texture_mode = 2

@@ -30,14 +30,21 @@ var weapons: Array = []             # 武器节点数组（可为 null 占位）
 var weapon: Node = null
 var invincible: bool = false
 var alive: bool = true
+var conducts_current: bool = true   # H5 conductsCurrent：坦克(敌人/玩家/炮塔/生成器)导电（Shock 链）
 
-# 炮塔后坐力
+# 炮塔后坐力（H5 recoil：武器开火时 tank.recoil=3~5，炮塔沿炮管反方向偏移后衰减）
 var _recoil: float = 0.0
-var _turret_offset: Vector2 = Vector2.ZERO
 var kill_delay: float = 0.12
+
+# 后坐力衰减速度（px/s；H5 每帧 -0.3 @60fps ≈ 18/s）
+const RECOIL_DECAY_PER_SEC: float = 18.0
 
 var _material: ShaderMaterial = null
 var _tween: Tween = null
+
+
+
+
 
 func _ready() -> void:
 	# 圆形碰撞（可在场景给 CollisionShape2D 预设，这里兜底重建）
@@ -55,18 +62,17 @@ func _my_mask() -> int:
 	# 坦克碰墙 + 障碍物 + 对方队伍
 	return Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER, Constants.Layer.PLAYER, Constants.Layer.ENEMY])
 
-func _physics_process(_delta: float) -> void:
-	# 后坐力恢复 + 炮塔位置同步
-	_recoil = max(0.0, _recoil - 0.3)
-	_turret_sprite.position = -Vector2(cos(_turret_sprite.rotation), sin(_turret_sprite.rotation)) * _recoil
+func _physics_process(delta: float) -> void:
+	# 炮塔后坐力恢复 + 炮管反方向偏移
+	_update_turret_recoil(delta)
 	if not alive:
 		_body_sprite.stop()
 		return
 	# 车体朝速度方向旋转 + 履带动画
-	var v := velocity
-	var speed := v.length()
+	#var v := velocity
+	var speed := velocity.length()
 	if speed > 1.0:
-		var target := v.angle()
+		var target := velocity.angle()
 		var diff := wrapf(target - _body_sprite.rotation, -PI, PI)
 		var step = deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
 		_body_sprite.rotation += clamp(diff, -step, step)
@@ -90,6 +96,14 @@ func rotate_turret(target_angle: float, delta: float) -> void:
 func get_turret_position(offset: float) -> Vector2:
 	var r := _turret_sprite.rotation
 	return global_position + Vector2(cos(r), sin(r)) * offset
+
+
+## 炮塔当前朝向角（用于 Fog 视野扇形等）
+func get_turret_rotation() -> float:
+	if _turret_sprite != null:
+		return _turret_sprite.rotation
+	return rotation
+
 
 # ============================================================
 # 视觉动画（车体履带 / 炮塔切武器）
@@ -236,3 +250,21 @@ func flash(color := Color.WHITE, duration := 0.2) -> void:
 func _set_amount(v: float) -> void:
 	if _material != null:
 		_material.set_shader_parameter("flash_amount", v)
+
+## 触发炮塔后坐力（H5 recoil setter：只取较大值，连续射击保持峰值）
+func apply_recoil(strength: float) -> void:
+	if strength > _recoil:
+		_recoil = strength
+
+## 后坐力恢复 + 炮塔精灵按炮管反方向偏移（delta 驱动，消除帧率相关）
+func _update_turret_recoil(delta: float) -> void:
+	if _turret_sprite == null:
+		return
+	_recoil = maxf(_recoil - RECOIL_DECAY_PER_SEC * delta, 0.0)
+	if _recoil <= 0.0:
+		if not _turret_sprite.position.is_zero_approx():
+			_turret_sprite.position = Vector2.ZERO
+		return
+	# 炮管反方向偏移（旋转在精灵自身坐标系，cos/sin 即炮口朝向的反向）
+	var r := _turret_sprite.rotation
+	_turret_sprite.position = -Vector2(cos(r), sin(r)) * _recoil

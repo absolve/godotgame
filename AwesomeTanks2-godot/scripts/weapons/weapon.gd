@@ -30,8 +30,11 @@ var id: String = ""
 @export var spawn_distance: float = 20.0
 @export var sound_alert_radius: float = 0.0
 
+# —— 炮塔后坐力（H5：开火时 tank.recoil=数值，minigun=3、shotgun/cannon/ricochet/railgun=5）——
+@export var recoil := 0.0
+
 @export var bullet_scene: PackedScene = null
-@export var bullet_texture: Texture2D = null
+#@export var bullet_texture: Texture2D = null
 
 # —— 音效配置 ——
 @export var fire_sfx := "" # 开火音（经 FireSound 节点播放）
@@ -44,8 +47,8 @@ var id: String = ""
 # —— 是否允许开火（坦克输入层设置）——
 var can_fire: bool = true
 
-var _loop_started := false
-var _fire_start_played := false
+#var _loop_started := false
+#var _fire_start_played := false
 
 signal shot(weapon)
 signal out_of_ammo(weapon)
@@ -184,7 +187,14 @@ func _shoot() -> void:
 			ammo = 0
 			#set_firing(false)
 			out_of_ammo.emit(self)
+	_apply_recoil()
 	shot.emit(self)
+
+
+## 开火后触发炮塔后坐力（供基类 _shoot 与各子类发射逻辑调用）
+func _apply_recoil() -> void:
+	if recoil > 0.0 and tank != null and tank.has_method("apply_recoil"):
+		tank.call("apply_recoil", recoil)
 
 
 func _get_aim_angle() -> float:
@@ -206,8 +216,8 @@ func _spawn_bullet(angle: float) -> Node2D:
 		if tank.has_method("get_turret_position") else tank.global_position
 	b.global_position = pos
 	b.rotation = angle
-	if bullet_texture != null and b.has_node("Sprite2D"):
-		(b.get_node("Sprite2D") as Sprite2D).texture = bullet_texture
+	#if bullet_texture != null and b.has_node("Sprite2D"):
+		#(b.get_node("Sprite2D") as Sprite2D).texture = bullet_texture
 	if b.has_method("setup"):
 		b.setup(team, damage, velocity, life, Color.WHITE, sound_alert_radius)
 	if "owner_actor" in b:
