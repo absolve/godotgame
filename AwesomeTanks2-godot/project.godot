@@ -97,6 +97,7 @@ pause={
 2d_physics/layer_4="obstacle"
 2d_physics/layer_5="enemy_spawner"
 2d_physics/layer_6="enemy"
+2d_physics/layer_7="fog"
 
 [rendering]
 

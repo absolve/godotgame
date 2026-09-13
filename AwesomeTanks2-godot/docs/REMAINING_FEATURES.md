@@ -80,31 +80,81 @@
 
 ---
 
-## 六、敌人 AI（状态机为空壳）
+## 六、敌人 AI（节点状态机基础版已接入）
 
-文件：[ai_machine.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/enemies/ai_machine.gd)
+框架：`scripts/fsm/state.gd` + `scripts/fsm/state_machine.gd`（场景 `scenes/fsm/state_machine.tscn`）
+敌人状态：`scripts/enemies/states/`（基类 `enemy_state.gd` 提供 `can_see_player()/aim_at_player()/fire()/navigate_to()/move_towards()` 等工具）
+寻路：`scripts/level/pathfinder.gd`（`ATPathfinder`，Godot 内置 `AStarGrid2D` 包装；由 `Level` 持有，见下）
 
-- [ ] 🔲 `StateIdle`：巡逻 + 转向逻辑（L52-53 空）
-- [ ] 🔲 `StateGoToSound`：调查声音源（需声音系统）
-- [ ] 🔲 `StateGoToPlayer`：直接追击（L55 空）
-- [ ] 🔲 `StateFollowPlayer`：A* 寻路追击（用 `NavigationAgent2D`，L59 空）
-- [ ] 🔲 `StateFrozen`：冰冻（已有，需 `on_unfreeze` 恢复）
-- [ ] 🔲 视线检测：`RayCast2D` + 视野角度/距离判断（[enemy.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/enemies/enemy.gd) L24）
-- [ ] 🔲 声音警报系统：开火/碰撞产生声音圆，范围内敌人 `alert_others()`（已声明，需调用点）
-- [ ] 🔲 警戒链：敌人间互相通知（`alert_others`/`on_alerted` 已声明）
+**已接入**（`scenes/Enemy.tscn` 里挂了 `StateMachine`，子节点为 4 个状态，初始 `Idle`）：
+
+| 状态 | 行为 |
+|---|---|
+| `Idle` | 原地巡视炮塔（每 2s 转 90°，H5 patrol）；看见玩家 → GoToPlayer |
+| `GoToSound` | 寻路走向声音点，到达/超时回 Idle；途中看见玩家 → GoToPlayer |
+| `GoToPlayer` | 寻路追到 `keep_distance` 停下；炮塔瞄准、对准+视线通畅即开火；丢失视线 2.5s → Idle |
+| `Frozen` | 完全静止（不移动/不开火/不转向）；`unfreeze()` → Idle |
+
+事件入口（`enemy.gd`）：`on_alerted(pos)` → GoToSound（追击/冰冻中忽略）、`on_player_in_sight()` → GoToPlayer、`freeze()/unfreeze()` → Frozen/Idle（`Level.freeze_enemies()` 已补上对所有敌人调用 `freeze()` + 冰冻/解冻音效）。
+
+### 寻路（`ATPathfinder` + `ATEnemy.navigate_to`）
+
+不照搬 H5 的 Easystar，直接用引擎能力：`AStarGrid2D` 就是"2D 网格 A\*"，包装层只做三件事——
+按关卡瓦片尺寸初始化网格、把不可通行格标 solid、世界坐标 ↔ 格子坐标换算。
+
+- **Level 侧**：`_ready()` 里 `parse() → _setup_pathfinder() → _spawn_objects()`；`pathfinder` 为公开成员，
+  另提供 `find_path()/is_line_walkable()` 便捷方法。
+  - 静态墙/秘密墙：建网格时标 solid；
+  - 可破坏障碍物（木箱/砖墙/油桶/木板/门）：生成时标 solid，接 `ATObstacle.destroyed` → 摧毁后**解除**（炸开后路径重新打通）；
+  - 固定单位（炮塔/生成器）：占格标 solid，接 `killed` → 被摧毁后解除（移动坦克不标 solid，避免互相堵路抖动）。
+- **敌人侧**：`ATEnemy.navigate_to(target)`
+  1. 直线（格子级 Bresenham）可走 → 直接朝目标推进（快路径，手感自然，不跑 A\*）；
+  2. 被挡住 → `find_path()` 取路径并 `smooth_path()` 拉直（string pulling），按 `repath_interval = 0.45s` 重算，逐路径点跟随（`waypoint_reach = 14px`）；
+  3. 目标不可达（玩家在还没炸开的砖墙房间里）→ 用 `AStarGrid2D.get_id_path(..., allow_partial_path = true)` 拿到"最接近目标的可达格"的部分路径，一路推进到墙边而不是原地发呆；
+  4. 起/终点格被占（单位压在障碍格上）→ 自动退到邻近可走格。
+  5. `level == null` 或没有 pathfinder（测试用假关卡）→ 退化为直线推进，不报错。
+
+- [x] ✅ 炮塔/生成器暂不跑这套移动 AI（各自 `_ready` 里 `ai.enabled = false`，炮塔 `move_speed = 0`）
+- [x] ✅ 校验：初始 Idle→巡视转动→见玩家 GoToPlayer→贴近开火→失去目标回 Idle→听声 GoToSound（朝声音移动）→冰冻静止→解冻回 Idle；真实关卡（含 Boss/炮塔/生成器）运行无报错
+- [x] ✅ 寻路校验：网格逻辑单测（绕墙 A\*、平滑不穿墙、目标为墙退化、越界/同格返回空）+ 物理推进实测（敌人绕过竖墙走下方缺口抵达目标约 40px）+ 15 张关卡全部建网格并与瓦片表零误差 + 打掉障碍物该格重新可通行
+- [ ] 🔲 炮塔专属状态（原地 Attack/Patrol，配合 `shoot_angle` 与 90° 巡视）
+- [ ] 🔲 声音系统：开火/碰撞产生声音圆并调用 `alert_others()`（现在只有接口，需在开火点接上）
+- [ ] 🔲 警戒链调用点：同伴开枪/玩家被发现时广播给半径内敌人
+- [ ] 🔲 复杂行为加到状态里：保持掩体、预判射击、命中后退避、Boss 专属行为
+- [ ] 🔲 单位间避让（现在只把固定单位当障碍；移动单位之间仍可能互相顶住）
+- [ ] 🔲 死亡单位清理（坦克 `_kill()` 只置 `alive=false` 并移除占格标记，尸体节点仍在场景里挡路）
+- [ ] 🔲 冰冻视觉（冰壳贴图/解冻特效）
+- [ ] 🔲 Kamikaze 自爆（贴近玩家 50px 内自爆：半径 150、伤害 1000）
+- [ ] 🔲 旧的 `scripts/enemies/ai_machine.gd`（对象式状态机）已被节点状态机取代，可删除
 
 ---
 
-## 七、敌人类型
+## 七、敌人类型（**已全部创建；重复类型已合并为形态场景**）
 
-- [ ] 🔲 [enemy.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/enemies/enemy.gd) `patrol()` 实现（L22）
-- [ ] 🔲 9 种坦克（minigun/shotgun/cannon/rockets/laser/ricochet/flamethrower/railgun/kamikaze）各自武器与行为
-- [ ] 🔲 [turret_enemy.gd](file:///f:/AwesomeTanks2-main/AwesomeTanks2-godot/scripts/enemies/turret_enemy.gd) `_has_line_of_sight()` RayCast2D（L22）
-- [ ] 🔲 8 种固定炮塔武器配置
-- [ ] 🔲 [spawner.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/enemies/spawner.gd) `_try_spawn()` 实例化敌人放附近空格（L31）
-- [ ] 🔲 7 种生成器（颜色对应敌人类型）
-- [ ] 🔲 Boss 类：7 种 Boss（高血量 + 特殊武器 + 死亡掉落）
-- [ ] 🔲 敌人贴图随武器类型切换
+基类：`scenes/Enemy.tscn`（`tank.tscn` + `scripts/enemies/enemy.gd`，另加 `BaseSprite` 供炮塔底座）
+- 敌人基本参数都在 `ATEnemy` 的导出属性里：`enemy_id / tank_key / max_health / points / move_speed / turret_speed / view_angle / view_distance / shoot_angle / shoot_range / alert_radius / is_boss`
+- 坦克/Boss 的车体与炮塔贴图写在各独立场景的 `SpriteFrames` 上（车体两帧 `move` 动画，可扩展更多帧）
+- 武器 = `scenes/weapons/*.tscn` 作为**子节点实例**（独立场景）或运行时实例化（形态场景），并在其中覆盖 CPU 专用参数；`ATEnemy._collect_weapons()` 自动收集并注入 `tank`/`team`
+
+共 **18 个场景**（`scenes/enemies/`），承载 **31 种敌人类型**：
+
+| 类别 | 组织方式 | 场景数 |
+|---|---|---|
+| 移动坦克 9 种 | 各自独立场景：`EnemyMinigun / Shotgun / Cannon / Rockets / Ricochet / Laser / Railgun / Flamethrower / Kamikaze` | 9 |
+| Boss 7 种 | 各自独立场景：`BossShotgun / Cannon / Rockets / Laser / Ricochet / Railgun / Flamethrower`（boss_body + `*_boss` 炮塔，`is_boss=true`） | 7 |
+| 固定炮塔 8 种 | **合并为 1 个形态场景** `TurretEnemy.tscn`（底座+炮塔两 Sprite），类型数据在 `ATEnemyTypes.TURRETS`，生成时 `apply_type()` 应用 | 1 |
+| 生成器 7 种 | **合并为 1 个形态场景** `Spawner.tscn`，类型数据在 `ATEnemyTypes.SPAWNERS`，生成时 `apply_kind()` 应用（贴图 `spawners/<kind>.png`、血量、分数、6 只产出表） | 1 |
+
+- [x] ✅ 数值取自 H5（坦克 L21975-22065 / 炮塔 L21775-21861 / Boss L22067-22145 / 生成器 L22299-22362），基准 `level.index=0, difficulty=1.0`
+- [x] ✅ 类型数据表：`scripts/enemies/enemy_types.gd`（`TURRETS` / `TILE_TURRET` / `SPAWNERS` / `TILE_SPAWNER` + 形态场景路径）
+- [x] ✅ Level 接入：坦克/Boss 走 `ENEMY_NAMES`（tile→独立场景），炮塔/生成器走形态场景 + `apply_type/apply_kind`；统一登记 `enemies[] / enemies_alive` 并接 `killed`
+- [x] ✅ 校验：16 个独立场景 + 8 种炮塔 + 7 种生成器逐个通过；15 个正式关卡实生成敌人数 == 地图敌人瓦片数
+- [x] ✅ Kamikaze 无武器（H5 `weapon=null`），保留 `shoot_range=50` 供后续自爆逻辑
+- [ ] 🔲 `patrol()` / 开火 / 自爆等行为（等状态机接入）
+- [ ] 🔲 难度与关卡缩放：H5 敌人血量乘 `difficulty`、速度乘 `level.index`，当前是基准值，未按关缩放
+- [ ] 🔲 生成器 `_try_spawn()`：在附近空格实例化 `spawn_types` 里的敌人（H5 每只随机抽取并移除，共 6 只）；半血换 `_damaged` 贴图
+- [ ] 🔲 Boss 差异：友伤 1/3 减免、死亡镜头抖动/掉币；RocketsBoss 在 H5 中继承普通坦克（无减免）
+- 备注：H5 里 `RicochetBoss` 实际挂了霰弹武器类（疑似原项目笔误），本项目按其名称使用 `ricochet` 武器（反弹弹）；`RicochetTank` 复用 `railgun_body`、`KamikazeTank` 复用 `laser_body`（图集无专用帧）
 
 ---
 
@@ -132,15 +182,22 @@
 
 ---
 
-## 十、战争迷雾
+## 十、战争迷雾（逐格黑雾瓦片版）
 
-文件：[fog.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/level/fog.gd)
+文件：
+- `scripts/level/fog.gd` / `scenes/level/fog.tscn` —— 黑雾管理器（按地图创建瓦片 + 视野射线）
+- `scripts/level/fog_tile.gd` / `scenes/level/fog_tile.tscn` —— 单个黑雾瓦片（Area2D + 黑色贴图 + 放大判定区）
+- `sprites/game/fog_tile.png.tres`（项目内既有贴图，atlas region 12×12 纯黑实心块）——由 `scenes/level/fog_tile.tscn` 的 Sprite 引用，并按 tile 尺寸放大（52/12 ≈ 4.333 倍）正好铺满一格；瓦片数量 = 地图格数（每格 1 个 Area2D），不做 12px 细分
 
-- [x] ✅ 已重写：`tiles` 永久揭示网格 + 每格羽化圆洞黑色 ImageTexture（无需 SubViewport/shader）
-- [x] ✅ `reveal_tile()` 单格揭示 / `reveal_tile_area()` 玩家脚下大圈（H5 revealTileArea）
-- [x] ✅ 扇形视野 `update_fov()`：按炮塔朝向 ±view_angle、view_distance，36 条射线×20 步逐格揭雾，遇墙/可破坏障碍即停（墙后、箱子后不揭）
-- [x] ✅ Level 接入：出生点立即揭雾 + `_process` 每 3 帧惰性更新；障碍被摧毁后解除遮挡
-- 待办：敌人开火/受击时 `revealFogAtLocation` 暴露自己（接口已留 `Level._update_fog`/fog API，可后续在敌人命中处调用 `reveal_tile`）
+- [x] ✅ 地图加载时按地图尺寸逐格创建黑雾瓦片（铺满整图，z=100 盖住地图与单位）
+- [x] ✅ 玩家按炮塔方向发射视野射线：射线与 **墙/障碍** 和 **黑雾瓦片** 碰撞
+  - 命中黑雾 → 该瓦片播放“放大+淡出+随机旋转”消失动画后释放，射线继续推进
+  - 命中墙/障碍 → 射线终止（墙后、箱子后的黑雾保留）
+- [x] ✅ 玩家脚下周围一圈黑雾清除（保证能看到自己），随移动持续更新
+- [x] ✅ 判定区放大（`fog.tscn` 的 `tile_collision_scale`，默认 1.8 → 93.6px）：
+  射线不必贴近本格就能提前清雾；上限约 3.0（外扩 < 1 格墙厚，否则会穿墙误清）
+- [x] ✅ 真实关卡集成验证：11×18 地图 → 198 个瓦片（每格 1 个 Area2D），出生即清 20+ 格
+- 待办：敌人开火/受击时暴露自己（`ATFog.reveal_at_world(pos, r)` 已留接口）
 
 ---
 

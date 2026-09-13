@@ -134,11 +134,13 @@ H5 敌人不是“一坨 if/else 行为树”，而是**有限状态机 + 每帧
 
 | Godot 文件 | class | 现状 |
 |---|---|---|
-| `scripts/enemies/ai_machine.gd` | `ATAIMachine`/`ATAIState` | 状态机外壳齐（change/update/消息），StateIdle/GoToPlayer/Follow/Frozen 仅桩 |
-| `scripts/enemies/enemy.gd` | `ATEnemy extends ATTank` | 挂 machine；`alert_others/on_alerted/on_player_in_sight` 有雏形，`patrol()` 未实现 |
+| `scripts/fsm/state.gd` / `state_machine.gd` | `State`/`StateMachine` | 节点式状态机（替代 `ai_machine.gd` 对象式外壳），已接入敌人 |
+| `scripts/enemies/states/` | `EnemyState` + Idle/GoToSound/GoToPlayer/Frozen | 已实现并可跑（见 `docs/REMAINING_FEATURES.md` 六） |
+| `scripts/enemies/enemy.gd` | `ATEnemy extends ATTank` | 挂状态机；`alert_others/on_alerted/on_player_in_sight`、`navigate_to()` 寻路移动已实现 |
+| `scripts/level/pathfinder.gd` | `ATPathfinder` | `AStarGrid2D` 网格寻路（Level 持有；障碍/固定单位动态标 solid） |
 | `scripts/enemies/spawner.gd` | `ATSpawner` | 计时/上限外壳，`_try_spawn()` TODO |
-| `scripts/enemies/turret_enemy.gd` | `ATTurretEnemy` | 朝玩家转向雏形，`_has_line_of_sight()` TODO |
-| `scripts/level/level.gd` | Level(根) | 已含瓦片/occupancy/坐标；需补 声音广播、冻结广播、寻路服务 |
+| `scripts/enemies/turret_enemy.gd` | `ATTurretEnemy` | 朝玩家转向 + 后坐力；`_has_line_of_sight()` TODO，状态机暂关 |
+| `scripts/level/level.gd` | Level(根) | 瓦片/occupancy/坐标 + 寻路网格（`pathfinder`）；需补 声音广播 |
 
 ### 5.2 状态机实现（与 H5 语义一一对应）
 
@@ -171,18 +173,15 @@ StateSpawn       出生移动/白闪，>5s→Idle，见玩家→FollowPlayer
 - `_alerted` 计时器 + `alert_others()`（半径 200，发 `on_player_in_sight`）——已具备雏形；
 - 建议把射线探测**节流**（如每 3 帧或 0.05~0.1s 一次，H5 用 debounce 思路），避免每帧 10+ 敌人全量 raycast。
 
-### 5.4 寻路层（二选一）
+### 5.4 寻路层（**已实现：方案 A，用 Godot 内置 `AStarGrid2D`**）
 
-方案 A（贴合 H5，改动小）：保留 level 网格
-- 由 `level.gd` 提供 `find_path(from_tile, to_tile) -> Array[Vector2i]`（A*/BFS on `tiles`+occupancy，可参考 H5 Easystar）；
-- `StateGoTo` 缓存路径，目标 tile 前看 N 步被占/玩家移远再重寻；
-- 路径每帧转目标方向，移动交给 `ATTank.move` / `move_and_slide`，用 `speed_max/acceleration` 平滑。
-
-方案 B（更 Godot 原生）：`NavigationRegion2D` + `NavigationAgent2D`
-- 静态墙烘进 navmesh；动态障碍（对象/敌人）用 `set_navigation_map` 避让较麻烦，
-  建议**障碍格子在 A*/path 前做二次检查**，混用最简单。
-
-> 推荐先 **方案 A**（与 H5 一致、可控、无需编辑期烘焙），后续需要再平滑到 B。
+实际落地（`scripts/level/pathfinder.gd` 的 `ATPathfinder` + `ATEnemy.navigate_to()`）：
+- `AStarGrid2D` 自带 2D 网格 A\*，无需第三方库、无需编辑期烘焙；`diagonal_mode = DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES`
+  等价 H5 Easystar 的 `disableCornerCutting`；
+- `Level` 建网格（静态墙标 solid），可破坏障碍物/固定单位（炮塔/生成器）生成时标 solid，摧毁信号回来时解除 —— 与 H5 "动态障碍重寻路"效果等价；
+- 敌人侧：格子级 Bresenham 直线可走就直冲（快路径），被挡才走 A\*，路径 string-pulling 拉直，0.45s 重算；
+  目标不可达时用 `allow_partial_path` 走"最接近目标的可达格"，一路推进到墙边；
+- 备选方案 B（`NavigationRegion2D` + `NavigationAgent2D`）暂不需要：动态障碍要频繁重烘焙 navmesh，反而不如网格直接。
 
 ### 5.5 移动与开火（对齐现有 tank 骨架）
 
@@ -213,7 +212,7 @@ Spawner：spawn_types 池/间隔/存活上限/累计上限(6)、spawner_type
 ### 5.8 建议落地顺序
 
 - [ ] ATEnemy：缓存每帧感知数据 + `can_see_player/line_of_fire_clear/shoot`
-- [ ] level：`alert_sound`、`get_random_free_tile_around`、`find_path`
+- [ ] level：`alert_sound`、`get_random_free_tile_around`（`find_path` 已随 `ATPathfinder` 完成）
 - [ ] ai_machine：StateIdle/StateFollowPlayer/StateFrozen 完整逻辑（Spawn/GoToSound/GoToPlayer 随后）
 - [ ] turret_enemy：改用 5.3 的两射线法；spawner：池 + Spawn 状态出生
 - [ ] Kamikaze/Boss 参数与行为覆写；数值按难度表接入
@@ -224,8 +223,9 @@ Spawner：spawn_types 池/间隔/存活上限/累计上限(6)、spawner_type
 
 | 内容 | H5 行号(约) | Godot 文件 |
 |---|---|---|
-| states 基类/StateMachine 导出 | 20538~20541 | `scripts/enemies/ai_machine.gd` |
-| AI 状态定义(Idle/Frozen/Spawn/GoToSound/GoToPlayer/FollowPlayer) | 20548~20720 | 同上（状态类待补全） |
+| states 基类/StateMachine 导出 | 20538~20541 | `scripts/fsm/state.gd` + `state_machine.gd`（节点式） |
+| AI 状态定义(Idle/Frozen/Spawn/GoToSound/GoToPlayer/FollowPlayer) | 20548~20720 | `scripts/enemies/states/*.gd`（Spawn 待补） |
+| Easystar 网格寻路 / level.findPath | 20713 附近 | `scripts/level/pathfinder.gd`（`AStarGrid2D`）+ `enemy.gd:navigate_to()` |
 | 坦克感知/巡逻/射击（searchForPlayer/patrol/shoot） | 22184~22224 | `scripts/enemies/enemy.gd` |
 | 坦克 update（缓存距离/瓦片/受伤闪/死亡） | 22225~22237 | `scripts/tank/tank.gd` + enemy.gd |
 | alert/alertOthers/受击 | 22186~22194 | enemy.gd |
@@ -233,7 +233,7 @@ Spawner：spawn_types 池/间隔/存活上限/累计上限(6)、spawner_type
 | 冻结广播/解冻 | ~23832~23844 | level.gd |
 | 生成器(池/进度/半血换帧/掉落) | 22301~22360 | `scripts/enemies/spawner.gd` |
 | 固定炮塔 | 21772~21966 | `scripts/enemies/turret_enemy.gd` |
-| 出生 AI 状态（白闪/找空格/超时） | 20589~20616 | ai_machine.gd(StateSpawn 待加) |
+| 出生 AI 状态（白闪/找空格/超时） | 20589~20616 | `states/state_spawn.gd`（待加） |
 
 ---
 

@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/kamikaze_body_0.png.tres" id="1_b0"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/kamikaze_body_1.png.tres" id="2_b1"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/kamikaze.png.tres" id="3_tt"]
+
+[sub_resource type="SpriteFrames" id="Frames_body"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_b0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_b1")
+}],
+"loop": true,
+"name": &"move",
+"speed": 20.0
+}]
+[sub_resource type="SpriteFrames" id="Frames_turret"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tt")
+}],
+"loop": false,
+"name": &"default",
+"speed": 1.0
+}]
+
+[node name="EnemyKamikaze" instance=ExtResource("1_base")]
+enemy_id = "kamikaze"
+tank_key = "kamikaze"
+max_health = 350.0
+points = 400
+move_speed = 94.5
+turret_speed = 0.0
+view_angle = 2.0944
+view_distance = 350.0
+shoot_angle = 0.0
+shoot_range = 50.0
+alert_radius = 200.0
+
+[node name="BodySprite" parent="." index="1"]
+sprite_frames = SubResource("Frames_body")
+animation = &"move"
+
+[node name="TurretSprite" parent="." index="2"]
+sprite_frames = SubResource("Frames_turret")

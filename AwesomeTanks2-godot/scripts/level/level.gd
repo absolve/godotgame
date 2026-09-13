@@ -85,10 +85,12 @@ var map_width: int = 0
 var map_height: int = 0
 var map_theme: int = 0 # Constants.gameTheme
 var occupancy: Array = [] # 动态对象占据标记（tiles 同尺寸）
-var _fog_solid: Array = [] # 迷雾遮挡标记（静态墙/可破坏障碍；玩家/敌人不挡视线）
 
-var _fog: Node = null        # ATFog 实例（_ready 中创建）
-var _fog_frame: int = 0      # 惰性更新计数（H5 updateFogLazy ≈ 每 3 帧一次）
+var _fog: ATFog = null       # 黑雾（scenes/level/fog.tscn，_ready 中实例化）
+var _fog_frame: int = 0      # 惰性更新计数（约每 3 帧发射一次视野射线）
+
+## 寻路网格（scripts/level/pathfinder.gd；敌人 AI 用它绕开墙/障碍）
+var pathfinder: ATPathfinder = null
 
 var _slot_nodes: Array = []
 var _last_hp_ratio: float = -1.0
@@ -107,6 +109,36 @@ const OBJECT_SCENES: Dictionary = {
 	Constants.Tile.BRICKS_2: preload("res://scenes/objects/bricks.tscn"),
 }
 
+# 敌人瓦片 → 敌人场景名（scenes/enemies/<名>.tscn）。
+# 坦克 9 种与 Boss 7 种差异较大，各自独立场景；炮塔 8 种、生成器 7 种只是
+# 贴图/武器/数值不同，合并为两个"形态场景"（TurretEnemy / Spawner），
+# 类型数据见 scripts/enemies/enemy_types.gd。
+const ENEMY_DIR := "res://scenes/enemies/"
+const ENEMY_NAMES: Dictionary = {
+	# 移动坦克 9 种
+	Constants.Tile.TANK_MINIGUN: "EnemyMinigun",
+	Constants.Tile.TANK_SHOTGUN: "EnemyShotgun",
+	Constants.Tile.TANK_CANNON: "EnemyCannon",
+	Constants.Tile.TANK_ROCKETS: "EnemyRockets",
+	Constants.Tile.TANK_LASER: "EnemyLaser",
+	Constants.Tile.TANK_RICOCHET: "EnemyRicochet",
+	Constants.Tile.TANK_FLAMETHROWER: "EnemyFlamethrower",
+	Constants.Tile.TANK_RAILGUN: "EnemyRailgun",
+	Constants.Tile.TANK_KAMIKAZE: "EnemyKamikaze",
+	# Boss 7 种
+	Constants.Tile.BOSS_SHOTGUN: "BossShotgun",
+	Constants.Tile.BOSS_CANNON: "BossCannon",
+	Constants.Tile.BOSS_ROCKETS: "BossRockets",
+	Constants.Tile.BOSS_LASER: "BossLaser",
+	Constants.Tile.BOSS_RICOCHET: "BossRicochet",
+	Constants.Tile.BOSS_RAILGUN: "BossRailgun",
+	Constants.Tile.BOSS_FLAMETHROWER: "BossFlamethrower",
+}
+
+var _enemy_scene_cache: Dictionary = {}
+var _turret_scene: PackedScene = null
+var _spawner_scene: PackedScene = null
+
 
 func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
@@ -115,6 +147,7 @@ func _ready() -> void:
 	difficulty_mult = Settings.DIFFICULTIES[int(Game.current["game"]["difficulty"])] \
 		if int(Game.current["game"]["difficulty"]) >= 0 else 1.0
 	parse(level_data)
+	_setup_pathfinder()
 	_spawn_objects()
 	_setup_fog()
 	_collect_hud_nodes()
@@ -148,22 +181,17 @@ func parse(_level_data: Array) -> void:
 		map_width = max(map_width, (r as String).length())
 	tiles.clear()
 	occupancy.clear()
-	_fog_solid.clear()
 	for y in range(map_height):
 		var row_arr: Array = []
 		var occ_row: Array = []
-		var solid_row: Array = []
 		var row_str: String = rows[y]
 		for x in range(map_width):
 			var ch: String = " " if x >= row_str.length() else row_str[x]
 			var tile: int = int(Constants.CHAR_TO_TILE.get(ch, Constants.Tile.EMPTY))
 			row_arr.append(tile)
 			occ_row.append(false)
-			# 静态墙挡视线；可破坏障碍(bricks/wood/crate/barrel/gate)由 _spawn_object_at 再标
-			solid_row.append(Constants.is_static_wall(tile))
 		tiles.append(row_arr)
 		occupancy.append(occ_row)
-		_fog_solid.append(solid_row)
 	_build_static_tiles()
 
 
@@ -213,6 +241,46 @@ func _build_static_tiles() -> void:
 				sprite.texture = TEX_WALLS[randi() % TEX_WALLS.size()]
 			body.add_child(sprite)
 			static_layer.add_child(body)
+
+
+# ============================================================
+# 寻路（敌人 AI 用；网格来自 scripts/level/pathfinder.gd）
+# ============================================================
+## 按解析后的地图建立寻路网格：静态墙/秘密墙不可通行。
+## 可破坏障碍物在生成时标记、被摧毁时解除，所以炸开后路径会重新打通。
+func _setup_pathfinder() -> void:
+	pathfinder = ATPathfinder.new()
+	pathfinder.setup(map_width, map_height, Settings.TILE_SIZE)
+	for y in range(map_height):
+		for x in range(map_width):
+			if Constants.is_static_wall(tiles[y][x]):
+				pathfinder.set_solid(x, y, true)
+
+
+## 障碍物占格：标记不可通行，并在被摧毁（queue_free 前发 destroyed）时解除
+func _mark_obstacle_tile(obj: Node2D, x: int, y: int) -> void:
+	if pathfinder == null:
+		return
+	pathfinder.set_solid(x, y, true)
+	if obj is ATObstacle:
+		(obj as ATObstacle).destroyed.connect(_on_obstacle_destroyed.bind(x, y))
+
+
+func _on_obstacle_destroyed(_obstacle: Node, x: int, y: int) -> void:
+	if pathfinder != null:
+		pathfinder.set_solid(x, y, false)
+
+
+## 世界坐标寻路（给外部/调试用；无寻路器时返回空数组 = 不可达）
+func find_path(from_world: Vector2, to_world: Vector2) -> PackedVector2Array:
+	if pathfinder == null:
+		return PackedVector2Array()
+	return pathfinder.find_path(from_world, to_world)
+
+
+## 两点间是否可直线通行（格子级判定）
+func is_line_walkable(from_world: Vector2, to_world: Vector2) -> bool:
+	return pathfinder != null and pathfinder.is_line_walkable(from_world, to_world)
 
 
 # 坐标换算（瓦片 <-> 像素）
@@ -272,7 +340,7 @@ func bind_player(p: Node) -> void:
 	_refresh_hud()
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if get_tree().paused:
 		return
 	if freeze_time > 0:
@@ -287,45 +355,35 @@ func _process(delta: float) -> void:
 		_update_fog()
 
 
-## 按玩家当前位置/朝向刷新雾（出生后先执行一次让出生点周围可见）
+## 按玩家位置/炮塔朝向刷新黑雾：
+##   1) 清掉玩家脚下周围一圈黑雾瓦片（能看到自己）；
+##   2) 按炮塔方向发射扇形视野射线清雾（射线与墙/黑雾碰撞，墙后不生效）。
 func _update_fog() -> void:
 	if _fog == null or player == null or not is_instance_valid(player):
 		return
-	# H5 updateFog：先无条件揭玩家脚下大圈，再做扇形射线揭示
-	var pt := px_to_tile(player.global_position.x)
-	var pp := px_to_tile(player.global_position.y)
-	_fog.reveal_tile_area(pt, pp)
+	var ts := Settings.TILE_SIZE
+	var px := int(player.global_position.x / ts)
+	var py := int(player.global_position.y / ts)
+	_fog.clear_area(px, py, _fog.clear_radius_tiles)
 	var view_angle := float(player.get("view_angle")) if "view_angle" in player else PI / 4.0
 	var view_dist := float(player.get("view_distance")) if "view_distance" in player else 300.0
 	var aim: float = player.get_turret_rotation() if player.has_method("get_turret_rotation") \
 		else float(player.rotation)
-	_fog.update_fov(player.global_position, aim, view_angle, view_dist)
+	_fog.reveal_fov(player.global_position, aim, view_angle, view_dist)
 
 
-## 出生后立即揭示出生点周边（关卡开始时没有全图视野）
+## 地图加载完成后创建黑雾：实例化 fog.tscn 并逐格铺满整张地图
 func _setup_fog() -> void:
-	_fog = ATFog.new()
+	_fog = (preload("res://scenes/level/fog.tscn") as PackedScene).instantiate()
 	_fog.name = "Fog"
 	add_child(_fog)
-	_fog.configure(0, 0, map_width, map_height)
-	_fog.set_blocked_cb(_fog_is_blocked)
 	_fog.z_index = 100   # 盖在静态层/物体层之上
-	# 玩家尚未生成? — _spawn_objects 已先跑，但玩家位置绑定在 bind_player；
-	# 等首帧 player 就绪后再揭。标记立即尝试一次（有 player 则立刻可见）
+	_fog.configure(0, 0, map_width, map_height)
+	_fog.build_tiles()
+	# 出生点先清一圈：本帧物理空间可能还没登记新瓦片，随后每 3 帧的
+	# _update_fog 会再补一次（清掉缓存确保一定发射线）
 	_update_fog()
-
-
-## Fog 遮挡查询：静态墙或仍存活的可破坏障碍挡住视线（玩家/敌人不挡，同 H5）
-func _fog_is_blocked(x: int, y: int) -> bool:
-	if x < 0 or y < 0 or x >= map_width or y >= map_height:
-		return true   # 越界视为墙
-	return bool(_fog_solid[y][x])
-
-
-func _mark_fog_blocker(x: int, y: int, on: bool) -> void:
-	if x < 0 or y < 0 or x >= map_width or y >= map_height:
-		return
-	_fog_solid[y][x] = on
+	_fog.invalidate_cache()
 
 
 ## 每帧同步血瓶 / 武器槽（幂等；数据没变化时开销可忽略）
@@ -510,20 +568,86 @@ func _spawn_object_at(tile: int, x: int, y: int) -> void:
 	if tile == Constants.Tile.PLAYER:
 		_spawn_player(pos, x, y)
 		return
-	# 2) 障碍物（油桶/木箱/门/木板/砖墙）——挡视线（可被摧毁后解除）
+	# 2) 障碍物（油桶/木箱/门/木板/砖墙）——它们挡视野射线（物理层 OBSTACLE）
 	if OBJECT_SCENES.has(tile):
 		var obj: Node2D = (OBJECT_SCENES[tile] as PackedScene).instantiate()
 		obj.position = pos
 		if "tile_type" in obj:
 			obj.tile_type = tile
 		_objects_layer.add_child(obj)
-		_mark_fog_blocker(x, y, true)
-		obj.tree_exiting.connect(func() -> void: _mark_fog_blocker(x, y, false))
+		_mark_obstacle_tile(obj, x, y)
 		return
-	# 3) 敌人（敌人场景族就绪后按 tile 映射对应派生场景）
-	if Constants.is_enemy(tile):
-		# TODO: 敌人/炮塔/生成器/Boss 场景接入后在这里创建
+	# 3) 敌人：坦克/Boss 走独立场景；炮塔/生成器走形态场景 + 类型数据
+	if ENEMY_NAMES.has(tile) or ATEnemyTypes.TILE_TURRET.has(tile) \
+			or ATEnemyTypes.TILE_SPAWNER.has(tile):
+		_spawn_enemy_by_tile(tile, pos, x, y)
 		return
+
+
+## 按瓦片实例化敌人，登记到 enemies 并接击杀信号
+##   - 坦克/Boss：各自独立场景（场景里已带贴图/数值/武器）
+##   - 炮塔/生成器：同一个形态场景，入树后按类型数据 apply_type/apply_kind
+func _spawn_enemy_by_tile(tile: int, pos: Vector2, x: int, y: int) -> void:
+	var e: Node2D = null
+	var is_turret: bool = ATEnemyTypes.TILE_TURRET.has(tile)
+	var is_spawner: bool = ATEnemyTypes.TILE_SPAWNER.has(tile)
+	if is_turret:
+		if _turret_scene == null:
+			_turret_scene = load(ATEnemyTypes.TURRET_SCENE) as PackedScene
+		e = _turret_scene.instantiate()
+	elif is_spawner:
+		if _spawner_scene == null:
+			_spawner_scene = load(ATEnemyTypes.SPAWNER_SCENE) as PackedScene
+		e = _spawner_scene.instantiate()
+	else:
+		var scene := _enemy_scene_for(tile)
+		if scene == null:
+			push_warning("Level: 敌人场景缺失: ", ENEMY_NAMES.get(tile, "?"))
+			return
+		e = scene.instantiate()
+	e.position = pos
+	if "level" in e:
+		e.level = self
+	_objects_layer.add_child(e)
+	# 形态场景：入树后（@onready 就绪）再应用类型数据（贴图/数值/武器）
+	if is_turret:
+		e.call("apply_type", ATEnemyTypes.TURRETS[ATEnemyTypes.TILE_TURRET[tile]])
+	elif is_spawner:
+		e.call("apply_kind", int(ATEnemyTypes.TILE_SPAWNER[tile]))
+	enemies.append(e)
+	enemies_alive += 1
+	if e.has_signal("killed"):
+		e.killed.connect(_on_enemy_unit_killed.bind(e))
+	# 固定单位（炮塔/生成器）永远占着那一格 → 记为不可通行，敌人会绕开它；
+	# 被摧毁时解除（移除单位的逻辑接入后同样适用）
+	if (is_turret or is_spawner) and pathfinder != null:
+		pathfinder.set_solid(x, y, true)
+		if e.has_signal("killed"):
+			e.killed.connect(_on_static_unit_killed.bind(x, y))
+
+
+func _on_static_unit_killed(x: int, y: int) -> void:
+	if pathfinder != null:
+		pathfinder.set_solid(x, y, false)
+
+
+## 取敌人场景（带缓存）；找不到返回 null
+func _enemy_scene_for(tile: int) -> PackedScene:
+	var name_key: String = ENEMY_NAMES.get(tile, "")
+	if name_key == "":
+		return null
+	if _enemy_scene_cache.has(name_key):
+		return _enemy_scene_cache[name_key]
+	var path := ENEMY_DIR + name_key + ".tscn"
+	if not ResourceLoader.exists(path):
+		return null
+	var ps: PackedScene = load(path)
+	_enemy_scene_cache[name_key] = ps
+	return ps
+
+
+func _on_enemy_unit_killed(e: Node2D) -> void:
+	on_enemy_killed(e)
 
 
 ## 生成玩家并绑定 HUD/相机/结算信号
@@ -543,7 +667,7 @@ func _spawn_player(pos: Vector2, x: int, y: int) -> void:
 # ============================================================
 # 战斗循环
 # ============================================================
-func on_enemy_killed(enemy: Node2D) -> void:
+func on_enemy_killed(_enemy: Node2D) -> void:
 	enemies_alive -= 1
 	if enemies_alive <= 0 and is_instance_valid(player):
 		_show_summary(true)
@@ -553,19 +677,25 @@ func on_player_killed() -> void:
 	_show_summary(false)
 
 
-func shake_camera(amount: float) -> void:
+func shake_camera(_amount: float) -> void:
 	# TODO: 相机震动（用 Tween 偏移 _camera.offset）
 	pass
 
 
+## 冰冻全部敌人（H5 freezeEnemies：敌人进入 Frozen 状态，持续 duration 秒）
 func freeze_enemies(duration: float) -> void:
 	freeze_time = duration
+	for e in enemies:
+		if is_instance_valid(e) and e.has_method("freeze"):
+			e.freeze()
+	Audio.play_sfx("freeze.mp3", 1.3)
 
 
 func _unfreeze_enemies() -> void:
 	for e in enemies:
 		if is_instance_valid(e) and e.has_method("unfreeze"):
 			e.unfreeze()
+	Audio.play_sfx("unfreeze.mp3", 1.25)
 
 
 func abandon() -> void:

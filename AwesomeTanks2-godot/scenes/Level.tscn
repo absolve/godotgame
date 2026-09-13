@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ds3rg5fr5uedy" path="res://scenes/custom_camera.tscn" id="2_wsd7d"]
 [ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="3_theme"]
 [ext_resource type="PackedScene" path="res://scenes/hud/health_vial.tscn" id="4_vial"]
-[ext_resource type="PackedScene" path="res://scenes/hud/weapon_slot.tscn" id="5_slot"]
+[ext_resource type="PackedScene" uid="uid://dltyyymb47vkq" path="res://scenes/hud/weapon_slot.tscn" id="5_slot"]
 [ext_resource type="Texture2D" path="res://sprites/game/hud/background.png.tres" id="6_bg"]
 [ext_resource type="Texture2D" path="res://sprites/game/buttons/menu_normal.png.tres" id="7_menu_n"]
 [ext_resource type="Texture2D" path="res://sprites/game/buttons/menu_hover.png.tres" id="8_menu_h"]

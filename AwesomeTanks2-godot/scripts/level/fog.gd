@@ -1,230 +1,225 @@
-extends Node2D
-## Fog —— 战争迷雾（对应原项目 window.AT.Fog，awesome_tanks_2.js L22679~22686）
-##
-## H5 机制（分析结论）：
-##   1) tiles[fogHeight][fogWidth] 布尔网格，初始全 false(=有雾)，永久揭示、不回收；
-##   2) 渲染：整幅 RenderTexture + inverse_alpha shader → 未揭示处不透明黑雾，
-##      已揭示(被画过)处透明显示下方地图；
-##   3) 三种揭示：
-##        revealTile(x,y)          —— 永久揭开一格（画 12px 小圆 fog_tile）；
-##        revealTileArea(x,y)      —— 玩家所在格每帧刷大圈 fog_circle(36px)，脚下常亮；
-##        revealFogAtLocation(body)—— 开火/被击中时揭该格（敌人开枪会暴露自己）。
-##   4) 扇形视野 revealFogArc(tankBody, turretAngle±viewAngle, viewDistance)：
-##        每 2π/36 一条射线，向远处每次推进 (dist/20)，逐格 revealTile；
-##        若该格在 objects 网格中有活的遮挡物(墙/砖/crate/油桶/炮塔…)
-##        → 立即 break：被挡的格子（箱子/墙后面）不会揭雾。
-##   5) 由关卡每 1~3 帧调用 updateFog，玩家初始位置也立刻执行一次。
-##
-## Godot 实现：行为层保留 tiles 网格（可 headless 验证）；渲染层自绘一张
-## 低分辨率黑色 ImageTexture（每瓦片 SCALE 像素），揭示时把该瓦片圆形区域
-## alpha 渐变置 0（透明=雾消失），Sprite2D 铺满地图即可，无需额外 shader。
-
 class_name ATFog
+extends Node2D
+## Fog —— 战争迷雾管理器（逐格黑雾瓦片版）
+##
+## 设计（对照 H5 window.AT.Fog 的“逐格揭示”语义，改为节点式实现）：
+##   1) 地图加载时按地图尺寸逐格创建黑雾瓦片（scenes/level/fog_tile.tscn =
+##      Area2D + 黑色贴图 fog_tile.png（12×12，按 tile 放大）+ tile 尺寸判定），
+##      每个地图格一个瓦片，铺满整张地图；
+##   2) 玩家按炮塔方向发射射线（物理射线，见 reveal_fov）：射线同时与
+##      “墙壁/障碍”和“黑雾瓦片”发生碰撞——
+##        · 打到黑雾瓦片 → 该瓦片播放消失动画，射线继续向前推进；
+##        · 打到墙/障碍   → 射线终止（墙后、箱子后的黑雾不会被清掉）；
+##   3) 每条视野射线穿过多少格黑雾就清多少格，永久保持清除（不回收）；
+##   4) 玩家所在格周围一圈黑雾也会被清掉（保证能看到自己，对应 H5 revealTileArea）。
+##
+## 场景：scenes/level/fog.tscn（本脚本挂在根节点上，由 Level 实例化）。
 
-## 每瓦片纹理像素数（H5 fogResolution=12；8 已够平滑且图很小）
-const SCALE: int = 8
+const TILE_SCENE: PackedScene = preload("res://scenes/level/fog_tile.tscn")
 
-## 单格揭示圆半径（瓦片单位；H5 fog_tile≈0.5 放大后约 1 格）
-const TILE_RADIUS: float = 0.62
-## 玩家脚下大圈半径（瓦片单位；H5 fog_circle 36px≈0.7，放大后约 1.5 格）
-const AREA_RADIUS: float = 1.6
-## 圆形边缘羽化宽度（瓦片单位）
-const SOFT: float = 0.55
+## 视野射线一次最多推进的段数（防止极端情况下死循环）
+const MAX_RAY_STEPS: int = 64
+## 射线推进的最小剩余距离（小于它就不再发射线）
+const MIN_REMAIN: float = 2.0
+
+@export var tile_size: int = Settings.TILE_SIZE
+## 玩家脚下清除半径（瓦片）
+@export var clear_radius_tiles: float = 1.35
+## 是否打开位置/朝向缓存（玩家不动不转时不重复发射线）
+@export var cache_enabled: bool = true
+## 黑雾瓦片判定区相对 tile 的放大倍数（>1：射线提前命中，黑雾不用贴近才消失）
+@export var tile_collision_scale: float = 1.8
 
 var fog_width: int = 0
 var fog_height: int = 0
-var tiles: Array = []            # tiles[y][x] = true 已揭示
+var tiles: Array = []                 # tiles[y][x] = ATFogTile 或 null（已清除）
 var tile_offset_x: int = 0
 var tile_offset_y: int = 0
-var tile_size: int = Settings.TILE_SIZE
 
-var _img: Image = null
-var _tex: ImageTexture = null
-var _sprite: Sprite2D = null
-var _dirty := false
-
-## 是否阻塞视线的回调（由关卡提供：静态墙 / crate / 砖 / 油桶 等）
-## 传 null 表示无遮挡。
-var _blocked_cb: Callable = Callable()
+var _last_center := Vector2.INF
+var _last_aim := INF
 
 
-func _ready() -> void:
-	_sprite = Sprite2D.new()
-	_sprite.name = "FogSprite"
-	_sprite.centered = false
-	_sprite.position = Vector2.ZERO
-	add_child(_sprite)
-	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-
-
-## 关卡初始化调用。w/h 为地图瓦片数；offset 为世界原点对应的瓦片角。
+# ============================================================
+# 构建
+# ============================================================
 func configure(offset_x: int, offset_y: int, w: int, h: int) -> void:
 	tile_offset_x = offset_x
 	tile_offset_y = offset_y
 	fog_width = w
 	fog_height = h
-	tiles.clear()
-	for y in range(h):
+
+
+## 按地图逐格创建黑雾瓦片（地图加载时调用一次）
+func build_tiles() -> void:
+	for y in range(fog_height):
 		var row: Array = []
-		for x in range(w):
-			row.append(false)
+		for x in range(fog_width):
+			row.append(null)
 		tiles.append(row)
-	_build_texture()
-	_sprite.scale = Vector2(float(tile_size) / SCALE, float(tile_size) / SCALE)
+	for y in range(fog_height):
+		for x in range(fog_width):
+			_add_tile(x, y)
 
 
-func set_blocked_cb(cb: Callable) -> void:
-	_blocked_cb = cb
+func _add_tile(x: int, y: int) -> void:
+	var t: ATFogTile = TILE_SCENE.instantiate()
+	t.tile_x = x
+	t.tile_y = y
+	t.collision_scale = tile_collision_scale   # 必须在入树(_ready)前赋值
+	t.position = cell_center(x, y)
+	t.z_index = 100   # 盖住地图与单位
+	t.disappeared.connect(_on_tile_disappeared)
+	add_child(t)
+	tiles[y][x] = t
 
 
-## 重建全黑 Image 纹理（未探索=不透明黑）
-func _build_texture() -> void:
-	_img = Image.create(fog_width * SCALE, fog_height * SCALE, false, Image.FORMAT_RGBA8)
-	_img.fill(Color(0, 0, 0, 1))
-	_tex = ImageTexture.create_from_image(_img)
-	_sprite.texture = _tex
-
-
-func _sync_texture() -> void:
-	if _dirty and _tex != null and _img != null:
-		_tex.update(_img)
-		_dirty = false
-
-
-# ============================================================
-# 揭示 API（决策 + 纹理）
-# ============================================================
-## 揭开一格（含羽化圆斑）；已揭过则跳过（避免重复写纹理）
-func reveal_tile(x: int, y: int) -> bool:
-	var tx := x - tile_offset_x
-	var ty := y - tile_offset_y
-	if tx < 0 or ty < 0 or tx >= fog_width or ty >= fog_height:
-		return false
-	if tiles[ty][tx]:
-		return false
-	tiles[ty][tx] = true
-	_paint_hole(Vector2(tx + 0.5, ty + 0.5), TILE_RADIUS)
-	return true
-
-
-## 玩家脚下大圈（H5 revealTileArea：无条件画 fog_circle，覆盖格标记为已揭示）
-func reveal_tile_area(x: int, y: int) -> void:
-	var tx := x - tile_offset_x
-	var ty := y - tile_offset_y
-	if tx < 0 or ty < 0 or tx >= fog_width or ty >= fog_height:
-		return
-	_paint_hole(Vector2(tx + 0.5, ty + 0.5), AREA_RADIUS)
-	# 圈内覆盖到的瓦片也记作已揭示（与纹理一致，供查询/测试）
-	_mark_circle_tiles(tx + 0.5, ty + 0.5, AREA_RADIUS)
-
-
-func _mark_circle_tiles(cx: float, cy: float, radius: float) -> void:
-	var r2 := radius * radius
-	var x0 := maxi(0, int(cx - radius) - 1)
-	var x1 := mini(fog_width - 1, int(cx + radius) + 1)
-	var y0 := maxi(0, int(cy - radius) - 1)
-	var y1 := mini(fog_height - 1, int(cy + radius) + 1)
-	for yy in range(y0, y1 + 1):
-		for xx in range(x0, x1 + 1):
-			var dx := xx + 0.5 - cx
-			var dy := yy + 0.5 - cy
-			if dx * dx + dy * dy <= r2:
-				tiles[yy][xx] = true
-
-
-## 画一个中心为瓦片坐标、半径 radius(瓦片) 的透明洞（边缘羽化）
-func _paint_hole(center: Vector2, radius: float) -> void:
-	if _img == null:
-		return
-	var px := Vector2(center.x * SCALE, center.y * SCALE)
-	var r := radius * SCALE
-	var soft := SOFT * SCALE
-	var x0 := clampi(int(px.x - r - soft), 0, _img.get_width() - 1)
-	var x1 := clampi(int(px.x + r + soft) + 1, 0, _img.get_width())
-	var y0 := clampi(int(px.y - r - soft), 0, _img.get_height() - 1)
-	var y1 := clampi(int(px.y + r + soft) + 1, 0, _img.get_height())
-	for yy in range(y0, y1):
-		for xx in range(x0, x1):
-			var d := Vector2(xx + 0.5 - px.x, yy + 0.5 - px.y).length()
-			if d > r + soft:
-				continue
-			var target_alpha := 0.0
-			if d <= r:
-				target_alpha = 0.0
-			else:
-				target_alpha = clampf((d - r) / maxf(soft, 0.001), 0.0, 1.0)
-			var cur := _img.get_pixel(xx, yy)
-			# 透明取“更透明”（保持已揭示处干净）
-			if target_alpha < cur.a:
-				cur.a = target_alpha
-				_img.set_pixel(xx, yy, cur)
-	_dirty = true
+func _on_tile_disappeared(tile: ATFogTile) -> void:
+	if tile.tile_y >= 0 and tile.tile_y < fog_height \
+			and tile.tile_x >= 0 and tile.tile_x < fog_width:
+		if tiles[tile.tile_y][tile.tile_x] == tile:
+			tiles[tile.tile_y][tile.tile_x] = null
 
 
 # ============================================================
-# 视野扫描（H5 revealFogArc 移植）
+# 坐标/查询
 # ============================================================
-## 玩家视野：以 center(像素) 为原点，朝向 turret_angle，半角 view_angle 的扇形，
-## 距离 view_distance(像素)。逐条射线推进，遇遮挡格立即停止。
-func update_fov(center: Vector2, turret_angle: float, view_angle: float, view_distance: float) -> void:
-	var start_a := turret_angle - view_angle
-	var end_a := turret_angle + view_angle
-	var step_a := TAU / 36.0   # H5: 2π/36 ≈ 每 10°
-	var a := start_a
-	while a < end_a:
-		_reveal_ray(center, a, view_distance)
-		a += step_a
-	_sync_texture()
+func cell_center(x: int, y: int) -> Vector2:
+	return Vector2((x + tile_offset_x + 0.5) * tile_size,
+		(y + tile_offset_y + 0.5) * tile_size)
 
 
-func _reveal_ray(center: Vector2, angle: float, dist: float) -> void:
-	var dir := Vector2(cos(angle), sin(angle))
-	var steps := 20  # H5 固定 20 小步
-	var pos := center
-	for _i in steps:
-		# 越界即止（墙外无地图）
-		if pos.x < 0 or pos.y < 0 or pos.x >= fog_width * tile_size or pos.y >= fog_height * tile_size:
-			return
-		var tx := int(pos.x / tile_size) + tile_offset_x
-		var ty := int(pos.y / tile_size) + tile_offset_y
-		# 走到自己坦克格/脚下已用 area 揭示，仍允许 reveal（幂等）
-		reveal_tile(tx, ty)
-		# 该格有遮挡(墙/箱…) → 射线停下，之后不揭
-		if _is_blocked(tx, ty):
-			return
-		pos += dir * (dist / steps)
+func tile_at(x: int, y: int) -> ATFogTile:
+	if x < 0 or y < 0 or x >= fog_width or y >= fog_height:
+		return null
+	return tiles[y][x]
 
 
-func _is_blocked(x: int, y: int) -> bool:
-	if _blocked_cb.is_valid():
-		return bool(_blocked_cb.call(x, y))
-	return false
+func is_cleared(x: int, y: int) -> bool:
+	return tile_at(x, y) == null
 
 
-# ============================================================
-# 调试/测试辅助
-# ============================================================
-func is_revealed(x: int, y: int) -> bool:
-	var tx := x - tile_offset_x
-	var ty := y - tile_offset_y
-	if tx < 0 or ty < 0 or tx >= fog_width or ty >= fog_height:
-		return false
-	return tiles[ty][tx]
-
-
-func revealed_count() -> int:
+func remaining_count() -> int:
 	var n := 0
 	for row in tiles:
-		for v in row:
-			if v:
+		for t in row:
+			if t != null and is_instance_valid(t):
 				n += 1
 	return n
 
 
-func reset() -> void:
-	for y in range(fog_height):
-		for x in range(fog_width):
-			tiles[y][x] = false
-	if _img != null:
-		_img.fill(Color(0, 0, 0, 1))
-		_sync_texture()
+## 清除一格（射线命中或外部调用）。返回是否真的清掉。
+func clear_tile(x: int, y: int, animate: bool = true) -> bool:
+	var t := tile_at(x, y)
+	if t == null or not is_instance_valid(t) or t.cleared:
+		return false
+	tiles[y][x] = null
+	t.clear(animate)
+	return true
+
+
+## 清除以某瓦片为中心、半径 radius(瓦片) 内的黑雾（玩家脚下）
+func clear_area(center_x: int, center_y: int, radius: float) -> int:
+	var n := 0
+	var r := maxf(radius, 0.0)
+	var x0 := int(floor(center_x - r))
+	var x1 := int(ceil(center_x + r))
+	var y0 := int(floor(center_y - r))
+	var y1 := int(ceil(center_y + r))
+	for y in range(y0, y1 + 1):
+		for x in range(x0, x1 + 1):
+			var dx := float(x - center_x)
+			var dy := float(y - center_y)
+			if dx * dx + dy * dy <= r * r:
+				if clear_tile(x, y, true):
+					n += 1
+	return n
+
+
+# ============================================================
+# 视野射线（核心）
+# ============================================================
+## 按炮塔朝向发射扇形视野射线：半角 half_angle、距离 dist(px)。
+## center 为玩家炮塔位置(px)，aim 为炮塔朝向(rad)。
+## 返回本次新清除的黑雾格数。
+func reveal_fov(center: Vector2, aim: float, half_angle: float, dist: float) -> int:
+	if fog_width <= 0 or fog_height <= 0:
+		return 0
+	if cache_enabled and _last_center.distance_to(center) < 0.5 \
+			and absf(wrapf(aim - _last_aim, -PI, PI)) < 0.01:
+		return 0
+	_last_center = center
+	_last_aim = aim
+
+	var cleared := 0
+	# 起点所在格：射线从瓦片内部出发不会命中自身，这里直接清掉（玩家脚下可见）
+	var otx := int(center.x / tile_size) - tile_offset_x
+	var oty := int(center.y / tile_size) - tile_offset_y
+	if clear_tile(otx, oty, true):
+		cleared += 1
+	var step_a := TAU / 36.0            # 每 10° 一条射线（同 H5）
+	var a := aim - half_angle
+	while a <= aim + half_angle + 0.0001:
+		cleared += _cast_ray(center, a, dist)
+		a += step_a
+	return cleared
+
+
+## 单条射线：反复与“黑雾瓦片 / 墙”碰撞
+##   命中黑雾 → 清除该瓦片并从命中点继续前进（exclude 掉它，避免重复命中）
+##   命中墙/障碍 → 结束
+func _cast_ray(origin: Vector2, angle: float, dist: float) -> int:
+	var space := get_world_2d().direct_space_state
+	if space == null:
+		return 0
+	var dir := Vector2.RIGHT.rotated(angle)
+	var mask := Constants.layer_mask([
+		Constants.Layer.WALL, Constants.Layer.OBSTACLE,
+		Constants.Layer.ENEMY_SPAWNER, Constants.Layer.FOG,
+	])
+	var exclude: Array[RID] = []
+	var pos := origin
+	var cleared := 0
+	var steps := 0
+	while steps < MAX_RAY_STEPS:
+		steps += 1
+		var remain := dist - origin.distance_to(pos)
+		if remain <= MIN_REMAIN:
+			break
+		var q := PhysicsRayQueryParameters2D.create(pos, pos + dir * remain, mask)
+		q.collide_with_areas = true     # 黑雾是 Area2D
+		q.collide_with_bodies = true    # 墙/障碍是 StaticBody2D
+		q.exclude = exclude
+		var hit := space.intersect_ray(q)
+		if hit.is_empty():
+			break
+		var collider = hit.get("collider")
+		var point: Vector2 = hit.get("position")
+		if collider is ATFogTile:
+			var ft := collider as ATFogTile
+			# 命中黑雾：清除（带动画）并继续
+			if not ft.cleared:
+				clear_tile(ft.tile_x, ft.tile_y, true)
+				cleared += 1
+			if not exclude.has(ft.get_rid()):
+				exclude.append(ft.get_rid())
+			pos = point + dir * 1.0
+			continue
+		# 墙/障碍/其它实体：射线被挡住，结束
+		break
+	return cleared
+
+
+## 便捷：清除某世界坐标所在格的（及周边）黑雾（供敌人开火/被击中暴露等调用）
+func reveal_at_world(pos: Vector2, radius_tiles: float = 0.0) -> int:
+	var tx := int(pos.x / tile_size) - tile_offset_x
+	var ty := int(pos.y / tile_size) - tile_offset_y
+	if radius_tiles <= 0.0:
+		return 1 if clear_tile(tx, ty, true) else 0
+	return clear_area(tx, ty, radius_tiles)
+
+
+## 重置缓存（强制下次 reveal_fov 一定发射线）
+func invalidate_cache() -> void:
+	_last_center = Vector2.INF
+	_last_aim = INF

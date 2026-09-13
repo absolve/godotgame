@@ -127,14 +127,17 @@ func configure_body_animation(frame_paths: Array[String]) -> void:
 func configure_turret_frames(anim_map: Dictionary) -> void:
 	var frames := SpriteFrames.new()
 	for anim_name in anim_map:
+		var key := str(anim_name)
 		var paths: Array = anim_map[anim_name]
-		frames.add_animation(str(anim_name))
-		frames.set_animation_speed(str(anim_name), 1.0)
-		frames.set_animation_loop(str(anim_name), false)
+		# 新建的 SpriteFrames 自带一个空的 "default" 动画，直接 add 会报"已存在"
+		if not frames.has_animation(key):
+			frames.add_animation(key)
+		frames.set_animation_speed(key, 1.0)
+		frames.set_animation_loop(key, false)
 		for p in paths:
 			var tex := load(p) as Texture2D
 			if tex != null:
-				frames.add_frame(str(anim_name), tex)
+				frames.add_frame(key, tex)
 	_turret_sprite.sprite_frames = frames
 
 ## 显示某武器的炮塔动画（找不到就切回默认）
@@ -266,5 +269,5 @@ func _update_turret_recoil(delta: float) -> void:
 			_turret_sprite.position = Vector2.ZERO
 		return
 	# 炮管反方向偏移（旋转在精灵自身坐标系，cos/sin 即炮口朝向的反向）
-	var r := _turret_sprite.rotation
+	var r = _turret_sprite.rotation
 	_turret_sprite.position = -Vector2(cos(r), sin(r)) * _recoil

@@ -1,8 +1,35 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/tanks/tank.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="2_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/fsm/state_machine.tscn" id="3_fsm"]
+[ext_resource type="Script" path="res://scripts/enemies/states/state_idle.gd" id="4_idle"]
+[ext_resource type="Script" path="res://scripts/enemies/states/state_go_to_sound.gd" id="5_sound"]
+[ext_resource type="Script" path="res://scripts/enemies/states/state_go_to_player.gd" id="6_player"]
+[ext_resource type="Script" path="res://scripts/enemies/states/state_frozen.gd" id="7_frozen"]
 
 [node name="Enemy" instance=ExtResource("1_base")]
 collision_layer = 32
 script = ExtResource("2_enemy")
+
+[node name="BodySprite" parent="." index="1"]
+
+[node name="TurretSprite" parent="." index="2"]
+
+[node name="BaseSprite" type="Sprite2D" parent="." index="3"]
+visible = false
+
+[node name="StateMachine" parent="." index="4" instance=ExtResource("3_fsm")]
+initial_state = &"Idle"
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("4_idle")
+
+[node name="GoToSound" type="Node" parent="StateMachine"]
+script = ExtResource("5_sound")
+
+[node name="GoToPlayer" type="Node" parent="StateMachine"]
+script = ExtResource("6_player")
+
+[node name="Frozen" type="Node" parent="StateMachine"]
+script = ExtResource("7_frozen")

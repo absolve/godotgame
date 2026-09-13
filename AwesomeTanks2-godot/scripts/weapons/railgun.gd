@@ -31,6 +31,9 @@ var _damaged: Dictionary = {}   # 本发已结算目标（避免同一目标多�
 
 
 func _ready() -> void:
+	# 场景里未写 id 时补上（基类 _ready 会按 id 套用 PRESETS 的开火音效，故必须先设）
+	if id == "":
+		id = "railgun"
 	super._ready()
 	_beam.visible = false
 	_hit_area.monitoring = false

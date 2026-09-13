@@ -1,0 +1,57 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/minigun_body_0.png.tres" id="1_b0"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/minigun_body_1.png.tres" id="2_b1"]
+[ext_resource type="Texture2D" path="res://sprites/game/tanks/minigun.png.tres" id="3_tt"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/minigun.tscn" id="4_w"]
+
+[sub_resource type="SpriteFrames" id="Frames_body"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_b0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_b1")
+}],
+"loop": true,
+"name": &"move",
+"speed": 20.0
+}]
+[sub_resource type="SpriteFrames" id="Frames_turret"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_tt")
+}],
+"loop": false,
+"name": &"default",
+"speed": 1.0
+}]
+
+[node name="EnemyMinigun" instance=ExtResource("1_base")]
+enemy_id = "minigun"
+tank_key = "minigun"
+max_health = 40.0
+points = 100
+move_speed = 94.5
+turret_speed = 126.05
+view_angle = 2.0944
+view_distance = 200.0
+shoot_angle = 10.0
+shoot_range = 100.0
+alert_radius = 200.0
+
+[node name="BodySprite" parent="." index="1"]
+sprite_frames = SubResource("Frames_body")
+animation = &"move"
+
+[node name="TurretSprite" parent="." index="2"]
+sprite_frames = SubResource("Frames_turret")
+
+[node name="Weapon" parent="." index="4" instance=ExtResource("4_w")]
+damage = 10.0
+rate = 4.0
+life = 0.5
+spawn_distance = 14.0
