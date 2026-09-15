@@ -657,6 +657,9 @@ func _spawn_player(pos: Vector2, x: int, y: int) -> void:
 	var p: Node2D = SCENE_PLAYER.instantiate()
 	p.position = pos
 	_objects_layer.add_child(p)
+	# 注入关卡引用（玩家被火焰点燃的时长按关卡序号算，H5 (55+40×index)/60）
+	if "level" in p:
+		p.set("level", self)
 	occupy_tile(x, y)
 	customCamera.position = pos      # 出生点置于镜头中心
 	customCamera.target = p

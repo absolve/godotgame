@@ -18,3 +18,11 @@ func _ready() -> void:
 	else:
 		health = 25.0
 		max_health = 25.0
+
+
+## 砖墙不燃，且被火焰打只吃 1 点直击伤害（H5 L21122：e instanceof Flamethrower && (t = 1)）
+## —— 火焰对砖墙几乎无效，它的输出在"烧木板 / 烧单位"上
+func on_bullet_hit(damage: float, src: Node, bullet: Node) -> void:
+	if src != null and is_instance_valid(src) and "ignites" in src and bool(src.get("ignites")):
+		damage = 1.0
+	super.on_bullet_hit(damage, src, bullet)

@@ -65,7 +65,12 @@
 - [ ] 🔲 **Minigun**：默认无限弹药（参数表已在 settings）
 - [ ] 🔲 **Shotgun**：多弹丸散射（`spawn_count`/`spread` 已有字段）
 - [ ] 🔲 **Ricochet**：子弹碰墙弹跳（需覆盖 bullet 的 `_on_hit`，墙体反弹而非销毁）
-- [ ] 🔲 **Flamethrower**：火焰粒子流 + 持续伤害（需粒子 + `flame_loop` 音频已备）
+- [x] ✅ **Flamethrower**：已按 H5 重做（子弹流 + 点燃）——
+  - 弹体：`scenes/projectiles/flame_bullet.tscn` + `scripts/weapons/bullet_flame.gd`，12 发/秒、弹速 240、存活 1.5→2.33s（射程 360→560px），**每发逐帧随机**（`alpha` 前 10% 寿命渐显、`scale` 前 15% 由 0.2 长到 1.0、每帧随机取 flame_0/1 + 随机旋转），命中任何东西喷 3 个烟（`Fx.smoke`）后消失，寿命耗尽有消散表现；
+  - 点燃：`scenes/fx/burning.tscn` + `scripts/fx/burning.gd`（`ATBurning`），挂在被点燃目标身上**每个物理帧**结算一次伤害，表现同 H5（fire_0..3 随机取图/旋转/锚点抖动/alpha 抖动，每 2 帧刷新，末 0.2s 淡出），不叠加；
+  - 各目标每帧灼烧（H5 原值）：敌坦克/Boss 2、炮塔 4、生成器 0.5、玩家 2（时长 (55+40×关卡序号)/60）、油桶 1、**木板 0.25×直击伤害**（并可向相邻木板蔓延，连锁烧穿木墙）；砖墙不燃且火焰直击**只算 1 点**；被点燃会**解冻**，冰冻会**灭火**；
+  - 音效：`weapon.gd` 恢复"一次连发"启停逻辑，火焰按住时播 `flame_start` + 循环 `flame_loop`（同种武器共用一条循环音、引用计数）；
+  - 相关：`ATWeapon.ignites` 标记火焰来源、子弹新增 `owner_weapon`；`Fx.smoke`/`scenes/fx/smoke.tscn` 新增
 - [ ] 🔲 **Cannon**：等离子弹（普通子弹加大伤害）
 - [x] ✅ **Shock**：已重做为武器内置持续武器（无子弹）——RayCast2D(主射线找最近命中体) + Area2D(Chain，命中点附近检测敌人/油桶, 半径200) + Beam/Arc1..3(Line2D, 帧图按段长交替+alpha抖动)；首目标+最多3跳、逐跳最近优先+视线校验；见 `scenes/weapons/shock.tscn` / `scripts/weapons/shock.gd`（原 shock_bullet 场景/脚本已删除；tank/obstacle 增加 H5 conducts_current 导电标记）
 - [ ] 🔲 **Rockets**：[special_weapons.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/weapons/special_weapons.gd) 追踪 + 烟雾尾迹（L25）+ 范围爆炸（L36）
@@ -123,7 +128,7 @@
 - [ ] 🔲 复杂行为加到状态里：保持掩体、预判射击、命中后退避、Boss 专属行为
 - [ ] 🔲 单位间避让（现在只把固定单位当障碍；移动单位之间仍可能互相顶住）
 - [ ] 🔲 死亡单位清理（坦克 `_kill()` 只置 `alive=false` 并移除占格标记，尸体节点仍在场景里挡路）
-- [ ] 🔲 冰冻视觉（冰壳贴图/解冻特效）
+- [ ] 🔲 冰冻视觉（冰壳贴图/解冻特效）——**冰冻与火焰的互斥已实现**：`ATEnemy.freeze()` 会灭火（H5 `fire.time = 0`），被火焰点燃会 `unfreeze()`
 - [ ] 🔲 Kamikaze 自爆（贴近玩家 50px 内自爆：半径 150、伤害 1000）
 - [ ] 🔲 旧的 `scripts/enemies/ai_machine.gd`（对象式状态机）已被节点状态机取代，可删除
 
@@ -203,12 +208,18 @@
 
 ## 十一、特效系统
 
+文件（`Fx` 自动加载统一入口，见 `scripts/autoload/fx.gd`）：
+- `scenes/fx/spark.tscn` / `puff.tscn` / `explosion.tscn` / `smoke.tscn`（一次性 CPUParticles2D，播完自毁）
+- `scenes/fx/burning.tscn` + `scripts/fx/burning.gd`（`ATBurning`）—— 点燃/灼烧组件（见"五、武器系统 Flamethrower"）
+
+- [x] ✅ `Fx.smoke()`（H5 `spawnSmoke`，一次 3 个烟）：火焰命中墙体/目标时喷烟
+- [x] ✅ 点燃视觉（`ATBurning`）：fire_0..3 随机取图 + 随机旋转/锚点抖动 + alpha 抖动，每 2 帧刷新、末 0.2s 淡出
 - [ ] 🔲 [level.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/level/level.gd) `shake_camera()` 相机震动（L89-90）
 - [ ] 🔲 爆炸粒子（`GPUParticles2D`）
 - [ ] 🔲 受击闪光：应用 [add_tint.gdshader](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/shaders/add_tint.gdshader) 到 Sprite2D material
 - [ ] 🔲 死亡灰度：应用 [grayscale.gdshader](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/shaders/grayscale.gdshader)
 - [ ] 🔲 时间冻结效果（`freeze_time` 已有，需暂停敌人 update）
-- [ ] 🔲 烟雾/火花/碎片/星星粒子资源
+- [x] ✅ 烟雾/火花/消散粒子资源（spark/puff/smoke/explosion 四个场景；碎片/星星粒子仍缺）
 
 ---
 

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/fx/burning.gd" id="1_burn"]
+[ext_resource type="Texture2D" path="res://sprites/game/fire_0.png.tres" id="2_fire"]
+
+[node name="Burning" type="Sprite2D"]
+texture = ExtResource("2_fire")
+script = ExtResource("1_burn")

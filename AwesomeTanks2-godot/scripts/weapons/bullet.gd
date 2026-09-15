@@ -17,13 +17,14 @@ var life: float = 1.0
 var hit_color: Color = Color.WHITE
 var sound_alert_radius: float = 0.0
 var owner_actor: Node = null      # 布设者（射击坦克），避免自撞
+var owner_weapon: Node = null     # 发射它的武器（命中回调要用来判断火焰/激光等特性）
 
 # —— 由武器下发（见 ATWeapon._spawn_bullet）——
 var impact_sfx := ""
 var bullet_spark := true          # 命中时爆火花
 var bullet_puff := false          # 寿命耗尽时冒消散烟
 
-@onready var _sprite: AnimatedSprite2D = $AnimatedSprite
+@onready var _sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite") as AnimatedSprite2D
 
 
 func _ready() -> void:
@@ -67,7 +68,7 @@ func _on_hit(other: Node) -> void:
 	if other.has_method("on_bullet_hit"):
 		var other_team: int = other.team if "team" in other else Constants.Team.CPU
 		if other_team != team:
-			other.on_bullet_hit(damage, null, self)
+			other.on_bullet_hit(damage, owner_weapon, self)
 	_die(true)
 
 

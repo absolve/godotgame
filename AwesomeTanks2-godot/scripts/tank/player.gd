@@ -9,6 +9,11 @@ class_name ATPlayer
 var auto_aim: bool = false
 var auto_aim_target: Node2D = null
 
+## 关卡引用（Level._spawn_player 注入；用于按关卡序号算点燃时长，H5 (55+40×index)/60 秒）
+var level: Node = null
+## 被点燃时每物理帧受到的灼烧伤害（H5：玩家 = 2）
+@export var burn_damage: float = 2.0
+
 const DIR_WEAPONS = "res://scenes/weapons/"
 
 # 槽位顺序与 Settings.WEAPON_KEYS + mines 一致（索引 9 = mines）
@@ -138,6 +143,30 @@ func _unhandled_input(_event: InputEvent) -> void:
 	#if Input.is_action_just_pressed("next_weapon"):
 		#next_weapon()
 	pass
+
+# ============================================================
+# 受击 / 点燃（H5：玩家被火焰命中会着火，时长随关卡序号增长）
+# ============================================================
+func on_bullet_hit(damage: float, src_weapon: Node, bullet: Node) -> void:
+	super.on_bullet_hit(damage, src_weapon, bullet)
+	if not alive or invincible:
+		return
+	_try_ignite(src_weapon)
+
+
+## 被敌方火焰命中 → 点燃；时长 = (55 + 40×关卡序号)/60 秒（H5 L22561）
+func _try_ignite(src: Node) -> void:
+	if not ATBurning.is_flame_source(src, team):
+		return
+	ATBurning.attach_from(self, burn_damage, src, _burn_duration())
+
+
+func _burn_duration() -> float:
+	var index := 0
+	if level != null and is_instance_valid(level) and "level_index" in level:
+		index = int(level.get("level_index"))
+	return (55.0 + 40.0 * float(index)) / 60.0
+
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)

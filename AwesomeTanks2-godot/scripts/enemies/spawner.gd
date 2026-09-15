@@ -31,6 +31,7 @@ func _ready() -> void:
 		ai.enabled = false
 	move_speed = 0.0
 	velocity = Vector2.ZERO
+	burn_damage = 0.5   # H5：生成器被点燃每帧 0.5 点（L22330 new Fire(this, .5)）
 
 
 ## 按 kind 应用数据（贴图/血量/分数/产出表）；须在节点入树后调用

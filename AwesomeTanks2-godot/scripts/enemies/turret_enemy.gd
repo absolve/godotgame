@@ -23,6 +23,7 @@ func _ready() -> void:
 	# 固定炮塔无车体：隐藏车体精灵（可见的是底座 + 炮塔）
 	_body_sprite.visible = false
 	move_speed = 0.0   # 不可移动（move() 亦为 no-op），让"能否移动"的判定统一看 move_speed
+	burn_damage = 4.0  # H5：固定炮塔被点燃每帧 4 点（L21890 new Fire(this, 4)）
 	if _base_sprite != null:
 		_base_sprite.visible = _base_sprite.texture != null
 	# 炮塔暂不跑通用坦克 AI（原地转向由自身 _physics_process 处理）；
@@ -63,7 +64,9 @@ func _build_turret_frames(turret_key: String) -> void:
 	if not ResourceLoader.exists(path):
 		return
 	var frames := SpriteFrames.new()
-	frames.add_animation("default")
+	# 新建的 SpriteFrames 自带一个空的 "default" 动画，直接 add 会报"已存在"
+	if not frames.has_animation("default"):
+		frames.add_animation("default")
 	frames.set_animation_speed("default", 1.0)
 	frames.set_animation_loop("default", false)
 	frames.add_frame("default", load(path))

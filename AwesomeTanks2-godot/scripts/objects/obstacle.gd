@@ -10,6 +10,14 @@ var destructible: bool = true
 var tile_type: int = Constants.Tile.EMPTY
 var conducts_current: bool = false  # H5 conductsCurrent：crate/木箱/砖默认绝缘；油桶(barrel)导电=true
 
+# —— 火焰点燃（H5：只有木板与油桶会着火；crate/砖/门/秘密墙不燃）——
+## 被点燃时每物理帧的灼烧伤害（H5：油桶 new Fire(this, 1)）
+@export var burn_damage_flat: float = 0.0
+## 按"本次直击伤害"的比例点燃（H5：木板 new Fire(this, .25 * damage)）
+@export var burn_damage_ratio: float = 0.0
+## 是否把火蔓延给相邻木板（H5：木板会连锁烧穿木墙）
+@export var spreads_fire: bool = false
+
 signal destroyed(obstacle)
 
 # 不同类型被毁时的音效（barrel 自带爆炸覆写）
@@ -30,15 +38,26 @@ func _ready() -> void:
 func on_bullet_hit(damage: float, _src: Node, _bullet: Node) -> void:
 	if not destructible:
 		return
+	_try_ignite(damage, _src)
 	health -= damage
 	_flash_hit()
 	if health <= 0:
 		_die()
 
 
+## 被火焰命中 → 点燃（直击伤害照常结算，点燃额外按帧掉血；不燃的物体 burn 值为 0）
+func _try_ignite(damage: float, src: Node) -> void:
+	var burn := burn_damage_flat + burn_damage_ratio * damage
+	if burn <= 0.0:
+		return
+	ATBurning.attach_from(self, burn, src, -1.0, spreads_fire)
+
+
 ## 受击闪光：子 Sprite 泛白后 0.12s 淡回（等价 H5 flashElement 的 tint 闪烁）
 func _flash_hit() -> void:
 	for child in get_children():
+		if child is ATBurning:
+			continue   # 火焰贴图不参与受击泛白（点燃每帧都调用本函数）
 		if child is Sprite2D or child is AnimatedSprite2D:
 			var sprite: CanvasItem = child
 			if _flash_tween != null and _flash_tween.is_valid():

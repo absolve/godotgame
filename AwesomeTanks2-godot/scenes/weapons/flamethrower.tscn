@@ -14,4 +14,7 @@ velocity = 240.0
 spread = 0.12
 spawn_distance = 26.0
 sound_alert_radius = 80.0
+ignites = true
+bullet_spark = false
+bullet_puff = true
 bullet_scene = ExtResource("3_bs")

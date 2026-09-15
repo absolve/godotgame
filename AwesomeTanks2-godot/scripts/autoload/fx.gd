@@ -5,6 +5,7 @@ extends Node
 const SCENE_SPARK: PackedScene = preload("res://scenes/fx/spark.tscn")
 const SCENE_PUFF: PackedScene = preload("res://scenes/fx/puff.tscn")
 const SCENE_EXPLOSION: PackedScene = preload("res://scenes/fx/explosion.tscn")
+const SCENE_SMOKE: PackedScene = preload("res://scenes/fx/smoke.tscn")
 
 
 ## 在 pos 生成一个一次性特效；holder 若不传则加在当前场景根（建议传子弹/物体的父节点）
@@ -48,3 +49,8 @@ func puff(pos: Vector2, holder: Node = null) -> void:
 
 func explosion(pos: Vector2, holder: Node = null) -> void:
 	spawn(pos, SCENE_EXPLOSION, holder)
+
+
+## 烟雾（H5 spawnSmoke）；一次 3 个粒子，火焰撞墙/物体被毁时用
+func smoke(pos: Vector2, holder: Node = null) -> void:
+	spawn(pos, SCENE_SMOKE, holder)

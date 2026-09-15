@@ -210,12 +210,33 @@ func on_bullet_hit(damage: float, src_weapon: Node, bullet: Node) -> void:
 	super.on_bullet_hit(damage, src_weapon, bullet)
 	alerted_time = 2.5
 	alerted = true
+	if alive:
+		_try_ignite(src_weapon)
+
+
+# ============================================================
+# 火焰点燃（H5：命中体 onBulletHit 里 instanceof Flamethrower/Fire 就挂 window.AT.Fire）
+# ============================================================
+## 被点燃时每物理帧受到的灼烧伤害（H5：敌坦克/Boss = 2，炮塔 = 4，生成器 = 0.5）
+@export var burn_damage: float = 2.0
+## 燃烧时长（秒）；< 0 时用 H5 默认 (85 + 30×随机)/60
+@export var burn_duration: float = -1.0
+
+
+## 被火焰命中 → 点燃（已在燃烧则不叠加），并解冻（H5 同：火烧到冰就化）
+func _try_ignite(src: Node) -> void:
+	if not ATBurning.is_flame_source(src, team):
+		return
+	if ai_state_name() == "Frozen":
+		unfreeze()
+	ATBurning.attach_from(self, burn_damage, src, burn_duration)
 
 
 # ============================================================
 # 冰冻（冰冻道具/电击效果调用；对应 H5 onFreeze/onUnfreeze）
 # ============================================================
 func freeze() -> void:
+	ATBurning.extinguish(self)   # H5 onFreeze：fire.time = 0（冰冻灭火）
 	set_ai_state("Frozen")
 
 
