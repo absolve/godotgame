@@ -169,10 +169,13 @@ func set_performance_level(stat: String, level: int) -> void:
 ## 关卡结算：记录分数、解锁进度
 func finish_level(index: int, points: int, success: bool) -> void:
 	var g: Dictionary = current["game"]
-	if index < g["points"].size():
-		g["points"][index] = max(int(g["points"][index]), points)
+	# 关卡数不再固定 15，按需扩展"每关最高分"数组
+	var scores: Array = g["points"]
+	while scores.size() <= index:
+		scores.append(0)
+	scores[index] = max(int(scores[index]), points)
 	g["levels"] = max(int(g["levels"]), index + 1)
-	if index + 1 >= Settings.LEVEL_COUNT:
+	if index + 1 >= ATLevels.LEVELS.size():
 		g["completed"] = true
 	save()
 	profile_changed.emit()

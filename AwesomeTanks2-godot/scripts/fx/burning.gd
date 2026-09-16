@@ -25,12 +25,12 @@ const TEX_FIRE: Array[Texture2D] = [
 	preload("res://sprites/game/fire_2.png.tres"),
 	preload("res://sprites/game/fire_3.png.tres"),
 ]
-const SCENE := preload("res://scenes/fx/burning.tscn")
+const SCENE = preload("res://scenes/fx/burning.tscn")
 
 ## 燃烧表现刷新间隔（帧）——H5 用 step 计数，等价每 2 帧刷一次
-const REFRESH_FRAMES := 2
+const REFRESH_FRAMES = 2
 ## 末尾淡出时长（秒）——H5: min(1, time / .2)
-const FADE_TIME := 0.2
+const FADE_TIME = 0.2
 ## 每帧伤害（由 attach 传入；作为默认值给场景预览用）
 @export var damage_per_frame: float = 2.0
 ## 是否向相邻木板蔓延（只有木板开启）

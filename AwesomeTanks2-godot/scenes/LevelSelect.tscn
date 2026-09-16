@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_normal.png.tres" id="3_back_n"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_hover.png.tres" id="4_back_h"]
 [ext_resource type="Texture2D" path="res://sprites/menu/levels/buttons/back_to_upgrades_down.png.tres" id="5_back_d"]
-[ext_resource type="PackedScene" uid="uid://dskw1ya6xx3o3" path="res://scenes/level_btn.tscn" id="6_lb"]
 
 [node name="LevelSelect" type="Control" unique_id=567715099]
 layout_mode = 3
@@ -41,124 +40,15 @@ offset_bottom = 635.0
 texture = ExtResource("2_bg")
 stretch_mode = 5
 
-[node name="Btn1" parent="Design" unique_id=2081292427 instance=ExtResource("6_lb")]
+[node name="BtnGrid" type="GridContainer" parent="Design" unique_id=2081292427]
 layout_mode = 0
 offset_left = 133.0
 offset_top = 244.0
-offset_right = 203.0
-offset_bottom = 304.0
-
-[node name="Btn2" parent="Design" unique_id=1154054508 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 213.0
-offset_top = 244.0
-offset_right = 283.0
-offset_bottom = 304.0
-level_num = 2
-
-[node name="Btn3" parent="Design" unique_id=1790530690 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 293.0
-offset_top = 244.0
-offset_right = 363.0
-offset_bottom = 304.0
-level_num = 3
-
-[node name="Btn4" parent="Design" unique_id=1925650239 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 373.0
-offset_top = 244.0
-offset_right = 443.0
-offset_bottom = 304.0
-level_num = 4
-
-[node name="Btn5" parent="Design" unique_id=566082529 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 453.0
-offset_top = 244.0
-offset_right = 523.0
-offset_bottom = 304.0
-level_num = 5
-
-[node name="Btn6" parent="Design" unique_id=710418580 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 133.0
-offset_top = 324.0
-offset_right = 203.0
-offset_bottom = 384.0
-level_num = 6
-
-[node name="Btn7" parent="Design" unique_id=1302931801 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 213.0
-offset_top = 324.0
-offset_right = 283.0
-offset_bottom = 384.0
-level_num = 7
-
-[node name="Btn8" parent="Design" unique_id=1923948433 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 293.0
-offset_top = 324.0
-offset_right = 363.0
-offset_bottom = 384.0
-level_num = 8
-
-[node name="Btn9" parent="Design" unique_id=562497067 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 373.0
-offset_top = 324.0
-offset_right = 443.0
-offset_bottom = 384.0
-level_num = 9
-
-[node name="Btn10" parent="Design" unique_id=232170291 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 453.0
-offset_top = 324.0
-offset_right = 523.0
-offset_bottom = 384.0
-level_num = 10
-
-[node name="Btn11" parent="Design" unique_id=1553970269 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 133.0
-offset_top = 404.0
-offset_right = 203.0
-offset_bottom = 464.0
-level_num = 11
-
-[node name="Btn12" parent="Design" unique_id=275373287 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 213.0
-offset_top = 404.0
-offset_right = 283.0
-offset_bottom = 464.0
-level_num = 12
-
-[node name="Btn13" parent="Design" unique_id=483576736 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 293.0
-offset_top = 404.0
-offset_right = 363.0
-offset_bottom = 464.0
-level_num = 13
-
-[node name="Btn14" parent="Design" unique_id=1059071638 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 373.0
-offset_top = 404.0
-offset_right = 443.0
-offset_bottom = 464.0
-level_num = 14
-
-[node name="Btn15" parent="Design" unique_id=171212905 instance=ExtResource("6_lb")]
-layout_mode = 0
-offset_left = 453.0
-offset_top = 404.0
 offset_right = 523.0
 offset_bottom = 464.0
-level_num = 15
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 20
+columns = 5
 
 [node name="TotalScore" type="Label" parent="Design" unique_id=1924720292]
 layout_mode = 0
@@ -183,19 +73,4 @@ texture_pressed = ExtResource("5_back_d")
 texture_hover = ExtResource("4_back_h")
 texture_disabled = ExtResource("3_back_n")
 
-[connection signal="clicked" from="Design/Btn1" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn2" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn3" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn4" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn5" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn6" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn7" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn8" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn9" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn10" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn11" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn12" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn13" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn14" to="." method="_on_level_clicked"]
-[connection signal="clicked" from="Design/Btn15" to="." method="_on_level_clicked"]
 [connection signal="pressed" from="Design/BackBtn" to="." method="_on_back_pressed"]

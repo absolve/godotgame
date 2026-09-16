@@ -1,28 +1,46 @@
 extends Control
 ## LevelSelect — 关卡选择界面（对应 H5 MenuLevels）
-## 15 个关卡按钮直接在 LevelSelect.tscn 中定义（LevelBtn 实例）
-## 按钮状态（normal/active/disabled）由 LevelBtn 脚本根据解锁进度动态刷新
+##
+## 按钮不再写死在场景里，而是按关卡总数动态生成到 Design/BtnGrid（5 列网格），
+## 所以关卡数不再被 15 卡住。
+## 按钮底图不含数字（见 sprites/atlas/level_btn_*.png），关卡号由 LevelBtn 的 Label 绘制。
 
-#const FONT: Font = preload("res://fonts/gunplay.ttf")
+const LEVEL_BTN_SCENE := preload("res://scenes/level_btn.tscn")
+
+@onready var _grid: GridContainer = $Design/BtnGrid
 @onready var _total_score: Label = $Design/TotalScore
+
 var _level_btns: Array = []
 
 
 func _ready() -> void:
 	Audio.play_music("music_menu.mp3")
-	#_total_score.add_theme_font_override("font", FONT)
-	# 收集所有关卡按钮（按 level_num 排序）
-	for child in $Design.get_children():
-		if child.has_method("refresh_state") and child.has_method("get"):
-			var num: int = child.level_num
-			if num >= 1 and num <= 15:
-				_level_btns.append(child)
-	_level_btns.sort_custom(func(a, b): return a.level_num < b.level_num)
-	# 刷新每个按钮的状态
+	_build_buttons()
+	_refresh_states()
+	_total_score.text = " Total score: %d Pts. " % Game.get_total_points()
+
+
+## 关卡总数 = data/levels.gd 里定义的数量（新增关卡后这里自动跟上，不需要改场景）
+static func total_level_count() -> int:
+	return maxi(ATLevels.LEVELS.size(), Settings.LEVEL_COUNT)
+
+
+## 按关卡总数生成按钮
+func _build_buttons() -> void:
+	for i in range(total_level_count()):
+		var btn = LEVEL_BTN_SCENE.instantiate()
+		btn.name = "Btn%d" % (i + 1)
+		btn.level_num = i + 1
+		btn.clicked.connect(_on_level_clicked)
+		_grid.add_child(btn)
+		_level_btns.append(btn)
+
+
+func _refresh_states() -> void:
+	# unlocked = 已通关关卡数（0 表示还没玩过第 1 关）
 	var unlocked := int(Game.current["game"]["levels"])
 	for btn in _level_btns:
 		btn.refresh_state(unlocked)
-	_total_score.text = " Total score: %d Pts. " % Game.get_total_points()
 
 
 func _on_level_clicked(index: int) -> void:

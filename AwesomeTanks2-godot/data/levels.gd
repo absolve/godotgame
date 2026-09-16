@@ -341,7 +341,7 @@ static func get_level(index: int) -> Array:
 
 ## 正式关卡数量
 static func main_level_count() -> int:
-	return 15
+	return LEVELS.size()
 
 ## 列出自定义关卡目录中所有 .json 文件名（不含扩展名）
 static func list_custom_levels() -> Array[String]:
