@@ -1,3 +1,8 @@
+# ============================================================
+# 仓库根目录忽略规则（本仓库放着多个小游戏工程）
+# 各子工程自己的 .gitignore 负责工程专属规则（如 Godot 的 .godot/）
+# ============================================================
+
 # Godot 4+ specific ignores
 .godot/
 .nomedia
@@ -6,6 +11,7 @@
 .import/
 export.cfg
 export_credentials.cfg
+export_presets.cfg
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -16,4 +22,26 @@ data_*/
 mono_crash.*.json
 *.import
 
+# ---------- C# / .NET 构建产物 ----------
+bin/
+obj/
+*.dmp
+*.binlog
+TestResults/
+
+# ---------- IDE / 编辑器本地文件 ----------
+# 注意：*.csproj（Godot 生成的项目文件）要入库，只忽略各人的用户配置
 .vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.sln.DotSettings.user
+
+# ---------- 系统杂项 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
