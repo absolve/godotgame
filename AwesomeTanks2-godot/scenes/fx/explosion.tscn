@@ -1,15 +1,83 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://cs3034ewo7axh"]
 
-[ext_resource type="Script" path="res://scripts/fx/fx_burst.gd" id="1_fx"]
+[ext_resource type="Script" uid="uid://cd1vuhpm3c0m6" path="res://scripts/fx/explosion.gd" id="1_2y6wa"]
 [ext_resource type="Texture2D" path="res://sprites/game/particles/smoke_0.png.tres" id="2_smoke"]
-[ext_resource type="Texture2D" path="res://sprites/game/particles/spark_0.png.tres" id="3_spark"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_0.png.tres" id="4_rfbau"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_1.png.tres" id="5_m7y3v"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_2.png.tres" id="6_cr3lf"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_3.png.tres" id="7_djpfh"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_4.png.tres" id="8_fjxnu"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_5.png.tres" id="9_1hy5d"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_6.png.tres" id="10_j6hwg"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_7.png.tres" id="11_p1vtb"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_8.png.tres" id="12_460di"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_9.png.tres" id="13_scb82"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_10.png.tres" id="14_ejt68"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_11.png.tres" id="15_8hb0y"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_12.png.tres" id="16_bgd43"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_13.png.tres" id="17_1ujq0"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/explosion_14.png.tres" id="18_i5ex2"]
 
-[node name="Explosion" type="Node2D"]
-script = ExtResource("1_fx")
+[sub_resource type="SpriteFrames" id="SpriteFrames_rbyu6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_rfbau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_m7y3v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_cr3lf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_djpfh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_fjxnu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_1hy5d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_j6hwg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_p1vtb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_460di")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_scb82")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ejt68")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_8hb0y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_bgd43")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_1ujq0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_i5ex2")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 30.0
+}]
 
-[node name="Smoke" type="CPUParticles2D" parent="."]
-emitting = true
+[node name="Explosion" type="Node2D" unique_id=1589751338]
+script = ExtResource("1_2y6wa")
+
+[node name="Smoke" type="CPUParticles2D" parent="." unique_id=290634086]
+emitting = false
 amount = 14
+texture = ExtResource("2_smoke")
 lifetime = 0.55
 one_shot = true
 explosiveness = 0.7
@@ -19,18 +87,8 @@ initial_velocity_min = 40.0
 initial_velocity_max = 120.0
 scale_amount_min = 0.7
 scale_amount_max = 1.4
-texture = ExtResource("2_smoke")
 
-[node name="Sparks" type="CPUParticles2D" parent="."]
-emitting = true
-amount = 12
-lifetime = 0.35
-one_shot = true
-explosiveness = 0.8
-spread = 180.0
-gravity = Vector2(0, 80)
-initial_velocity_min = 90.0
-initial_velocity_max = 220.0
-scale_amount_min = 0.4
-scale_amount_max = 0.9
-texture = ExtResource("3_spark")
+[node name="ani" type="AnimatedSprite2D" parent="." unique_id=1133569780]
+sprite_frames = SubResource("SpriteFrames_rbyu6")
+frame = 14
+frame_progress = 1.0

@@ -14,6 +14,8 @@ signal killed
 @onready var _body_sprite: AnimatedSprite2D = $BodySprite
 @onready var _turret_sprite: AnimatedSprite2D = $TurretSprite
 @onready var _body: CollisionShape2D = $Body
+## 头顶血条（scenes/objects/lifebar.tscn；只有敌人场景 Enemy.tscn 里挂了，玩家没有 → null）
+@onready var _lifebar: ATLifebar = get_node_or_null("Lifebar") as ATLifebar
 #@onready var _hit_flash: Node = $BodySprite/HitFlash  # 受击闪光组件（基座场景自带，全坦克共用）
 
 # 物理参数（由子类根据升级等级设置）
@@ -53,14 +55,24 @@ func _ready() -> void:
 	(_body as CollisionShape2D).shape = shape
 	collision_layer = _my_layer()
 	collision_mask = _my_mask()
-	_body_sprite.material = _material
+	# 受击闪光材质：用场景里 BodySprite 自带的 ShaderMaterial
+	# （resource_local_to_scene=true → 每辆坦克一份，互不干扰），并让炮塔共用同一份
+	_material = _body_sprite.material as ShaderMaterial
+	if _material != null:
+		_turret_sprite.material = _material
 
 func _my_layer() -> int:
 	return 1 << (Constants.Layer.PLAYER - 1) if team == Constants.Team.PLAYER else 1 << (Constants.Layer.ENEMY - 1)
 
 func _my_mask() -> int:
-	# 坦克碰墙 + 障碍物 + 对方队伍
-	return Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER, Constants.Layer.PLAYER, Constants.Layer.ENEMY])
+	# 坦克碰墙 + 障碍物 + 对方队伍（H5 敌坦克 mask = PLAYER|PROJECTILE|ENEMY|OBSTACLE|WALL：
+	# 不含 ENEMY_SPAWNER，所以敌人坦克能压过生成器，生成器产出的坦克不会卡在自己身上；
+	# 玩家在 H5 里没设 mask（= 全部相碰），会被生成器挡住，故玩家保留 ENEMY_SPAWNER）
+	var layers: Array = [Constants.Layer.WALL, Constants.Layer.OBSTACLE,
+		Constants.Layer.PLAYER, Constants.Layer.ENEMY]
+	if team == Constants.Team.PLAYER:
+		layers.append(Constants.Layer.ENEMY_SPAWNER)
+	return Constants.layer_mask(layers)
 
 func _physics_process(delta: float) -> void:
 	# 炮塔后坐力恢复 + 炮管反方向偏移
@@ -215,9 +227,26 @@ func on_bullet_hit(damage: float, src_weapon: Node, _bullet: Node) -> void:
 	if invincible:
 		return
 	health -= damage
-	_flash_hit(src_weapon.hit_color if src_weapon != null and "hit_color" in src_weapon else Color.WHITE)
+	# 来源可能为空（爆炸/灼烧）或已释放（发射者在子弹飞行途中被击毁）→ 一律按白色闪光
+	var hit_color: Color = Color.WHITE
+	if is_instance_valid(src_weapon) and "hit_color" in src_weapon:
+		hit_color = src_weapon.hit_color
+	_flash_hit(hit_color)
+	# H5 Tank.onBulletHit：挨打就显示头顶血条（0.833s 内没有再次受击自动隐藏）
+	if _lifebar != null:
+		_lifebar.show_bar()
+	_play_hit_sound(src_weapon)
 	if health <= 0 and alive:
 		_kill()
+
+
+## 受击音（H5 敌坦克 L22194 / 玩家 L22561：`e instanceof Explosion || Laser || Fire || playEnemyHit()`）
+##   爆炸、激光（持续光束）与"挂在身上的灼烧"都不播 —— 后者每物理帧掉一次血，播了会刷屏。
+##   生成器等子类可覆写（生成器用 spawner_hit_1~3，且连火焰直击也不播，见 ATSpawner）。
+func _play_hit_sound(src: Node) -> void:
+	if src == null or not is_instance_valid(src) or src is ATBurning or src is ATLaserWeapon:
+		return
+	Audio.play_enemy_hit()
 
 
 ## 触发受击闪光（由 BodySprite/HitFlash 着色器组件统一播放）

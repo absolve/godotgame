@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/objects/lifebar.gd" id="1_lifebar"]
+[ext_resource type="Texture2D" path="res://sprites/game/lifebar/background.png.tres" id="2_bg"]
+[ext_resource type="Texture2D" path="res://sprites/game/lifebar/foreground.png.tres" id="3_fg"]
+
+[node name="Lifebar" type="Node2D"]
+position = Vector2(0, -30)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_lifebar")
+
+[node name="Bar" type="TextureProgressBar" parent="."]
+offset_left = -47.5
+offset_right = 47.5
+offset_bottom = 15.0
+mouse_filter = 2
+texture_under = ExtResource("2_bg")
+texture_progress = ExtResource("3_fg")

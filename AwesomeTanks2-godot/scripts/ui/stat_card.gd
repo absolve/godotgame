@@ -28,6 +28,9 @@ func setup(key: String) -> void:
 	refresh()
 
 
+## 纯状态同步（不播任何闪烁效果）：等级 / 仪表盘 / 价格
+## 注意：**不要在这里加闪烁**，因为 _refresh_stat_cards() 会遍历所有卡调用本函数，
+## 一旦这里闪，点任意一张卡都会让所有卡一起闪（H5 的闪烁是 Gauge.increase 单独负责的）。
 func refresh() -> void:
 	_level = Game.get_performance_level(stat_key)
 	# 仪表盘：0~5 对应 gauge_0 ~ gauge_5
@@ -40,9 +43,15 @@ func refresh() -> void:
 		_price.text = "MAX"
 		disabled = true
 	else:
-		_price.text = _format_money(int(Settings.PRICES[stat_key][_level]))
+		_price.text = Game._format_money(int(Settings.PRICES[stat_key][_level]))
 		disabled = false
 
+
+## 升级成功：刷新状态 + 闪一下图标和仪表盘（对应 H5 Gauge.increase）
+func increase() -> void:
+	refresh()
+	FlashFx.flash(_icon)
+	FlashFx.flash(_gauge)
 
 func _on_down() -> void:
 	Audio.play_button_down()
@@ -53,14 +62,3 @@ func _on_up() -> void:
 
 func flash_price():
 	FlashFx.flash(_price)
-
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v

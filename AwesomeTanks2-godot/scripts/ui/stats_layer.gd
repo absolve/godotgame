@@ -152,7 +152,7 @@ func refresh() -> void:
 	for key in _value_labels:
 		_value_labels[key].text = str(int(stats.get(key, 0)))
 	if _money_label != null:
-		_money_label.text = _format_money(int(stats.get("moneyEarned", 0)))
+		_money_label.text = Game._format_money(int(stats.get("moneyEarned", 0)))
 	_refresh_medals()
 
 
@@ -221,15 +221,3 @@ func _on_close_pressed() -> void:
 	Audio.play_button_down()
 	_hide_hint()
 	visible = false
-
-
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v

@@ -13,6 +13,7 @@ shader_parameter/flash_amount = 0.0
 shader_parameter/flash_color = Color(1, 1, 1, 1)
 
 [node name="Tank" type="CharacterBody2D" unique_id=1648966353]
+z_index = 5
 script = ExtResource("1_tank")
 
 [node name="Body" type="CollisionShape2D" parent="." unique_id=1334008395]

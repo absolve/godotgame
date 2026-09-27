@@ -49,6 +49,7 @@ const TEX_WALLS: Array = [
 const TEX_SECRET: Texture2D = preload("res://sprites/game/secret.png.tres")
 
 @onready var _objects_layer: Node2D = $ObjectsLayer
+@onready var _bonus_layer: Node2D = $BonusLayer      # 奖励拾取物（画在坦克下面，H5 groundLayer 同）
 @onready var _top_layer: Node2D = $TopLayer
 @onready var customCamera: Camera2D = $customCamera
 
@@ -61,6 +62,8 @@ const TEX_SECRET: Texture2D = preload("res://sprites/game/secret.png.tres")
 @onready var _profit_bg: TextureRect = $HUD/HudRoot/Bottom/Profit
 @onready var _profit_value: Label = $HUD/HudRoot/Bottom/Profit/Value
 @onready var _fight: TextureRect = $HUD/HudRoot/Bottom/Fight
+## 入场黑屏（H5 camera.flash(0, 250)：整屏黑 → 250ms 淡入）
+@onready var _flash: ColorRect = $HUD/HudRoot/Flash
 
 # 弹窗（HUD CanvasLayer 内实例，常驻 ALWAYS，暂停中仍可交互）
 @onready var _pause_alert: PauseAlertScript = $HUD/PauseAlert
@@ -97,9 +100,14 @@ var _last_hp_ratio: float = -1.0
 var _profit_tween: Tween = null
 var _fight_tween: Tween = null
 var _summary_success: bool = false
+var _summary_shown: bool = false    # 结算只触发一次（H5: summaryAlert || …）
+var _result_persisted: bool = false     # 关卡结束的存档写回只做一次（H5 shutdown 同）
 
 # 关卡对象场景（玩家 + 障碍物瓦片 → 场景，_spawn_objects 直接按瓦片添加）
 const SCENE_PLAYER := preload("res://scenes/Player.tscn")
+const SCENE_BONUS := preload("res://scenes/objects/bonus.tscn")
+## 死亡灰度着色器（H5 grayscaleShader）
+const PRELOAD_GRAYSCALE: Shader = preload("res://shaders/grayscale.gdshader")
 const OBJECT_SCENES: Dictionary = {
 	Constants.Tile.BARREL: preload("res://scenes/objects/barrel.tscn"),
 	Constants.Tile.CRATE: preload("res://scenes/objects/crate.tscn"),
@@ -155,6 +163,7 @@ func _ready() -> void:
 	_connect_popups()
 	level_started.emit()
 	Audio.play_music("music_game.mp3")
+	_play_intro()
 
 
 func _connect_popups() -> void:
@@ -303,6 +312,16 @@ func is_tile_free(x: int, y: int) -> bool:
 	if Constants.is_static_wall(tiles[y][x]):
 		return false
 	return not occupancy[y][x]
+
+
+## 能不能往这一格"塞一个会走路的单位"（生成器挑落点、奖励小敌人找空地等）：
+## 在 is_tile_free 之上再排除**可破坏障碍物与固定单位**（油桶/木箱/木板/砖墙/炮塔/生成器）
+## —— 它们没写进 occupancy，但都是实体，单位塞进去会卡住。
+## （H5 是 isTileFree + objects[y][x] === null 两个都查）
+func is_tile_clear_for_unit(x: int, y: int) -> bool:
+	if not is_tile_free(x, y):
+		return false
+	return pathfinder == null or not pathfinder.is_solid(x, y)
 
 
 func occupy_tile(x: int, y: int) -> void:
@@ -502,29 +521,58 @@ func _sync_audio_icons() -> void:
 
 
 # ---------- 结算 ----------
+## 结算流程（H5 enemyKilled / playerKilled → SummaryAlert）：
+##   清场/阵亡的那一刻**收回玩家操作权**（H5: summaryAlert 存在时 player.stopFire()，
+##   这里连驾驶一起锁 —— 否则会出现"关卡已经结束还能开车打枪"），
+##   但**不暂停世界**（H5 的 enemyKilled/playerKilled 都不设 gamePaused）：
+##   残留子弹、爆炸、掉落的金币继续演/继续被吸走，面板照 H5 的 2s 时序淡入，
+##   4.5s 后自动继续（胜利）或等玩家点 CONTINUE（失败）。
 func _show_summary(success: bool) -> void:
+	if _summary_shown:
+		return                      # 只结一次（避免玩家先死又清场等重复触发）
+	_summary_shown = true
 	_summary_success = success
 	Game.finish_level(level_index, points, success)
 	level_complete.emit(success, int(profit))
-	get_tree().paused = true
-	Audio.stop_music()
+	Audio.stop_music()              # H5: SummaryAlert 构造时停音乐
 	Audio.play_sfx("level_won.mp3" if success else "level_lost.mp3")
+	if is_instance_valid(player):
+		if "invincible" in player:
+			player.invincible = true    # H5: 胜利后玩家无敌（残留子弹打不死，避免"赢了又死"）
+		if "control_locked" in player:
+			player.set("control_locked", true)   # 收回操作权（不让关卡结束后继续打）
+		if player.has_method("stop_fire"):
+			player.call("stop_fire")
 	_summary_alert.open(success, int(profit))
 
 
 func _on_summary_continue() -> void:
-	get_tree().paused = false
+	get_tree().paused = false       # 兜底：世界在结算期间本来就不暂停（H5 同）
+	_persist_level_result()         # H5 shutdown：收益入账 + 弹药写回 + save
 	if _summary_success:
 		Game.change_scene(Settings.SCENE_LEVEL_SELECT)
 	else:
 		Game.change_scene(Settings.SCENE_UPGRADES)
 
 
+# ---------- 关卡开始动画（H5: camera.flash(0,250) + hud.showFightMessage） ----------
+## 入场：黑屏 250ms 淡入（H5 camera.flash(0, 250)），随后播 FIGHT 横幅；
+## 横幅播放期间镜头不跟随玩家（H5: fightMessageComplete 才 updateCamera）
+func _play_intro() -> void:
+	customCamera.frozen = true
+	_flash.visible = true
+	_flash.color = Color(0.0, 0.0, 0.0, 1.0)
+	var tw := create_tween()
+	tw.tween_property(_flash, "color:a", 0.0, 0.25)
+	tw.tween_callback(func() -> void: _flash.visible = false)
+	_show_fight()
+
+
 # ---------- 开打前/战斗中的小动画（供流程接入） ----------
 func _show_profit(amount: int) -> void:
 	if _profit_tween != null and _profit_tween.is_valid():
 		_profit_tween.kill()
-	_profit_value.text = _format_money(amount)
+	_profit_value.text = Game._format_money(amount)
 	_profit_bg.visible = true
 	_profit_bg.position = Vector2(-118.0, -65.0)
 	_profit_tween = create_tween()
@@ -536,6 +584,8 @@ func _show_profit(amount: int) -> void:
 	_profit_tween.tween_callback(func() -> void: _profit_bg.visible = false)
 
 
+## FIGHT 横幅（H5 hud.showFightMessage，L23111~L23123）：
+##   延迟 0.5s → 0.6s 上升进场 → 停留 1.3s → 0.5s 下滑出屏 → 隐藏并恢复镜头跟随
 func _show_fight() -> void:
 	if _fight_tween != null and _fight_tween.is_valid():
 		_fight_tween.kill()
@@ -544,10 +594,13 @@ func _show_fight() -> void:
 	_fight_tween = create_tween()
 	_fight_tween.tween_interval(0.5)
 	_fight_tween.tween_property(_fight, "position:y", -450.0, 0.6) \
-		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-	_fight_tween.chain().tween_property(_fight, "position:y", 100.0, 0.5) \
-		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
-	_fight_tween.tween_callback(func() -> void: _fight.visible = false)
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_fight_tween.tween_interval(1.3)          # H5: 第二段 tween 带 1300ms delay → 横幅停留
+	_fight_tween.tween_property(_fight, "position:y", 100.0, 0.5) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_fight_tween.tween_callback(func() -> void:
+		_fight.visible = false
+		customCamera.frozen = false)
 
 
 # ============================================================
@@ -574,8 +627,14 @@ func _spawn_object_at(tile: int, x: int, y: int) -> void:
 		obj.position = pos
 		if "tile_type" in obj:
 			obj.tile_type = tile
+		# 血量按关卡序号算（H5：油桶 25+4×index 等）→ 注入关卡引用
+		if "level" in obj:
+			obj.level = self
 		_objects_layer.add_child(obj)
 		_mark_obstacle_tile(obj, x, y)
+		# 木箱被摧毁 → 掉落奖励（H5 Crate.kill → spawnBonus(getRandomBonus(), x, y, 15)）
+		if tile == Constants.Tile.CRATE and obj is ATObstacle:
+			(obj as ATObstacle).destroyed.connect(_on_crate_destroyed.bind(Vector2i(x, y)))
 		return
 	# 3) 敌人：坦克/Boss 走独立场景；炮塔/生成器走形态场景 + 类型数据
 	if ENEMY_NAMES.has(tile) or ATEnemyTypes.TILE_TURRET.has(tile) \
@@ -647,7 +706,44 @@ func _enemy_scene_for(tile: int) -> PackedScene:
 
 
 func _on_enemy_unit_killed(e: Node2D) -> void:
+	_drop_coins_for_enemy(e)      # 敌人只掉金币（H5：坦克/炮塔/Boss/生成器各不同数量）
+	_play_enemy_death_effects(e)  # 烟 + 爆炸粒子 + 震屏（H5 Tank.kill / Turret.kill）
 	on_enemy_killed(e)
+	# H5 kill()：结算完就把单位从场上移除（生成器产出的坦克也走这里）
+	if e != null and is_instance_valid(e):
+		e.queue_free()
+
+
+## 敌人死亡表现（H5 Tank.kill：spawnSmoke + explosionEmitter + shakeCamera）
+func _play_enemy_death_effects(e: Node2D) -> void:
+	if e == null or not is_instance_valid(e):
+		return
+	Fx.smoke(e.global_position, _objects_layer)
+	Fx.explosion(e.global_position, _objects_layer)
+	shake_camera(8.0)
+
+
+## 运行时登记一个敌人（H5 createTank：进 enemies、计数 +1、接击杀信号）。
+## 生成器产出的坦克走这里；关卡数据里的敌人由 _spawn_enemy_by_tile 内联同一套逻辑。
+func register_enemy(e: Node2D) -> void:
+	if e == null:
+		return
+	enemies.append(e)
+	enemies_alive += 1
+	if e.has_signal("killed"):
+		e.killed.connect(_on_enemy_unit_killed.bind(e))
+
+
+## 枪声传出去（H5 alertSound，L23841）：半径内的敌人切 GoToSound 去调查开枪的位置。
+## 由玩家武器按 sound_alert_radius 调用（H5 只有玩家武器的 onShot 会 alertSound，敌人武器不会）。
+func alert_sound(pos: Vector2, radius: float) -> void:
+	if radius <= 0.0:
+		return
+	for e in enemies:
+		if not is_instance_valid(e) or not (e is Node2D) or not e.has_method("on_alerted"):
+			continue
+		if pos.distance_squared_to((e as Node2D).global_position) <= radius * radius:
+			e.on_alerted(pos)
 
 
 ## 生成玩家并绑定 HUD/相机/结算信号
@@ -668,21 +764,168 @@ func _spawn_player(pos: Vector2, x: int, y: int) -> void:
 
 
 # ============================================================
+# 奖励拾取物（掉落 + 拾取结算；组件 ATBonus 只做表现/磁吸，流程都在这里）
+# 掉落来源（H5）：敌人只掉金币，木箱掉加权随机奖励
+# ============================================================
+## 生成一个拾取物。**所有掉落的唯一入口**（以后要换对象池只改这里）
+func _spawn_bonus(kind: int, pos: Vector2, weapon_key: String = "", amount: int = 0) -> ATBonus:
+	var b: ATBonus = SCENE_BONUS.instantiate()
+	_bonus_layer.call_deferred("add_child",b)
+	b.global_position = pos
+	b.setup(kind, self, weapon_key, amount)      # @onready 就绪后再初始化（同 apply_type 的约定）
+	b.picked_up.connect(_on_bonus_picked_up)
+	b.expired.connect(_on_bonus_expired)
+	return b
+
+
+func _drop_coins(pos: Vector2, count: int) -> void:
+	for _i in maxi(count, 0):
+		_spawn_bonus(ATBonusTypes.Kind.COIN, pos)
+
+
+## 敌人死亡掉币（数量见 ATBonusTypes.coin_drop_for_enemy）
+func _drop_coins_for_enemy(e: Node) -> void:
+	var count := ATBonusTypes.coin_drop_for_enemy(e)
+	if count <= 0 or not (e is Node2D):
+		return
+	_drop_coins((e as Node2D).global_position, count)
+
+
+## 木箱被摧毁：加权随机奖励（H5 Crate.getRandomBonus + spawnBonus(..., 15)）
+func _on_crate_destroyed(crate: Node, cell: Vector2i) -> void:
+	if not (crate is Node2D):
+		return
+	var pos := (crate as Node2D).global_position
+	var pick := ATBonusTypes.pick_crate_bonus(self, player if is_instance_valid(player) else null)
+	match int(pick.get("kind", ATBonusTypes.Kind.COIN)):
+		ATBonusTypes.Kind.COIN:
+			_drop_coins(pos, ATBonusTypes.COIN_PER_CRATE_ROLL)      # 掷中金币 → 一次 15 个
+		ATBonusTypes.Kind.AMMO:
+			_spawn_bonus(ATBonusTypes.Kind.AMMO, pos, str(pick.get("weapon_key", "")),
+				int(pick.get("amount", 0)))
+		ATBonusTypes.Kind.SMALL_ENEMY:
+			_spawn_small_enemy(cell)
+		_:
+			_spawn_bonus(int(pick.get("kind", ATBonusTypes.Kind.COIN)), pos)
+
+
+## 小敌人：在木箱附近空格生成一个血量 1/3 的随机坦克（H5 bonus.SmallEnemy）
+func _spawn_small_enemy(cell: Vector2i) -> void:
+	var target := Vector2i(-1, -1)
+	for dy in range(-2, 3):
+		for dx in range(-2, 3):
+			var c := Vector2i(cell.x + dx, cell.y + dy)
+			if is_tile_clear_for_unit(c.x, c.y):
+				target = c
+				break
+		if target.x >= 0:
+			break
+	if target.x < 0:
+		return
+	var tank_key := ATBonusTypes.small_enemy_tank(level_index)
+	var tile: int = int(ATBonusTypes.SMALL_ENEMY_TILE.get(tank_key, -1))
+	if tile < 0:
+		return
+	_spawn_object_at(tile, target.x, target.y)
+	# 刚生成的那个敌人就是 enemies 里最后一个 → 血量压到 1/3（H5: setHealth(... * (s ? 1/3 : 1))）
+	if not enemies.is_empty():
+		var e = enemies[enemies.size() - 1]
+		if is_instance_valid(e) and "max_health" in e:
+			e.max_health = maxf(float(e.max_health) / 3.0, 1.0)
+			e.health = e.max_health
+
+
+## 拾取：加血 / 加弹药 / 冻结 / 记收益（H5 player.onBonusHit + level.collect）
+func _on_bonus_picked_up(b: ATBonus) -> void:
+	match b.kind:
+		ATBonusTypes.Kind.COIN:
+			profit += ATBonusTypes.coin_value(level_index, difficulty_mult)
+			_play_bonus_sfx(b.kind)
+			_show_profit(int(round(profit)))
+			Fx.spark(b.global_position, _objects_layer)      # H5: 拾取星星粒子
+		ATBonusTypes.Kind.HEALTH:
+			if is_instance_valid(player):
+				player.health = minf(float(player.max_health), float(player.health) + 0.25 * float(player.max_health))
+			_play_bonus_sfx(b.kind)
+		ATBonusTypes.Kind.FREEZE:
+			freeze_enemies(ATBonusTypes.FREEZE_DURATION)      # 冻结时长/音效在里面
+		ATBonusTypes.Kind.AMMO:
+			_give_ammo(b.weapon_key, b.amount)
+		ATBonusTypes.Kind.BOMB:
+			_explode_bomb(b.global_position)
+
+
+## 过期：只有炸弹会在寿命到点时炸（H5 炸弹 lifespan = 1s → kill → 爆炸）
+func _on_bonus_expired(b: ATBonus) -> void:
+	if b.kind == ATBonusTypes.Kind.BOMB:
+		_explode_bomb(b.global_position)
+
+
+## 给弹药：没拥有这把武器就白捡（H5 同）
+func _give_ammo(weapon_key: String, amount: int) -> void:
+	if not is_instance_valid(player) or amount <= 0:
+		return
+	var idx := SLOT_KEYS.find(weapon_key)
+	var weapons: Array = player.weapons
+	var w = weapons[idx] if idx >= 0 and idx < weapons.size() else null
+	if w == null or not is_instance_valid(w):
+		return
+	w.ammo = mini(int(w.ammo) + amount, int(w.max_ammo))
+	_play_bonus_sfx(ATBonusTypes.Kind.AMMO)
+
+
+## 炸弹：半径伤害，不分敌我（H5 Explosion: 半径 200 / 伤害 150，伤害对玩家和敌人同时生效）
+func _explode_bomb(pos: Vector2) -> void:
+	Audio.play_sfx("explosion.mp3", 1.25)
+	Fx.explosion(pos, _objects_layer)
+	ATBullet.damage_in_radius(self, pos, 200.0, 150.0, Constants.Team.CPU)     # 打到玩家
+	ATBullet.damage_in_radius(self, pos, 200.0, 150.0, Constants.Team.PLAYER)  # 打到敌人
+
+
+func _play_bonus_sfx(kind: int) -> void:
+	var sfx := ATBonusTypes.pickup_sfx(kind)
+	if str(sfx["file"]) != "":
+		Audio.play_sfx(str(sfx["file"]), float(sfx["db"]))
+
+
+# ============================================================
 # 战斗循环
 # ============================================================
-func on_enemy_killed(_enemy: Node2D) -> void:
+func on_enemy_killed(enemy: Node2D) -> void:
 	enemies_alive -= 1
-	if enemies_alive <= 0 and is_instance_valid(player):
+	# H5 enemyKilled：累计分数（关卡结算/星级用）
+	if enemy != null and is_instance_valid(enemy) and "points" in enemy:
+		points += int(enemy.points)
+	# H5：只有"玩家还活着"且敌人清空才算通关（玩家先死时由死亡结算接管）
+	if enemies_alive <= 0 and is_instance_valid(player) and bool(player.get("alive")):
 		_show_summary(true)
 
 
+## 玩家被击败（H5 player.kill + playerKilled，L22562 / L23962）：
+##   震屏 15 + 烟 + 爆炸 + 炮塔/车体转灰度（坦克保留在场上），然后弹结算
 func on_player_killed() -> void:
+	if is_instance_valid(player):
+		shake_camera(15.0)
+		Fx.smoke(player.global_position, _objects_layer)
+		Fx.explosion(player.global_position, _objects_layer)
+		_set_player_grayscale(player)
 	_show_summary(false)
 
 
-func shake_camera(_amount: float) -> void:
-	# TODO: 相机震动（用 Tween 偏移 _camera.offset）
-	pass
+## 死亡灰度（H5: bodySprite.shader = turretSprite.shader = grayscaleShader）
+func _set_player_grayscale(p: Node) -> void:
+	var mat := ShaderMaterial.new()
+	mat.shader = PRELOAD_GRAYSCALE
+	for path in ["BodySprite", "TurretSprite"]:
+		var sp := p.get_node_or_null(path)
+		if sp is CanvasItem:
+			(sp as CanvasItem).material = mat
+
+
+func shake_camera(amount: float) -> void:
+	# H5 shakeCamera：只取较大值，相机自己按 30px/s 衰减
+	if customCamera != null:
+		customCamera.shake(amount)
 
 
 ## 冰冻全部敌人（H5 freezeEnemies：敌人进入 Frozen 状态，持续 duration 秒）
@@ -702,16 +945,42 @@ func _unfreeze_enemies() -> void:
 
 
 func abandon() -> void:
+	_persist_level_result()
 	Game.change_scene(Settings.SCENE_UPGRADES)
 
 
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v
+# ---------- 关卡结束写存档（对应 H5 Level.shutdown） ----------
+## H5 在关卡 state 退出时统一做两件事：收益入账 + 把打剩的弹药写回 profile，最后 save 一次。
+## 这两件事原来都没做：金币只在结算面板上显示（升级界面看不到钱变多），
+## 弹药也从不写回（每关开局都是存档里的满值）。这里一起补上，只做一次。
+func _persist_level_result() -> void:
+	if _result_persisted:
+		return
+	_result_persisted = true
+	_credit_profit()
+	_save_weapon_ammo()
+	Game.save()                     # H5 shutdown 末尾统一 save（add_money/set_weapon_ammo 都不自己存）
+
+
+## 收益入账（H5: `profile.game.money += Math.round(this.profit)`）
+func _credit_profit() -> void:
+	var gain := int(round(profit))
+	if gain > 0:
+		Game.add_money(gain)
+
+
+## 弹药写回（H5: `profile.game.<武器>Ammo = player.weapons[i].ammo`，武器槽 1~8 + mines）：
+## 无限弹的 minigun 不写（H5 也没写）；有限弹武器写回时由 Game.set_weapon_ammo 按上限 clamp。
+func _save_weapon_ammo() -> void:
+	if not is_instance_valid(player):
+		return
+	var weapons: Variant = player.get("weapons")
+	if not (weapons is Array):
+		return
+	for w in (weapons as Array):
+		if w == null or not is_instance_valid(w) or not (w is ATWeapon):
+			continue
+		var wp := w as ATWeapon
+		if wp.id == "" or wp.has_infinite_ammo():
+			continue
+		Game.set_weapon_ammo(wp.id, int(wp.ammo))

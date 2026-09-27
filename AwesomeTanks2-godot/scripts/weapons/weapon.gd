@@ -225,7 +225,18 @@ func _shoot() -> void:
 			#set_firing(false)
 			out_of_ammo.emit(self)
 	_apply_recoil()
+	_alert_nearby_enemies()
 	shot.emit(self)
+
+
+## 枪声惊动附近敌人（H5：玩家武器的 onShot → level.alertSound；敌人开火不惊动同伴）
+func _alert_nearby_enemies() -> void:
+	if sound_alert_radius <= 0.0 or team != Constants.Team.PLAYER or tank == null \
+			or not is_instance_valid(tank):
+		return
+	var lv = tank.get("level")
+	if lv != null and lv.has_method("alert_sound"):
+		lv.alert_sound(tank.global_position, sound_alert_radius)
 
 
 ## 开火后触发炮塔后坐力（供基类 _shoot 与各子类发射逻辑调用）

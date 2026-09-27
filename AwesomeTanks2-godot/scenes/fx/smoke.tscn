@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://b1q3x1css5whf"]
 
-[ext_resource type="Script" path="res://scripts/fx/fx_burst.gd" id="1_fx"]
+[ext_resource type="Script" uid="uid://da2ol06jtc5b7" path="res://scripts/fx/smoke.gd" id="1_gc1qs"]
 [ext_resource type="Texture2D" path="res://sprites/game/particles/smoke_0.png.tres" id="2_tex"]
 
-[node name="Smoke" type="Node2D"]
-script = ExtResource("1_fx")
+[node name="Smoke" type="Node2D" unique_id=1277947673]
+script = ExtResource("1_gc1qs")
 
-[node name="Particles" type="CPUParticles2D" parent="."]
-emitting = true
+[node name="Particles" type="CPUParticles2D" parent="." unique_id=1445358600]
+emitting = false
 amount = 3
+texture = ExtResource("2_tex")
 lifetime = 0.5
 one_shot = true
 gravity = Vector2(0, -30)
@@ -16,4 +17,3 @@ initial_velocity_min = 10.0
 initial_velocity_max = 30.0
 scale_amount_min = 0.9
 scale_amount_max = 1.4
-texture = ExtResource("2_tex")

@@ -31,7 +31,7 @@ func _ready() -> void:
 	collision_layer = 1 << (Constants.Layer.PROJECTILE - 1)
 	collision_mask = Constants.layer_mask([
 		Constants.Layer.WALL, Constants.Layer.OBSTACLE,
-		Constants.Layer.PLAYER, Constants.Layer.ENEMY,
+		Constants.Layer.PLAYER, Constants.Layer.ENEMY, Constants.Layer.ENEMY_SPAWNER,
 	])
 	body_entered.connect(_on_hit)
 	# 贴图/动画由派生子弹场景的 SpriteFrames 提供，自动播第一个动画
@@ -68,13 +68,16 @@ func _on_hit(other: Node) -> void:
 	if other.has_method("on_bullet_hit"):
 		var other_team: int = other.team if "team" in other else Constants.Team.CPU
 		if other_team != team:
-			other.on_bullet_hit(damage, owner_weapon, self)
+			# 发射者在子弹飞行途中可能已经被销毁（坦克被击毁 → 它的武器子节点一起释放，
+			# 而子弹挂在 ObjectsLayer 上还活着）。这里必须传 null 而不是"已释放的对象"，
+			# 否则受击方的 on_bullet_hit(src: Node) 形参会报 "previously freed is not a subclass"。
+			other.on_bullet_hit(damage, owner_weapon if is_instance_valid(owner_weapon) else null, self)
 	_die(true)
 
 
 ## 是否是布设者自身（生成瞬间贴脸时会先碰撞到自己）
 func _is_owner(other: Node) -> bool:
-	return owner_actor != null and other == owner_actor
+	return is_instance_valid(owner_actor) and other == owner_actor
 
 
 func _die(hit_something: bool) -> void:
@@ -112,12 +115,18 @@ static func damage_in_radius(owner: Node2D, origin: Vector2, radius: float, dmg:
 	shape.radius = radius
 	query.shape = shape
 	query.transform = Transform2D(0.0, origin)
-	query.collision_mask = Constants.layer_mask([Constants.Layer.PLAYER, Constants.Layer.ENEMY])
+	# H5 Explosion.damageObject：玩家 / 障碍物 / 生成器 / 敌人都吃爆炸伤害
+	query.collision_mask = Constants.layer_mask([
+		Constants.Layer.PLAYER, Constants.Layer.ENEMY,
+		Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER,
+	])
 	for hit in space.intersect_shape(query, 32):
 		var obj := hit.get("collider") as Node
 		if obj == null or obj == owner:
 			continue
-		if obj.has_method("on_bullet_hit"):
-			var ot: int = obj.team if "team" in obj else -1
-			if ot != my_team and ot != -1:
-				obj.on_bullet_hit(dmg, null, owner)
+		if not obj.has_method("on_bullet_hit"):
+			continue
+		# 有队伍属性的单位不打同队；没有队伍属性的（障碍物）一律可打（H5 同款）
+		if "team" in obj and int(obj.team) == my_team:
+			continue
+		obj.on_bullet_hit(dmg, null, owner)

@@ -181,15 +181,38 @@ func patrol(_see_player: bool) -> bool:
 	return ai_state_name() == "GoToPlayer"
 
 
-## 警戒链：通知附近同伴（H5 alertOthers：半径内敌人一起警觉）
+## 挨打就警觉（H5 Tank.alert，L22186）：自己转去追击 + 通知半径内同伴一起扑过来
+func alert() -> void:
+	alerted_time = 2.5
+	alerted = true
+	alert_others()
+
+
+## 警戒链（H5 Tank.alertOthers，L22188）：自己 + 半径内同伴都收到"发现玩家了"。
+## H5 循环里的第一个条件就是 s === this —— 挨打的那辆自己也切到 GoToPlayer，
+## 所以"打了敌人却不来追"的问题就出在这里（原来只改了 alerted 标记，没切状态）。
 func alert_others() -> void:
+	_alert_unit(self)
 	if level == null:
 		return
 	for e in level.enemies:
-		if is_instance_valid(e) and e != self and e.has_method("on_alerted"):
-			if global_position.distance_squared_to((e as Node2D).global_position) \
-					<= alert_radius * alert_radius:
-				e.on_alerted(global_position)
+		if not is_instance_valid(e) or e == self or not (e is Node2D):
+			continue
+		if global_position.distance_squared_to((e as Node2D).global_position) <= alert_radius * alert_radius:
+			_alert_unit(e)
+
+
+## 通知单个单位"看到玩家了"。已在追击的不重复切状态；没有 AI 的（生成器/炮塔/已阵亡）
+## 跳过 —— H5 里也是靠 `s.states` 是否存在来筛（炮塔没有 states，收不到这个消息）。
+func _alert_unit(e: Node) -> void:
+	if not e.has_method("on_player_in_sight"):
+		return
+	var machine = e.get("ai")
+	if machine != null and not bool(machine.get("enabled")):
+		return
+	if str(e.call("ai_state_name")) == "GoToPlayer":
+		return
+	e.call("on_player_in_sight")
 
 
 ## 听到声音：去调查（正在追击玩家时不受影响，H5 同）
@@ -208,8 +231,7 @@ func on_player_in_sight() -> void:
 
 func on_bullet_hit(damage: float, src_weapon: Node, bullet: Node) -> void:
 	super.on_bullet_hit(damage, src_weapon, bullet)
-	alerted_time = 2.5
-	alerted = true
+	alert()                 # H5 onBulletHit 末尾：this.alert()（自己 + 同伴一起追）
 	if alive:
 		_try_ignite(src_weapon)
 

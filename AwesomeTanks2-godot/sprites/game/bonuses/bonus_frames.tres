@@ -1,0 +1,121 @@
+[gd_resource type="SpriteFrames" load_steps=13 format=3]
+
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/coin.png.tres" id="1_coin"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/health.png.tres" id="2_health"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/freeze.png.tres" id="3_freeze"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/bomb.png.tres" id="4_bomb"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_shotgun.png.tres" id="5_shotgun"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_ricochet.png.tres" id="6_ricochet"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_flamethrower.png.tres" id="7_flame"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_cannon.png.tres" id="8_cannon"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_laser.png.tres" id="9_laser"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_rockets.png.tres" id="10_rockets"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_railgun.png.tres" id="11_railgun"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/ammo_mines.png.tres" id="12_mines"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_coin")
+}],
+"loop": true,
+"name": &"coin",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_health")
+}],
+"loop": true,
+"name": &"health",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_freeze")
+}],
+"loop": true,
+"name": &"freeze",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_bomb")
+}],
+"loop": true,
+"name": &"bomb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_shotgun")
+}],
+"loop": true,
+"name": &"ammo_shotgun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_ricochet")
+}],
+"loop": true,
+"name": &"ammo_ricochet",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_flame")
+}],
+"loop": true,
+"name": &"ammo_flamethrower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_cannon")
+}],
+"loop": true,
+"name": &"ammo_cannon",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_laser")
+}],
+"loop": true,
+"name": &"ammo_shock",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_rockets")
+}],
+"loop": true,
+"name": &"ammo_rockets",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_laser")
+}],
+"loop": true,
+"name": &"ammo_laser",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_railgun")
+}],
+"loop": true,
+"name": &"ammo_railgun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_mines")
+}],
+"loop": true,
+"name": &"ammo_mines",
+"speed": 5.0
+}]

@@ -25,6 +25,8 @@ script = ExtResource("1_level")
 
 [node name="StaticLayer" type="Node2D" parent="." unique_id=719341152]
 
+[node name="BonusLayer" type="Node2D" parent="." unique_id=1122334455]
+
 [node name="ObjectsLayer" type="Node2D" parent="." unique_id=1256775711]
 
 [node name="TopLayer" type="Node2D" parent="." unique_id=2053700251]
@@ -43,6 +45,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("3_theme")
+
+[node name="Flash" type="ColorRect" parent="HUD/HudRoot" unique_id=1122334456]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Bottom" type="Control" parent="HUD/HudRoot" unique_id=1566529465]
 anchors_preset = 0

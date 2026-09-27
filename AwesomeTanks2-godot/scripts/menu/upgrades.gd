@@ -126,7 +126,7 @@ func _on_stat_clicked(key: String) -> void:
 		Audio.play_sfx("buy.mp3")
 		FlashFx.flash(_money_label)
 		if stat_card != null:
-			stat_card.increase()  # 闪烁 + 刷新仪表盘贴图（对应 H5 Gauge.increase）
+			stat_card.increase()   # 只有这张卡闪（refresh 不播闪烁，见 stat_card.gd）
 	else:
 		Audio.play_sfx("not_available.mp3")
 		FlashFx.flash(_money_label)
@@ -196,7 +196,7 @@ func _on_card_refill(key: String) -> void:
 
 # ---------- 刷新 ----------
 func _refresh() -> void:
-	_money_label.text = _format_money(Game.get_money())
+	_money_label.text = Game._format_money(Game.get_money())
 	_refresh_cards()
 	_refresh_stat_cards()
 
@@ -212,7 +212,7 @@ func _refresh_stat_cards() -> void:
 
 
 func _on_money_changed(_value: int) -> void:
-	_money_label.text = _format_money(Game.get_money())
+	_money_label.text = Game._format_money(Game.get_money())
 
 
 # ---------- Sound/Music ----------
@@ -287,16 +287,3 @@ func _on_difficulty_medium_pressed() -> void:
 func _on_difficulty_hard_pressed() -> void:
 	Audio.play_button_down()
 	_set_difficulty(2)
-
-
-# ---------- 金额格式化 ----------
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v

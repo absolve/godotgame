@@ -6,7 +6,7 @@ extends EnemyState
 ## 复杂功能（走位/保持距离、预判射击、自动瞄准）后续再加。
 
 @export var keep_distance: float = 60.0     # 距离小于它就不再前进（避免贴脸）
-@export var lose_sight_time: float = 2.5    # 连续看不见玩家的时长上限（秒）
+@export var lose_sight_time: float = 4.0    # 连续看不见玩家的时长上限（H5 FollowPlayer: forgetTime >= 4 放弃）
 @export var fire_check_interval: float = 0.15  # 开火判定间隔（秒），节流用
 
 var _no_sight_time: float = 0.0
@@ -14,7 +14,7 @@ var _fire_check_timer: float = 0.0
 var _last_known: Vector2 = Vector2.ZERO
 
 
-func enter(msg: Dictionary = {}) -> void:
+func enter(_msg: Dictionary = {}) -> void:
 	_no_sight_time = 0.0
 	var p := player()
 	if p != null:
@@ -31,8 +31,10 @@ func physics_update(delta: float) -> void:
 		return
 	_last_known = p.global_position
 
-	# 看不见玩家：累计到上限就放弃追击
-	if can_see_player():
+	# 看不见玩家：累计到上限就放弃追击（H5 FollowPlayer: forgetTime >= 4 → Idle）。
+	# 被惊动（alerted，刚挨打/被同伴喊话）期间算"知道玩家在哪"，不掉计数，
+	# 所以挨了打一定会朝你追过来（H5 里被击中会直接切 GoToPlayer 且 10s 才放弃）。
+	if can_see_player() or e.alerted:
 		_no_sight_time = 0.0
 	else:
 		_no_sight_time += delta

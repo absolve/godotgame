@@ -19,6 +19,7 @@ func spawn(pos: Vector2, scene: PackedScene, holder: Node = null) -> void:
 	var fx: Node2D = scene.instantiate()
 	# 先禁发粒子：避免节点默认在 (0,0)=左上角喷一次
 	_set_emitting(fx, false)
+	#holder.call_deferred("add_child",fx)
 	holder.add_child(fx)
 	fx.global_position = pos
 	_set_emitting(fx, true)

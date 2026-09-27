@@ -95,7 +95,7 @@ func refresh() -> void:
 	if maxed:
 		_price.text = "MAX"
 	else:
-		_price.text = _format_money(int(Settings.PRICES[_weapon_key][_level + 1]))
+		_price.text = Game._format_money(int(Settings.PRICES[_weapon_key][_level + 1]))
 	# 弹药区（仅非 minigun 且已拥有时显示）
 	var show_ammo: bool = _weapon_key != "minigun" and _level >= 0
 	_refill_btn.visible = false
@@ -114,7 +114,7 @@ func _refresh_ammo() -> void:
 	_ammo_bar.position = Vector2(AMMO_BAR_X, AMMO_BAR_BOTTOM - h)
 	if p < 1.0:
 		_refill_btn.visible = true
-		_ammo_price.text = _format_money(int(Settings.AMMO_PRICES.get(_weapon_key, 0)))
+		_ammo_price.text = Game._format_money(int(Settings.AMMO_PRICES.get(_weapon_key, 0)))
 	else:
 		_ammo_price.text = "MAX"
 
@@ -170,15 +170,3 @@ func _on_refill_pressed() -> void:
 func _on_close_pressed() -> void:
 	Audio.play_button_down()
 	visible = false
-
-
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v

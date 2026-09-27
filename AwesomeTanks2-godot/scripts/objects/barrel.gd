@@ -12,8 +12,7 @@ var _exploded := false
 func _ready() -> void:
 	super._ready()
 	conducts_current = true  # H5：油桶导电，被 Shock 电到会传导（父类默认 false）
-	health = 1.0
-	max_health = 1.0
+	# 血量由父类按关卡序号给定（H5 Barrel: setHealth(25 + 4 * level.index)）
 
 
 func _die() -> void:
@@ -27,16 +26,16 @@ func _explode() -> void:
 	Audio.play_sfx("explosion.mp3")
 	Fx.explosion(global_position, get_parent())
 	# 范围伤害：坦克 + 其它可破坏物（连锁引爆其它油桶）
-	var space := get_world_2d().direct_space_state
-	var query := PhysicsShapeQueryParameters2D.new()
-	var shape := CircleShape2D.new()
+	var space = get_world_2d().direct_space_state
+	var query = PhysicsShapeQueryParameters2D.new()
+	var shape = CircleShape2D.new()
 	shape.radius = explode_radius
 	query.shape = shape
 	query.transform = Transform2D(0.0, global_position)
 	query.collision_mask = Constants.layer_mask([
 		Constants.Layer.PLAYER, Constants.Layer.ENEMY, Constants.Layer.OBSTACLE,
 	])
-	for hit in space.intersect_shape(query, 32):
+	for hit in space.intersect_shape(query, 10):
 		var obj := hit.get("collider") as Node
 		if obj == null or obj == self:
 			continue

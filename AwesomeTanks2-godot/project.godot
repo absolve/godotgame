@@ -17,8 +17,8 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="Awesome Tanks 2"
 config/description="Awesome Tanks 2 — Godot 4 重构学习版"
 run/main_scene="res://scenes/Boot.tscn"
-config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
+config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
+config/icon="res://icon.png"
 
 [autoload]
 
@@ -35,6 +35,10 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="AwesomeTanks2"
 
 [input]
 

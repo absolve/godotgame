@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dplbmm542qrj7"]
+
+[ext_resource type="Script" uid="uid://bp15cyu2mmtmt" path="res://scripts/objects/bonus.gd" id="1_bonus"]
+[ext_resource type="SpriteFrames" path="res://sprites/game/bonuses/bonus_frames.tres" id="2_frames"]
+[ext_resource type="Texture2D" path="res://sprites/game/bonuses/bomb_fire.png.tres" id="3_fire"]
+
+[sub_resource type="CircleShape2D" id="ShapeBonus"]
+radius = 60.0
+
+[node name="Bonus" type="Area2D" unique_id=2082230113]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_bonus")
+
+[node name="Anim" type="AnimatedSprite2D" parent="." unique_id=476569060]
+sprite_frames = ExtResource("2_frames")
+animation = &"coin"
+autoplay = "coin"
+
+[node name="Fire" type="Sprite2D" parent="." unique_id=2091547225]
+visible = false
+texture = ExtResource("3_fire")
+
+[node name="Shape" type="CollisionShape2D" parent="." unique_id=161636072]
+shape = SubResource("ShapeBonus")

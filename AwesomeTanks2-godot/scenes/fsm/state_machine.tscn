@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://dhkyrl8blpsts"]
 
-[ext_resource type="Script" path="res://scripts/fsm/state_machine.gd" id="1_fsm"]
+[ext_resource type="Script" uid="uid://b04rcs5plj1j6" path="res://scripts/fsm/state_machine.gd" id="1_fsm"]
 
-[node name="StateMachine" type="Node"]
+[node name="StateMachine" type="Node" unique_id=1907245049]
 script = ExtResource("1_fsm")

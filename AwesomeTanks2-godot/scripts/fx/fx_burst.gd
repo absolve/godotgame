@@ -3,12 +3,13 @@ extends Node2D
 
 const AUTO_FREE_AFTER := 1.2
 
+@onready var particles=$Particles
 
 func _ready() -> void:
-	var child := get_child(0) if get_child_count() > 0 else null
+	z_index=10
 	var life := AUTO_FREE_AFTER
-	if child != null and "lifetime" in child and child is CPUParticles2D:
-		life = maxf(AUTO_FREE_AFTER, (child as CPUParticles2D).lifetime + 0.2)
-		child.emitting=true
+	if  "lifetime" in particles and particles is CPUParticles2D:
+		life = maxf(AUTO_FREE_AFTER,particles.lifetime + 0.2)
+		particles.emitting=true
 	await get_tree().create_timer(life).timeout
 	queue_free()

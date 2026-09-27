@@ -41,7 +41,9 @@ func player_distance() -> float:
 
 
 ## 看见玩家：H5 Tank.searchForPlayer 的简化移植
-##   距离 < 60px 直接算看见；超过视野距离/超出视野角/有遮挡则看不见
+##   距离 < 60px 直接算看见；超过视野距离/超出视野角/有遮挡则看不见。
+##   刚挨打或被同伴喊话（alerted）时**不再要求玩家在炮塔视野角内**
+##   （H5 searchForPlayer(alerted) 里的 `!e &&` 就是干这个的），所以从背后打它也会被发现。
 func can_see_player() -> bool:
 	var e := enemy()
 	var p := player()
@@ -52,10 +54,11 @@ func can_see_player() -> bool:
 		return true
 	if d > e.view_distance:
 		return false
-	var aim := (p.global_position - e.global_position).angle()
-	var facing := e.get_turret_rotation()
-	if absf(wrapf(aim - facing, -PI, PI)) > maxf(e.view_angle, 0.1):
-		return false
+	if not e.alerted:
+		var aim := (p.global_position - e.global_position).angle()
+		var facing := e.get_turret_rotation()
+		if absf(wrapf(aim - facing, -PI, PI)) > maxf(e.view_angle, 0.1):
+			return false
 	return line_of_sight(p.global_position)
 
 

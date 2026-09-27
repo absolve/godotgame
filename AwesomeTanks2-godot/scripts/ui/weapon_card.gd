@@ -50,9 +50,9 @@ func refresh() -> void:
 		_pips[i].texture = TEX_PIP_ON if i < _level else TEX_PIP_OFF
 	# 价格：未拥有→购买价；0..4→下一级升级价；5→MAX
 	if _level < 0:
-		_price.text = _format_money(int(Settings.PRICES[weapon_key][0]))
+		_price.text = Game._format_money(int(Settings.PRICES[weapon_key][0]))
 	elif _level < 5:
-		_price.text = _format_money(int(Settings.PRICES[weapon_key][_level + 1]))
+		_price.text = Game._format_money(int(Settings.PRICES[weapon_key][_level + 1]))
 	else:
 		_price.text = "MAX"
 	# 弹药条：仅非 minigun 且拥有时显示，高度按百分比从底向上长
@@ -105,15 +105,3 @@ func flash_price() -> void:
 
 func flash_ammo() -> void:
 	FlashFx.flash(_ammo_bar)   # 弹药条：补弹成功
-
-
-static func _format_money(v: int) -> String:
-	if v >= 1000000000:
-		return "$%.3fb" % (v / 1000000000.0)
-	if v >= 100000000:
-		return "$%.1fm" % (v / 1000000.0)
-	if v >= 1000000:
-		return "$%.2fm" % (v / 1000000.0)
-	if v >= 100000:
-		return "$%.1fk" % (v / 1000.0)
-	return "$%d" % v

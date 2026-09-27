@@ -11,6 +11,10 @@ var auto_aim_target: Node2D = null
 
 ## 关卡引用（Level._spawn_player 注入；用于按关卡序号算点燃时长，H5 (55+40×index)/60 秒）
 var level: Node = null
+## 操作锁：关卡结算（清场/阵亡）后由 Level 置 true —— 收回驾驶/开火/换武器
+## （H5 是 summaryAlert 存在时 player.stopFire()；这里连驾驶一起锁，
+##   否则会出现"关卡已经结束还能开车打枪"）
+var control_locked: bool = false
 ## 被点燃时每物理帧受到的灼烧伤害（H5：玩家 = 2）
 @export var burn_damage: float = 2.0
 
@@ -24,8 +28,9 @@ const SLOT_KEYS: Array[String] = [
 
 
 func _ready() -> void:
-	super._ready()
+	# team 必须在 super._ready() 之前设置：基类按 team 决定碰撞层（PLAYER / ENEMY）
 	team = Constants.Team.PLAYER
+	super._ready()
 	name = "player"
 	_apply_upgrades()
 	_setup_weapons()
@@ -175,6 +180,11 @@ func _physics_process(delta: float) -> void:
 	#rotate_turret(aim, delta)
 	_turret_sprite.look_at(get_global_mouse_position())
 	if not alive:
+		return
+	# 关卡已结算：只减速停下，不接受任何操作（炮塔仍跟着鼠标，纯表现）
+	if control_locked:
+		velocity = velocity.lerp(Vector2.ZERO, 0.2)
+		stop_fire()
 		return
 	# 移动
 	var dir := Vector2.ZERO

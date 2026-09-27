@@ -1,66 +1,55 @@
 class_name ATPathfinder
 extends RefCounted
-## ATPathfinder —— 关卡网格寻路（基于 Godot 内置 AStarGrid2D）
+## ATPathfinder —— 关卡网格寻路（GDScript 门面；实际实现已换成 C#）
 ##
-## 设计思路（不照搬 H5 的 EasyStar，尽量用引擎自带能力）：
-##   - Godot 4 内置 `AStarGrid2D` 就是"2D 网格 A*"，这里只做三件事：
-##       1) 用关卡瓦片尺寸初始化网格（region / cell_size / 对角线规则）；
-##       2) 把不可通行格标记为 solid（静态墙 + 未被摧毁的可破坏障碍）；
-##       3) 世界坐标 ↔ 格子坐标换算，返回世界坐标路径点。
-##   - 另加一个"格子直线可走"判定（Bresenham 走格），供状态机做快路径与路径平滑。
-##
-## 使用（由 Level 持有）：
+## 实现：scripts/pathfinding/EasyStarPathfinder.cs（内部是 EasyStarJS 的 C# 移植，
+## scenes 侧不再使用 Godot 的 AStarGrid2D）。
+## 本类**保持与旧版完全相同的 API**，所以 Level / ATEnemy 的调用点一行都没改：
 ##   var pf := ATPathfinder.new()
 ##   pf.setup(map_width, map_height)
-##   pf.set_solid(x, y, true)                  # 墙/障碍
-##   var pts := pf.find_path(from_world, to_world)   # 空数组 = 不可达
-##   if pf.is_line_walkable(from_world, to_world): ...
+##   pf.set_solid(x, y, true)                          # 墙/障碍/固定单位占格
+##   var pts := pf.find_path(from_world, to_world)      # 空数组 = 不可达
+##   if pf.is_line_walkable(from_world, to_world): ...  # 直冲快路径
+##   var smooth := pf.smooth_path(pts, from_world)      # 拉直路径
 ##
-## 说明：单位（玩家/敌人）不标记 solid —— 避免互相堵路与抖动；
-## 需要"避让同伴"时，由使用方自行调用 set_solid 临时标记。
+## 与旧版行为一致的点：
+##   - 格子 0 = 可走、1 = 不可走；单位不标 solid（避免互相堵路）；
+##   - 8 向移动、禁止贴角斜穿（两个正交邻居都要可走）；
+##   - 起点/终点格被占 → 退到最近可走格；目标不可达 → 返回"部分路径"推进到墙边；
+##   - 路径返回世界坐标格心，并去掉"起点所在格"。
+## 差异：内部换成 EasyStar + 标准 Octile 启发式（路径与旧 AStarGrid2D 一样是最优的），
+##       并且**默认单线程**；线程池能力（set_worker_threads）保留，游戏当前不启用。
 
 var width: int = 0
 var height: int = 0
 var tile_size: int = Settings.TILE_SIZE
 
-var _astar := AStarGrid2D.new()
-var _solid: Array = []          # _solid[y][x] = true 不可通行
+## C# 实现对象（scripts/pathfinding/EasyStarPathfinder.cs，[GlobalClass]）
+var _cs: EasyStarPathfinder = null
 
 
-## 初始化网格（先设置 region/cell_size，再 update()，之后才能 set_point_solid）
+## 初始化网格（默认全部可走，之后逐个 set_solid 标墙）
 func setup(w: int, h: int, ts: int = Settings.TILE_SIZE) -> void:
 	width = maxi(w, 1)
 	height = maxi(h, 1)
 	tile_size = ts
-	_astar.region = Rect2i(0, 0, width, height)
-	_astar.cell_size = Vector2(tile_size, tile_size)
-	# 禁止贴角斜穿（与 H5 EasyStar disableCornerCutting 同义）
-	_astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
-	_astar.update()
-	_solid.clear()
-	for y in range(height):
-		var row: Array = []
-		for x in range(width):
-			row.append(false)
-		_solid.append(row)
+	if _cs == null:
+		_cs = EasyStarPathfinder.new()
+	_cs.Setup(width, height, tile_size)
 
 
 # ============================================================
 # 可通行性
 # ============================================================
 func set_solid(x: int, y: int, on: bool) -> void:
-	if not in_bounds(x, y):
-		return
-	if _solid[y][x] == on:
-		return
-	_solid[y][x] = on
-	_astar.set_point_solid(Vector2i(x, y), on)
+	if _cs != null:
+		_cs.SetSolid(x, y, on)
 
 
 func is_solid(x: int, y: int) -> bool:
-	if not in_bounds(x, y):
+	if _cs == null:
 		return true
-	return bool(_solid[y][x])
+	return _cs.IsSolid(x, y)
 
 
 func in_bounds(x: int, y: int) -> bool:
@@ -81,92 +70,44 @@ func cell_center(c: Vector2i) -> Vector2:
 # ============================================================
 # 寻路
 # ============================================================
-## 世界坐标 → 世界坐标路径点（含终点格中心）。
-## 起点越界/起点与终点同格时返回空数组。
-## 目标不可达（被墙隔开，例如玩家在还没炸开的砖墙房间里）时返回"部分路径"：
-## 终点会落在最接近目标的那个可达格，敌人据此一路推进到墙边而不是原地发呆。
+## 世界坐标 → 世界坐标路径点；空数组 = 连部分路径都没有
 func find_path(from_world: Vector2, to_world: Vector2) -> PackedVector2Array:
-	var out := PackedVector2Array()
-	var a := world_to_cell(from_world)
-	var b := world_to_cell(to_world)
-	if not in_bounds(a.x, a.y) or not in_bounds(b.x, b.y):
-		return out
-	if is_solid(a.x, a.y):
-		# 起点格被占（例如单位正压在已摧毁的固定单位格上）：从最近的可走格出发
-		a = _nearest_free(a)
-		if a.x < 0:
-			return out
-	if a == b:
-		return out
-	if is_solid(b.x, b.y):
-		# 目标格本身被占（例如站在障碍格里）：退而求其次找它旁边的可走格
-		b = _nearest_free(b)
-		if b.x < 0:
-			return out
-	var ids := _astar.get_id_path(a, b, true)
-	for id in ids:
-		out.append(cell_center(id))
-	# 去掉"起点所在格"：避免先往回走一小步
-	if out.size() > 1 and from_world.distance_to(out[0]) < float(tile_size) * 0.6:
-		out.remove_at(0)
-	return out
+	if _cs == null:
+		return PackedVector2Array()
+	return _cs.FindPath(from_world, to_world)
 
 
-func _nearest_free(c: Vector2i) -> Vector2i:
-	for radius in range(1, 4):
-		for dy in range(-radius, radius + 1):
-			for dx in range(-radius, radius + 1):
-				var n := Vector2i(c.x + dx, c.y + dy)
-				if in_bounds(n.x, n.y) and not is_solid(n.x, n.y):
-					return n
-	return Vector2i(-1, -1)
-
-
-## 两点之间是否可直线通行（Bresenham 走格，遇到 solid 即 false）
-## 用于"直冲"快路径判断与路径平滑。
+## 两点之间是否可直线通行（Bresenham 走格，遇 solid 即 false）
 func is_line_walkable(from_world: Vector2, to_world: Vector2) -> bool:
-	var a := world_to_cell(from_world)
-	var b := world_to_cell(to_world)
-	return is_cell_line_walkable(a, b)
+	if _cs == null:
+		return false
+	return _cs.IsLineWalkable(from_world, to_world)
 
 
 func is_cell_line_walkable(a: Vector2i, b: Vector2i) -> bool:
-	var x := a.x
-	var y := a.y
-	var dx := absi(b.x - a.x)
-	var dy := -absi(b.y - a.y)
-	var sx := 1 if a.x < b.x else -1
-	var sy := 1 if a.y < b.y else -1
-	var err := dx + dy
-	while true:
-		if is_solid(x, y):
-			return false
-		if x == b.x and y == b.y:
-			return true
-		var e2 := 2 * err
-		if e2 >= dy:
-			err += dy
-			x += sx
-		if e2 <= dx:
-			err += dx
-			y += sy
-	return false   # 兜底：循环理论上一定从内部返回（GDScript 需要显式收尾）
+	if _cs == null:
+		return false
+	return _cs.IsCellLineWalkable(a, b)
 
 
-## 路径平滑：从起点开始，能直线看到更远的点就跳过中间点（string pulling 简化版）
+## 路径平滑：能直线看到更远的点就跳过中间点（string pulling）
 func smooth_path(path: PackedVector2Array, from_world: Vector2) -> PackedVector2Array:
-	if path.size() <= 1:
+	if _cs == null:
 		return path
-	var out := PackedVector2Array()
-	var anchor := from_world
-	var i := 0
-	while i < path.size():
-		var far := i
-		for j in range(path.size() - 1, i, -1):
-			if is_line_walkable(anchor, path[j]):
-				far = j
-				break
-		out.append(path[far])
-		anchor = path[far]
-		i = far + 1
-	return out
+	return _cs.SmoothPath(path, from_world)
+
+
+# ============================================================
+# 线程池（保留能力，游戏当前不启用：默认 0 = 单线程、不建任何线程）
+# ============================================================
+func set_worker_threads(n: int) -> void:
+	if _cs != null:
+		_cs.SetWorkerThreads(n)
+
+
+func is_threaded() -> bool:
+	return _cs != null and _cs.Threaded
+
+
+func worker_count() -> int:
+	return _cs.WorkerCount if _cs != null else 0

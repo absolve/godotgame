@@ -1,26 +1,22 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://b7f1we43tf4by"]
 
-[ext_resource type="Script" path="res://scripts/ui/stat_card.gd" id="1_card"]
-[ext_resource type="FontFile" path="res://fonts/gunplay.ttf" id="2_font"]
+[ext_resource type="Script" uid="uid://dgi83oio1rjn7" path="res://scripts/ui/stat_card.gd" id="1_card"]
+[ext_resource type="FontFile" uid="uid://b15iv5af5s13u" path="res://fonts/gunplay.ttf" id="2_font"]
 
-[node name="StatCard" type="TextureButton"]
+[node name="StatCard" type="TextureButton" unique_id=393671553]
 custom_minimum_size = Vector2(94, 135)
-layout_mode = 0
 offset_right = 94.0
 offset_bottom = 135.0
-stretch_mode = 2
 script = ExtResource("1_card")
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="." unique_id=928380288]
 layout_mode = 0
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 94.0
 offset_bottom = 90.0
 mouse_filter = 2
 stretch_mode = 4
 
-[node name="Gauge" type="TextureRect" parent="."]
+[node name="Gauge" type="TextureRect" parent="." unique_id=1396791559]
 layout_mode = 0
 offset_left = 11.0
 offset_top = 12.0
@@ -29,15 +25,13 @@ offset_bottom = 53.0
 mouse_filter = 2
 stretch_mode = 4
 
-[node name="Price" type="Label" parent="."]
+[node name="Price" type="Label" parent="." unique_id=910958181]
 layout_mode = 0
-offset_left = 0.0
 offset_top = 95.0
 offset_right = 94.0
 offset_bottom = 135.0
-mouse_filter = 2
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_colors/font_color = Color(0.91, 0.7, 0, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.91, 0.7, 0.0, 1)
+horizontal_alignment = 1
+vertical_alignment = 1

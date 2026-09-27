@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/enemies/spawner.gd" id="2_spawner"]
+[ext_resource type="Texture2D" path="res://sprites/game/spawners/progress_6.png.tres" id="3_progress"]
 
 [node name="Spawner" instance=ExtResource("1_base")]
 script = ExtResource("2_spawner")
@@ -11,3 +12,8 @@ turret_speed = 0.0
 view_distance = 0.0
 spawn_interval = 4.17
 max_alive = 4
+
+[node name="Progress" type="Sprite2D" parent="." index="6"]
+position = Vector2(25, 25)
+centered = false
+texture = ExtResource("3_progress")

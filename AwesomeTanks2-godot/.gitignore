@@ -1,14 +1,58 @@
-# Godot 4+ specific ignores
+# ============================================================
+# Godot 4（C# / .NET 版）忽略规则
+# 参考 github/gitignore 的 Godot.gitignore + VisualStudio(.NET) 模板
+# ============================================================
+
+# ---------- Godot 生成物（随时可由编辑器重新生成）----------
 .godot/
 /android/
 /builds/
 
-# Imported resources (auto-generated)
+# ---------- C# / .NET 构建产物 ----------
+# 本项目的 csproj 走 Godot.NET.Sdk：dotnet build 的 bin/obj 默认落在
+# .godot/mono/temp/ 下（已被上面的 .godot/ 覆盖），这里再列一份，
+# 防止 IDE（Rider/VS）或单独执行 dotnet restore/build 时在项目根生成。
+bin/
+obj/
+.mono/
+data_*/
+mono_crash.*.json
+*.dmp
+*.binlog
+TestResults/
+
+# ---------- IDE / 编辑器本地文件（各人机器不同）----------
+# 注意：AwesomeTanks2.csproj 是 Godot 生成、需要入库的项目文件，**不要**忽略它
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.sln.DotSettings.user
+
+# ---------- Godot 导出配置（可能含签名口令，官方模板建议不入库）----------
+export.cfg
+export_credentials.cfg
+export_presets.cfg
+*.translation
+
+# ---------- 导入设置：沿用现状忽略 ----------
+# 严格说 Godot 官方模板**不**忽略 *.import（它是每个资源的导入设置，换机器重新导入会用默认值）。
+# 本项目贴图过滤在 project.godot 里统一设成最近邻
+# （rendering/textures/canvas_textures/default_texture_filter=0），各 .import 里都是默认值，
+# 所以暂时忽略它没有副作用。以后若手动改过某个资源的导入设置（例如给循环音效勾 loop），
+# 请删掉下面这行并把这些 .import 一起提交。
 *.import
 
-# OS/editor
+# ---------- 系统杂项 ----------
 .DS_Store
 Thumbs.db
-
-# Local config / save
+desktop.ini
+*.tmp
 *.local
+
+# ---------- 千万不要忽略 ----------
+# *.uid          Godot 4.4+ 的资源唯一 ID，必须入库（否则引用会重新洗牌）
+# *.tres/*.tscn  场景与资源

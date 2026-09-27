@@ -12,7 +12,7 @@ spawn_distance = 30.0
 
 [node name="Ray" type="RayCast2D" parent="." index="2" unique_id=53866911]
 target_position = Vector2(620, 0)
-collision_mask = 43
+collision_mask = 59
 
 [node name="Line" type="Line2D" parent="." index="3" unique_id=3675357]
 visible = false

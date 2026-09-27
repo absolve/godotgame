@@ -14,6 +14,8 @@ var _music_tween: Tween = null
 var _loops: Dictionary = {}
 # 每种循环音的引用计数
 var _loop_refs: Dictionary = {}
+# 受击音专用声道（文件名 -> AudioStreamPlayer）：同一音效不叠加，见 _play_hit_sfx
+var _hit_players: Dictionary = {}
 
 # 资源路径前缀（sounds/ 下所有 mp3）
 const SOUND_DIR := "res://sounds/"
@@ -47,15 +49,34 @@ func play_button_down() -> void:
 
 func play_enemy_hit() -> void:
 	var r := randf() * 3.0
-	if r < 1.0: play_sfx("enemy_hit_1.mp3", -12.0)
-	elif r < 2.0: play_sfx("enemy_hit_2.mp3", -12.0)
-	else: play_sfx("enemy_hit_3.mp3", -12.0)
+	if r < 1.0: _play_hit_sfx("enemy_hit_1.mp3", -12.0)
+	elif r < 2.0: _play_hit_sfx("enemy_hit_2.mp3", -12.0)
+	else: _play_hit_sfx("enemy_hit_3.mp3", -12.0)
 
 func play_spawner_hit() -> void:
 	var r := randf() * 3.0
-	if r < 1.0: play_sfx("spawner_hit_1.mp3")
-	elif r < 2.0: play_sfx("spawner_hit_2.mp3")
-	else: play_sfx("spawner_hit_3.mp3")
+	if r < 1.0: _play_hit_sfx("spawner_hit_1.mp3")
+	elif r < 2.0: _play_hit_sfx("spawner_hit_2.mp3")
+	else: _play_hit_sfx("spawner_hit_3.mp3")
+
+## 受击音：同一个音效复用一条声道，重复触发即从头重播。
+## H5 走 Phaser SoundManager（同一音效不会叠成多路），而火焰武器每秒 20+ 次命中，
+## 若每次都新建播放器会叠成噪音，故按文件名复用。
+func _play_hit_sfx(file: String, volume_db: float = 0.0) -> void:
+	if not Game.current["game"]["sound"]:
+		return
+	var path := SOUND_DIR + file
+	if not ResourceLoader.exists(path):
+		return
+	var p: AudioStreamPlayer = _hit_players.get(file)
+	if p == null or not is_instance_valid(p):
+		p = AudioStreamPlayer.new()
+		p.bus = "SFX"
+		p.stream = load(path)
+		add_child(p)
+		_hit_players[file] = p
+	p.volume_db = volume_db
+	p.play()
 
 # ============================================================
 # 循环音（武器持续音）

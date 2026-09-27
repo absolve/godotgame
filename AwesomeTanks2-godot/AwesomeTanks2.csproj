@@ -1,0 +1,15 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <!-- 寻路已换成 C#（scripts/pathfinding/*.cs），因此本项目现在是 .NET 项目：
+         必须用 Godot 4.7.2 的 .NET(mono) 版打开/导出，标准版加载不了 C# 脚本。
+         目标框架用 net10.0：Godot 4.7.2 自带的 GodotSharp 是 net8.0 + rollForward=LatestMajor，
+         能在 .NET 10 运行时上跑；而本机没装 net8.0 targeting pack 且无外网，
+         写 net8.0 会还原失败。若你的机器有 net8.0 targeting pack，可改回 net8.0。 -->
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>EasyStarCs</RootNamespace>
+    <AssemblyName>AwesomeTanks2</AssemblyName>
+  </PropertyGroup>
+</Project>

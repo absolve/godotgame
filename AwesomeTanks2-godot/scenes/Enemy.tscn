@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/tanks/tank.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="2_enemy"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/enemies/states/state_go_to_sound.gd" id="5_sound"]
 [ext_resource type="Script" path="res://scripts/enemies/states/state_go_to_player.gd" id="6_player"]
 [ext_resource type="Script" path="res://scripts/enemies/states/state_frozen.gd" id="7_frozen"]
+[ext_resource type="PackedScene" path="res://scenes/objects/lifebar.tscn" id="8_lifebar"]
 
 [node name="Enemy" instance=ExtResource("1_base")]
 collision_layer = 32
@@ -33,3 +34,5 @@ script = ExtResource("6_player")
 
 [node name="Frozen" type="Node" parent="StateMachine"]
 script = ExtResource("7_frozen")
+
+[node name="Lifebar" parent="." index="5" instance=ExtResource("8_lifebar")]
