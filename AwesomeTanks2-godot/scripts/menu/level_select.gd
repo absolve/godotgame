@@ -19,7 +19,6 @@ func _ready() -> void:
 	_refresh_states()
 	_total_score.text = " Total score: %d Pts. " % Game.get_total_points()
 
-
 ## 关卡总数 = data/levels.gd 里定义的数量（新增关卡后这里自动跟上，不需要改场景）
 static func total_level_count() -> int:
 	return maxi(ATLevels.LEVELS.size(), Settings.LEVEL_COUNT)

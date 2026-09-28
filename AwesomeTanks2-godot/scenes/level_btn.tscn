@@ -19,7 +19,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_7fl5c"]
 resource_name = "zoomIn"
-length = 0.19999999999999998
+length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -35,7 +35,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_lxhxn"]
 resource_name = "zoomOut"
-length = 0.19999999999999998
+length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -68,7 +68,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.29, 0.306, 0.004, 1)
 theme_override_colors/font_shadow_color = Color(1, 0.996, 0.733, 1)
 theme_override_constants/shadow_offset_x = -2

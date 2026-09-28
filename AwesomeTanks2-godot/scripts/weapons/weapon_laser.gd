@@ -16,8 +16,10 @@ class_name ATLaserWeapon
 @onready var _line: Line2D = $Line
 
 var _beam_loop_on := false
-var _was_firing := false            # 上一物理帧是否开火（用于一次性播放 laser_start）
-
+var _was_firing := false            # 上一物理帧是否开火（用于一次性播放 laser_start + _draw 是否画）
+var targetPos := Vector2.ZERO       # 光束终点（节点本地坐标，_draw 直接用）
+var muzzle := Vector2.ZERO          # 炮口（全局坐标，用来摆射线）
+var _muzzle_local := Vector2.ZERO   # 炮口的本地坐标（和 targetPos 同一坐标系，避免混用）
 
 func _ready() -> void:
 	super._ready()
@@ -34,6 +36,51 @@ func set_firing(on: bool) -> void:
 		can_fire = true
 	else:
 		can_fire = false
+
+func _aim_beam() -> void:
+	if tank == null or not is_instance_valid(tank):
+		return
+	muzzle = tank.get_turret_position(spawn_distance) \
+		if tank.has_method("get_turret_position") else global_position
+	_muzzle_local = to_local(muzzle)
+	var angle := _get_aim_angle()
+	_ray.global_position = muzzle
+	_ray.rotation = angle
+	# 关键：刚挪完射线就必须强制刷新，否则下面 is_colliding()/get_collision_point()
+	# 读到的是射线**上一帧/上一次开火**的位置 → 画面里就会画出"上次那条线"
+	_ray.force_raycast_update()
+	
+	#targetPos=Vector2(beam_range,0).rotated(_get_aim_angle())
+	#_line.global_position = muzzle
+	#_line.rotation = angle
+	#_line.visible = true
+
+
+func _hit_scan(delta: float) -> void:
+	# 先按最大射程算终点，命中再改成命中点（否则打空时 targetPos 会一直留着上次的命中点）
+	var end_global := muzzle + Vector2(beam_range, 0.0).rotated(_ray.global_rotation)
+	if _ray.is_colliding():
+		var point: Vector2 = _ray.get_collision_point()
+		end_global = point
+		var collider := _ray.get_collider()
+		if collider and collider.has_method("on_bullet_hit") and collider != tank:
+			var ot: int = collider.team if "team" in collider else Constants.Team.CPU
+			if ot != team:
+				collider.on_bullet_hit(beam_dps * delta, self, null)
+	#_line.points = PackedVector2Array([Vector2.ZERO, Vector2(dist, 0.0)])
+	targetPos = to_local(end_global)
+
+	#queue_redraw()
+
+func _finish_burst() -> void:
+	if _beam_loop_on:
+		Audio.stop_laser_loop()
+		_beam_loop_on = false
+	if _was_firing:
+		_was_firing = false
+		queue_redraw()      # 只在"亮 → 灭"的那一帧重绘一次，把线擦掉
+		
+	#_line.visible = false
 
 
 func _physics_process(delta: float) -> void:
@@ -58,38 +105,12 @@ func _physics_process(delta: float) -> void:
 	_hit_scan(delta)
 	_was_firing = true
 	can_fire = false  # 本帧开火信号已消耗，持续开火由坦克每帧 set_firing(true) 维持
+	queue_redraw()
 
-
-func _aim_beam() -> void:
-	if tank == null or not is_instance_valid(tank):
-		return
-	var muzzle: Vector2 = tank.get_turret_position(spawn_distance) \
-		if tank.has_method("get_turret_position") else global_position
-	var angle := _get_aim_angle()
-	_ray.global_position = muzzle
-	_ray.rotation = angle
-	_line.global_position = muzzle
-	_line.rotation = angle
-	_line.visible = true
-
-
-func _hit_scan(delta: float) -> void:
-	var dist := beam_range
-	if _ray.is_colliding():
-		var point: Vector2 = _ray.get_collision_point()
-		dist = clampf((point - _ray.global_position).length(), 0.0, beam_range)
-		var collider := _ray.get_collider()
-		if collider and collider.has_method("on_bullet_hit") and collider != tank:
-			var ot: int = collider.team if "team" in collider else Constants.Team.CPU
-			if ot != team:
-				collider.on_bullet_hit(beam_dps * delta, self, null)
-	_line.points = PackedVector2Array([Vector2.ZERO, Vector2(dist, 0.0)])
-	#print(_line.points)
-
-func _finish_burst() -> void:
-	if _beam_loop_on:
-		Audio.stop_laser_loop()
-		_beam_loop_on = false
+func _draw() -> void:
 	if _was_firing:
-		_was_firing = false
-	_line.visible = false
+		var brightness := randf_range(0.55, 1.0)
+		var laser_color := Color(brightness, brightness * 0.08, brightness * 0.08, 1.0)
+		# 两个端点都在 _physics_process 里转成本地坐标（同一帧、同一变换），
+		# 这里不要再 to_local()，否则绘制发生在渲染帧、节点已跟着坦克转动 → 起点/终点对不上
+		draw_line(_muzzle_local, targetPos, laser_color, 2.0, true)

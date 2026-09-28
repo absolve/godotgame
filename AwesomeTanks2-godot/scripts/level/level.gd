@@ -381,6 +381,13 @@ func _update_fog() -> void:
 	if _fog == null or player == null or not is_instance_valid(player):
 		return
 	var ts := Settings.TILE_SIZE
+	# 玩家正在制导火箭：视野跟着导弹（H5 updateFog：player.follow 时只揭开导弹周围那一圈）
+	if "follow" in player:
+		var r = player.get("follow")
+		if r is Node2D and is_instance_valid(r):
+			_fog.clear_area(int((r as Node2D).global_position.x / ts),
+				int((r as Node2D).global_position.y / ts), _fog.clear_radius_tiles)
+			return
 	var px := int(player.global_position.x / ts)
 	var py := int(player.global_position.y / ts)
 	_fog.clear_area(px, py, _fog.clear_radius_tiles)
@@ -667,12 +674,16 @@ func _spawn_enemy_by_tile(tile: int, pos: Vector2, x: int, y: int) -> void:
 	e.position = pos
 	if "level" in e:
 		e.level = self
-	_objects_layer.add_child(e)
+	#_objects_layer.add_child(e)
+	# add_child 用 deferred（避免在 _ready 阶段给正在建子节点的父节点加子节点时报错），
+	# 那么 apply_type/apply_kind 也必须一起 deferred：延迟调用按入队顺序执行，
+	# 先入树（@onready 变量就绪）再 apply，否则 _body_sprite 还是 null（贴图/武器都会设不上）
+	_objects_layer.call_deferred("add_child",e)
 	# 形态场景：入树后（@onready 就绪）再应用类型数据（贴图/数值/武器）
 	if is_turret:
-		e.call("apply_type", ATEnemyTypes.TURRETS[ATEnemyTypes.TILE_TURRET[tile]])
+		e.call_deferred("apply_type", ATEnemyTypes.TURRETS[ATEnemyTypes.TILE_TURRET[tile]])
 	elif is_spawner:
-		e.call("apply_kind", int(ATEnemyTypes.TILE_SPAWNER[tile]))
+		e.call_deferred("apply_kind", int(ATEnemyTypes.TILE_SPAWNER[tile]))
 	enemies.append(e)
 	enemies_alive += 1
 	if e.has_signal("killed"):
@@ -746,7 +757,24 @@ func alert_sound(pos: Vector2, radius: float) -> void:
 			e.on_alerted(pos)
 
 
-## 生成玩家并绑定 HUD/相机/结算信号
+## 玩家发射制导火箭：镜头交给导弹、玩家不能开车、迷雾跟着导弹
+## （H5：武器里 tank.follow = rocket，Level.updateCamera / updateFog 都优先看 player.follow）
+func set_guided_rocket(rocket: Node2D) -> void:
+	if is_instance_valid(player):
+		player.set("follow", rocket)
+	if customCamera != null:
+		customCamera.target = rocket
+
+
+## 制导结束（命中/引爆/切武器/阵亡）：镜头与操作权还给玩家
+func clear_guided_rocket(rocket: Node2D) -> void:
+	if is_instance_valid(player) and player.get("follow") == rocket:
+		player.set("follow", null)
+	if customCamera != null and is_instance_valid(player):
+		customCamera.target = player
+
+
+## 玩家生成并绑定 HUD/相机/结算信号
 func _spawn_player(pos: Vector2, x: int, y: int) -> void:
 	if player != null:
 		return

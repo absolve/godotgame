@@ -28,10 +28,10 @@ func _ready() -> void:
 # ============================================================
 # 音效（一次性）
 # ============================================================
-func play_sfx(name: String, volume_db: float = 0.0) -> AudioStreamPlayer:
+func play_sfx(_name: String, volume_db: float = 0.0) -> AudioStreamPlayer:
 	if not Game.current["game"]["sound"]:
 		return null
-	var path := SOUND_DIR + name
+	var path := SOUND_DIR + _name
 	if not ResourceLoader.exists(path):
 		return null
 	var p := _acquire_player()

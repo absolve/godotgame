@@ -15,6 +15,9 @@ var level: Node = null
 ## （H5 是 summaryAlert 存在时 player.stopFire()；这里连驾驶一起锁，
 ##   否则会出现"关卡已经结束还能开车打枪"）
 var control_locked: bool = false
+## 正在制导的火箭（H5 player.follow）：非空时不能开车（镜头在导弹上），
+## 导弹一没（命中/引爆）就自动清空、控制权还回来（由 Level.clear_guided_rocket 处理）
+var follow: Node2D = null
 ## 被点燃时每物理帧受到的灼烧伤害（H5：玩家 = 2）
 @export var burn_damage: float = 2.0
 
@@ -53,10 +56,10 @@ func _setup_weapons() -> void:
 	weapons.resize(SLOT_KEYS.size())
 	for i in SLOT_KEYS.size():
 		var key: String = SLOT_KEYS[i]
-		var level: int = int(g.get(key + "Level", -1))
+		var _level: int = int(g.get(key + "Level", -1))
 		if key == "minigun":
-			level = maxi(level, 0)
-		if level < 0:
+			_level = maxi(_level, 0)
+		if _level < 0:
 			continue
 		var scene_path := DIR_WEAPONS + key + ".tscn"
 		if not ResourceLoader.exists(scene_path):
@@ -72,7 +75,7 @@ func _setup_weapons() -> void:
 			w.max_ammo = limit
 			w.ammo = int(g.get(key + "Ammo", limit))
 		# 等级参数注入（WEAPON_STATS 表后续接入后生效；无则用场景默认值）
-		var params: Dictionary = _level_params(key, level)
+		var params: Dictionary = _level_params(key, _level)
 		if not params.is_empty() and w.has_method("apply_params"):
 			w.apply_params(params)
 		add_child(w)
@@ -88,7 +91,7 @@ func _setup_weapons() -> void:
 
 
 ## 按 Settings.WEAPON_STATS 取该武器当前等级参数（damage/rate/life/spawn_count）
-func _level_params(key: String, level: int) -> Dictionary:
+func _level_params(key: String, _level: int) -> Dictionary:
 	var out: Dictionary = {}
 	var stats: Variant = Settings.WEAPON_STATS.get(key, {})
 	if not stats is Dictionary:
@@ -97,8 +100,8 @@ func _level_params(key: String, level: int) -> Dictionary:
 		if prop == "velocity":
 			continue  # 火箭速度因子与像素换算待统一，速度沿用场景默认值
 		var arr = stats[prop]
-		if arr is Array and arr.size() > level:
-			out[prop] = arr[level]
+		if arr is Array and arr.size() > _level:
+			out[prop] = arr[_level]
 	return out
 
 
@@ -175,27 +178,32 @@ func _burn_duration() -> float:
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
-	# 鼠标瞄准（持续跟随）
+	# 鼠标瞄准（持续跟随；制导火箭时玩家也是用鼠标给导弹指方向）
 	#var aim := (get_global_mouse_position() - global_position).angle()
 	#rotate_turret(aim, delta)
 	_turret_sprite.look_at(get_global_mouse_position())
 	if not alive:
 		return
+	if not is_instance_valid(follow):
+		follow = null
 	# 关卡已结算：只减速停下，不接受任何操作（炮塔仍跟着鼠标，纯表现）
 	if control_locked:
 		velocity = velocity.lerp(Vector2.ZERO, 0.2)
 		stop_fire()
 		return
-	# 移动
-	var dir := Vector2.ZERO
-	dir.x = Input.get_axis("move_left", "move_right")
-	dir.y = Input.get_axis("move_up", "move_down")
-	if dir != Vector2.ZERO:
-		move(dir.normalized())
-	else:
+	# 移动（制导火箭期间不能开车 —— 镜头在导弹上，H5 同）
+	if follow != null:
 		velocity = velocity.lerp(Vector2.ZERO, 0.2)
-		
-	# 开火
+	else:
+		var dir := Vector2.ZERO
+		dir.x = Input.get_axis("move_left", "move_right")
+		dir.y = Input.get_axis("move_up", "move_down")
+		if dir != Vector2.ZERO:
+			move(dir.normalized())
+		else:
+			velocity = velocity.lerp(Vector2.ZERO, 0.2)
+
+	# 开火（制导期间仍要能按：再按一次 = 引爆导弹，见 ATWeaponRockets.set_firing）
 	if Input.is_action_pressed("fire"):
 		#print(1)
 		start_fire()
@@ -206,3 +214,11 @@ func _physics_process(delta: float) -> void:
 		next_weapon()
 	if Input.is_action_just_pressed("prev_weapon"):
 		prevWeapon()
+
+
+func _kill() -> void:
+	# H5 player.kill：this.follow && (this.follow.requestKill = !0) —— 阵亡时把在飞的导弹引爆
+	if is_instance_valid(follow) and follow.has_method("detonate"):
+		follow.call("detonate")
+	follow = null
+	super._kill()

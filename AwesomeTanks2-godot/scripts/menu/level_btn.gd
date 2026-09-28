@@ -81,7 +81,8 @@ func _sync_pivot() -> void:
 
 func _on_down() -> void:
 	if not disabled:
-		Audio.play_button_down()
+		#Audio.play_button_down()
+		Audio.play_sfx("level.mp3")
 
 
 func _on_up() -> void:

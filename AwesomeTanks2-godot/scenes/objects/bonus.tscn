@@ -22,4 +22,5 @@ visible = false
 texture = ExtResource("3_fire")
 
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=161636072]
+visible = false
 shape = SubResource("ShapeBonus")
