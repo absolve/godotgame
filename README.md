@@ -22,6 +22,7 @@
 | [2048](#2048) | 益智 | Godot 4.x | ✅ 已完成 | 2026 | 2048 数字合并游戏 |
 | [tetris](#tetris) | 益智 | Godot 4.x | ✅ 已完成 | 2026 | 俄罗斯方块游戏 |
 | [myflappybird1](#myflappybird1) | 休闲益智 | Godot 2.x | 📦 存档 | - | 早期 Flappy Bird 版本 |
+| [AwesomeTanks2-godot](#awesometanks2-godot) | 射击 | Godot 4.7 + C# (.NET) | 🚧 开发中 | 2026 | 《Awesome Tanks 2》H5 原版的 Godot 复刻，15 关战役 + 关卡编辑器 |
 
 ---
 
@@ -242,10 +243,59 @@
 
 ---
 
+### AwesomeTanks2-godot
+
+**《Awesome Tanks 2》H5 原版的 Godot 复刻版**（开发中）
+
+以 H5 版《Awesome Tanks 2》（`awesome_tanks_2.js`）为蓝本，按原版逐个功能复刻：
+数值、关卡地图、敌人 AI、武器手感、结算流程都尽量与 H5 保持一致。
+
+- **操作方式**:
+  - W / A / S / D: 移动
+  - 鼠标: 瞄准炮塔
+  - 鼠标左键: 开火（火焰喷射器 / 激光 / 电枪按住即持续输出；火箭按一下发射制导导弹，再按一下引爆）
+  - Q / E: 上一个 / 下一个武器
+  - ESC: 暂停
+  - 制导火箭飞行期间镜头会跟着导弹，玩家不能开车，导弹消失后镜头与操作权自动还给玩家
+
+- **游戏特性**:
+  - **15 关战役**：砖墙 / 木板 / 木箱 / 油桶 / 闸门等可破坏场景，油桶连锁爆炸，砖墙挡子弹、木板会被烧穿
+  - **10 种武器**：机枪、霰弹枪、弹跳弹、火焰喷射器、加农炮、电枪（连锁闪电）、制导火箭、激光、轨道炮、地雷
+  - **升级商店**：装甲 / 速度 / 炮塔转速 / 视野 4 项属性 + 各武器等级与弹药购买，结算收益入账并跨关保留弹药
+  - **敌人**：生成器 7 种（周期产出坦克，共 6 只）、固定炮塔 8 种、机动坦克 9 种，全部带寻路 AI（警戒链 / 追击 / 调查声响 / 冰冻 / 灼烧）
+  - **奖励掉落**：金币、医疗包、冰冻、炸弹、各类弹药、小敌人，敌人清空后全场吸附结算
+  - **黑雾视野**：按炮塔朝向发射扇形视野射线揭开迷雾，制导火箭期间视野跟着导弹
+  - **结算流程**：与 H5 一致 —— 面板 2 秒后淡入、胜利 4.5 秒后自动继续；结算期间世界不暂停，但玩家失去操作
+  - **关卡编辑器**：内置编辑器可以自己画地图并保存为自定义关卡
+
+- **技术栈**:
+  - Godot 4.7（GL Compatibility）+ **C# (.NET)** + GDScript
+  - 寻路用 EasyStar，C# 重写（`scripts/pathfinding/*.cs`），GDScript 侧只留一层薄封装
+  - 场景 + 脚本一一对应，可复用组件（血条 / 奖励物 / 武器 / 状态机）都是独立 `.tscn` 再实例化到父场景
+
+- **项目结构**:
+  ```
+  AwesomeTanks2-godot/
+  ├── project.godot          # Godot 4.7 配置（800x600，C# 项目）
+  ├── AwesomeTanks2.csproj   # C# 工程（需 .NET 版 Godot 打开）
+  ├── scenes/                # 场景（Level / Title / LevelSelect / Upgrades / LevelEditor …）
+  ├── scripts/               # GDScript + C#（tank / enemies / weapons / objects / level / ui / pathfinding）
+  ├── data/levels.gd         # 15 关 ASCII 地图数据
+  ├── sprites/  sounds/      # 贴图（atlas 切片为 .tres）与音效
+  ├── docs/                  # 开发笔记（敌人 AI 分析等）
+  └── tools/                 # 资源导入等一次性工具
+  ```
+
+> ⚠️ 这是 C# 项目：必须用 **.NET（mono）版 Godot** 打开/运行，标准版加载不了 C# 脚本（`dotnet build` 需要本机有对应 .NET SDK）
+
+![AwesomeTanks2-godot](awesometanks2-title.png)
+
+---
+
 ## 🛠️ 技术栈
 
-- **引擎**: Godot 3.x / 4.x
-- **语言**: GDScript
+- **引擎**: Godot 2.x / 3.x / 4.x（AwesomeTanks2-godot 用的是 Godot 4.7 的 .NET 版）
+- **语言**: GDScript / C#（AwesomeTanks2-godot 的寻路为 C#）
 - **渲染**: OpenGL / Direct3D
 - **物理**: Godot Physics / Jolt Physics
 
@@ -267,7 +317,8 @@ project_name/
 
 1. 下载并安装 [Godot 引擎](https://godotengine.org/)
 2. 使用对应版本的 Godot 打开项目文件夹（Godot 3.x 用于旧项目，Godot 4.x 用于 mario-new、2048、tetris）
-3. 运行主场景（通常是 `welcome.tscn` 或 `main.tscn`）
+3. **AwesomeTanks2-godot 需要 Godot 4.7 的 .NET(mono) 版**，且本机装好对应 .NET SDK；打开后先 `dotnet build`，再用编辑器运行主场景
+4. 运行主场景（通常是 `welcome.tscn` 或 `main.tscn`）
 
 ## 📜 许可证
 
