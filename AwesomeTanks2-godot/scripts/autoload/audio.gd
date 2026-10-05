@@ -36,7 +36,7 @@ func playSfx(soundName: String, volumeDb: float = 0.0) -> AudioStreamPlayer:
 		return null
 	var p := acquirePlayer()
 	p.stream = load(path)
-	p.volumeDb = volumeDb
+	p.volume_db = volumeDb
 	p.bus = "SFX"
 	p.play()
 	return p
@@ -141,7 +141,7 @@ func playMusic(file: String, fadeMs: int = 200, volume: float = 1.0) -> void:
 	if musicPlayer.stream == stream and musicPlayer.playing:
 		return
 	musicPlayer.stream = stream
-	musicPlayer.volumeDb = -40.0
+	musicPlayer.volume_db = -40.0
 	musicPlayer.play()
 	fadeTo(volume, fadeMs)
 

@@ -3,14 +3,14 @@ extends ATEnemy
 ## 对应原项目 window.AT.Turret：底座 + 可旋转炮塔，不移动，共 8 种武器（数据见 ATEnemyTypes.TURRETS）
 ##
 ## 为什么只有 1 个炮塔场景：8 种炮塔结构完全相同，仅底座/炮塔贴图、武器与数值不同，
-## 因此合并为一个形态场景，关卡生成时按瓦片调用 apply_type() 应用对应数据。
+## 因此合并为一个形态场景，关卡生成时按瓦片调用 applyType() 应用对应数据。
 ##
 ## 场景结构：
 ##   TurretEnemy (ATTurretEnemy)
-##   ├─ BaseSprite    —— 底座贴图（apply_type 里按类型设置）
-##   ├─ TurretSprite  —— 炮塔贴图（apply_type 里按类型设置）
+##   ├─ BaseSprite    —— 底座贴图（applyType 里按类型设置）
+##   ├─ TurretSprite  —— 炮塔贴图（applyType 里按类型设置）
 ##   ├─ BodySprite    —— 隐藏（炮塔无车体）
-##   └─ Weapon        —— apply_type 运行时按类型实例化的武器场景
+##   └─ Weapon        —— applyType 运行时按类型实例化的武器场景
 ## 转向/开火行为等状态机接入后再补，本类目前只保证表现与数据正确。
 
 class_name ATTurretEnemy
@@ -81,7 +81,7 @@ func setupWeapon(weaponKey: String, params: Dictionary) -> void:
 	if not ResourceLoader.exists(path):
 		push_warning("TurretEnemy: 武器场景缺失 " + path)
 		return
-	# 先清掉旧武器（apply_type 可重复调用）
+	# 先清掉旧武器（applyType 可重复调用）
 	for child in get_children():
 		if child is ATWeapon:
 			child.queue_free()
@@ -96,7 +96,7 @@ func setupWeapon(weaponKey: String, params: Dictionary) -> void:
 	collectWeapons()
 
 
-## 视觉兜底：tank_key 为空（形态场景）时不做任何加载，等 apply_type 指定类型
+## 视觉兜底：tankKey 为空（形态场景）时不做任何加载，等 applyType 指定类型
 func configureEnemyVisuals() -> void:
 	if tankKey == "":
 		return

@@ -68,9 +68,12 @@ func fireCharged() -> void:
 	b.rotation = getAimAngle()
 	if b.has_method("setup"):
 		b.setup(team, dmg, velocity, life, Color.WHITE, soundAlertRadius)
-	if "owner_actor" in b:
+	if "ownerActor" in b:
 		b.ownerActor = tank
-	for prop in ["impact_sfx", "bullet_spark", "bullet_puff"]:
+	# 命中回调需要知道"是谁打的"（与基类 ATWeapon.spawnBullet 保持一致）
+	if "ownerWeapon" in b:
+		b.ownerWeapon = self
+	for prop in ["impactSfx", "bulletSpark", "bulletPuff"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()

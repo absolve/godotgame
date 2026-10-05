@@ -28,42 +28,42 @@ const TURRETS: Dictionary = {
 	"minigun": {
 		"id": "turret_minigun", "base": "minigun_base", "turret": "minigun", "weapon": "minigun",
 		"max_health": 400.0, "points": 400, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 10.0,
-		"params": {"damage": 10.0, "rate": 6.0, "life": 0.5, "spawn_distance": 22.0},
+		"params": {"damage": 10.0, "rate": 6.0, "life": 0.5, "spawnDistance": 22.0},
 	},
 	"shotgun": {
 		"id": "turret_shotgun", "base": "shotgun_base", "turret": "shotgun", "weapon": "shotgun",
 		"max_health": 400.0, "points": 500, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 20.0,
-		"params": {"damage": 15.0, "rate": 1.5, "life": 1.667, "spawn_count": 6, "spawn_distance": 20.0},
+		"params": {"damage": 15.0, "rate": 1.5, "life": 1.667, "spawnCount": 6, "spawnDistance": 20.0},
 	},
 	"cannon": {
 		"id": "turret_cannon", "base": "cannon_base", "turret": "cannon", "weapon": "cannon",
 		"max_health": 500.0, "points": 800, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 20.0,
-		"params": {"damage": 200.0, "rate": 1.5, "life": 1.667, "spawn_distance": 30.0},
+		"params": {"damage": 200.0, "rate": 1.5, "life": 1.667, "spawnDistance": 30.0},
 	},
 	"rockets": {
 		"id": "turret_rockets", "base": "rockets_base", "turret": "rockets", "weapon": "rockets",
 		"max_health": 1000.0, "points": 900, "view_distance": 400.0, "turret_speed": 3.0, "shoot_angle": 25.0,
-		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "spawn_distance": 15.0},
+		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "spawnDistance": 15.0},
 	},
 	"laser": {
 		"id": "turret_laser", "base": "laser_base", "turret": "laser", "weapon": "laser",
 		"max_health": 1250.0, "points": 1000, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 15.0,
-		"params": {"damage": 6.0, "beam_dps": 360.0, "spawn_distance": 26.0},
+		"params": {"damage": 6.0, "beamDps": 360.0, "spawnDistance": 26.0},
 	},
 	"ricochet": {
 		"id": "turret_ricochet", "base": "generic_base", "turret": "ricochet", "weapon": "ricochet",
 		"max_health": 2000.0, "points": 600, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 30.0,
-		"params": {"damage": 80.0, "rate": 6.0, "life": 1.667, "spawn_distance": 23.0},
+		"params": {"damage": 80.0, "rate": 6.0, "life": 1.667, "spawnDistance": 23.0},
 	},
 	"railgun": {
 		"id": "turret_railgun", "base": "generic_base", "turret": "railgun", "weapon": "railgun",
 		"max_health": 1500.0, "points": 1100, "view_distance": 400.0, "turret_speed": 1.75, "shoot_angle": 15.0,
-		"params": {"damage": 333.0, "rate": 1.091, "spawn_distance": 30.0},
+		"params": {"damage": 333.0, "rate": 1.091, "spawnDistance": 30.0},
 	},
 	"flamethrower": {
 		"id": "turret_flamethrower", "base": "generic_base", "turret": "flamethrower", "weapon": "flamethrower",
 		"max_health": 1250.0, "points": 700, "view_distance": 400.0, "turret_speed": 3.0, "shoot_angle": 25.0,
-		"params": {"damage": 1.0, "rate": 10.0, "life": 1.667, "spawn_distance": 26.0},
+		"params": {"damage": 1.0, "rate": 10.0, "life": 1.667, "spawnDistance": 26.0},
 	},
 }
 

@@ -114,15 +114,15 @@ static func coinValue(levelIndex: int, difficulty: float) -> float:
 static func coinDropForEnemy(e: Node) -> int:
 	if e == null or not is_instance_valid(e):
 		return 0
-	var id := str(e.get("enemyId")) if "enemy_id" in e else ""
+	var id := str(e.get("enemyId")) if "enemyId" in e else ""
 	var isBoss := false
-	if "is_boss" in e:
+	if "isBoss" in e:
 		isBoss = bool(e.get("isBoss"))
 	if isBoss:
 		return 14 + randi() % 3
 	if id.begins_with("spawner"):
 		var spawned := 0
-		if "_spawned" in e and e.get("spawned") is Array:
+		if "spawned" in e and e.get("spawned") is Array:
 			spawned = (e.get("spawned") as Array).size()
 		return int(floor(7.0 + 3.0 * randf() + (4.0 + 3.0 * randf()) * float(6 - spawned)))
 	if id.begins_with("turret"):

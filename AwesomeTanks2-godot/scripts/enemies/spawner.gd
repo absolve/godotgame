@@ -5,11 +5,11 @@ extends ATEnemy
 ##
 ## 为什么只有 1 个生成器场景：7 种生成器结构完全相同，仅贴图（spawners/<kind>.png）、
 ## 血量、分数与产出表不同，因此合并为一个形态场景 + 一张数据表，关卡生成时按瓦片
-## 调用 apply_kind() 应用对应数据。
+## 调用 applyKind() 应用对应数据。
 ##
 ## 场景结构：
 ##   Spawner (ATSpawner)
-##   ├─ BodySprite     —— 生成器本体贴图（apply_kind 按 kind 设置；半血换 _damaged 图）
+##   ├─ BodySprite     —— 生成器本体贴图（applyKind 按 kind 设置；半血换 _damaged 图）
 ##   ├─ TurretSprite   —— 隐藏（生成器无炮塔）
 ##   ├─ Progress       —— 右上角产出进度贴图（progress_[6-已产出]）
 ##   └─ Lifebar        —— 头顶血条（来自 enemy.tscn）
@@ -211,7 +211,7 @@ func updatePoints() -> void:
 	points = 500 + 200 * enemyKind + (MAX_SPAWNED - spawned.size()) * (150 + 50 * enemyKind)
 
 
-## 视觉兜底：kind 已在场景里确定时才加载；否则等 apply_kind 指定
+## 视觉兜底：kind 已在场景里确定时才加载；否则等 applyKind 指定
 func configureEnemyVisuals() -> void:
 	if bodySprite.sprite_frames != null:
 		return

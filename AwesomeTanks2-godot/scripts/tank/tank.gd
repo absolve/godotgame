@@ -41,7 +41,7 @@ var killDelay: float = 0.12
 # 后坐力衰减速度（px/s；H5 每帧 -0.3 @60fps ≈ 18/s）
 const RECOIL_DECAY_PER_SEC: float = 18.0
 
-var material: ShaderMaterial = null
+var shaderMaterial: ShaderMaterial = null
 var tween: Tween = null
 
 
@@ -57,9 +57,9 @@ func _ready() -> void:
 	collision_mask = myMask()
 	# 受击闪光材质：用场景里 BodySprite 自带的 ShaderMaterial
 	# （resource_local_to_scene=true → 每辆坦克一份，互不干扰），并让炮塔共用同一份
-	material = bodySprite.material as ShaderMaterial
-	if material != null:
-		turretSprite.material = material
+	shaderMaterial = bodySprite.material as ShaderMaterial
+	if shaderMaterial != null:
+		turretSprite.material = shaderMaterial
 
 func myLayer() -> int:
 	return 1 << (Constants.Layer.PLAYER - 1) if team == Constants.Team.PLAYER else 1 << (Constants.Layer.ENEMY - 1)
@@ -250,19 +250,19 @@ func unfreeze() -> void:
 
 ## 触发一次受击闪光
 func flash(color := Color.WHITE, duration := 0.2) -> void:
-	if material == null:
+	if shaderMaterial == null:
 		return
 	if tween != null and tween.is_valid():
 		tween.kill()
-	material.set_shader_parameter("flash_color", color)
-	material.set_shader_parameter("flash_amount", 1.0)
+	shaderMaterial.set_shader_parameter("flash_color", color)
+	shaderMaterial.set_shader_parameter("flash_amount", 1.0)
 	tween = create_tween()
 	tween.tween_method(setAmount, 1.0, 0.0, duration)
 
 
 func setAmount(v: float) -> void:
-	if material != null:
-		material.set_shader_parameter("flash_amount", v)
+	if shaderMaterial != null:
+		shaderMaterial.set_shader_parameter("flash_amount", v)
 
 ## 触发炮塔后坐力（H5 recoil setter：只取较大值，连续射击保持峰值）
 func applyRecoil(strength: float) -> void:

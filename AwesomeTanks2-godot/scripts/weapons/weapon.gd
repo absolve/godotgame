@@ -62,22 +62,22 @@ const LOOP_KEY := "weapon_fire"
 
 const PRESETS: Dictionary = {
 	"minigun": {
-		"fire_sfx": "minigun.mp3", "impact_sfx": "bullet_hit.mp3",
-		"bullet_spark": true, "bullet_puff": true,
+		"fireSfx": "minigun.mp3", "impactSfx": "bullet_hit.mp3",
+		"bulletSpark": true, "bulletPuff": true,
 	},
 	"shotgun": {
-		"fire_sfx": "shotgun.mp3", "impact_sfx": "bullet_hit.mp3",
+		"fireSfx": "shotgun.mp3", "impactSfx": "bullet_hit.mp3",
 	},
 	"ricochet": {
-		"fire_sfx": "ricochet_shot.mp3", "impact_sfx": "bullet_hit.mp3",
+		"fireSfx": "ricochet_shot.mp3", "impactSfx": "bullet_hit.mp3",
 	},
 	"flamethrower": {
-		"fire_start_sfx": "flame_start.mp3", "fire_loop_sfx": "flame_loop.mp3",
+		"fireStartSfx": "flame_start.mp3", "fireLoopSfx": "flame_loop.mp3",
 	},
-	"cannon": {"fire_sfx": "cannon.mp3"},
-	"shock": {"fire_loop_sfx": "shock_loop.mp3"},
-	"rockets": {"fire_sfx": "rocket.mp3"},
-	"railgun": {"fire_sfx": "railgun.mp3", "impact_sfx": "bullet_hit.mp3"},
+	"cannon": {"fireSfx": "cannon.mp3"},
+	"shock": {"fireLoopSfx": "shock_loop.mp3"},
+	"rockets": {"fireSfx": "rocket.mp3"},
+	"railgun": {"fireSfx": "railgun.mp3", "impactSfx": "bullet_hit.mp3"},
 }
 
 @onready var fireTimer: Timer = $FireTimer
@@ -176,7 +176,7 @@ func applyParams(p: Dictionary) -> void:
 	for key in p:
 		if key in self:
 			set(key, p[key])
-	if "fire_sfx" in p:
+	if "fireSfx" in p:
 		applyFireSound()
 
 
@@ -256,12 +256,12 @@ func spawnBullet(angle: float) -> Node2D:
 		#(b.get_node("Sprite2D") as Sprite2D).texture = bullet_texture
 	if b.has_method("setup"):
 		b.setup(team, damage, velocity, life, Color.WHITE, soundAlertRadius)
-	if "owner_actor" in b:
+	if "ownerActor" in b:
 		b.ownerActor = tank
 	# 命中回调需要知道"是谁打的"（H5 用 srcWeapon instanceof 判断火焰/激光等）
-	if "owner_weapon" in b:
+	if "ownerWeapon" in b:
 		b.ownerWeapon = self
-	for prop in ["impact_sfx", "bullet_spark", "bullet_puff"]:
+	for prop in ["impactSfx", "bulletSpark", "bulletPuff"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()

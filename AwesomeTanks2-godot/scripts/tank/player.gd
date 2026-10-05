@@ -90,7 +90,7 @@ func setupWeapons() -> void:
 		switchTurret("minigun")
 
 
-## 按 Settings.WEAPON_STATS 取该武器当前等级参数（damage/rate/life/spawn_count）
+## 按 Settings.WEAPON_STATS 取该武器当前等级参数（damage/rate/life/spawnCount）
 func levelParams(key: String, weaponLevel: int) -> Dictionary:
 	var out: Dictionary = {}
 	var stats: Variant = Settings.WEAPON_STATS.get(key, {})

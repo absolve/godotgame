@@ -44,7 +44,7 @@ var ignites: bool = true
 var team: int = -1
 
 var time: float = 0.0
-var frame: int = 0
+var frames: int = 0
 var spreadTimer: float = 0.0
 var burnTarget: Node2D = null
 
@@ -198,8 +198,8 @@ func _physics_process(delta: float) -> void:
 	if burnTarget.has_method("onBulletHit"):
 		burnTarget.onBulletHit(damagePerFrame, self, null)
 	# 表现：每 2 帧随机取图/旋转/抖动一次，末尾 0.2s 淡出
-	frame += 1
-	if frame % REFRESH_FRAMES == 0:
+	frames += 1
+	if frames % REFRESH_FRAMES == 0:
 		refreshLook()
 	# 木板蔓延
 	if spreadsFire:

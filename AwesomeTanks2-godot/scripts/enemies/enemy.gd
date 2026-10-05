@@ -12,7 +12,7 @@ extends ATTank
 ##   - 基本参数（血量/速度/视野/分数/开火角…）直接写在各敌人场景的导出属性里；
 ##   - 车体与炮塔贴图写在各敌人场景的 SpriteFrames 上（可放多帧动画）；
 ##   - 武器用「武器场景实例」挂成子节点，并在场景里覆盖 CPU 专用参数（damage/rate/…）；
-##   - 被合并的同类敌人（炮塔/生成器）用形态场景 + apply_type/apply_kind 在运行时套数据。
+##   - 被合并的同类敌人（炮塔/生成器）用形态场景 + applyType/applyKind 在运行时套数据。
 ## 本类只做兜底：若场景没给 SpriteFrames，才用 tank_key 按命名规则加载。
 
 class_name ATEnemy
@@ -76,7 +76,7 @@ func collectWeapons() -> void:
 
 
 ## 视觉兜底：场景里已设置 SpriteFrames 就用场景的（每类敌人一场景，贴图写在场景里）；
-## 未设置且 tank_key 非空时才按命名规则加载（形态场景 tank_key 为空，等 apply_type 指定类型）。
+## 未设置且 tankKey 非空时才按命名规则加载（形态场景 tankKey 为空，等 applyType 指定类型）。
 func configureEnemyVisuals() -> void:
 	if tankKey == "":
 		return

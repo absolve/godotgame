@@ -415,7 +415,7 @@ func refreshHud() -> void:
 		var w = weapons[i] if i < weapons.size() else null
 		var owned: bool = w != null
 		var pct := -1.0
-		if owned and "max_ammo" in w and float(w.maxAmmo) < 999999.0:
+		if owned and "maxAmmo" in w and float(w.maxAmmo) < 999999.0:
 			pct = clampf(float(w.ammo) / maxf(float(w.maxAmmo), 1.0), 0.0, 1.0)
 		slotNodes[i].call("refresh", owned, owned and index == i, pct)
 
@@ -631,7 +631,7 @@ func spawnObjectAt(tile: int, x: int, y: int) -> void:
 
 ## 按瓦片实例化敌人，登记到 enemies 并接击杀信号
 ##   - 坦克/Boss：各自独立场景（场景里已带贴图/数值/武器）
-##   - 炮塔/生成器：同一个形态场景，入树后按类型数据 apply_type/apply_kind
+##   - 炮塔/生成器：同一个形态场景，入树后按类型数据 applyType/applyKind
 func spawnEnemyByTile(tile: int, pos: Vector2, x: int, y: int) -> void:
 	var e: Node2D = null
 	var isTurret: bool = ATEnemyTypes.TILE_TURRET.has(tile)
@@ -655,14 +655,14 @@ func spawnEnemyByTile(tile: int, pos: Vector2, x: int, y: int) -> void:
 		e.level = self
 	#_objects_layer.add_child(e)
 	# add_child 用 deferred（避免在 _ready 阶段给正在建子节点的父节点加子节点时报错），
-	# 那么 apply_type/apply_kind 也必须一起 deferred：延迟调用按入队顺序执行，
+	# 那么 applyType/applyKind 也必须一起 deferred：延迟调用按入队顺序执行，
 	# 先入树（@onready 变量就绪）再 apply，否则 _body_sprite 还是 null（贴图/武器都会设不上）
 	objectsLayer.call_deferred("add_child",e)
 	# 形态场景：入树后（@onready 就绪）再应用类型数据（贴图/数值/武器）
 	if isTurret:
-		e.call_deferred("apply_type", ATEnemyTypes.TURRETS[ATEnemyTypes.TILE_TURRET[tile]])
+		e.call_deferred("applyType", ATEnemyTypes.TURRETS[ATEnemyTypes.TILE_TURRET[tile]])
 	elif isSpawner:
-		e.call_deferred("apply_kind", int(ATEnemyTypes.TILE_SPAWNER[tile]))
+		e.call_deferred("applyKind", int(ATEnemyTypes.TILE_SPAWNER[tile]))
 	enemies.append(e)
 	enemiesAlive += 1
 	if e.has_signal("killed"):
@@ -777,11 +777,15 @@ func spawnPlayer(pos: Vector2, x: int, y: int) -> void:
 ## 生成一个拾取物。**所有掉落的唯一入口**（以后要换对象池只改这里）
 func spawnBonus(kind: int, pos: Vector2, weaponKey: String = "", amount: int = 0) -> ATBonus:
 	var b: ATBonus = SCENE_BONUS.instantiate()
-	bonusLayer.call_deferred("add_child",b)
-	b.global_position = pos
-	b.setup(kind, self, weaponKey, amount)      # @onready 就绪后再初始化（同 apply_type 的约定）
+	b.position = pos
 	b.pickedUp.connect(onBonusPickedUp)
 	b.expired.connect(onBonusExpired)
+	# add_child 用 deferred（避免在 _ready 阶段给正在建子节点的父节点加子节点时报错），
+	# 那么 setup 也必须一起 deferred：延迟调用按入队顺序执行，先入树（@onready 就绪）
+	# 再 setup，否则 bonus.gd 里的 anim/fire/shape 还是 null —— 动画不会切到对应奖励类型
+	# （AnimatedSprite2D 会停在场景默认的 coin）、炸弹引线也不显示。
+	bonusLayer.call_deferred("add_child", b)
+	b.call_deferred("setup", kind, self, weaponKey, amount)
 	return b
 
 
@@ -837,7 +841,7 @@ func spawnSmallEnemy(cell: Vector2i) -> void:
 	# 刚生成的那个敌人就是 enemies 里最后一个 → 血量压到 1/3（H5: setHealth(... * (s ? 1/3 : 1))）
 	if not enemies.is_empty():
 		var e = enemies[enemies.size() - 1]
-		if is_instance_valid(e) and "max_health" in e:
+		if is_instance_valid(e) and "maxHealth" in e:
 			e.maxHealth = maxf(float(e.maxHealth) / 3.0, 1.0)
 			e.health = e.maxHealth
 
