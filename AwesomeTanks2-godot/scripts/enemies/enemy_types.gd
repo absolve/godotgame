@@ -12,14 +12,14 @@ class_name ATEnemyTypes
 ## 基准：level.index=0、difficulty=1.0（炮塔血量在 H5 中不随难度缩放）
 
 ## 形态场景路径
-const TURRET_SCENE := "res://scenes/enemies/TurretEnemy.tscn"
-const SPAWNER_SCENE := "res://scenes/enemies/Spawner.tscn"
+const TURRET_SCENE := "res://scenes/enemies/turret_enemy.tscn"
+const SPAWNER_SCENE := "res://scenes/enemies/spawner.tscn"
 const WEAPON_DIR := "res://scenes/weapons/"
 const TURRET_TEX := "res://sprites/game/turrets/"
 const SPAWNER_TEX := "res://sprites/game/spawners/"
 
 ## H5 turretRotationSpeed 为 rad/s，本项目 rotate_turret 用 deg/s
-const RAD2DEG := 57.29578
+const RAD2_DEG := 57.29578
 
 ## 炮塔定义：类型名 → 参数
 ##   base/turret：sprites/game/turrets/<key>.png

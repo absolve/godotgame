@@ -5,7 +5,7 @@ extends Control
 #const FONT: Font = preload("res://fonts/gunplay.ttf")
 const CARD_SCENE: PackedScene = preload("res://scenes/weapon_card.tscn")
 const STAT_CARD_SCENE: PackedScene = preload("res://scenes/stat_card.tscn")
-const StatsLayerScript := preload("res://scripts/ui/stats_layer.gd")
+const STATS_LAYER_SCRIPT := preload("res://scripts/ui/stats_layer.gd")
 
 # 10 张武器卡在 WeaponsPanel(581x309) 内的左上角坐标
 const CARD_POSITIONS: Dictionary = {
@@ -37,253 +37,253 @@ const TAB_PERF_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_per
 const TAB_WP: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons.png.tres")
 const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres")
 
-@onready var _money_label: Label = $Design/TopBar/MoneyLabel
-@onready var _sound_btn: TextureButton = $Design/SoundBtn
-@onready var _music_btn: TextureButton = $Design/MusicBtn
-@onready var _cards: Control = $Design/WeaponsPanel/Cards
-@onready var _perf_cards: Control = $Design/PerformancePanel/PerfCards
-@onready var _tab_perf: TextureButton = $Design/TabPerformance
-@onready var _tab_wp: TextureButton = $Design/TabWeapons
-@onready var _weapons_panel: Control = $Design/WeaponsPanel
-@onready var _perf_panel: Control = $Design/PerformancePanel
-@onready var _difficulty_layer: Control = $DifficultyLayer
-@onready var _stats_layer: StatsLayerScript = $StatsLayer
-@onready var _weapon_alert: Control = $WeaponAlert
+@onready var moneyLabel: Label = $Design/TopBar/MoneyLabel
+@onready var soundBtn: TextureButton = $Design/SoundBtn
+@onready var musicBtn: TextureButton = $Design/MusicBtn
+@onready var cards: Control = $Design/WeaponsPanel/Cards
+@onready var perfCards: Control = $Design/PerformancePanel/PerfCards
+@onready var tabPerf: TextureButton = $Design/TabPerformance
+@onready var tabWp: TextureButton = $Design/TabWeapons
+@onready var weaponsPanel: Control = $Design/WeaponsPanel
+@onready var perfPanel: Control = $Design/PerformancePanel
+@onready var difficultyLayer: Control = $DifficultyLayer
+@onready var statsLayer: STATS_LAYER_SCRIPT = $StatsLayer
+@onready var weaponAlert: Control = $WeaponAlert
 
-var _cards_by_key: Dictionary = {}   # key -> WeaponCard 实例
-var _stats_by_key: Dictionary = {}   # key -> StatCard 实例
+var cardsByKey: Dictionary = {}   # key -> WeaponCard 实例
+var statsByKey: Dictionary = {}   # key -> StatCard 实例
 
 
 func _ready() -> void:
-	Audio.play_music("music_menu.mp3")
+	Audio.playMusic("music_menu.mp3")
 	#_money_label.add_theme_font_override("font", FONT)
-	_populate_cards()
-	_populate_stat_cards()
+	populateCards()
+	populateStatCards()
 	# 默认显示武器 Tab
-	_tab_perf.texture_normal = TAB_PERF
-	_tab_perf.texture_hover = TAB_PERF
-	_tab_perf.texture_pressed = TAB_PERF
-	_tab_wp.texture_normal = TAB_WP_A
-	_tab_wp.texture_hover = TAB_WP_A
-	_tab_wp.texture_pressed = TAB_WP_A
-	_perf_panel.visible = false
-	_weapons_panel.visible = true
+	tabPerf.texture_normal = TAB_PERF
+	tabPerf.texture_hover = TAB_PERF
+	tabPerf.texture_pressed = TAB_PERF
+	tabWp.texture_normal = TAB_WP_A
+	tabWp.texture_hover = TAB_WP_A
+	tabWp.texture_pressed = TAB_WP_A
+	perfPanel.visible = false
+	weaponsPanel.visible = true
 	# Sound/Music 状态
-	_refresh_sound_btn(bool(Game.current.get("game", {}).get("sound", true)))
-	_refresh_music_btn(bool(Game.current.get("game", {}).get("music", true)))
-	_refresh()
-	Game.money_changed.connect(_on_money_changed)
-	_weapon_alert.purchased.connect(_on_weapon_alert_purchased)
-	_weapon_alert.failed.connect(_on_weapon_alert_failed)
+	refreshSoundBtn(bool(Game.current.get("game", {}).get("sound", true)))
+	refreshMusicBtn(bool(Game.current.get("game", {}).get("music", true)))
+	refresh()
+	Game.moneyChanged.connect(onMoneyChanged)
+	weaponAlert.purchased.connect(onWeaponAlertPurchased)
+	weaponAlert.failed.connect(onWeaponAlertFailed)
 
 
 # ---------- Tab 切换 ----------
-func _on_performance_tab_pressed() -> void:
-	Audio.play_button_down()
-	_tab_perf.texture_normal = TAB_PERF_A
-	_tab_perf.texture_hover = TAB_PERF_A
-	_tab_perf.texture_pressed = TAB_PERF_A
-	_tab_wp.texture_normal = TAB_WP
-	_tab_wp.texture_hover = TAB_WP
-	_tab_wp.texture_pressed = TAB_WP
-	_perf_panel.visible = true
-	_weapons_panel.visible = false
+func onPerformanceTabPressed() -> void:
+	Audio.playButtonDown()
+	tabPerf.texture_normal = TAB_PERF_A
+	tabPerf.texture_hover = TAB_PERF_A
+	tabPerf.texture_pressed = TAB_PERF_A
+	tabWp.texture_normal = TAB_WP
+	tabWp.texture_hover = TAB_WP
+	tabWp.texture_pressed = TAB_WP
+	perfPanel.visible = true
+	weaponsPanel.visible = false
 
 
-func _on_weapons_tab_pressed() -> void:
-	Audio.play_button_down()
-	_tab_perf.texture_normal = TAB_PERF
-	_tab_perf.texture_hover = TAB_PERF
-	_tab_perf.texture_pressed = TAB_PERF
-	_tab_wp.texture_normal = TAB_WP_A
-	_tab_wp.texture_hover = TAB_WP_A
-	_tab_wp.texture_pressed = TAB_WP_A
-	_perf_panel.visible = false
-	_weapons_panel.visible = true
+func onWeaponsTabPressed() -> void:
+	Audio.playButtonDown()
+	tabPerf.texture_normal = TAB_PERF
+	tabPerf.texture_hover = TAB_PERF
+	tabPerf.texture_pressed = TAB_PERF
+	tabWp.texture_normal = TAB_WP_A
+	tabWp.texture_hover = TAB_WP_A
+	tabWp.texture_pressed = TAB_WP_A
+	perfPanel.visible = false
+	weaponsPanel.visible = true
 
 
 # ---------- 属性卡实例化 ----------
-func _populate_stat_cards() -> void:
+func populateStatCards() -> void:
 	for key in STAT_KEYS:
 		var card = STAT_CARD_SCENE.instantiate()
-		card.stat_key = key
-		_perf_cards.add_child(card)
+		card.statKey = key
+		perfCards.add_child(card)
 		card.position = STAT_POSITIONS[key]
-		card.clicked.connect(_on_stat_clicked)
-		_stats_by_key[key] = card
+		card.clicked.connect(onStatClicked)
+		statsByKey[key] = card
 
 
 # ---------- 属性升级 ----------
-func _on_stat_clicked(key: String) -> void:
-	var level: int = Game.get_performance_level(key)
+func onStatClicked(key: String) -> void:
+	var level: int = Game.getPerformanceLevel(key)
 	if level >= 5:
 		return
 	var price: int = int(Settings.PRICES[key][level])
-	var stat_card: Control = _stats_by_key.get(key)
+	var statCard: Control = statsByKey.get(key)
 	if Game.spend(price):
-		Game.set_performance_level(key, level + 1)
+		Game.setPerformanceLevel(key, level + 1)
 		Game.save()
-		Audio.play_sfx("buy.mp3")
-		FlashFx.flash(_money_label)
-		if stat_card != null:
-			stat_card.increase()   # 只有这张卡闪（refresh 不播闪烁，见 stat_card.gd）
+		Audio.playSfx("buy.mp3")
+		FlashFx.flash(moneyLabel)
+		if statCard != null:
+			statCard.increase()   # 只有这张卡闪（refresh 不播闪烁，见 stat_card.gd）
 	else:
-		Audio.play_sfx("not_available.mp3")
-		FlashFx.flash(_money_label)
-		if stat_card != null:
-			stat_card.flash_price()  # 闪价签（对应 H5 a(this[key+"Price"])）
-	_refresh()
+		Audio.playSfx("not_available.mp3")
+		FlashFx.flash(moneyLabel)
+		if statCard != null:
+			statCard.flashPrice()  # 闪价签（对应 H5 a(this[key+"Price"])）
+	refresh()
 
 
 # ---------- 武器卡实例化 ----------
-func _populate_cards() -> void:
+func populateCards() -> void:
 	for key in CARD_POSITIONS:
 		var card = CARD_SCENE.instantiate()
-		card.weapon_key = key
-		_cards.add_child(card)
+		card.weaponKey = key
+		cards.add_child(card)
 		card.position = CARD_POSITIONS[key]
-		card.clicked.connect(_on_card_clicked)
-		card.refill_held.connect(_on_card_refill)
-		_cards_by_key[key] = card
+		card.clicked.connect(onCardClicked)
+		card.refillHeld.connect(onCardRefill)
+		cardsByKey[key] = card
 
 
 # ---------- 武器卡：单击=打开 购买/升级 弹窗（对应 H5 weaponClick→BuyUpgradeAlert） ----------
-func _on_card_clicked(key: String) -> void:
-	_weapon_alert.open(key)
+func onCardClicked(key: String) -> void:
+	weaponAlert.open(key)
 
 
 # ---------- 弹窗购买结果：金额与对应武器卡闪烁（对应 H5 weaponUpgrade/ammoBuy） ----------
-func _on_weapon_alert_purchased(key: String, is_refill: bool) -> void:
-	_refresh()
-	FlashFx.flash(_money_label)
-	var card = _cards_by_key.get(key)
+func onWeaponAlertPurchased(key: String, isRefill: bool) -> void:
+	refresh()
+	FlashFx.flash(moneyLabel)
+	var card = cardsByKey.get(key)
 	if card == null:
 		return
-	if is_refill:
-		card.flash_ammo()   # 补弹成功：闪卡的弹药条
+	if isRefill:
+		card.flashAmmo()   # 补弹成功：闪卡的弹药条
 	else:
 		card.flash()        # 购买/升级成功：闪整张武器卡
 
 
-func _on_weapon_alert_failed(key: String, is_refill: bool) -> void:
-	FlashFx.flash(_money_label)
-	if not is_refill:
-		var card = _cards_by_key.get(key)
+func onWeaponAlertFailed(key: String, isRefill: bool) -> void:
+	FlashFx.flash(moneyLabel)
+	if not isRefill:
+		var card = cardsByKey.get(key)
 		if card != null:
-			card.flash_price()  # 购买失败：闪卡的价签
+			card.flashPrice()  # 购买失败：闪卡的价签
 
 
 # ---------- 武器卡：长按=补弹（仅拥有且非 minigun） ----------
-func _on_card_refill(key: String) -> void:
-	var ammo: int = Game.get_weapon_ammo(key)
+func onCardRefill(key: String) -> void:
+	var ammo: int = Game.getWeaponAmmo(key)
 	var limit: int = int(Settings.AMMO_LIMITS.get(key, 0))
 	if ammo >= limit:
 		return
 	var price: int = int(Settings.AMMO_PRICES.get(key, 0))
 	var amount: int = int(Settings.AMMO_AMOUNT.get(key, 0))
 	if Game.spend(price):
-		Game.set_weapon_ammo(key, ammo + amount)
+		Game.setWeaponAmmo(key, ammo + amount)
 		Game.save()
-		Audio.play_sfx("buy.mp3")
-		FlashFx.flash(_money_label)
-		if _cards_by_key.has(key):
-			_cards_by_key[key].flash_ammo()
+		Audio.playSfx("buy.mp3")
+		FlashFx.flash(moneyLabel)
+		if cardsByKey.has(key):
+			cardsByKey[key].flashAmmo()
 	else:
-		Audio.play_sfx("not_available.mp3")
-		FlashFx.flash(_money_label)
-	_refresh()
+		Audio.playSfx("not_available.mp3")
+		FlashFx.flash(moneyLabel)
+	refresh()
 
 
 # ---------- 刷新 ----------
-func _refresh() -> void:
-	_money_label.text = Game._format_money(Game.get_money())
-	_refresh_cards()
-	_refresh_stat_cards()
+func refresh() -> void:
+	moneyLabel.text = Game.formatMoney(Game.getMoney())
+	refreshCards()
+	refreshStatCards()
 
 
-func _refresh_cards() -> void:
-	for key in _cards_by_key:
-		_cards_by_key[key].refresh()
+func refreshCards() -> void:
+	for key in cardsByKey:
+		cardsByKey[key].refresh()
 
 
-func _refresh_stat_cards() -> void:
-	for key in _stats_by_key:
-		_stats_by_key[key].refresh()
+func refreshStatCards() -> void:
+	for key in statsByKey:
+		statsByKey[key].refresh()
 
 
-func _on_money_changed(_value: int) -> void:
-	_money_label.text = Game._format_money(Game.get_money())
+func onMoneyChanged(value: int) -> void:
+	moneyLabel.text = Game.formatMoney(Game.getMoney())
 
 
 # ---------- Sound/Music ----------
-func _refresh_sound_btn(on: bool) -> void:
-	_sound_btn.button_pressed = on
+func refreshSoundBtn(on: bool) -> void:
+	soundBtn.button_pressed = on
 
 
-func _refresh_music_btn(on: bool) -> void:
-	_music_btn.button_pressed = on
+func refreshMusicBtn(on: bool) -> void:
+	musicBtn.button_pressed = on
 
 
-func _on_sound_toggled() -> void:
-	var want_on: bool = _sound_btn.button_pressed
-	_refresh_sound_btn(want_on)
-	Audio.set_sound_enabled(want_on)
+func onSoundToggled() -> void:
+	var wantOn: bool = soundBtn.button_pressed
+	refreshSoundBtn(wantOn)
+	Audio.setSoundEnabled(wantOn)
 
 
-func _on_music_toggled() -> void:
-	var want_on: bool = _music_btn.button_pressed
-	_refresh_music_btn(want_on)
-	Audio.set_music_enabled(want_on)
+func onMusicToggled() -> void:
+	var wantOn: bool = musicBtn.button_pressed
+	refreshMusicBtn(wantOn)
+	Audio.setMusicEnabled(wantOn)
 
 
 # ---------- 底栏 ----------
-func _on_play_pressed() -> void:
-	Audio.play_button_down()
-	Game.change_scene(Settings.SCENE_LEVEL_SELECT)
+func onPlayPressed() -> void:
+	Audio.playButtonDown()
+	Game.changeScene(Settings.SCENE_LEVEL_SELECT)
 
 
-func _on_menu_pressed() -> void:
-	Audio.play_button_down()
-	Game.change_scene(Settings.SCENE_TITLE)
+func onMenuPressed() -> void:
+	Audio.playButtonDown()
+	Game.changeScene(Settings.SCENE_TITLE)
 
 
-func _on_editor_pressed() -> void:
-	Audio.play_button_down()
-	Game.change_scene(Settings.SCENE_EDITOR)
+func onEditorPressed() -> void:
+	Audio.playButtonDown()
+	Game.changeScene(Settings.SCENE_EDITOR)
 
 
-func _on_stats_pressed() -> void:
-	Audio.play_button_down()
-	_stats_layer.open()  # 打开时重新读取统计/成就数据
+func onStatsPressed() -> void:
+	Audio.playButtonDown()
+	statsLayer.open()  # 打开时重新读取统计/成就数据
 
 
-func _on_difficulty_pressed() -> void:
-	Audio.play_button_down()
-	_difficulty_layer.visible = true
+func onDifficultyPressed() -> void:
+	Audio.playButtonDown()
+	difficultyLayer.visible = true
 
 
-func _on_difficulty_close_pressed() -> void:
-	Audio.play_button_down()
-	_difficulty_layer.visible = false
+func onDifficultyClosePressed() -> void:
+	Audio.playButtonDown()
+	difficultyLayer.visible = false
 
 
-func _set_difficulty(idx: int) -> void:
+func setDifficulty(idx: int) -> void:
 	Game.current["game"]["difficulty"] = idx
 	Game.save()
-	_difficulty_layer.visible = false
-	_refresh()
+	difficultyLayer.visible = false
+	refresh()
 
 
-func _on_difficulty_easy_pressed() -> void:
-	Audio.play_button_down()
-	_set_difficulty(0)
+func onDifficultyEasyPressed() -> void:
+	Audio.playButtonDown()
+	setDifficulty(0)
 
 
-func _on_difficulty_medium_pressed() -> void:
-	Audio.play_button_down()
-	_set_difficulty(1)
+func onDifficultyMediumPressed() -> void:
+	Audio.playButtonDown()
+	setDifficulty(1)
 
 
-func _on_difficulty_hard_pressed() -> void:
-	Audio.play_button_down()
-	_set_difficulty(2)
+func onDifficultyHardPressed() -> void:
+	Audio.playButtonDown()
+	setDifficulty(2)

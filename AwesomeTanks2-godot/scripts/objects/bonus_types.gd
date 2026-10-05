@@ -78,52 +78,52 @@ const COIN_LATE_FROM_NUMBER := 11
 # 基础查询
 # ============================================================
 ## 动画名（SpriteFrames 里的名字）
-static func anim_name(kind: int, weapon_key: String = "") -> String:
+static func animName(kind: int, weaponKey: String = "") -> String:
 	if kind == Kind.AMMO:
-		return str(AMMO.get(weapon_key, {}).get("anim", "ammo_shotgun"))
+		return str(AMMO.get(weaponKey, {}).get("anim", "ammo_shotgun"))
 	return str(KINDS.get(kind, {}).get("anim", "coin"))
 
 
 ## 该 kind 的拾取音效（含音量偏移）→ {file, db}
-static func pickup_sfx(kind: int) -> Dictionary:
+static func pickupSfx(kind: int) -> Dictionary:
 	var def: Dictionary = KINDS.get(kind, {})
 	return {"file": str(def.get("sfx", "")), "db": float(def.get("sfx_db", 0.0))}
 
 
 ## 该 kind 的存活时间（秒）
-static func life_of(kind: int, fallback: float) -> float:
+static func lifeOf(kind: int, fallback: float) -> float:
 	return float(KINDS.get(kind, {}).get("life", fallback))
 
 
 ## 弹药拾取量
-static func ammo_amount(weapon_key: String) -> int:
-	return int(AMMO.get(weapon_key, {}).get("amount", 0))
+static func ammoAmount(weaponKey: String) -> int:
+	return int(AMMO.get(weaponKey, {}).get("amount", 0))
 
 
 ## 单枚金币价值（number = 关卡序号从 1 起、index = 从 0 起、difficulty = 难度倍率）
-static func coin_value(level_index: int, difficulty: float) -> float:
-	var number := level_index + 1
+static func coinValue(levelIndex: int, difficulty: float) -> float:
+	var number := levelIndex + 1
 	var base := COIN_BASE if number < COIN_LATE_FROM_NUMBER else COIN_BASE_LATE
-	return base * (1.0 + COIN_LEVEL_GAIN * float(level_index)) * difficulty
+	return base * (1.0 + COIN_LEVEL_GAIN * float(levelIndex)) * difficulty
 
 
 # ============================================================
 # 掉落：敌人 / 箱子
 # ============================================================
 ## 敌人死亡掉多少金币（H5：坦克/炮塔 4~6、Boss 14~16、生成器按已产出数递减、Kamikaze 仅被打死才掉）
-static func coin_drop_for_enemy(e: Node) -> int:
+static func coinDropForEnemy(e: Node) -> int:
 	if e == null or not is_instance_valid(e):
 		return 0
-	var id := str(e.get("enemy_id")) if "enemy_id" in e else ""
-	var is_boss := false
+	var id := str(e.get("enemyId")) if "enemy_id" in e else ""
+	var isBoss := false
 	if "is_boss" in e:
-		is_boss = bool(e.get("is_boss"))
-	if is_boss:
+		isBoss = bool(e.get("isBoss"))
+	if isBoss:
 		return 14 + randi() % 3
 	if id.begins_with("spawner"):
 		var spawned := 0
-		if "_spawned" in e and e.get("_spawned") is Array:
-			spawned = (e.get("_spawned") as Array).size()
+		if "_spawned" in e and e.get("spawned") is Array:
+			spawned = (e.get("spawned") as Array).size()
 		return int(floor(7.0 + 3.0 * randf() + (4.0 + 3.0 * randf()) * float(6 - spawned)))
 	if id.begins_with("turret"):
 		return 4 + randi() % 3
@@ -133,13 +133,13 @@ static func coin_drop_for_enemy(e: Node) -> int:
 
 ## 箱子掉落（H5 Crate.getRandomBonus）：权重随血量/弹药动态变化
 ## 返回 { kind, weapon_key?, amount? }
-static func pick_crate_bonus(level: Node, player: Node) -> Dictionary:
+static func pickCrateBonus(level: Node, player: Node) -> Dictionary:
 	# ① 敌人清空 → 必掉金币；② 血量 < 25% → 必掉医疗包（H5 两条早退规则）
-	if level != null and is_instance_valid(level) and int(level.get("enemies_alive")) == 0:
+	if level != null and is_instance_valid(level) and int(level.get("enemiesAlive")) == 0:
 		return {"kind": Kind.COIN}
 	var hp := 1.0
-	if player != null and is_instance_valid(player) and "health" in player and "max_health" in player:
-		hp = clampf(float(player.health) / maxf(float(player.max_health), 1.0), 0.0, 1.0)
+	if player != null and is_instance_valid(player) and "health" in player and "maxHealth" in player:
+		hp = clampf(float(player.health) / maxf(float(player.maxHealth), 1.0), 0.0, 1.0)
 	if hp < 0.25:
 		return {"kind": Kind.HEALTH}
 
@@ -149,41 +149,41 @@ static func pick_crate_bonus(level: Node, player: Node) -> Dictionary:
 		{"kind": Kind.COIN, "weight": 1.0},
 	]
 	for key in AMMO:
-		entries.append({"kind": Kind.AMMO, "weapon_key": key, "weight": _ammo_weight(player, key)})
-	var first_level := level != null and is_instance_valid(level) and int(level.get("level_index")) == 0
-	entries.append({"kind": Kind.BOMB, "weight": 0.0 if first_level else 0.1})
+		entries.append({"kind": Kind.AMMO, "weapon_key": key, "weight": ammoWeight(player, key)})
+	var firstLevel := level != null and is_instance_valid(level) and int(level.get("levelIndex")) == 0
+	entries.append({"kind": Kind.BOMB, "weight": 0.0 if firstLevel else 0.1})
 	entries.append({"kind": Kind.SMALL_ENEMY, "weight": 0.1})
 
 	var weights: Array = []
 	for e in entries:
 		weights.append(float(e["weight"]))
-	var idx := weighted_pick(weights)
+	var idx := weightedPick(weights)
 	var picked: Dictionary = entries[idx]
 	if int(picked["kind"]) == Kind.AMMO:
-		picked["amount"] = ammo_amount(str(picked["weapon_key"]))
+		picked["amount"] = ammoAmount(str(picked["weapon_key"]))
 	return picked
 
 
 ## 弹药权重：弹药越少越高；满弹 / 没拥有该武器 = 0（H5 ammoWeightFor）
-static func _ammo_weight(player: Node, weapon_key: String) -> float:
+static func ammoWeight(player: Node, weaponKey: String) -> float:
 	if player == null or not is_instance_valid(player) or not ("weapons" in player):
 		return 0.0
-	var idx := SLOT_KEYS.find(weapon_key)
+	var idx := SLOT_KEYS.find(weaponKey)
 	if idx < 0:
 		return 0.0
 	var weapons: Array = player.get("weapons")
 	var w = weapons[idx] if idx < weapons.size() else null
 	if w == null or not is_instance_valid(w):
 		return 0.0
-	var max_ammo := float(w.get("max_ammo"))
-	if max_ammo <= 0.0 or max_ammo >= 999999.0:
+	var maxAmmo := float(w.get("maxAmmo"))
+	if maxAmmo <= 0.0 or maxAmmo >= 999999.0:
 		return 0.0
-	return 2.0 * (1.0 - float(w.get("ammo")) / max_ammo)
+	return 2.0 * (1.0 - float(w.get("ammo")) / maxAmmo)
 
 
 ## 小敌人要生成的坦克 key（按关卡序号选档，档内等权）
-static func small_enemy_tank(level_index: int) -> String:
-	var number := level_index + 1
+static func smallEnemyTank(levelIndex: int) -> String:
+	var number := levelIndex + 1
 	var tier := 1
 	for key in [13, 11, 9, 7, 5, 3, 1]:
 		if number >= int(key):
@@ -194,7 +194,7 @@ static func small_enemy_tank(level_index: int) -> String:
 
 
 ## 按权重随机取下标（H5 common.weightedChoice）
-static func weighted_pick(weights: Array) -> int:
+static func weightedPick(weights: Array) -> int:
 	var total := 0.0
 	for w in weights:
 		total += maxf(float(w), 0.0)

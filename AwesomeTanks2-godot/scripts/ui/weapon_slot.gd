@@ -9,40 +9,40 @@ const DIR_HUD := "res://sprites/game/hud/"
 const AMMO_ANCHOR := Vector2(51, 37)  # 弹药条右下角（H5）
 const AMMO_SIZE := Vector2(7, 31)
 
-@export var weapon_key := "minigun"
+@export var weaponKey := "minigun"
 
-@onready var _bar: TextureRect = $AmmoBar
+@onready var bar: TextureRect = $AmmoBar
 
-var _base: Texture2D = null
-var _active: Texture2D = null
+var base: Texture2D = null
+var activeTexture: Texture2D = null
 
 
 func _ready() -> void:
-	_base = _tex(DIR_HUD + weapon_key + ".png.tres")
-	_active = _tex(DIR_HUD + weapon_key + "_active.png.tres")
-	if _active == null:
-		_active = _base  # 部分武器(如 mines)没有单独 active 帧
+	base = tex(DIR_HUD + weaponKey + ".png.tres")
+	activeTexture = tex(DIR_HUD + weaponKey + "_active.png.tres")
+	if activeTexture == null:
+		activeTexture = base  # 部分武器(如 mines)没有单独 active 帧
 	refresh(false, false, -1.0)
 
 
-func refresh(owned: bool, active: bool, ammo_pct: float) -> void:
+func refresh(owned: bool, active: bool, ammoPct: float) -> void:
 	disabled = not owned
 	modulate.a = 1.0 if owned else 0.5
 
-	var tex := _active if (owned and active) else _base
+	var tex := activeTexture if (owned and active) else base
 	if tex != null and texture_normal != tex:
 		texture_normal = tex
 		texture_hover = tex
 		texture_pressed = tex
 
-	if ammo_pct < 0.0 or _base == null:
-		_bar.visible = false
+	if ammoPct < 0.0 or base == null:
+		bar.visible = false
 	else:
-		_bar.visible = true
-		var h := AMMO_SIZE.y * clampf(ammo_pct, 0.0, 1.0)
-		_bar.size = Vector2(AMMO_SIZE.x, maxf(h, 1.0) if h > 0.0 else 0.0)
-		_bar.position = Vector2(AMMO_ANCHOR.x - AMMO_SIZE.x, AMMO_ANCHOR.y - _bar.size.y)
+		bar.visible = true
+		var h := AMMO_SIZE.y * clampf(ammoPct, 0.0, 1.0)
+		bar.size = Vector2(AMMO_SIZE.x, maxf(h, 1.0) if h > 0.0 else 0.0)
+		bar.position = Vector2(AMMO_ANCHOR.x - AMMO_SIZE.x, AMMO_ANCHOR.y - bar.size.y)
 
 
-static func _tex(path: String) -> Texture2D:
+static func tex(path: String) -> Texture2D:
 	return load(path) if ResourceLoader.exists(path) else null

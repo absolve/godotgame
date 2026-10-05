@@ -11,38 +11,38 @@ class_name ATTank
 
 signal killed
 
-@onready var _body_sprite: AnimatedSprite2D = $BodySprite
-@onready var _turret_sprite: AnimatedSprite2D = $TurretSprite
-@onready var _body: CollisionShape2D = $Body
-## 头顶血条（scenes/objects/lifebar.tscn；只有敌人场景 Enemy.tscn 里挂了，玩家没有 → null）
-@onready var _lifebar: ATLifebar = get_node_or_null("Lifebar") as ATLifebar
+@onready var bodySprite: AnimatedSprite2D = $BodySprite
+@onready var turretSprite: AnimatedSprite2D = $TurretSprite
+@onready var body: CollisionShape2D = $Body
+## 头顶血条（scenes/objects/lifebar.tscn；只有敌人场景 enemy.tscn 里挂了，玩家没有 → null）
+@onready var lifebar: ATLifebar = get_node_or_null("Lifebar") as ATLifebar
 #@onready var _hit_flash: Node = $BodySprite/HitFlash  # 受击闪光组件（基座场景自带，全坦克共用）
 
 # 物理参数（由子类根据升级等级设置）
-var move_speed: float = 150.0
-var turret_speed: float = 240.0     # 度/秒
-var max_health: float = 100.0
+var moveSpeed: float = 150.0
+var turretSpeed: float = 240.0     # 度/秒
+var maxHealth: float = 100.0
 var health: float = 100.0
-var view_angle: float = 90.0
-var view_distance: float = 300.0
+var viewAngle: float = 90.0
+var viewDistance: float = 300.0
 
 var team: int = Constants.Team.CPU
-var weapon_index: int = 0
+var weaponIndex: int = 0
 var weapons: Array = []             # 武器节点数组（可为 null 占位）
 var weapon: Node = null
 var invincible: bool = false
 var alive: bool = true
-var conducts_current: bool = true   # H5 conductsCurrent：坦克(敌人/玩家/炮塔/生成器)导电（Shock 链）
+var conductsCurrent: bool = true   # H5 conductsCurrent：坦克(敌人/玩家/炮塔/生成器)导电（Shock 链）
 
 # 炮塔后坐力（H5 recoil：武器开火时 tank.recoil=3~5，炮塔沿炮管反方向偏移后衰减）
-var _recoil: float = 0.0
-var kill_delay: float = 0.12
+var recoil: float = 0.0
+var killDelay: float = 0.12
 
 # 后坐力衰减速度（px/s；H5 每帧 -0.3 @60fps ≈ 18/s）
 const RECOIL_DECAY_PER_SEC: float = 18.0
 
-var _material: ShaderMaterial = null
-var _tween: Tween = null
+var material: ShaderMaterial = null
+var tween: Tween = null
 
 
 
@@ -52,19 +52,19 @@ func _ready() -> void:
 	# 圆形碰撞（可在场景给 CollisionShape2D 预设，这里兜底重建）
 	var shape := CircleShape2D.new()
 	shape.radius = 22.0
-	(_body as CollisionShape2D).shape = shape
-	collision_layer = _my_layer()
-	collision_mask = _my_mask()
+	(body as CollisionShape2D).shape = shape
+	collision_layer = myLayer()
+	collision_mask = myMask()
 	# 受击闪光材质：用场景里 BodySprite 自带的 ShaderMaterial
 	# （resource_local_to_scene=true → 每辆坦克一份，互不干扰），并让炮塔共用同一份
-	_material = _body_sprite.material as ShaderMaterial
-	if _material != null:
-		_turret_sprite.material = _material
+	material = bodySprite.material as ShaderMaterial
+	if material != null:
+		turretSprite.material = material
 
-func _my_layer() -> int:
+func myLayer() -> int:
 	return 1 << (Constants.Layer.PLAYER - 1) if team == Constants.Team.PLAYER else 1 << (Constants.Layer.ENEMY - 1)
 
-func _my_mask() -> int:
+func myMask() -> int:
 	# 坦克碰墙 + 障碍物 + 对方队伍（H5 敌坦克 mask = PLAYER|PROJECTILE|ENEMY|OBSTACLE|WALL：
 	# 不含 ENEMY_SPAWNER，所以敌人坦克能压过生成器，生成器产出的坦克不会卡在自己身上；
 	# 玩家在 H5 里没设 mask（= 全部相碰），会被生成器挡住，故玩家保留 ENEMY_SPAWNER）
@@ -72,48 +72,29 @@ func _my_mask() -> int:
 		Constants.Layer.PLAYER, Constants.Layer.ENEMY]
 	if team == Constants.Team.PLAYER:
 		layers.append(Constants.Layer.ENEMY_SPAWNER)
-	return Constants.layer_mask(layers)
-
-func _physics_process(delta: float) -> void:
-	# 炮塔后坐力恢复 + 炮管反方向偏移
-	_update_turret_recoil(delta)
-	if not alive:
-		_body_sprite.stop()
-		return
-	# 车体朝速度方向旋转 + 履带动画
-	#var v := velocity
-	var speed := velocity.length()
-	if speed > 1.0:
-		var target := velocity.angle()
-		var diff := wrapf(target - _body_sprite.rotation, -PI, PI)
-		var step = deg_to_rad(8.0) * clamp(speed / max(move_speed, 1.0), 0.0, 1.0)
-		_body_sprite.rotation += clamp(diff, -step, step)
-		_play_tracks()
-	else:
-		_stop_tracks()
-	move_and_slide()
+	return Constants.layerMask(layers)
 
 # ============================================================
 # 移动 / 炮塔
 # ============================================================
 func move(dir: Vector2) -> void:
-	velocity = dir * move_speed
+	velocity = dir * moveSpeed
 
-func rotate_turret(target_angle: float, delta: float) -> void:
-	var cur := _turret_sprite.rotation
-	var diff := wrapf(target_angle - cur, -PI, PI)
-	var step := deg_to_rad(turret_speed) * delta
-	_turret_sprite.rotation = cur + clamp(diff, -step, step)
+func rotateTurret(targetAngle: float, delta: float) -> void:
+	var cur := turretSprite.rotation
+	var diff := wrapf(targetAngle - cur, -PI, PI)
+	var step := deg_to_rad(turretSpeed) * delta
+	turretSprite.rotation = cur + clamp(diff, -step, step)
 
-func get_turret_position(offset: float) -> Vector2:
-	var r := _turret_sprite.rotation
+func getTurretPosition(offset: float) -> Vector2:
+	var r := turretSprite.rotation
 	return global_position + Vector2(cos(r), sin(r)) * offset
 
 
 ## 炮塔当前朝向角（用于 Fog 视野扇形等）
-func get_turret_rotation() -> float:
-	if _turret_sprite != null:
-		return _turret_sprite.rotation
+func getTurretRotation() -> float:
+	if turretSprite != null:
+		return turretSprite.rotation
 	return rotation
 
 
@@ -122,25 +103,25 @@ func get_turret_rotation() -> float:
 # ============================================================
 ## 子类提供车体贴图路径 [frame0, frame1]，构建 "move" 动画（20fps 循环，H5 同款）
 ## （玩家已用场景内 SpriteFrames；敌人子类仍调用此接口，故保留）
-func configure_body_animation(frame_paths: Array[String]) -> void:
+func configureBodyAnimation(framePaths: Array[String]) -> void:
 	var frames := SpriteFrames.new()
 	frames.add_animation("move")
 	frames.set_animation_speed("move", 20.0)
 	frames.set_animation_loop("move", true)
-	for p in frame_paths:
+	for p in framePaths:
 		var tex := load(p) as Texture2D
 		if tex != null:
 			frames.add_frame("move", tex)
-	_body_sprite.sprite_frames = frames
-	_body_sprite.stop()
-	_body_sprite.frame = 0
+	bodySprite.sprite_frames = frames
+	bodySprite.stop()
+	bodySprite.frame = 0
 
 ## 子类提供 炮塔动画名 -> 贴图路径（每种武器一帧），构建切换用的动画集
-func configure_turret_frames(anim_map: Dictionary) -> void:
+func configureTurretFrames(animMap: Dictionary) -> void:
 	var frames := SpriteFrames.new()
-	for anim_name in anim_map:
-		var key := str(anim_name)
-		var paths: Array = anim_map[anim_name]
+	for animName in animMap:
+		var key := str(animName)
+		var paths: Array = animMap[animName]
 		# 新建的 SpriteFrames 自带一个空的 "default" 动画，直接 add 会报"已存在"
 		if not frames.has_animation(key):
 			frames.add_animation(key)
@@ -150,115 +131,115 @@ func configure_turret_frames(anim_map: Dictionary) -> void:
 			var tex := load(p) as Texture2D
 			if tex != null:
 				frames.add_frame(key, tex)
-	_turret_sprite.sprite_frames = frames
+	turretSprite.sprite_frames = frames
 
 ## 显示某武器的炮塔动画（找不到就切回默认）
-func switch_turret(anim_name: String) -> void:
-	if _turret_sprite.sprite_frames == null:
+func switchTurret(animName: String) -> void:
+	if turretSprite.sprite_frames == null:
 		return
-	if _turret_sprite.sprite_frames.has_animation(anim_name):
-		_turret_sprite.play(anim_name)
-	elif _turret_sprite.sprite_frames.has_animation("default"):
-		_turret_sprite.play("default")
+	if turretSprite.sprite_frames.has_animation(animName):
+		turretSprite.play(animName)
+	elif turretSprite.sprite_frames.has_animation("default"):
+		turretSprite.play("default")
 
-func _play_tracks() -> void:
-	if _body_sprite.sprite_frames != null and _body_sprite.sprite_frames.has_animation("move") \
-			and not _body_sprite.is_playing():
-		_body_sprite.play("move")
+func playTracks() -> void:
+	if bodySprite.sprite_frames != null and bodySprite.sprite_frames.has_animation("move") \
+			and not bodySprite.is_playing():
+		bodySprite.play("move")
 
-func _stop_tracks() -> void:
-	if _body_sprite.is_playing():
-		_body_sprite.stop()
-		_body_sprite.frame = 0
+func stopTracks() -> void:
+	if bodySprite.is_playing():
+		bodySprite.stop()
+		bodySprite.frame = 0
 
 # ============================================================
 # 武器
 # ============================================================
-func change_weapon(index: int) -> void:
+func changeWeapon(index: int) -> void:
 	if index < 0 or index >= weapons.size():
 		return
 	if weapons[index] == null or weapons[index] == weapon:
 		return
 	if weapon and weapon.has_method("deactivate"):
 		weapon.deactivate()
-	weapon_index = index
+	weaponIndex = index
 	weapon = weapons[index]
 	if weapon and weapon.has_method("activate"):
 		weapon.activate()
-	_on_weapon_changed(index)
-	Audio.play_sfx("weapon_change.mp3")
+	onWeaponChanged(index)
+	Audio.playSfx("weapon_change.mp3")
 
 ## 换武器时的表现钩子：子类（玩家）切炮塔动画 + 弹性动画
-func _on_weapon_changed(_index: int) -> void:
+func onWeaponChanged(index: int) -> void:
 	pass
 
-func next_weapon() -> void:
+func nextWeapon() -> void:
 	if weapons.is_empty():
 		return
-	var i := weapon_index
-	for _step in range(weapons.size()):
+	var i := weaponIndex
+	for step in range(weapons.size()):
 		i = posmod(i + 1, weapons.size())
 		if weapons[i] != null:
-			change_weapon(i)
+			changeWeapon(i)
 			return
 
 func prevWeapon():
 	if weapons.is_empty():
 		return
-	var i := weapon_index
-	for _step in range(weapons.size()):
+	var i := weaponIndex
+	for step in range(weapons.size()):
 		i = posmod(i - 1, weapons.size())
 		if weapons[i] != null:
-			change_weapon(i)
+			changeWeapon(i)
 			return
 	
-func start_fire() -> void:
-	if weapon and weapon.has_method("set_firing"):
-		weapon.set_firing(true)
+func startFire() -> void:
+	if weapon and weapon.has_method("setFiring"):
+		weapon.setFiring(true)
 
-func stop_fire() -> void:
-	if weapon and weapon.has_method("set_firing"):
-		weapon.set_firing(false)
+func stopFire() -> void:
+	if weapon and weapon.has_method("setFiring"):
+		weapon.setFiring(false)
 
 # ============================================================
 # 受击 / 死亡
 # ============================================================
-func on_bullet_hit(damage: float, src_weapon: Node, _bullet: Node) -> void:
+func onBulletHit(damage: float, srcWeapon: Node, bullet: Node) -> void:
 	if invincible:
 		return
 	health -= damage
 	# 来源可能为空（爆炸/灼烧）或已释放（发射者在子弹飞行途中被击毁）→ 一律按白色闪光
-	var hit_color: Color = Color.WHITE
-	if is_instance_valid(src_weapon) and "hit_color" in src_weapon:
-		hit_color = src_weapon.hit_color
-	_flash_hit(hit_color)
+	var hitColor: Color = Color.WHITE
+	if is_instance_valid(srcWeapon) and "hitColor" in srcWeapon:
+		hitColor = srcWeapon.hitColor
+	flashHit(hitColor)
 	# H5 Tank.onBulletHit：挨打就显示头顶血条（0.833s 内没有再次受击自动隐藏）
-	if _lifebar != null:
-		_lifebar.show_bar()
-	_play_hit_sound(src_weapon)
+	if lifebar != null:
+		lifebar.showBar()
+	playHitSound(srcWeapon)
 	if health <= 0 and alive:
-		_kill()
+		kill()
 
 
 ## 受击音（H5 敌坦克 L22194 / 玩家 L22561：`e instanceof Explosion || Laser || Fire || playEnemyHit()`）
 ##   爆炸、激光（持续光束）与"挂在身上的灼烧"都不播 —— 后者每物理帧掉一次血，播了会刷屏。
 ##   生成器等子类可覆写（生成器用 spawner_hit_1~3，且连火焰直击也不播，见 ATSpawner）。
-func _play_hit_sound(src: Node) -> void:
+func playHitSound(src: Node) -> void:
 	if src == null or not is_instance_valid(src) or src is ATBurning or src is ATLaserWeapon:
 		return
-	Audio.play_enemy_hit()
+	Audio.playEnemyHit()
 
 
 ## 触发受击闪光（由 BodySprite/HitFlash 着色器组件统一播放）
-func _flash_hit(color := Color.WHITE) -> void:
+func flashHit(color := Color.WHITE) -> void:
 	flash(color)
 
-func _kill() -> void:
+func kill() -> void:
 	alive = false
-	if weapon and weapon.has_method("set_firing"):
-		weapon.set_firing(false)
+	if weapon and weapon.has_method("setFiring"):
+		weapon.setFiring(false)
 	killed.emit()
-	Audio.play_sfx("explosion.mp3", 2.0)
+	Audio.playSfx("explosion.mp3", 2.0)
 
 func freeze() -> void:
 	# TODO: 冰冻效果（冰覆盖层/减速）
@@ -269,34 +250,53 @@ func unfreeze() -> void:
 
 ## 触发一次受击闪光
 func flash(color := Color.WHITE, duration := 0.2) -> void:
-	if _material == null:
+	if material == null:
 		return
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
-	_material.set_shader_parameter("flash_color", color)
-	_material.set_shader_parameter("flash_amount", 1.0)
-	_tween = create_tween()
-	_tween.tween_method(_set_amount, 1.0, 0.0, duration)
+	if tween != null and tween.is_valid():
+		tween.kill()
+	material.set_shader_parameter("flash_color", color)
+	material.set_shader_parameter("flash_amount", 1.0)
+	tween = create_tween()
+	tween.tween_method(setAmount, 1.0, 0.0, duration)
 
 
-func _set_amount(v: float) -> void:
-	if _material != null:
-		_material.set_shader_parameter("flash_amount", v)
+func setAmount(v: float) -> void:
+	if material != null:
+		material.set_shader_parameter("flash_amount", v)
 
 ## 触发炮塔后坐力（H5 recoil setter：只取较大值，连续射击保持峰值）
-func apply_recoil(strength: float) -> void:
-	if strength > _recoil:
-		_recoil = strength
+func applyRecoil(strength: float) -> void:
+	if strength > recoil:
+		recoil = strength
 
 ## 后坐力恢复 + 炮塔精灵按炮管反方向偏移（delta 驱动，消除帧率相关）
-func _update_turret_recoil(delta: float) -> void:
-	if _turret_sprite == null:
+func updateTurretRecoil(delta: float) -> void:
+	if turretSprite == null:
 		return
-	_recoil = maxf(_recoil - RECOIL_DECAY_PER_SEC * delta, 0.0)
-	if _recoil <= 0.0:
-		if not _turret_sprite.position.is_zero_approx():
-			_turret_sprite.position = Vector2.ZERO
+	recoil = maxf(recoil - RECOIL_DECAY_PER_SEC * delta, 0.0)
+	if recoil <= 0.0:
+		if not turretSprite.position.is_zero_approx():
+			turretSprite.position = Vector2.ZERO
 		return
 	# 炮管反方向偏移（旋转在精灵自身坐标系，cos/sin 即炮口朝向的反向）
-	var r = _turret_sprite.rotation
-	_turret_sprite.position = -Vector2(cos(r), sin(r)) * _recoil
+	var r = turretSprite.rotation
+	turretSprite.position = -Vector2(cos(r), sin(r)) * recoil
+
+func _physics_process(delta: float) -> void:
+	# 炮塔后坐力恢复 + 炮管反方向偏移
+	updateTurretRecoil(delta)
+	if not alive:
+		bodySprite.stop()
+		return
+	# 车体朝速度方向旋转 + 履带动画
+	#var v := velocity
+	var speed := velocity.length()
+	if speed > 1.0:
+		var target := velocity.angle()
+		var diff := wrapf(target - bodySprite.rotation, -PI, PI)
+		var step = deg_to_rad(8.0) * clamp(speed / max(moveSpeed, 1.0), 0.0, 1.0)
+		bodySprite.rotation += clamp(diff, -step, step)
+		playTracks()
+	else:
+		stopTracks()
+	move_and_slide()

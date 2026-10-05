@@ -6,20 +6,20 @@ extends ATTank
 
 class_name ATPlayer
 
-var auto_aim: bool = false
-var auto_aim_target: Node2D = null
+var autoAim: bool = false
+var autoAimTarget: Node2D = null
 
 ## 关卡引用（Level._spawn_player 注入；用于按关卡序号算点燃时长，H5 (55+40×index)/60 秒）
 var level: Node = null
 ## 操作锁：关卡结算（清场/阵亡）后由 Level 置 true —— 收回驾驶/开火/换武器
 ## （H5 是 summaryAlert 存在时 player.stopFire()；这里连驾驶一起锁，
 ##   否则会出现"关卡已经结束还能开车打枪"）
-var control_locked: bool = false
+var controlLocked: bool = false
 ## 正在制导的火箭（H5 player.follow）：非空时不能开车（镜头在导弹上），
 ## 导弹一没（命中/引爆）就自动清空、控制权还回来（由 Level.clear_guided_rocket 处理）
 var follow: Node2D = null
 ## 被点燃时每物理帧受到的灼烧伤害（H5：玩家 = 2）
-@export var burn_damage: float = 2.0
+@export var burnDamage: float = 2.0
 
 const DIR_WEAPONS = "res://scenes/weapons/"
 
@@ -35,36 +35,36 @@ func _ready() -> void:
 	team = Constants.Team.PLAYER
 	super._ready()
 	name = "player"
-	_apply_upgrades()
-	_setup_weapons()
+	applyUpgrades()
+	setupWeapons()
 
 
-func _apply_upgrades() -> void:
+func applyUpgrades() -> void:
 	var g: Dictionary = Game.current["game"]
-	move_speed = Settings.SPEED_LEVELS[int(g["speed"])]
-	turret_speed = Settings.TURRET_LEVELS[int(g["turret"])]
-	view_angle = Settings.VIEW_ANGLE_LEVELS[int(g["sight"])]
-	view_distance = Settings.VIEW_DISTANCE_LEVELS[int(g["sight"])]
-	max_health = Settings.ARMOR_LEVELS[int(g["armor"])]
-	health = max_health
+	moveSpeed = Settings.SPEED_LEVELS[int(g["speed"])]
+	turretSpeed = Settings.TURRET_LEVELS[int(g["turret"])]
+	viewAngle = Settings.VIEW_ANGLE_LEVELS[int(g["sight"])]
+	viewDistance = Settings.VIEW_DISTANCE_LEVELS[int(g["sight"])]
+	maxHealth = Settings.ARMOR_LEVELS[int(g["armor"])]
+	health = maxHealth
 
 
 ## 根据存档生成武器节点：level >=0 即拥有；minigun 默认必有
-func _setup_weapons() -> void:
+func setupWeapons() -> void:
 	var g: Dictionary = Game.current["game"]
 	weapons = []
 	weapons.resize(SLOT_KEYS.size())
 	for i in SLOT_KEYS.size():
 		var key: String = SLOT_KEYS[i]
-		var _level: int = int(g.get(key + "Level", -1))
+		var weaponLevel: int = int(g.get(key + "Level", -1))
 		if key == "minigun":
-			_level = maxi(_level, 0)
-		if _level < 0:
+			weaponLevel = maxi(weaponLevel, 0)
+		if weaponLevel < 0:
 			continue
-		var scene_path := DIR_WEAPONS + key + ".tscn"
-		if not ResourceLoader.exists(scene_path):
+		var scenePath := DIR_WEAPONS + key + ".tscn"
+		if not ResourceLoader.exists(scenePath):
 			continue
-		var w: Node = (load(scene_path) as PackedScene).instantiate()
+		var w: Node = (load(scenePath) as PackedScene).instantiate()
 		w.set("tank", self)
 		w.set("team", Constants.Team.PLAYER)
 		if "id" in w:
@@ -72,26 +72,26 @@ func _setup_weapons() -> void:
 		# 弹药（minigun 无限；其余按 AMMO_LIMITS/存档设置——场景默认是无限，需显式改为有限）
 		if Settings.AMMO_LIMITS.has(key):
 			var limit: int = int(Settings.AMMO_LIMITS[key])
-			w.max_ammo = limit
+			w.maxAmmo = limit
 			w.ammo = int(g.get(key + "Ammo", limit))
 		# 等级参数注入（WEAPON_STATS 表后续接入后生效；无则用场景默认值）
-		var params: Dictionary = _level_params(key, _level)
-		if not params.is_empty() and w.has_method("apply_params"):
-			w.apply_params(params)
+		var params: Dictionary = levelParams(key, weaponLevel)
+		if not params.is_empty() and w.has_method("applyParams"):
+			w.applyParams(params)
 		add_child(w)
 		w.name = key
 		weapons[i] = w
 	# 默认装备 minigun
 	if not weapons.is_empty() and weapons[0] != null:
 		weapon = weapons[0]
-		weapon_index = 0
+		weaponIndex = 0
 		if weapon.has_method("activate"):
 			weapon.activate()
-		switch_turret("minigun")
+		switchTurret("minigun")
 
 
 ## 按 Settings.WEAPON_STATS 取该武器当前等级参数（damage/rate/life/spawn_count）
-func _level_params(key: String, _level: int) -> Dictionary:
+func levelParams(key: String, weaponLevel: int) -> Dictionary:
 	var out: Dictionary = {}
 	var stats: Variant = Settings.WEAPON_STATS.get(key, {})
 	if not stats is Dictionary:
@@ -100,34 +100,65 @@ func _level_params(key: String, _level: int) -> Dictionary:
 		if prop == "velocity":
 			continue  # 火箭速度因子与像素换算待统一，速度沿用场景默认值
 		var arr = stats[prop]
-		if arr is Array and arr.size() > _level:
-			out[prop] = arr[_level]
+		if arr is Array and arr.size() > weaponLevel:
+			out[prop] = arr[weaponLevel]
 	return out
 
 
 # ============================================================
 # 换武器表现（切炮塔动画 + 弹性缩放 + 声音在基类播放）
 # ============================================================
-func _on_weapon_changed(_index: int) -> void:
+func onWeaponChanged(index: int) -> void:
 	var key := ""
 	if weapon != null and "id" in weapon:
 		key = str(weapon.id)
-	switch_turret(key)
-	_animate_turret_switch()
+	switchTurret(key)
+	animateTurretSwitch()
 
 
-func _animate_turret_switch() -> void:
+func animateTurretSwitch() -> void:
 	# 以炮塔中心为基准 0.5→1 弹性放大（近似 H5 Elastic.Out；AnimatedSprite2D 默认绕节点中心缩放）
 	var tw := create_tween()
-	_turret_sprite.scale = Vector2(0.5, 0.5)
-	tw.tween_property(_turret_sprite, "scale", Vector2.ONE, 0.45) \
+	turretSprite.scale = Vector2(0.5, 0.5)
+	tw.tween_property(turretSprite, "scale", Vector2.ONE, 0.45) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+# ============================================================
+# 受击 / 点燃（H5：玩家被火焰命中会着火，时长随关卡序号增长）
+# ============================================================
+func onBulletHit(damage: float, srcWeapon: Node, bullet: Node) -> void:
+	super.onBulletHit(damage, srcWeapon, bullet)
+	if not alive or invincible:
+		return
+	tryIgnite(srcWeapon)
+
+
+## 被敌方火焰命中 → 点燃；时长 = (55 + 40×关卡序号)/60 秒（H5 L22561）
+func tryIgnite(src: Node) -> void:
+	if not ATBurning.isFlameSource(src, team):
+		return
+	ATBurning.attachFrom(self, burnDamage, src, burnDuration())
+
+
+func burnDuration() -> float:
+	var index := 0
+	if level != null and is_instance_valid(level) and "levelIndex" in level:
+		index = int(level.get("levelIndex"))
+	return (55.0 + 40.0 * float(index)) / 60.0
+
+
+func kill() -> void:
+	# H5 player.kill：this.follow && (this.follow.requestKill = !0) —— 阵亡时把在飞的导弹引爆
+	if is_instance_valid(follow) and follow.has_method("detonate"):
+		follow.call("detonate")
+	follow = null
+	super.kill()
 
 
 # ============================================================
 # 输入/战斗（沿用原实现）
 # ============================================================
-func _unhandled_input(_event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	#if not alive:
 		#return
 	## 移动
@@ -152,44 +183,21 @@ func _unhandled_input(_event: InputEvent) -> void:
 		#next_weapon()
 	pass
 
-# ============================================================
-# 受击 / 点燃（H5：玩家被火焰命中会着火，时长随关卡序号增长）
-# ============================================================
-func on_bullet_hit(damage: float, src_weapon: Node, bullet: Node) -> void:
-	super.on_bullet_hit(damage, src_weapon, bullet)
-	if not alive or invincible:
-		return
-	_try_ignite(src_weapon)
-
-
-## 被敌方火焰命中 → 点燃；时长 = (55 + 40×关卡序号)/60 秒（H5 L22561）
-func _try_ignite(src: Node) -> void:
-	if not ATBurning.is_flame_source(src, team):
-		return
-	ATBurning.attach_from(self, burn_damage, src, _burn_duration())
-
-
-func _burn_duration() -> float:
-	var index := 0
-	if level != null and is_instance_valid(level) and "level_index" in level:
-		index = int(level.get("level_index"))
-	return (55.0 + 40.0 * float(index)) / 60.0
-
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	# 鼠标瞄准（持续跟随；制导火箭时玩家也是用鼠标给导弹指方向）
 	#var aim := (get_global_mouse_position() - global_position).angle()
 	#rotate_turret(aim, delta)
-	_turret_sprite.look_at(get_global_mouse_position())
+	turretSprite.look_at(get_global_mouse_position())
 	if not alive:
 		return
 	if not is_instance_valid(follow):
 		follow = null
 	# 关卡已结算：只减速停下，不接受任何操作（炮塔仍跟着鼠标，纯表现）
-	if control_locked:
+	if controlLocked:
 		velocity = velocity.lerp(Vector2.ZERO, 0.2)
-		stop_fire()
+		stopFire()
 		return
 	# 移动（制导火箭期间不能开车 —— 镜头在导弹上，H5 同）
 	if follow != null:
@@ -206,19 +214,11 @@ func _physics_process(delta: float) -> void:
 	# 开火（制导期间仍要能按：再按一次 = 引爆导弹，见 ATWeaponRockets.set_firing）
 	if Input.is_action_pressed("fire"):
 		#print(1)
-		start_fire()
+		startFire()
 	else:
-		stop_fire()
+		stopFire()
 	# 切武器
 	if Input.is_action_just_pressed("next_weapon"):
-		next_weapon()
+		nextWeapon()
 	if Input.is_action_just_pressed("prev_weapon"):
 		prevWeapon()
-
-
-func _kill() -> void:
-	# H5 player.kill：this.follow && (this.follow.requestKill = !0) —— 阵亡时把在飞的导弹引爆
-	if is_instance_valid(follow) and follow.has_method("detonate"):
-		follow.call("detonate")
-	follow = null
-	super._kill()

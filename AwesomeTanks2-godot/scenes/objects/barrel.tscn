@@ -9,7 +9,7 @@ size = Vector2(44, 44)
 
 [node name="Barrel" type="StaticBody2D" unique_id=1812882151]
 script = ExtResource("1_barrel")
-burn_damage_flat = 1.0
+burnDamageFlat = 1.0
 
 [node name="BodySprite" type="Sprite2D" parent="." unique_id=962489723]
 texture = ExtResource("2_tex")

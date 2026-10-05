@@ -2,7 +2,7 @@ class_name StateMachine
 extends Node
 ## StateMachine —— 节点式有限状态机（对应 GDQuest FSM 教程的 StateMachine）
 ##
-## 用法（敌人场景 Enemy.tscn 根坦克下加子节点）：
+## 用法（敌人场景 enemy.tscn 根坦克下加子节点）：
 ##   [Enemy (ATTank)]
 ##   └─ [StateMachine (script: state_machine.gd)]     ← 本类
 ##       ├─ Idle          (script: 敌人状态1.gd, extends State)
@@ -21,105 +21,105 @@ extends Node
 ##
 ## 参考：https://www.gdquest.com/tutorial/godot/design-patterns/finite-state-machine/
 
-signal state_changed(from_name: StringName, to_name: StringName)
+signal stateChanged(from_name: StringName, to_name: StringName)
 
 ## 宿主（可为空；为空时取父节点）。也可用 NodePath 指向场景其它节点
 @export var actor: Node2D = null
-@export var actor_path: NodePath = NodePath("..")
+@export var actorPath: NodePath = NodePath("..")
 
 ## 初始状态子节点名（留空 = 自动取第一个 State 子节点）
-@export var initial_state: StringName = &""
+@export var initialState: StringName = &""
 
 var states: Dictionary = {}            # 状态名(小写) -> State
-var current_state: State = null        # 当前状态
+var currentState: State = null        # 当前状态
 var enabled := true                    # 置 false 可整体暂停 AI（如冰冻/死亡）
 
-var _last_state: StringName = &""
+var lastState: StringName = &""
 
 
 func _ready() -> void:
 	if actor == null:
-		if not actor_path.is_empty():
-			actor = get_node_or_null(actor_path) as Node2D
+		if not actorPath.is_empty():
+			actor = get_node_or_null(actorPath) as Node2D
 		if actor == null:
 			actor = get_parent() as Node2D
 	# 收集本机所有 State 子节点并注册
 	for child in get_children():
 		if child is State:
-			_register_state(child)
+			registerState(child)
 	# 决定初始状态：explicit 优先，否则第一个注册的
-	if initial_state != &"":
-		if not states.has(StringName(initial_state).to_lower()):
-			push_warning("StateMachine %s: initial_state '%s' not found" % [name, initial_state])
-			initial_state = &""
-	if initial_state == &"":
+	if initialState != &"":
+		if not states.has(StringName(initialState).to_lower()):
+			push_warning("StateMachine %s: initial_state '%s' not found" % [name, initialState])
+			initialState = &""
+	if initialState == &"":
 		for child in get_children():
 			if child is State:
-				initial_state = child.name as StringName
+				initialState = child.name as StringName
 				break
-	if initial_state != &"":
-		transition_to(initial_state)
+	if initialState != &"":
+		transitionTo(initialState)
 
 
-func _register_state(s: State) -> void:
+func registerState(s: State) -> void:
 	var key: StringName = StringName(str(s.name).to_lower())
 	states[key] = s
-	s.state_machine = self
+	s.stateMachine = self
 	s.actor = actor if actor is Node2D else get_parent() as Node2D
-	s.state_time = 0.0
+	s.stateTime = 0.0
 
 
 ## 切换状态。name 用状态子节点名（大小写不敏感）。
-func transition_to(name_: StringName, msg: Dictionary = {}) -> void:
+func transitionTo(name_: StringName, msg: Dictionary = {}) -> void:
 	var key := StringName(str(name_).to_lower())
 	if not states.has(key):
 		push_warning("StateMachine %s: no state named '%s'" % [self.name, name_])
 		return
 	var next: State = states[key]
-	if next == current_state:
+	if next == currentState:
 		# 允许重入（如重新进 Idle 刷新计时）
-		if current_state != null:
-			current_state.exit()
+		if currentState != null:
+			currentState.exit()
 		next.enter(msg)
-		next.state_time = 0.0
-		state_changed.emit(_last_state, name_)
+		next.stateTime = 0.0
+		stateChanged.emit(lastState, name_)
 		return
-	_last_state = current_state.name as StringName if current_state != null else &""
-	if current_state != null:
-		current_state.exit()
-	current_state = next
+	lastState = currentState.name as StringName if currentState != null else &""
+	if currentState != null:
+		currentState.exit()
+	currentState = next
 	next.enter(msg)
-	next.state_time = 0.0
-	state_changed.emit(_last_state, name_)
+	next.stateTime = 0.0
+	stateChanged.emit(lastState, name_)
 
 
 ## 供外部（如冻结/解冻系统）强制当前状态处理事件
-func send_event(method_name: StringName, arg: Variant = null) -> void:
-	if current_state != null and current_state.has_method(method_name):
+func sendEvent(methodName: StringName, arg: Variant = null) -> void:
+	if currentState != null and currentState.has_method(methodName):
 		if arg == null:
-			current_state.call(method_name)
+			currentState.call(methodName)
 		else:
-			current_state.call(method_name, arg)
+			currentState.call(methodName, arg)
 
 
-func get_current_state() -> State:
-	return current_state
+func getCurrentState() -> State:
+	return currentState
 
 
 func _physics_process(delta: float) -> void:
-	if not enabled or current_state == null:
+	if not enabled or currentState == null:
 		return
-	current_state.state_time += delta
-	current_state.physics_update(delta)
+	currentState.stateTime += delta
+	currentState.physicsUpdate(delta)
 
 
 func _process(delta: float) -> void:
-	if not enabled or current_state == null:
+	if not enabled or currentState == null:
 		return
-	current_state.process_update(delta)
+	currentState.processUpdate(delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not enabled or current_state == null:
+	if not enabled or currentState == null:
 		return
-	current_state.handle_input(event)
+	currentState.handleInput(event)

@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Awesome Tanks 2"
 config/description="Awesome Tanks 2 — Godot 4 重构学习版"
-run/main_scene="res://scenes/Boot.tscn"
+run/main_scene="res://scenes/boot.tscn"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.png"
 
@@ -25,8 +25,8 @@ config/icon="res://icon.png"
 Settings="*res://scripts/autoload/settings.gd"
 Game="*res://scripts/autoload/game.gd"
 Audio="*res://scripts/autoload/audio.gd"
-Constants="*uid://btkfp47lg0ieh"
-FlashFx="*uid://chis38vv1lks5"
+Constants="*res://scripts/autoload/constants.gd"
+FlashFx="*res://scripts/autoload/flash_fx.gd"
 Fx="*res://scripts/autoload/fx.gd"
 
 [display]

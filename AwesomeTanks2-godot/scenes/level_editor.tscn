@@ -179,9 +179,9 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Status:"
 
-[connection signal="pressed" from="Design/TopBar/NewBtn" to="." method="_on_new_pressed"]
-[connection signal="pressed" from="Design/TopBar/LoadBtn" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="Design/TopBar/SaveBtn" to="." method="_on_save_pressed"]
-[connection signal="value_changed" from="Design/TopBar/WidthSpin" to="." method="_on_width_value_changed"]
-[connection signal="value_changed" from="Design/TopBar/HeightSpin" to="." method="_on_height_value_changed"]
-[connection signal="pressed" from="Design/TopBar/BackBtn" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Design/TopBar/NewBtn" to="." method="onNewPressed"]
+[connection signal="pressed" from="Design/TopBar/LoadBtn" to="." method="onLoadPressed"]
+[connection signal="pressed" from="Design/TopBar/SaveBtn" to="." method="onSavePressed"]
+[connection signal="value_changed" from="Design/TopBar/WidthSpin" to="." method="onWidthValueChanged"]
+[connection signal="value_changed" from="Design/TopBar/HeightSpin" to="." method="onHeightValueChanged"]
+[connection signal="pressed" from="Design/TopBar/BackBtn" to="." method="onBackPressed"]

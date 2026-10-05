@@ -187,13 +187,13 @@ const VIEW_DISTANCE_LEVELS: Array[float] = [230.0, 250.0, 270.0, 300.0, 320.0, 3
 # ============================================================
 # 场景路径
 # ============================================================
-const SCENE_BOOT = "res://scenes/Boot.tscn"
-const SCENE_TITLE = "res://scenes/Title.tscn"
-const SCENE_UPGRADES = "res://scenes/Upgrades.tscn"
-const SCENE_LEVEL_SELECT = "res://scenes/LevelSelect.tscn"
-const SCENE_LEVEL = "res://scenes/Level.tscn"
-const SCENE_CONGRATULATIONS = "res://scenes/Congratulations.tscn"
-const SCENE_EDITOR = "res://scenes/LevelEditor.tscn"
+const SCENE_BOOT = "res://scenes/boot.tscn"
+const SCENE_TITLE = "res://scenes/title.tscn"
+const SCENE_UPGRADES = "res://scenes/upgrades.tscn"
+const SCENE_LEVEL_SELECT = "res://scenes/level_select.tscn"
+const SCENE_LEVEL = "res://scenes/level.tscn"
+const SCENE_CONGRATULATIONS = "res://scenes/congratulations.tscn"
+const SCENE_EDITOR = "res://scenes/level_editor.tscn"
 
 # 关卡总数（正式关卡）
 const LEVEL_COUNT: int = 15

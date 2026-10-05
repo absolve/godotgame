@@ -94,7 +94,7 @@ offset_left = -229.5
 offset_top = -52.0
 offset_right = -174.5
 offset_bottom = -10.0
-weapon_key = "shotgun"
+weaponKey = "shotgun"
 
 [node name="Slot_ricochet" parent="HUD/HudRoot/Bottom" unique_id=88213454 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -102,7 +102,7 @@ offset_left = -171.5
 offset_top = -52.0
 offset_right = -116.5
 offset_bottom = -10.0
-weapon_key = "ricochet"
+weaponKey = "ricochet"
 
 [node name="Slot_flamethrower" parent="HUD/HudRoot/Bottom" unique_id=20667862 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -110,7 +110,7 @@ offset_left = -112.5
 offset_top = -52.0
 offset_right = -57.5
 offset_bottom = -10.0
-weapon_key = "flamethrower"
+weaponKey = "flamethrower"
 
 [node name="Slot_cannon" parent="HUD/HudRoot/Bottom" unique_id=586981931 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -118,7 +118,7 @@ offset_left = -54.5
 offset_top = -52.0
 offset_right = 0.5
 offset_bottom = -10.0
-weapon_key = "cannon"
+weaponKey = "cannon"
 
 [node name="Slot_shock" parent="HUD/HudRoot/Bottom" unique_id=233310291 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -126,7 +126,7 @@ offset_left = 3.5
 offset_top = -52.0
 offset_right = 58.5
 offset_bottom = -10.0
-weapon_key = "shock"
+weaponKey = "shock"
 
 [node name="Slot_rockets" parent="HUD/HudRoot/Bottom" unique_id=120560253 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -134,7 +134,7 @@ offset_left = 59.5
 offset_top = -52.0
 offset_right = 114.5
 offset_bottom = -10.0
-weapon_key = "rockets"
+weaponKey = "rockets"
 
 [node name="Slot_laser" parent="HUD/HudRoot/Bottom" unique_id=803883491 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -142,7 +142,7 @@ offset_left = 117.5
 offset_top = -52.0
 offset_right = 172.5
 offset_bottom = -10.0
-weapon_key = "laser"
+weaponKey = "laser"
 
 [node name="Slot_railgun" parent="HUD/HudRoot/Bottom" unique_id=1233415055 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -150,7 +150,7 @@ offset_left = 175.5
 offset_top = -52.0
 offset_right = 230.5
 offset_bottom = -10.0
-weapon_key = "railgun"
+weaponKey = "railgun"
 
 [node name="Slot_mines" parent="HUD/HudRoot/Bottom" unique_id=588001079 instance=ExtResource("5_slot")]
 layout_mode = 0
@@ -158,7 +158,7 @@ offset_left = 233.5
 offset_top = -52.0
 offset_right = 288.5
 offset_bottom = -10.0
-weapon_key = "mines"
+weaponKey = "mines"
 
 [node name="MenuBtn" type="TextureButton" parent="HUD/HudRoot/Bottom" unique_id=543181300]
 layout_mode = 0
@@ -259,8 +259,8 @@ layout_mode = 3
 visible = false
 layout_mode = 3
 
-[connection signal="pressed" from="HUD/HudRoot/Bottom/MenuBtn" to="." method="_on_hud_menu_pressed"]
-[connection signal="pressed" from="HUD/HudRoot/Bottom/HelpIcon" to="." method="_on_hud_help_pressed"]
-[connection signal="pressed" from="HUD/HudRoot/Bottom/PauseIcon" to="." method="_on_hud_pause_pressed"]
-[connection signal="pressed" from="HUD/HudRoot/Bottom/MusicIcon" to="." method="_on_hud_music_pressed"]
-[connection signal="pressed" from="HUD/HudRoot/Bottom/SoundIcon" to="." method="_on_hud_sound_pressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/MenuBtn" to="." method="onHudMenuPressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/HelpIcon" to="." method="onHudHelpPressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/PauseIcon" to="." method="onHudPausePressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/MusicIcon" to="." method="onHudMusicPressed"]
+[connection signal="pressed" from="HUD/HudRoot/Bottom/SoundIcon" to="." method="onHudSoundPressed"]

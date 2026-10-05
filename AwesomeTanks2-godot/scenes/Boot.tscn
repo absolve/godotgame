@@ -109,4 +109,4 @@ texture_hover = ExtResource("7_play_h")
 ignore_texture_size = true
 stretch_mode = 5
 
-[connection signal="pressed" from="PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="PlayBtn" to="." method="onPlayPressed"]

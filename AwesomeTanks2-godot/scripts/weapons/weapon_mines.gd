@@ -3,42 +3,41 @@ extends ATWeapon
 
 class_name ATMinesWeapon
 
-@export var mine_scene: PackedScene = null
-@export var mine_radius: float = 85.0
+@export var mineScene: PackedScene = null
+@export var mineRadius: float = 85.0
 
-var _cooldown: float = 0.0
-
-
-func _physics_process(delta: float) -> void:
-	if _cooldown > 0.0:
-		_cooldown -= delta
+var cooldown: float = 0.0
 
 
-func set_firing(on: bool) -> void:
-	super.set_firing(on)
+func setFiring(on: bool) -> void:
+	super.setFiring(on)
 	if on:
-		_lay_mine()
-		set_firing(false)
+		layMine()
+		setFiring(false)
 
 
-func _lay_mine() -> void:
-	if ammo <= 0 or _cooldown > 0.0 or mine_scene == null or tank == null or not is_instance_valid(tank):
+func layMine() -> void:
+	if ammo <= 0 or cooldown > 0.0 or mineScene == null or tank == null or not is_instance_valid(tank):
 		return
-	_cooldown = 0.45
-	var mine: Area2D = mine_scene.instantiate()
+	cooldown = 0.45
+	var mine: Area2D = mineScene.instantiate()
 	var holder: Node = tank.get_parent()
 	if holder == null:
 		return
 	holder.add_child(mine)
 	mine.global_position = tank.global_position
-	if "owner_actor" in mine:
-		mine.owner_actor = tank
+	if "ownerActor" in mine:
+		mine.ownerActor = tank
 	if mine.has_method("setup"):
-		mine.setup(team, damage, mine_radius)
-	Audio.play_sfx("mine.mp3")
-	if not has_infinite_ammo():
+		mine.setup(team, damage, mineRadius)
+	Audio.playSfx("mine.mp3")
+	if not hasInfiniteAmmo():
 		ammo -= 1
 		if ammo <= 0:
 			ammo = 0
-			out_of_ammo.emit(self)
+			outOfAmmo.emit(self)
 	shot.emit(self)
+
+func _physics_process(delta: float) -> void:
+	if cooldown > 0.0:
+		cooldown -= delta

@@ -8,13 +8,13 @@ size = Vector2(1200, 20)
 
 [node name="Railgun" unique_id=485862177 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-beam_range = 1200.0
-beam_width = 20.0
+beamRange = 1200.0
+beamWidth = 20.0
 damage = 800.0
 rate = 1.2
 life = 0.16
-spawn_distance = 22.0
-sound_alert_radius = 120.0
+spawnDistance = 22.0
+soundAlertRadius = 120.0
 recoil = 5.0
 
 [node name="WallRay" type="RayCast2D" parent="." index="2" unique_id=290742217]

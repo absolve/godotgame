@@ -8,18 +8,18 @@ var team: int = Constants.Team.PLAYER
 var damage: float = 80.0
 var radius: float = 85.0
 var armed: bool = false
-var arm_delay: float = 0.5
-var owner_actor: Node = null     # 布设者：自己踩自己的雷不引爆
-var _exploded := false
+var armDelay: float = 0.5
+var ownerActor: Node = null     # 布设者：自己踩自己的雷不引爆
+var exploded := false
 
-@onready var _shape: CollisionShape2D = $Shape
+@onready var shape: CollisionShape2D = $Shape
 
 
 func _ready() -> void:
 	monitoring = false
 	collision_layer = 1 << (Constants.Layer.PROJECTILE - 1)
-	collision_mask = Constants.layer_mask([Constants.Layer.PLAYER, Constants.Layer.ENEMY])
-	body_entered.connect(_on_trigger)
+	collision_mask = Constants.layerMask([Constants.Layer.PLAYER, Constants.Layer.ENEMY])
+	body_entered.connect(onTrigger)
 
 
 func setup(team_: int, damage_: float, radius_: float) -> void:
@@ -28,25 +28,25 @@ func setup(team_: int, damage_: float, radius_: float) -> void:
 	radius = radius_
 
 
+func onTrigger(body: Node) -> void:
+	if not armed:
+		return
+	if ownerActor != null and body == ownerActor:
+		return
+	explode()
+
+
+func explode() -> void:
+	if exploded or not is_inside_tree():
+		return
+	exploded = true
+	ATBullet.explodeAt(self, global_position, radius, damage, team)
+	queue_free()
+
+
 func _physics_process(delta: float) -> void:
 	if not armed:
-		arm_delay -= delta
-		if arm_delay <= 0:
+		armDelay -= delta
+		if armDelay <= 0:
 			armed = true
 			monitoring = true
-
-
-func _on_trigger(body: Node) -> void:
-	if not armed:
-		return
-	if owner_actor != null and body == owner_actor:
-		return
-	_explode()
-
-
-func _explode() -> void:
-	if _exploded or not is_inside_tree():
-		return
-	_exploded = true
-	ATBullet.explode(self, global_position, radius, damage, team)
-	queue_free()

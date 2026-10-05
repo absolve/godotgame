@@ -4,38 +4,38 @@ extends ATBullet
 
 class_name ATRicochetBullet
 
-var max_bounces: int = 4
-var _bounces: int = 0
+var maxBounces: int = 4
+var bounces: int = 0
 
 
-func _on_hit(other: Node) -> void:
-	if _is_owner(other):
+func onHit(other: Node) -> void:
+	if isOwner(other):
 		return
-	if other.has_method("on_bullet_hit"):
-		var other_team: int = other.team if "team" in other else Constants.Team.CPU
-		if other_team != team:
-			other.on_bullet_hit(damage, null, self)
-			_die(true)
+	if other.has_method("onBulletHit"):
+		var otherTeam: int = other.team if "team" in other else Constants.Team.CPU
+		if otherTeam != team:
+			other.onBulletHit(damage, null, self)
+			die(true)
 		else:
-			_die(false)
+			die(false)
 		return
 	# 撞墙反弹
-	if _bounces >= max_bounces:
-		_die(true)
+	if bounces >= maxBounces:
+		die(true)
 		return
-	_bounces += 1
-	Audio.play_sfx("ricochet_bounce.mp3")
+	bounces += 1
+	Audio.playSfx("ricochet_bounce.mp3")
 	Fx.spark(global_position, get_parent())
-	_reflect_off(other)
+	reflectOff(other)
 
 
-func _reflect_off(other: Node) -> void:
+func reflectOff(other: Node) -> void:
 	var incoming := Vector2.RIGHT.rotated(rotation)
 	var normal := Vector2.ZERO
 	if other is Node2D:
-		var to_center := global_position - (other as Node2D).global_position
-		if to_center.length() > 0.01:
-			normal = to_center.normalized()
+		var toCenter := global_position - (other as Node2D).global_position
+		if toCenter.length() > 0.01:
+			normal = toCenter.normalized()
 	if normal == Vector2.ZERO:
 		normal = -incoming
 	var reflected := incoming - 2.0 * incoming.dot(normal) * normal

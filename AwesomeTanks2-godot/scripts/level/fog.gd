@@ -22,84 +22,84 @@ const MAX_RAY_STEPS: int = 64
 ## 射线推进的最小剩余距离（小于它就不再发射线）
 const MIN_REMAIN: float = 2.0
 
-@export var tile_size: int = Settings.TILE_SIZE
+@export var tileSize: int = Settings.TILE_SIZE
 ## 玩家脚下清除半径（瓦片）
-@export var clear_radius_tiles: float = 1.35
+@export var clearRadiusTiles: float = 1.35
 ## 是否打开位置/朝向缓存（玩家不动不转时不重复发射线）
-@export var cache_enabled: bool = true
+@export var cacheEnabled: bool = true
 ## 黑雾瓦片判定区相对 tile 的放大倍数（>1：射线提前命中，黑雾不用贴近才消失）
-@export var tile_collision_scale: float = 1.8
+@export var tileCollisionScale: float = 1.8
 
-var fog_width: int = 0
-var fog_height: int = 0
+var fogWidth: int = 0
+var fogHeight: int = 0
 var tiles: Array = []                 # tiles[y][x] = ATFogTile 或 null（已清除）
-var tile_offset_x: int = 0
-var tile_offset_y: int = 0
+var tileOffsetX: int = 0
+var tileOffsetY: int = 0
 
-var _last_center := Vector2.INF
-var _last_aim := INF
+var lastCenter := Vector2.INF
+var lastAim := INF
 
 
 # ============================================================
 # 构建
 # ============================================================
-func configure(offset_x: int, offset_y: int, w: int, h: int) -> void:
-	tile_offset_x = offset_x
-	tile_offset_y = offset_y
-	fog_width = w
-	fog_height = h
+func configure(offsetX: int, offsetY: int, w: int, h: int) -> void:
+	tileOffsetX = offsetX
+	tileOffsetY = offsetY
+	fogWidth = w
+	fogHeight = h
 
 
 ## 按地图逐格创建黑雾瓦片（地图加载时调用一次）
-func build_tiles() -> void:
-	for y in range(fog_height):
+func buildTiles() -> void:
+	for y in range(fogHeight):
 		var row: Array = []
-		for x in range(fog_width):
+		for x in range(fogWidth):
 			row.append(null)
 		tiles.append(row)
-	for y in range(fog_height):
-		for x in range(fog_width):
-			_add_tile(x, y)
+	for y in range(fogHeight):
+		for x in range(fogWidth):
+			addTile(x, y)
 
 
-func _add_tile(x: int, y: int) -> void:
+func addTile(x: int, y: int) -> void:
 	var t: ATFogTile = TILE_SCENE.instantiate()
-	t.tile_x = x
-	t.tile_y = y
-	t.collision_scale = tile_collision_scale   # 必须在入树(_ready)前赋值
-	t.position = cell_center(x, y)
+	t.tileX = x
+	t.tileY = y
+	t.collisionScale = tileCollisionScale   # 必须在入树(_ready)前赋值
+	t.position = cellCenter(x, y)
 	t.z_index = 100   # 盖住地图与单位
-	t.disappeared.connect(_on_tile_disappeared)
+	t.disappeared.connect(onTileDisappeared)
 	add_child(t)
 	tiles[y][x] = t
 
 
-func _on_tile_disappeared(tile: ATFogTile) -> void:
-	if tile.tile_y >= 0 and tile.tile_y < fog_height \
-			and tile.tile_x >= 0 and tile.tile_x < fog_width:
-		if tiles[tile.tile_y][tile.tile_x] == tile:
-			tiles[tile.tile_y][tile.tile_x] = null
+func onTileDisappeared(tile: ATFogTile) -> void:
+	if tile.tileY >= 0 and tile.tileY < fogHeight \
+			and tile.tileX >= 0 and tile.tileX < fogWidth:
+		if tiles[tile.tileY][tile.tileX] == tile:
+			tiles[tile.tileY][tile.tileX] = null
 
 
 # ============================================================
 # 坐标/查询
 # ============================================================
-func cell_center(x: int, y: int) -> Vector2:
-	return Vector2((x + tile_offset_x + 0.5) * tile_size,
-		(y + tile_offset_y + 0.5) * tile_size)
+func cellCenter(x: int, y: int) -> Vector2:
+	return Vector2((x + tileOffsetX + 0.5) * tileSize,
+		(y + tileOffsetY + 0.5) * tileSize)
 
 
-func tile_at(x: int, y: int) -> ATFogTile:
-	if x < 0 or y < 0 or x >= fog_width or y >= fog_height:
+func tileAt(x: int, y: int) -> ATFogTile:
+	if x < 0 or y < 0 or x >= fogWidth or y >= fogHeight:
 		return null
 	return tiles[y][x]
 
 
-func is_cleared(x: int, y: int) -> bool:
-	return tile_at(x, y) == null
+func isCleared(x: int, y: int) -> bool:
+	return tileAt(x, y) == null
 
 
-func remaining_count() -> int:
+func remainingCount() -> int:
 	var n := 0
 	for row in tiles:
 		for t in row:
@@ -109,8 +109,8 @@ func remaining_count() -> int:
 
 
 ## 清除一格（射线命中或外部调用）。返回是否真的清掉。
-func clear_tile(x: int, y: int, animate: bool = true) -> bool:
-	var t := tile_at(x, y)
+func clearTile(x: int, y: int, animate: bool = true) -> bool:
+	var t := tileAt(x, y)
 	if t == null or not is_instance_valid(t) or t.cleared:
 		return false
 	tiles[y][x] = null
@@ -119,19 +119,19 @@ func clear_tile(x: int, y: int, animate: bool = true) -> bool:
 
 
 ## 清除以某瓦片为中心、半径 radius(瓦片) 内的黑雾（玩家脚下）
-func clear_area(center_x: int, center_y: int, radius: float) -> int:
+func clearArea(centerX: int, centerY: int, radius: float) -> int:
 	var n := 0
 	var r := maxf(radius, 0.0)
-	var x0 := int(floor(center_x - r))
-	var x1 := int(ceil(center_x + r))
-	var y0 := int(floor(center_y - r))
-	var y1 := int(ceil(center_y + r))
+	var x0 := int(floor(centerX - r))
+	var x1 := int(ceil(centerX + r))
+	var y0 := int(floor(centerY - r))
+	var y1 := int(ceil(centerY + r))
 	for y in range(y0, y1 + 1):
 		for x in range(x0, x1 + 1):
-			var dx := float(x - center_x)
-			var dy := float(y - center_y)
+			var dx := float(x - centerX)
+			var dy := float(y - centerY)
 			if dx * dx + dy * dy <= r * r:
-				if clear_tile(x, y, true):
+				if clearTile(x, y, true):
 					n += 1
 	return n
 
@@ -142,38 +142,38 @@ func clear_area(center_x: int, center_y: int, radius: float) -> int:
 ## 按炮塔朝向发射扇形视野射线：半角 half_angle、距离 dist(px)。
 ## center 为玩家炮塔位置(px)，aim 为炮塔朝向(rad)。
 ## 返回本次新清除的黑雾格数。
-func reveal_fov(center: Vector2, aim: float, half_angle: float, dist: float) -> int:
-	if fog_width <= 0 or fog_height <= 0:
+func revealFov(center: Vector2, aim: float, halfAngle: float, dist: float) -> int:
+	if fogWidth <= 0 or fogHeight <= 0:
 		return 0
-	if cache_enabled and _last_center.distance_to(center) < 0.5 \
-			and absf(wrapf(aim - _last_aim, -PI, PI)) < 0.01:
+	if cacheEnabled and lastCenter.distance_to(center) < 0.5 \
+			and absf(wrapf(aim - lastAim, -PI, PI)) < 0.01:
 		return 0
-	_last_center = center
-	_last_aim = aim
+	lastCenter = center
+	lastAim = aim
 
 	var cleared := 0
 	# 起点所在格：射线从瓦片内部出发不会命中自身，这里直接清掉（玩家脚下可见）
-	var otx := int(center.x / tile_size) - tile_offset_x
-	var oty := int(center.y / tile_size) - tile_offset_y
-	if clear_tile(otx, oty, true):
+	var otx := int(center.x / tileSize) - tileOffsetX
+	var oty := int(center.y / tileSize) - tileOffsetY
+	if clearTile(otx, oty, true):
 		cleared += 1
-	var step_a := TAU / 36.0            # 每 10° 一条射线（同 H5）
-	var a := aim - half_angle
-	while a <= aim + half_angle + 0.0001:
-		cleared += _cast_ray(center, a, dist)
-		a += step_a
+	var stepA := TAU / 36.0            # 每 10° 一条射线（同 H5）
+	var a := aim - halfAngle
+	while a <= aim + halfAngle + 0.0001:
+		cleared += castRay(center, a, dist)
+		a += stepA
 	return cleared
 
 
 ## 单条射线：反复与“黑雾瓦片 / 墙”碰撞
 ##   命中黑雾 → 清除该瓦片并从命中点继续前进（exclude 掉它，避免重复命中）
 ##   命中墙/障碍 → 结束
-func _cast_ray(origin: Vector2, angle: float, dist: float) -> int:
+func castRay(origin: Vector2, angle: float, dist: float) -> int:
 	var space := get_world_2d().direct_space_state
 	if space == null:
 		return 0
 	var dir := Vector2.RIGHT.rotated(angle)
-	var mask := Constants.layer_mask([
+	var mask := Constants.layerMask([
 		Constants.Layer.WALL, Constants.Layer.OBSTACLE,
 		Constants.Layer.ENEMY_SPAWNER, Constants.Layer.FOG,
 	])
@@ -199,7 +199,7 @@ func _cast_ray(origin: Vector2, angle: float, dist: float) -> int:
 			var ft := collider as ATFogTile
 			# 命中黑雾：清除（带动画）并继续
 			if not ft.cleared:
-				clear_tile(ft.tile_x, ft.tile_y, true)
+				clearTile(ft.tileX, ft.tileY, true)
 				cleared += 1
 			if not exclude.has(ft.get_rid()):
 				exclude.append(ft.get_rid())
@@ -211,15 +211,15 @@ func _cast_ray(origin: Vector2, angle: float, dist: float) -> int:
 
 
 ## 便捷：清除某世界坐标所在格的（及周边）黑雾（供敌人开火/被击中暴露等调用）
-func reveal_at_world(pos: Vector2, radius_tiles: float = 0.0) -> int:
-	var tx := int(pos.x / tile_size) - tile_offset_x
-	var ty := int(pos.y / tile_size) - tile_offset_y
-	if radius_tiles <= 0.0:
-		return 1 if clear_tile(tx, ty, true) else 0
-	return clear_area(tx, ty, radius_tiles)
+func revealAtWorld(pos: Vector2, radiusTiles: float = 0.0) -> int:
+	var tx := int(pos.x / tileSize) - tileOffsetX
+	var ty := int(pos.y / tileSize) - tileOffsetY
+	if radiusTiles <= 0.0:
+		return 1 if clearTile(tx, ty, true) else 0
+	return clearArea(tx, ty, radiusTiles)
 
 
 ## 重置缓存（强制下次 reveal_fov 一定发射线）
-func invalidate_cache() -> void:
-	_last_center = Vector2.INF
-	_last_aim = INF
+func invalidateCache() -> void:
+	lastCenter = Vector2.INF
+	lastAim = INF

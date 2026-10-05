@@ -19,97 +19,97 @@ const IDLE_TIME := 0.833
 ## H5 _permanent：常显（原项目 level.showHealth 调试开关用；本项目暂无该开关）
 @export var permanent: bool = false
 
-@onready var _bar: TextureProgressBar = $Bar
+@onready var bar: TextureProgressBar = $Bar
 
-var _target: Node = null
-var _last_health: float = -1.0
-var _idle: float = 0.0
-var _shown: bool = false
-var _tween: Tween = null
+var targetNode: Node = null
+var lastHealth: float = -1.0
+var idle: float = 0.0
+var shown: bool = false
+var tween: Tween = null
 
 
 func _ready() -> void:
-	_target = get_parent()
+	targetNode = get_parent()
 	modulate.a = 0.0
 	visible = false
-	_last_health = _health()
-	_refresh()
-
-
-func _process(delta: float) -> void:
-	global_rotation = 0.0                 # H5 postUpdate：血条抵消父节点旋转，永远水平
-	var hp := _health()
-	if hp <= 0.0:                         # 目标已死 → 立刻淡出
-		hide_bar()
-		return
-	if not is_equal_approx(hp, _last_health):
-		_last_health = hp
-		_refresh()
-		show_bar()                        # H5：血量一变就显示（受击掉血、治疗回血同理）
-		return
-	if permanent:
-		show_bar()
-		return
-	if _shown:
-		_idle += delta
-		if _idle >= IDLE_TIME:
-			hide_bar()
+	lastHealth = health()
+	refresh()
 
 
 # ============================================================
 # 对外接口
 # ============================================================
 ## 显示血条（H5 show）：重置待机计时 + 立刻按当前血量刷新 + 200ms 淡入
-func show_bar() -> void:
-	if _target == null or not is_instance_valid(_target):
+func showBar() -> void:
+	if targetNode == null or not is_instance_valid(targetNode):
 		return
-	_last_health = _health()
-	_refresh()
-	_idle = 0.0
-	if _shown:
+	lastHealth = health()
+	refresh()
+	idle = 0.0
+	if shown:
 		return                            # 已在显示中：只重置计时（避免每帧重启补间）
-	_shown = true
+	shown = true
 	visible = true
-	_kill_tween()
-	_tween = create_tween()
-	_tween.tween_property(self, "modulate:a", 1.0, FADE_TIME)
+	killTween()
+	tween = create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, FADE_TIME)
 
 
 ## 隐藏血条（H5 hide）：200ms 淡出后置为不可见
-func hide_bar() -> void:
-	if not _shown and not visible:
+func hideBar() -> void:
+	if not shown and not visible:
 		return
-	_shown = false
-	_kill_tween()
-	_tween = create_tween()
-	_tween.tween_property(self, "modulate:a", 0.0, FADE_TIME)
-	_tween.tween_callback(func() -> void: visible = false)
+	shown = false
+	killTween()
+	tween = create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, FADE_TIME)
+	tween.tween_callback(func() -> void: visible = false)
 
 
-func _kill_tween() -> void:
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
-	_tween = null
+func killTween() -> void:
+	if tween != null and tween.is_valid():
+		tween.kill()
+	tween = null
 
 
 # ============================================================
 # 内部：读目标血量 / 刷新前景裁切
 # ============================================================
 ## 按血量比例刷新条（H5: cropRect.width = health / maxHealth * 95）
-func _refresh() -> void:
-	if _bar == null:
+func refresh() -> void:
+	if bar == null:
 		return
-	var mx := _max_health()
-	_bar.value = clampf(_health() / mx * 100.0, 0.0, 100.0) if mx > 0.0 else 0.0
+	var mx := maxHealth()
+	bar.value = clampf(health() / mx * 100.0, 0.0, 100.0) if mx > 0.0 else 0.0
 
 
-func _health() -> float:
-	if _target == null or not is_instance_valid(_target) or not ("health" in _target):
+func health() -> float:
+	if targetNode == null or not is_instance_valid(targetNode) or not ("health" in targetNode):
 		return 0.0
-	return float(_target.get("health"))
+	return float(targetNode.get("health"))
 
 
-func _max_health() -> float:
-	if _target == null or not is_instance_valid(_target) or not ("max_health" in _target):
+func maxHealth() -> float:
+	if targetNode == null or not is_instance_valid(targetNode) or not ("maxHealth" in targetNode):
 		return 0.0
-	return float(_target.get("max_health"))
+	return float(targetNode.get("maxHealth"))
+
+
+func _process(delta: float) -> void:
+	global_rotation = 0.0                 # H5 postUpdate：血条抵消父节点旋转，永远水平
+	var hp := health()
+	if hp <= 0.0:                         # 目标已死 → 立刻淡出
+		hideBar()
+		return
+	if not is_equal_approx(hp, lastHealth):
+		lastHealth = hp
+		refresh()
+		showBar()                        # H5：血量一变就显示（受击掉血、治疗回血同理）
+		return
+	if permanent:
+		showBar()
+		return
+	if shown:
+		idle += delta
+		if idle >= IDLE_TIME:
+			hideBar()

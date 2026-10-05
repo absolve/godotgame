@@ -61,4 +61,4 @@ texture_pressed = ExtResource("5_cont_d")
 texture_hover = ExtResource("4_cont_h")
 texture_disabled = ExtResource("3_cont_n")
 
-[connection signal="pressed" from="Design/ContinueBtn" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Design/ContinueBtn" to="." method="onContinuePressed"]

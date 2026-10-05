@@ -73,4 +73,4 @@ texture_pressed = ExtResource("5_back_d")
 texture_hover = ExtResource("4_back_h")
 texture_disabled = ExtResource("3_back_n")
 
-[connection signal="pressed" from="Design/BackBtn" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Design/BackBtn" to="." method="onBackPressed"]

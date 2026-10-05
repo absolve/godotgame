@@ -8,15 +8,15 @@ radius = 200.0
 
 [node name="Shock" unique_id=953918711 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-beam_range = 900.0
-chain_radius = 200.0
-chain_max_hops = 3
-drain_per_sec = 60.0
+beamRange = 900.0
+chainRadius = 200.0
+chainMaxHops = 3
+drainPerSec = 60.0
 damage = 2.0
 rate = 0.0
 velocity = 0.0
-spawn_distance = 24.0
-sound_alert_radius = 100.0
+spawnDistance = 24.0
+soundAlertRadius = 100.0
 
 [node name="Ray" type="RayCast2D" parent="." index="2" unique_id=1554075075]
 target_position = Vector2(900, 0)

@@ -53,39 +53,39 @@ const TEX_DIR := "res://sprites/menu/upgrades/parts/achievements/"
 const COLOR_VALUE := Color("#AAC641")  # 统计数字（H5 addLabel fill）
 const COLOR_MONEY := Color("#FFB600")  # 总金币（H5 金色）
 
-@onready var _panel: Control = $Center2/Panel2
-@onready var _close_btn: TextureButton = $Center2/Panel2/CloseBtn2
+@onready var panel: Control = $Center2/Panel2
+@onready var closeBtn: TextureButton = $Center2/Panel2/CloseBtn2
 
-var _value_labels: Dictionary = {}      # 统计字段 -> Label
-var _money_label: Label = null
-var _medal_buttons: Dictionary = {}     # 成就名 -> TextureButton
-var _medal_anchors: Dictionary = {}     # 成就名 -> 底边中点（面板本地坐标）
-var _hint: TextureRect = null
-var _hint_tween: Tween = null
+var valueLabels: Dictionary = {}      # 统计字段 -> Label
+var moneyLabel: Label = null
+var medalButtons: Dictionary = {}     # 成就名 -> TextureButton
+var medalAnchors: Dictionary = {}     # 成就名 -> 底边中点（面板本地坐标）
+var hint: TextureRect = null
+var hintTween: Tween = null
 
 
 func _ready() -> void:
-	_build_ui()
-	_close_btn.pressed.connect(_on_close_pressed)
+	buildUi()
+	closeBtn.pressed.connect(onClosePressed)
 	refresh()
 
 
 # ============================================================
 # UI 构建（一次性）
 # ============================================================
-func _build_ui() -> void:
+func buildUi() -> void:
 	# 7 行统计数字（右对齐）
 	for row in STAT_ROWS:
-		var label := _make_value_label(float(row[1]))
-		_panel.add_child(label)
-		_value_labels[row[0]] = label
+		var label := makeValueLabel(float(row[1]))
+		panel.add_child(label)
+		valueLabels[row[0]] = label
 	# 生涯总收入（金色大字，H5 单独一行、锚点右上）
-	_money_label = _make_money_label()
-	_panel.add_child(_money_label)
+	moneyLabel = makeMoneyLabel()
+	panel.add_child(moneyLabel)
 	# 成就奖章
 	for a in ACHIEVEMENTS:
 		var name: String = a["name"]
-		_medal_anchors[name] = Vector2(
+		medalAnchors[name] = Vector2(
 			PANEL_CX + float(a["dx"]),
 			PANEL_CY + float(a["dy"])
 		)
@@ -94,21 +94,21 @@ func _build_ui() -> void:
 		btn.focus_mode = Control.FOCUS_NONE
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-		btn.pressed.connect(_on_medal_pressed.bind(name))
-		btn.mouse_entered.connect(_on_medal_hovered.bind(name))
-		btn.mouse_exited.connect(_hide_hint)
-		_panel.add_child(btn)
-		_medal_buttons[name] = btn
+		btn.pressed.connect(onMedalPressed.bind(name))
+		btn.mouse_entered.connect(onMedalHovered.bind(name))
+		btn.mouse_exited.connect(hideHint)
+		panel.add_child(btn)
+		medalButtons[name] = btn
 	# 说明气泡（贴图运行时切换）
-	_hint = TextureRect.new()
-	_hint.name = "Hint"
-	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hint.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_hint.visible = false
-	_panel.add_child(_hint)
+	hint = TextureRect.new()
+	hint.name = "Hint"
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	hint.visible = false
+	panel.add_child(hint)
 
 
-func _make_value_label(dy: float) -> Label:
+func makeValueLabel(dy: float) -> Label:
 	var l := Label.new()
 	l.offset_left = 150.0
 	l.offset_right = VALUE_RIGHT_X
@@ -123,7 +123,7 @@ func _make_value_label(dy: float) -> Label:
 	return l
 
 
-func _make_money_label() -> Label:
+func makeMoneyLabel() -> Label:
 	var l := Label.new()
 	var top: float = PANEL_CY + 10.0  # H5 anchor(1, 0)：顶部右对齐
 	l.offset_left = 150.0
@@ -149,27 +149,27 @@ func open() -> void:
 
 func refresh() -> void:
 	var stats: Dictionary = Game.current.get("stats", {})
-	for key in _value_labels:
-		_value_labels[key].text = str(int(stats.get(key, 0)))
-	if _money_label != null:
-		_money_label.text = Game._format_money(int(stats.get("moneyEarned", 0)))
-	_refresh_medals()
+	for key in valueLabels:
+		valueLabels[key].text = str(int(stats.get(key, 0)))
+	if moneyLabel != null:
+		moneyLabel.text = Game.formatMoney(int(stats.get("moneyEarned", 0)))
+	refreshMedals()
 
 
-func _refresh_medals() -> void:
-	for name in _medal_buttons:
-		var btn: TextureButton = _medal_buttons[name]
-		var suffix := "" if Game.is_achievement_completed(name) else "_disabled"
+func refreshMedals() -> void:
+	for name in medalButtons:
+		var btn: TextureButton = medalButtons[name]
+		var suffix := "" if Game.isAchievementCompleted(name) else "_disabled"
 		var tex := load(TEX_DIR + name + suffix + ".png.tres") as Texture2D
 		btn.texture_normal = tex
 		btn.texture_pressed = tex
 		btn.texture_hover = tex
-		_place_medal(btn, name, tex)
+		placeMedal(btn, name, tex)
 
 
 ## 奖章锚点 = 底边中点（对应 H5 anchor(0.5,1)），贴图尺寸变化时按实际尺寸重排
-func _place_medal(btn: TextureButton, name: String, tex: Texture2D) -> void:
-	var anchor: Vector2 = _medal_anchors[name]
+func placeMedal(btn: TextureButton, name: String, tex: Texture2D) -> void:
+	var anchor: Vector2 = medalAnchors[name]
 	var s := Vector2(71.0, 82.0)
 	if tex != null:
 		s = tex.get_size()
@@ -180,44 +180,44 @@ func _place_medal(btn: TextureButton, name: String, tex: Texture2D) -> void:
 # ============================================================
 # 奖章交互 → 说明气泡
 # ============================================================
-func _on_medal_hovered(name: String) -> void:
-	_show_hint(name)
+func onMedalHovered(name: String) -> void:
+	showHint(name)
 
 
-func _on_medal_pressed(name: String) -> void:
-	_show_hint(name)
+func onMedalPressed(name: String) -> void:
+	showHint(name)
 
 
-func _show_hint(name: String) -> void:
+func showHint(name: String) -> void:
 	var tex := load(TEX_DIR + name + "_hint.png.tres") as Texture2D
 	if tex == null:
 		return
-	_hint.texture = tex
+	hint.texture = tex
 	var s: Vector2 = tex.get_size()
-	_hint.size = s
-	_hint.position = HINT_POS - s * 0.5
-	_hint.modulate.a = 1.0
-	_hint.visible = true
-	if _hint_tween != null and _hint_tween.is_valid():
-		_hint_tween.kill()
-	_hint_tween = create_tween()
-	_hint_tween.tween_interval(HINT_KEEP_SEC)
-	_hint_tween.tween_property(_hint, "modulate:a", 0.0, 0.25)
-	_hint_tween.tween_callback(_hint.hide)
+	hint.size = s
+	hint.position = HINT_POS - s * 0.5
+	hint.modulate.a = 1.0
+	hint.visible = true
+	if hintTween != null and hintTween.is_valid():
+		hintTween.kill()
+	hintTween = create_tween()
+	hintTween.tween_interval(HINT_KEEP_SEC)
+	hintTween.tween_property(hint, "modulate:a", 0.0, 0.25)
+	hintTween.tween_callback(hint.hide)
 
 
-func _hide_hint() -> void:
-	if _hint_tween != null and _hint_tween.is_valid():
-		_hint_tween.kill()
-	_hint_tween = null
-	_hint.visible = false
-	_hint.modulate.a = 1.0
+func hideHint() -> void:
+	if hintTween != null and hintTween.is_valid():
+		hintTween.kill()
+	hintTween = null
+	hint.visible = false
+	hint.modulate.a = 1.0
 
 
 # ============================================================
 # 关闭
 # ============================================================
-func _on_close_pressed() -> void:
-	Audio.play_button_down()
-	_hide_hint()
+func onClosePressed() -> void:
+	Audio.playButtonDown()
+	hideHint()
 	visible = false

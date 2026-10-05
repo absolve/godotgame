@@ -80,80 +80,6 @@ public sealed class EasyStar
     /// </summary>
     public bool ReopenClosedNodes { get; set; }
 
-    // ------------------------------------------------------------
-    // 请求
-    // ------------------------------------------------------------
-    private sealed class PathInstance
-    {
-        public int Id;
-        public int StartX, StartY, EndX, EndY;
-        public Action<List<Vector2I>?>? Callback;
-        public bool Done;
-        public bool Cancelled;
-        public string? Error;
-        public List<Vector2I>? Result;
-
-        // 每条请求独占一张节点表 + 一个开放表：切片与线程模式都能安全并存；
-        // 请求结束后对象回池复用（Nodes/Stamp 表保留，靠 SearchStamp 失效旧数据）
-        public readonly EasyStarHeap Open = new();
-        public EasyStarNode?[] Nodes = Array.Empty<EasyStarNode?>();
-        public int[] Stamp = Array.Empty<int>();
-        public int SearchStamp = 1;
-
-        public void EnsureTables(int cells)
-        {
-            if (Nodes.Length >= cells)
-            {
-                NextStamp();
-                return;
-            }
-            Nodes = new EasyStarNode?[cells];
-            Stamp = new int[cells];
-            SearchStamp = 1;
-        }
-
-        /// <summary>换一次搜索：版本戳 +1，旧格子的数据自动失效</summary>
-        public void NextStamp()
-        {
-            SearchStamp++;
-            if (SearchStamp == int.MaxValue)
-            {
-                Array.Clear(Stamp);
-                SearchStamp = 1;
-            }
-        }
-
-        public void ResetForReuse()
-        {
-            Id = 0;
-            Callback = null;
-            Done = false;
-            Cancelled = false;
-            Error = null;
-            Result = null;
-            Open.Clear();
-        }
-
-        public EasyStarNode GetOrCreate(EasyStar owner, int x, int y, EasyStarNode? parent, float cost)
-        {
-            int idx = y * owner.Width + x;
-            if (Stamp[idx] == SearchStamp && Nodes[idx] != null)
-            {
-                return Nodes[idx]!;
-            }
-            EasyStarNode node = Nodes[idx] ?? new EasyStarNode();
-            node.Reset();
-            node.X = x;
-            node.Y = y;
-            node.Estimated = owner.GetDistance(x, y, EndX, EndY);
-            node.CostSoFar = parent != null ? parent.CostSoFar + cost : 0f;
-            node.Parent = parent;
-            Nodes[idx] = node;
-            Stamp[idx] = SearchStamp;
-            return node;
-        }
-    }
-
     private readonly Dictionary<int, PathInstance> _instances = new();
     private readonly Queue<int> _queue = new();
     private readonly ConcurrentQueue<PathInstance> _threadResults = new();
@@ -843,6 +769,80 @@ public sealed class EasyStar
                 _threadResults.Enqueue(inst);
                 Interlocked.Decrement(ref _threadsInFlight);
             }
+        }
+    }
+
+    // ------------------------------------------------------------
+    // 请求
+    // ------------------------------------------------------------
+    private sealed class PathInstance
+    {
+        public int Id;
+        public int StartX, StartY, EndX, EndY;
+        public Action<List<Vector2I>?>? Callback;
+        public bool Done;
+        public bool Cancelled;
+        public string? Error;
+        public List<Vector2I>? Result;
+
+        // Each request owns its node table and open set so sliced and threaded searches can coexist.
+        // Recycled requests retain these tables and invalidate old values with SearchStamp.
+        public readonly EasyStarHeap Open = new();
+        public EasyStarNode?[] Nodes = Array.Empty<EasyStarNode?>();
+        public int[] Stamp = Array.Empty<int>();
+        public int SearchStamp = 1;
+
+        public void EnsureTables(int cells)
+        {
+            if (Nodes.Length >= cells)
+            {
+                NextStamp();
+                return;
+            }
+            Nodes = new EasyStarNode?[cells];
+            Stamp = new int[cells];
+            SearchStamp = 1;
+        }
+
+        /// <summary>Advances the search stamp so prior cell data becomes invalid.</summary>
+        public void NextStamp()
+        {
+            SearchStamp++;
+            if (SearchStamp == int.MaxValue)
+            {
+                Array.Clear(Stamp);
+                SearchStamp = 1;
+            }
+        }
+
+        public void ResetForReuse()
+        {
+            Id = 0;
+            Callback = null;
+            Done = false;
+            Cancelled = false;
+            Error = null;
+            Result = null;
+            Open.Clear();
+        }
+
+        public EasyStarNode GetOrCreate(EasyStar owner, int x, int y, EasyStarNode? parent, float cost)
+        {
+            int index = y * owner.Width + x;
+            if (Stamp[index] == SearchStamp && Nodes[index] != null)
+            {
+                return Nodes[index]!;
+            }
+            EasyStarNode node = Nodes[index] ?? new EasyStarNode();
+            node.Reset();
+            node.X = x;
+            node.Y = y;
+            node.Estimated = owner.GetDistance(x, y, EndX, EndY);
+            node.CostSoFar = parent != null ? parent.CostSoFar + cost : 0f;
+            node.Parent = parent;
+            Nodes[index] = node;
+            Stamp[index] = SearchStamp;
+            return node;
         }
     }
 }

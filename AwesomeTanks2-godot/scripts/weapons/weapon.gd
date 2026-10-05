@@ -20,15 +20,15 @@ var id: String = ""
 
 # —— 弹道/伤害参数 ——
 @export var ammo: int = 999999 # 弹药（>=999999 视为无限）
-@export var max_ammo: int = 999999
+@export var maxAmmo: int = 999999
 @export var damage: float = 10.0
 @export var rate: float = 4.0 # 每秒射次（<=0 = 无开火延迟，每帧直接开火/由子类处理）
 @export var life: float = 1.0 # 子弹存活时间（秒）
 @export var velocity: float = 600.0
 @export var spread: float = 0.0
-@export var spawn_count: int = 1
-@export var spawn_distance: float = 20.0
-@export var sound_alert_radius: float = 0.0
+@export var spawnCount: int = 1
+@export var spawnDistance: float = 20.0
+@export var soundAlertRadius: float = 0.0
 
 # —— 炮塔后坐力（H5：开火时 tank.recoil=数值，minigun=3、shotgun/cannon/ricochet/railgun=5）——
 @export var recoil := 0.0
@@ -36,27 +36,27 @@ var id: String = ""
 # —— 火焰类弹药：命中后点燃目标（H5：目标的 onBulletHit 里判断 instanceof Flamethrower）——
 @export var ignites := false
 
-@export var bullet_scene: PackedScene = null
+@export var bulletScene: PackedScene = null
 #@export var bullet_texture: Texture2D = null
 
 # —— 音效配置 ——
-@export var fire_sfx := "" # 开火音（经 FireSound 节点播放）
-@export var fire_start_sfx := "" # 开始持续开火时的单发音
-@export var fire_loop_sfx := "" # 持续开火循环音
-@export var impact_sfx := "" # 子弹撞墙/物体音效
-@export var bullet_spark := true
-@export var bullet_puff := false
+@export var fireSfx := "" # 开火音（经 FireSound 节点播放）
+@export var fireStartSfx := "" # 开始持续开火时的单发音
+@export var fireLoopSfx := "" # 持续开火循环音
+@export var impactSfx := "" # 子弹撞墙/物体音效
+@export var bulletSpark := true
+@export var bulletPuff := false
 
 # —— 是否允许开火（坦克输入层设置）——
-var can_fire: bool = true
+var canFire: bool = true
 ## 当前是否处于"一次连发"中（用于持续音的启停，见 _begin/_end_fire_session）
-var _firing: bool = false
+var firing: bool = false
 
 #var _loop_started := false
 #var _fire_start_played := false
 
 signal shot(weapon)
-signal out_of_ammo(weapon)
+signal outOfAmmo(weapon)
 
 const LOOP_KEY := "weapon_fire"
 
@@ -80,8 +80,8 @@ const PRESETS: Dictionary = {
 	"railgun": {"fire_sfx": "railgun.mp3", "impact_sfx": "bullet_hit.mp3"},
 }
 
-@onready var _fire_timer: Timer = $FireTimer
-@onready var _fire_sound: AudioStreamPlayer = $FireSound
+@onready var fireTimer: Timer = $FireTimer
+@onready var fireSound: AudioStreamPlayer = $FireSound
 
 
 func _ready() -> void:
@@ -90,66 +90,54 @@ func _ready() -> void:
 		for k in p:
 			if k in self:
 				set(k, p[k])
-	_apply_fire_sound()
+	applyFireSound()
 
 
 ## 设置是否开火（坦克按住时每物理帧调用 set_firing(true)，松开调 set_firing(false)）
 ##   持续音（fire_loop_sfx，如火焰 flame_loop）与起始单发音（fire_start_sfx，如 flame_start）
 ##   只在"一次连发"的首尾各触发一次，不会每帧重播。
-func set_firing(on: bool) -> void:
+func setFiring(on: bool) -> void:
 	if not on:
-		_end_fire_session()
+		endFireSession()
 		return
 	if ammo <= 0:
-		out_of_ammo.emit(self)
-		_end_fire_session()
+		outOfAmmo.emit(self)
+		endFireSession()
 		return
-	_begin_fire_session()
+	beginFireSession()
 	# 有开火延迟：FireTimer 倒计时结束后才允许下一发；无延迟：每帧直接开火
 	if rate > 0.0:
-		if can_fire:
-			can_fire = false
-			_shoot()
-			_fire_timer.start(1.0 / rate)
+		if canFire:
+			canFire = false
+			shoot()
+			fireTimer.start(1.0 / rate)
 	else:
-		_shoot()
+		shoot()
 
 
 ## 一次连发开始：播一次起始音 + 起持续循环音（对应 H5 startFire）
-func _begin_fire_session() -> void:
-	if _firing:
+func beginFireSession() -> void:
+	if firing:
 		return
-	_firing = true
-	if fire_start_sfx != "":
-		Audio.play_sfx(fire_start_sfx)
-	if fire_loop_sfx != "":
-		Audio.start_loop(_loop_key(), fire_loop_sfx)
+	firing = true
+	if fireStartSfx != "":
+		Audio.playSfx(fireStartSfx)
+	if fireLoopSfx != "":
+		Audio.startLoop(loopKey(), fireLoopSfx)
 
 
 ## 一次连发结束：停持续循环音（对应 H5 stopFire）
-func _end_fire_session() -> void:
-	if not _firing:
+func endFireSession() -> void:
+	if not firing:
 		return
-	_firing = false
-	if fire_loop_sfx != "":
-		Audio.stop_loop(_loop_key())
+	firing = false
+	if fireLoopSfx != "":
+		Audio.stopLoop(loopKey())
 
 
 ## 循环音键：同种武器共用一条循环音（H5 全局 flame_loop 引用计数同款）
-func _loop_key() -> String:
+func loopKey() -> String:
 	return "weapon_" + (id if id != "" else name)
-
-
-func _exit_tree() -> void:
-	# 节点被释放时释放循环音引用，避免留下停不掉的持续音
-	if not _firing:
-		return
-	_firing = false
-	if fire_loop_sfx == "":
-		return
-	var audio := get_node_or_null("/root/Audio")
-	if audio != null:
-		audio.call("stop_loop", _loop_key())
 
 #func _physics_process(_delta: float) -> void:
 	#if not can_fire:
@@ -184,95 +172,95 @@ func _exit_tree() -> void:
 	#set_firing(false)
 
 
-func apply_params(p: Dictionary) -> void:
+func applyParams(p: Dictionary) -> void:
 	for key in p:
 		if key in self:
 			set(key, p[key])
 	if "fire_sfx" in p:
-		_apply_fire_sound()
+		applyFireSound()
 
 
-func has_infinite_ammo() -> bool:
-	return max_ammo >= 999999
+func hasInfiniteAmmo() -> bool:
+	return maxAmmo >= 999999
 
 
-func _apply_fire_sound() -> void:
-	if _fire_sound == null:
+func applyFireSound() -> void:
+	if fireSound == null:
 		return
-	if fire_sfx == "":
-		_fire_sound.stream = null
+	if fireSfx == "":
+		fireSound.stream = null
 		return
-	var path := "res://sounds/" + fire_sfx
+	var path := "res://sounds/" + fireSfx
 	if ResourceLoader.exists(path):
-		_fire_sound.stream = load(path)
+		fireSound.stream = load(path)
 
 
 ## 单次齐射（子类可重写）：按 spawn_count/spread 发射并扣弹
-func _shoot() -> void:
-	var base_angle := _get_aim_angle()
-	for i in spawn_count:
-		var t: float = 0.5 if spawn_count == 1 else float(i) / maxf(float(spawn_count - 1), 1.0)
-		var a: float = base_angle - spread * 0.5 + t * spread if spawn_count > 1 \
-			else base_angle + (randf() * spread - spread * 0.5) if spread > 0.0 else base_angle
-		_spawn_bullet(a)
+func shoot() -> void:
+	var baseAngle := getAimAngle()
+	for i in spawnCount:
+		var t: float = 0.5 if spawnCount == 1 else float(i) / maxf(float(spawnCount - 1), 1.0)
+		var a: float = baseAngle - spread * 0.5 + t * spread if spawnCount > 1 \
+			else baseAngle + (randf() * spread - spread * 0.5) if spread > 0.0 else baseAngle
+		spawnBullet(a)
 	# 开火音（FireSound 节点）
-	if fire_sfx != "" and _fire_sound != null and _fire_sound.stream != null:
-		_fire_sound.play()
+	if fireSfx != "" and fireSound != null and fireSound.stream != null:
+		fireSound.play()
 	if ammo < 999999:
 		ammo -= 1
 		if ammo <= 0:
 			ammo = 0
 			#set_firing(false)
-			out_of_ammo.emit(self)
-	_apply_recoil()
-	_alert_nearby_enemies()
+			outOfAmmo.emit(self)
+	applyRecoil()
+	alertNearbyEnemies()
 	shot.emit(self)
 
 
 ## 枪声惊动附近敌人（H5：玩家武器的 onShot → level.alertSound；敌人开火不惊动同伴）
-func _alert_nearby_enemies() -> void:
-	if sound_alert_radius <= 0.0 or team != Constants.Team.PLAYER or tank == null \
+func alertNearbyEnemies() -> void:
+	if soundAlertRadius <= 0.0 or team != Constants.Team.PLAYER or tank == null \
 			or not is_instance_valid(tank):
 		return
 	var lv = tank.get("level")
-	if lv != null and lv.has_method("alert_sound"):
-		lv.alert_sound(tank.global_position, sound_alert_radius)
+	if lv != null and lv.has_method("alertSound"):
+		lv.alertSound(tank.global_position, soundAlertRadius)
 
 
 ## 开火后触发炮塔后坐力（供基类 _shoot 与各子类发射逻辑调用）
-func _apply_recoil() -> void:
-	if recoil > 0.0 and tank != null and tank.has_method("apply_recoil"):
-		tank.call("apply_recoil", recoil)
+func applyRecoil() -> void:
+	if recoil > 0.0 and tank != null and tank.has_method("applyRecoil"):
+		tank.call("applyRecoil", recoil)
 
 
-func _get_aim_angle() -> float:
+func getAimAngle() -> float:
 	if tank == null:
 		return 0.0
-	if "_turret_sprite" in tank:
-		var ts = tank.get("_turret_sprite")
+	if "turretSprite" in tank:
+		var ts = tank.get("turretSprite")
 		if ts != null:
 			return ts.rotation
 	return tank.rotation
 
 
 ## 在炮口角度 a 生成一发子弹（子类可重写/改用其它发射方式）
-func _spawn_bullet(angle: float) -> Node2D:
-	if bullet_scene == null or tank == null or not is_instance_valid(tank):
+func spawnBullet(angle: float) -> Node2D:
+	if bulletScene == null or tank == null or not is_instance_valid(tank):
 		return null
-	var b: Node2D = bullet_scene.instantiate()
-	var pos: Vector2 = tank.get_turret_position(spawn_distance) \
-		if tank.has_method("get_turret_position") else tank.global_position
+	var b: Node2D = bulletScene.instantiate()
+	var pos: Vector2 = tank.getTurretPosition(spawnDistance) \
+		if tank.has_method("getTurretPosition") else tank.global_position
 	b.global_position = pos
 	b.rotation = angle
 	#if bullet_texture != null and b.has_node("Sprite2D"):
 		#(b.get_node("Sprite2D") as Sprite2D).texture = bullet_texture
 	if b.has_method("setup"):
-		b.setup(team, damage, velocity, life, Color.WHITE, sound_alert_radius)
+		b.setup(team, damage, velocity, life, Color.WHITE, soundAlertRadius)
 	if "owner_actor" in b:
-		b.owner_actor = tank
+		b.ownerActor = tank
 	# 命中回调需要知道"是谁打的"（H5 用 srcWeapon instanceof 判断火焰/激光等）
 	if "owner_weapon" in b:
-		b.owner_weapon = self
+		b.ownerWeapon = self
 	for prop in ["impact_sfx", "bullet_spark", "bullet_puff"]:
 		if prop in b:
 			b.set(prop, get(prop))
@@ -282,5 +270,17 @@ func _spawn_bullet(angle: float) -> Node2D:
 	return b
 
 
-func _on_fire_timer_timeout() -> void:
-	can_fire = true
+func onFireTimerTimeout() -> void:
+	canFire = true
+
+
+func _exit_tree() -> void:
+	# 节点被释放时释放循环音引用，避免留下停不掉的持续音
+	if not firing:
+		return
+	firing = false
+	if fireLoopSfx == "":
+		return
+	var audio := get_node_or_null("/root/Audio")
+	if audio != null:
+		audio.call("stopLoop", loopKey())

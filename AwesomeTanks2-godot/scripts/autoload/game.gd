@@ -6,13 +6,13 @@ extends Node
 ##   - 玩家进度数据（金钱、关卡、武器等级、弹药、成就、统计）
 ##   - 场景切换封装
 
-signal profile_changed
-signal money_changed(value: int)
+signal profileChanged
+signal moneyChanged(value: int)
 
 # ============================================================
 # 默认存档结构（对应原项目 DEFAULT）
 # ============================================================
-const _DEFAULT: Dictionary = {
+const DEFAULT_PROFILE: Dictionary = {
 	"achievements": {
 		"hunter": 0, "destroyer": 0, "dodger": 0, "treasurer": 0,
 		"ultracombo": 0, "gotcha": 0, "fired": 0, "nailed": 0, "survivor": 0,
@@ -53,22 +53,23 @@ const _DEFAULT: Dictionary = {
 
 # 存档文件名（位置由 _resolve_save_path 动态决定）
 const SAVE_FILE_NAME := "save.json"
-var SAVE_PATH: String = "user://save.json"
+var savePath: String = "user://save.json"
 
-# 运行时数据（深拷贝自 _DEFAULT）
+# 运行时数据（深拷贝自 DEFAULT_PROFILE）
 var current: Dictionary = {}
+var pendingLevelIndex: int = 0
 
 # ============================================================
 # 生命周期
 # ============================================================
 func _ready() -> void:
-	SAVE_PATH = _resolve_save_path()
-	load_profile()
+	savePath = resolveSavePath()
+	loadProfile()
 
 ## 存档路径解析：
 ## - 编辑器 / H5 网页版：用 Godot 标准 user://（跨平台安全）
 ## - 桌面导出版（Windows/macOS/Linux）：放在可执行文件同目录，方便备份/分发
-func _resolve_save_path() -> String:
+func resolveSavePath() -> String:
 	if OS.has_feature("editor") or OS.has_feature("web"):
 		return "user://" + SAVE_FILE_NAME
 	return OS.get_executable_path().get_base_dir().path_join(SAVE_FILE_NAME)
@@ -76,8 +77,8 @@ func _resolve_save_path() -> String:
 # ============================================================
 # 存档 I/O
 # ============================================================
-func load_profile() -> void:
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+func loadProfile() -> void:
+	var f := FileAccess.open(savePath, FileAccess.READ)
 	if f == null:
 		reset()
 		return
@@ -85,89 +86,89 @@ func load_profile() -> void:
 	f.close()
 	var parsed = JSON.parse_string(text)
 	if typeof(parsed) == TYPE_DICTIONARY:
-		current = _merge_defaults(parsed)
+		current = mergeDefaults(parsed)
 	else:
 		reset()
 
 func save() -> void:
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f := FileAccess.open(savePath, FileAccess.WRITE)
 	if f == null:
-		push_warning("无法写入存档: %s" % SAVE_PATH)
+		push_warning("无法写入存档: %s" % savePath)
 		return
 	f.store_string(JSON.stringify(current, "\t"))
 	f.close()
 
 func reset() -> void:
-	current = _deep_copy(_DEFAULT)
+	current = deepCopy(DEFAULT_PROFILE)
 	# 用当前弹药上限填充初始弹药
 	var g: Dictionary = current["game"]
 	for key in Settings.AMMO_LIMITS:
 		g[key + "Ammo"] = Settings.AMMO_LIMITS[key]
 	save()
 
-func is_achievement_completed(_name: String) -> bool:
-	return int(current["achievements"].get(_name, 0)) >= Settings.ACHIEVEMENTS_LIMITS.get(name, 1)
+func isAchievementCompleted(achievementName: String) -> bool:
+	return int(current["achievements"].get(achievementName, 0)) >= Settings.ACHIEVEMENTS_LIMITS.get(name, 1)
 
-func increase_achievement(_name: String) -> bool:
+func increaseAchievement(achievementName: String) -> bool:
 	var a: Dictionary = current["achievements"]
-	a[_name] = int(a.get(_name, 0)) + 1
-	return a[_name] >= Settings.ACHIEVEMENTS_LIMITS.get(_name, 1)
+	a[achievementName] = int(a.get(achievementName, 0)) + 1
+	return a[achievementName] >= Settings.ACHIEVEMENTS_LIMITS.get(achievementName, 1)
 
-func get_total_points() -> int:
+func getTotalPoints() -> int:
 	var total := 0
 	for p in current["game"]["points"]:
 		total += int(p)
 	return total
 
-func get_ammo_percent(weapon_key: String) -> float:
+func getAmmoPercent(weaponKey: String) -> float:
 	var g: Dictionary = current["game"]
-	var ammo := int(g.get(weapon_key + "Ammo", 0))
-	var limit: int = Settings.AMMO_LIMITS.get(weapon_key, 1)
+	var ammo := int(g.get(weaponKey + "Ammo", 0))
+	var limit: int = Settings.AMMO_LIMITS.get(weaponKey, 1)
 	return float(ammo) / float(limit)
 
 # ============================================================
 # 经济：金钱 / 购买
 # ============================================================
-func get_money() -> int:
+func getMoney() -> int:
 	return int(current["game"]["money"])
 
-func add_money(amount: int) -> void:
-	current["game"]["money"] = get_money() + amount
+func addMoney(amount: int) -> void:
+	current["game"]["money"] = getMoney() + amount
 	current["stats"]["moneyEarned"] += max(amount, 0)
-	money_changed.emit(get_money())
+	moneyChanged.emit(getMoney())
 
-func can_afford(price: int) -> bool:
-	return get_money() >= price
+func canAfford(price: int) -> bool:
+	return getMoney() >= price
 
 func spend(price: int) -> bool:
-	if not can_afford(price):
+	if not canAfford(price):
 		return false
-	current["game"]["money"] = get_money() - price
-	money_changed.emit(get_money())
+	current["game"]["money"] = getMoney() - price
+	moneyChanged.emit(getMoney())
 	return true
 
 ## 获取某武器当前等级（-1=未购买）
-func get_weapon_level(weapon_key: String) -> int:
-	return int(current["game"].get(weapon_key + "Level", -1))
+func getWeaponLevel(weaponKey: String) -> int:
+	return int(current["game"].get(weaponKey + "Level", -1))
 
-func set_weapon_level(weapon_key: String, level: int) -> void:
-	current["game"][weapon_key + "Level"] = level
+func setWeaponLevel(weaponKey: String, level: int) -> void:
+	current["game"][weaponKey + "Level"] = level
 
-func get_weapon_ammo(weapon_key: String) -> int:
-	return int(current["game"].get(weapon_key + "Ammo", 0))
+func getWeaponAmmo(weaponKey: String) -> int:
+	return int(current["game"].get(weaponKey + "Ammo", 0))
 
-func set_weapon_ammo(weapon_key: String, ammo: int) -> void:
-	var limit: int = Settings.AMMO_LIMITS.get(weapon_key, ammo)
-	current["game"][weapon_key + "Ammo"] = clamp(ammo, 0, limit)
+func setWeaponAmmo(weaponKey: String, ammo: int) -> void:
+	var limit: int = Settings.AMMO_LIMITS.get(weaponKey, ammo)
+	current["game"][weaponKey + "Ammo"] = clamp(ammo, 0, limit)
 
-func get_performance_level(stat: String) -> int:
+func getPerformanceLevel(stat: String) -> int:
 	return int(current["game"].get(stat, 0))
 
-func set_performance_level(stat: String, level: int) -> void:
+func setPerformanceLevel(stat: String, level: int) -> void:
 	current["game"][stat] = level
 
 ## 关卡结算：记录分数、解锁进度
-func finish_level(index: int, points: int, success: bool) -> void:
+func finishLevel(index: int, points: int, success: bool) -> void:
 	var g: Dictionary = current["game"]
 	# 关卡数不再固定 15，按需扩展"每关最高分"数组
 	var scores: Array = g["points"]
@@ -178,27 +179,26 @@ func finish_level(index: int, points: int, success: bool) -> void:
 	if index + 1 >= ATLevels.LEVELS.size():
 		g["completed"] = true
 	save()
-	profile_changed.emit()
+	profileChanged.emit()
 
 # ============================================================
 # 场景切换
 # ============================================================
-func change_scene(path: String) -> void:
+func changeScene(path: String) -> void:
 	get_tree().change_scene_to_file(path)
 
-func goto_level(index: int) -> void:
+func gotoLevel(index: int) -> void:
 	# 通过资源占位参数把关卡索引传给 Level 场景
-	_pending_level_index = index
-	change_scene(Settings.SCENE_LEVEL)
+	pendingLevelIndex = index
+	changeScene(Settings.SCENE_LEVEL)
 
-var _pending_level_index: int = 0
-func consume_pending_level_index() -> int:
-	var i := _pending_level_index
-	_pending_level_index = 0
+func consumePendingLevelIndex() -> int:
+	var i := pendingLevelIndex
+	pendingLevelIndex = 0
 	return i
 
 # ---------- 金额格式化 ----------
-func _format_money(v: int) -> String:
+func formatMoney(v: int) -> String:
 	if v >= 1000000000:
 		return "$%.3fb" % (v / 1000000000.0)
 	if v >= 100000000:
@@ -212,27 +212,27 @@ func _format_money(v: int) -> String:
 # ============================================================
 # 内部工具
 # ============================================================
-func _deep_copy(d: Dictionary) -> Dictionary:
+func deepCopy(d: Dictionary) -> Dictionary:
 	var out: Dictionary = {}
 	for k in d:
 		var v = d[k]
 		if typeof(v) == TYPE_DICTIONARY:
-			out[k] = _deep_copy(v)
+			out[k] = deepCopy(v)
 		elif typeof(v) == TYPE_ARRAY:
 			out[k] = (v as Array).duplicate(true)
 		else:
 			out[k] = v
 	return out
 
-func _merge_defaults(loaded: Dictionary) -> Dictionary:
-	# 以 _DEFAULT 为骨架，把 loaded 的值覆盖进来，保证新字段存在
-	var out := _deep_copy(_DEFAULT)
-	_merge_dict(out, loaded)
+func mergeDefaults(loaded: Dictionary) -> Dictionary:
+	# 以 DEFAULT_PROFILE 为骨架，把 loaded 的值覆盖进来，保证新字段存在
+	var out := deepCopy(DEFAULT_PROFILE)
+	mergeDict(out, loaded)
 	return out
 
-func _merge_dict(into: Dictionary, from: Dictionary) -> void:
+func mergeDict(into: Dictionary, from: Dictionary) -> void:
 	for k in from:
 		if into.has(k) and typeof(into[k]) == TYPE_DICTIONARY and typeof(from[k]) == TYPE_DICTIONARY:
-			_merge_dict(into[k], from[k])
+			mergeDict(into[k], from[k])
 		else:
 			into[k] = from[k]

@@ -21,7 +21,7 @@ script = ExtResource("2_enemy")
 visible = false
 
 [node name="StateMachine" parent="." index="4" instance=ExtResource("3_fsm")]
-initial_state = &"Idle"
+initialState = &"Idle"
 
 [node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("4_idle")

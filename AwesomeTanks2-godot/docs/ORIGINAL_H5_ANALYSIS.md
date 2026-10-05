@@ -225,11 +225,11 @@ window.AT
 | `AT.profile` | `scripts/autoload/game.gd`（save.json，user://） |
 | `AT.audio` | `scripts/autoload/audio.gd` |
 | `AT.LEVELS` | `data/levels.gd` + `scripts/level/*` |
-| 关卡/战斗 | `scenes/Level.tscn` + `scripts/level/level.gd`（含合并后的瓦片解析/静态墙） |
+| 关卡/战斗 | `scenes/level.tscn` + `scripts/level/level.gd`（含合并后的瓦片解析/静态墙） |
 | 武器 | `scripts/weapons/*`（weapon/bullet/special_weapons/laser_beam/mine） |
 | 敌人 | `scripts/enemies/*`（ai_machine/enemy/spawner/turret_enemy） |
 | GUI/HUD/Alert | `scenes/hud/*` + `scripts/ui/*`（health_vial/weapon_slot/pause/abandon/help/summary） |
-| 菜单/中枢 | `scenes/Title|Upgrades|LevelSelect.tscn` + `scripts/menu/*` |
+| 菜单/中枢 | `scenes/Title|Upgrades|level_select.tscn` + `scripts/menu/*` |
 | 着色器 | `shaders/*.gdshader` |
 
 ---
@@ -288,7 +288,7 @@ window.AT
 - 各弹种建议映射到独立场景/脚本：
   | H5 弹种 | Godot |
   |---|---|
-  | minigun/shotgun/cannon 直弹 | `scenes/Bullet.tscn` + `weapons/bullet.gd`（速度/方向/伤害由 setup 传入） |
+  | minigun/shotgun/cannon 直弹 | `scenes/bullet.tscn` + `weapons/bullet.gd`（速度/方向/伤害由 setup 传入） |
   | ricochet 反弹 | 在 bullet.gd 上覆写碰墙反弹（沿用 frame） |
   | 火箭追踪 | `weapons/special_weapons.gd`（已有骨架：追踪目标 + 范围爆炸 + 尾烟） |
   | 激光 | `weapons/laser_beam.gd`（已有：射线即时命中 + laser_loop 音频） |

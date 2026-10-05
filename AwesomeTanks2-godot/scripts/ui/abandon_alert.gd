@@ -8,8 +8,8 @@ signal canceled
 
 func _ready() -> void:
 	visible = false
-	($Center/Panel/YesBtn as TextureButton).pressed.connect(_on_yes)
-	($Center/Panel/NoBtn as TextureButton).pressed.connect(_on_no)
+	($Center/Panel/YesBtn as TextureButton).pressed.connect(onYes)
+	($Center/Panel/NoBtn as TextureButton).pressed.connect(onNo)
 
 
 func open() -> void:
@@ -20,11 +20,11 @@ func close() -> void:
 	visible = false
 
 
-func _on_yes() -> void:
-	Audio.play_button_down()
+func onYes() -> void:
+	Audio.playButtonDown()
 	confirmed.emit()
 
 
-func _on_no() -> void:
-	Audio.play_button_down()
+func onNo() -> void:
+	Audio.playButtonDown()
 	canceled.emit()

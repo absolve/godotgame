@@ -7,8 +7,8 @@ extends Camera2D
 
 @export var target: Node2D
 #@export var max_offset: Vector2 = Vector2(100, 100)
-@export var edge_threshold: float = 0.2
-@export var smooth_speed: float = 6.0 # 平滑速度
+@export var edgeThreshold: float = 0.2
+@export var smoothSpeed: float = 6.0 # 平滑速度
 @export var scalingFactor = 0.10
 ## 冻结跟随（入场 FIGHT 横幅期间用；震屏也一并暂停，与 H5 一致）
 @export var frozen: bool = false
@@ -16,20 +16,20 @@ extends Camera2D
 ## 震屏衰减速度（px/s；H5: 30）
 const SHAKE_DECAY: float = 30.0
 
-var viewport_size: Vector2
+var viewportSize: Vector2
 var viewport
 
-var _shake: float = 0.0
+var shakeAmount: float = 0.0
 
 
 func _ready():
 	viewport = get_viewport()
-	viewport_size = viewport.get_visible_rect().size
+	viewportSize = viewport.get_visible_rect().size
 
 
 ## 触发震屏（H5 shakeCamera：只取较大值，不叠加）
 func shake(amount: float) -> void:
-	_shake = maxf(_shake, amount)
+	shakeAmount = maxf(shakeAmount, amount)
 
 
 func _physics_process(delta: float) -> void:
@@ -37,12 +37,12 @@ func _physics_process(delta: float) -> void:
 		return
 	if frozen:
 		offset = Vector2.ZERO
-		_shake = 0.0
+		shakeAmount = 0.0
 		return
 
 	# 计算目标偏移（同上）
 	#var viewport := get_viewport()
-	var mouse_pos = viewport.get_mouse_position()
+	var mousePos = viewport.get_mouse_position()
 	#var viewport_size := viewport.get_visible_rect().size
 	#print(viewport_size)
 	#var normalized := mouse_pos / viewport_size
@@ -57,20 +57,20 @@ func _physics_process(delta: float) -> void:
 	#elif normalized.y > 1.0 - edge_threshold:
 		#strength.y = (normalized.y - (1.0 - edge_threshold)) / edge_threshold
 
-	if mouse_pos.x - position.x >= viewport_size.x * edge_threshold:
-		offset.x = (mouse_pos.x - position.x) * scalingFactor
-	if mouse_pos.x - position.x <= viewport_size.x * edge_threshold:
-		offset.x = (mouse_pos.x - position.x) * scalingFactor
-	if mouse_pos.y - position.y >= viewport_size.y * edge_threshold:
-		offset.y = (mouse_pos.y - position.y) * scalingFactor
-	if mouse_pos.y - position.y <= viewport_size.y * edge_threshold:
-		offset.y = (mouse_pos.y - position.y) * scalingFactor
+	if mousePos.x - position.x >= viewportSize.x * edgeThreshold:
+		offset.x = (mousePos.x - position.x) * scalingFactor
+	if mousePos.x - position.x <= viewportSize.x * edgeThreshold:
+		offset.x = (mousePos.x - position.x) * scalingFactor
+	if mousePos.y - position.y >= viewportSize.y * edgeThreshold:
+		offset.y = (mousePos.y - position.y) * scalingFactor
+	if mousePos.y - position.y <= viewportSize.y * edgeThreshold:
+		offset.y = (mousePos.y - position.y) * scalingFactor
 
 	# 震屏：叠加在上面的偏移上（offset 每帧都会被重算，所以不会累积）
-	if _shake > 0.0:
-		offset += Vector2(randf_range(-_shake, _shake), randf_range(-_shake, _shake))
-		_shake = maxf(_shake - SHAKE_DECAY * delta, 0.0)
+	if shakeAmount > 0.0:
+		offset += Vector2(randf_range(-shakeAmount, shakeAmount), randf_range(-shakeAmount, shakeAmount))
+		shakeAmount = maxf(shakeAmount - SHAKE_DECAY * delta, 0.0)
 
 	# 计算目标位置并进行平滑移动
 	var desired = target.global_position + offset
-	global_position = global_position.lerp(desired, smooth_speed * delta)
+	global_position = global_position.lerp(desired, smoothSpeed * delta)

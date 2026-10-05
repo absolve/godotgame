@@ -7,45 +7,45 @@ extends Control
 
 const LEVEL_BTN_SCENE := preload("res://scenes/level_btn.tscn")
 
-@onready var _grid: GridContainer = $Design/BtnGrid
-@onready var _total_score: Label = $Design/TotalScore
+@onready var grid: GridContainer = $Design/BtnGrid
+@onready var totalScore: Label = $Design/TotalScore
 
-var _level_btns: Array = []
+var levelBtns: Array = []
 
 
 func _ready() -> void:
-	Audio.play_music("music_menu.mp3")
-	_build_buttons()
-	_refresh_states()
-	_total_score.text = " Total score: %d Pts. " % Game.get_total_points()
+	Audio.playMusic("music_menu.mp3")
+	buildButtons()
+	refreshStates()
+	totalScore.text = " Total score: %d Pts. " % Game.getTotalPoints()
 
 ## 关卡总数 = data/levels.gd 里定义的数量（新增关卡后这里自动跟上，不需要改场景）
-static func total_level_count() -> int:
+static func totalLevelCount() -> int:
 	return maxi(ATLevels.LEVELS.size(), Settings.LEVEL_COUNT)
 
 
 ## 按关卡总数生成按钮
-func _build_buttons() -> void:
-	for i in range(total_level_count()):
+func buildButtons() -> void:
+	for i in range(totalLevelCount()):
 		var btn = LEVEL_BTN_SCENE.instantiate()
 		btn.name = "Btn%d" % (i + 1)
-		btn.level_num = i + 1
-		btn.clicked.connect(_on_level_clicked)
-		_grid.add_child(btn)
-		_level_btns.append(btn)
+		btn.levelNum = i + 1
+		btn.clicked.connect(onLevelClicked)
+		grid.add_child(btn)
+		levelBtns.append(btn)
 
 
-func _refresh_states() -> void:
+func refreshStates() -> void:
 	# unlocked = 已通关关卡数（0 表示还没玩过第 1 关）
 	var unlocked := int(Game.current["game"]["levels"])
-	for btn in _level_btns:
-		btn.refresh_state(unlocked)
+	for btn in levelBtns:
+		btn.refreshState(unlocked)
 
 
-func _on_level_clicked(index: int) -> void:
-	Game.goto_level(index)
+func onLevelClicked(index: int) -> void:
+	Game.gotoLevel(index)
 
 
-func _on_back_pressed() -> void:
-	Audio.play_button_down()
-	Game.change_scene(Settings.SCENE_UPGRADES)
+func onBackPressed() -> void:
+	Audio.playButtonDown()
+	Game.changeScene(Settings.SCENE_UPGRADES)

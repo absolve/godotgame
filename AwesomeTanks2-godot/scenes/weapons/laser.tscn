@@ -5,10 +5,10 @@
 
 [node name="Laser" unique_id=1456387278 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-beam_range = 620.0
-beam_dps = 900.0
-drain_per_sec = 60.0
-spawn_distance = 30.0
+beamRange = 620.0
+beamDps = 900.0
+drainPerSec = 60.0
+spawnDistance = 30.0
 
 [node name="Ray" type="RayCast2D" parent="." index="2" unique_id=53866911]
 target_position = Vector2(620, 0)

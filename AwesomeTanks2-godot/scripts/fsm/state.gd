@@ -14,17 +14,17 @@ extends Node
 ##   - 输入/物理更新由机器转发给当前状态，避免敌人自己手写 if/else 状态分发。
 
 ## 状态机（父场景中 StateMachine 节点注入）
-var state_machine: StateMachine = null
+var stateMachine: StateMachine = null
 
 ## 状态机所属宿主（如 ATTank 敌人；由 state_machine.actor 下发）
 var actor: Node2D = null
 
 ## 本状态已持续时长（由 StateMachine.physics_update 累计，enter 时清零）
-var state_time: float = 0.0
+var stateTime: float = 0.0
 
 
 ## 进入状态（首次进入或由其它状态切换而来）。msg 可携带切换参数。
-func enter(_msg: Dictionary = {}) -> void:
+func enter(msg: Dictionary = {}) -> void:
 	pass
 
 
@@ -34,21 +34,21 @@ func exit() -> void:
 
 
 ## 每物理帧（约 60Hz）更新；仅当本状态是当前状态时被调用
-func physics_update(_delta: float) -> void:
+func physicsUpdate(delta: float) -> void:
 	pass
 
 
 ## 每渲染帧更新（可选；大部分 AI 逻辑放 physics_update）
-func process_update(_delta: float) -> void:
+func processUpdate(delta: float) -> void:
 	pass
 
 
 ## 由 StateMachine 转发 unhandled input（可选）
-func handle_input(_event: InputEvent) -> void:
+func handleInput(event: InputEvent) -> void:
 	pass
 
 
 ## 便捷：请求状态机切到其它状态（找不到时由机器告警并忽略）
-func transition_to(target_name: StringName, msg: Dictionary = {}) -> void:
-	if state_machine != null:
-		state_machine.transition_to(target_name, msg)
+func transitionTo(targetName: StringName, msg: Dictionary = {}) -> void:
+	if stateMachine != null:
+		stateMachine.transitionTo(targetName, msg)

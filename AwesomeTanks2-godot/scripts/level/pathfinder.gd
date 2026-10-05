@@ -22,92 +22,92 @@ extends RefCounted
 
 var width: int = 0
 var height: int = 0
-var tile_size: int = Settings.TILE_SIZE
+var tileSize: int = Settings.TILE_SIZE
 
 ## C# 实现对象（scripts/pathfinding/EasyStarPathfinder.cs，[GlobalClass]）
-var _cs: EasyStarPathfinder = null
+var cs: EasyStarPathfinder = null
 
 
 ## 初始化网格（默认全部可走，之后逐个 set_solid 标墙）
 func setup(w: int, h: int, ts: int = Settings.TILE_SIZE) -> void:
 	width = maxi(w, 1)
 	height = maxi(h, 1)
-	tile_size = ts
-	if _cs == null:
-		_cs = EasyStarPathfinder.new()
-	_cs.Setup(width, height, tile_size)
+	tileSize = ts
+	if cs == null:
+		cs = EasyStarPathfinder.new()
+	cs.Setup(width, height, tileSize)
 
 
 # ============================================================
 # 可通行性
 # ============================================================
-func set_solid(x: int, y: int, on: bool) -> void:
-	if _cs != null:
-		_cs.SetSolid(x, y, on)
+func setSolid(x: int, y: int, on: bool) -> void:
+	if cs != null:
+		cs.SetSolid(x, y, on)
 
 
-func is_solid(x: int, y: int) -> bool:
-	if _cs == null:
+func isSolid(x: int, y: int) -> bool:
+	if cs == null:
 		return true
-	return _cs.IsSolid(x, y)
+	return cs.IsSolid(x, y)
 
 
-func in_bounds(x: int, y: int) -> bool:
+func inBounds(x: int, y: int) -> bool:
 	return x >= 0 and y >= 0 and x < width and y < height
 
 
 # ============================================================
 # 坐标换算
 # ============================================================
-func world_to_cell(p: Vector2) -> Vector2i:
-	return Vector2i(int(floor(p.x / tile_size)), int(floor(p.y / tile_size)))
+func worldToCell(p: Vector2) -> Vector2i:
+	return Vector2i(int(floor(p.x / tileSize)), int(floor(p.y / tileSize)))
 
 
-func cell_center(c: Vector2i) -> Vector2:
-	return Vector2((c.x + 0.5) * tile_size, (c.y + 0.5) * tile_size)
+func cellCenter(c: Vector2i) -> Vector2:
+	return Vector2((c.x + 0.5) * tileSize, (c.y + 0.5) * tileSize)
 
 
 # ============================================================
 # 寻路
 # ============================================================
 ## 世界坐标 → 世界坐标路径点；空数组 = 连部分路径都没有
-func find_path(from_world: Vector2, to_world: Vector2) -> PackedVector2Array:
-	if _cs == null:
+func findPath(fromWorld: Vector2, toWorld: Vector2) -> PackedVector2Array:
+	if cs == null:
 		return PackedVector2Array()
-	return _cs.FindPath(from_world, to_world)
+	return cs.FindPath(fromWorld, toWorld)
 
 
 ## 两点之间是否可直线通行（Bresenham 走格，遇 solid 即 false）
-func is_line_walkable(from_world: Vector2, to_world: Vector2) -> bool:
-	if _cs == null:
+func isLineWalkable(fromWorld: Vector2, toWorld: Vector2) -> bool:
+	if cs == null:
 		return false
-	return _cs.IsLineWalkable(from_world, to_world)
+	return cs.IsLineWalkable(fromWorld, toWorld)
 
 
-func is_cell_line_walkable(a: Vector2i, b: Vector2i) -> bool:
-	if _cs == null:
+func isCellLineWalkable(a: Vector2i, b: Vector2i) -> bool:
+	if cs == null:
 		return false
-	return _cs.IsCellLineWalkable(a, b)
+	return cs.IsCellLineWalkable(a, b)
 
 
 ## 路径平滑：能直线看到更远的点就跳过中间点（string pulling）
-func smooth_path(path: PackedVector2Array, from_world: Vector2) -> PackedVector2Array:
-	if _cs == null:
+func smoothPath(path: PackedVector2Array, fromWorld: Vector2) -> PackedVector2Array:
+	if cs == null:
 		return path
-	return _cs.SmoothPath(path, from_world)
+	return cs.SmoothPath(path, fromWorld)
 
 
 # ============================================================
 # 线程池（保留能力，游戏当前不启用：默认 0 = 单线程、不建任何线程）
 # ============================================================
-func set_worker_threads(n: int) -> void:
-	if _cs != null:
-		_cs.SetWorkerThreads(n)
+func setWorkerThreads(n: int) -> void:
+	if cs != null:
+		cs.SetWorkerThreads(n)
 
 
-func is_threaded() -> bool:
-	return _cs != null and _cs.Threaded
+func isThreaded() -> bool:
+	return cs != null and cs.Threaded
 
 
-func worker_count() -> int:
-	return _cs.WorkerCount if _cs != null else 0
+func workerCount() -> int:
+	return cs.WorkerCount if cs != null else 0

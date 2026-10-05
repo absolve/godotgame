@@ -336,15 +336,15 @@ const LEVELS: Array = [
 ]
 
 ## 根据索引获取关卡数据 [name, theme, ...rows]
-static func get_level(index: int) -> Array:
+static func getLevel(index: int) -> Array:
 	return LEVELS[clamp(index, 0, LEVELS.size() - 1)]
 
 ## 正式关卡数量
-static func main_level_count() -> int:
+static func mainLevelCount() -> int:
 	return LEVELS.size()
 
 ## 列出自定义关卡目录中所有 .json 文件名（不含扩展名）
-static func list_custom_levels() -> Array[String]:
+static func listCustomLevels() -> Array[String]:
 	var out: Array[String] = []
 	var dir := DirAccess.open(Settings.CUSTOM_LEVELS_DIR)
 	if dir == null:
@@ -359,8 +359,8 @@ static func list_custom_levels() -> Array[String]:
 
 ## 从 JSON 文件加载自定义关卡，返回 [name, theme, ...rows] 格式（与 LEVELS 元素一致）
 ## 文件格式: {"name": "...", "theme": "grass|snow|desert", "tiles": ["...", "..."]}
-static func load_custom_json(file_name: String) -> Array:
-	var path := Settings.CUSTOM_LEVELS_DIR + file_name + ".json"
+static func loadCustomJson(fileName: String) -> Array:
+	var path := Settings.CUSTOM_LEVELS_DIR + fileName + ".json"
 	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return ["Custom", "grass", "█"]
@@ -369,15 +369,15 @@ static func load_custom_json(file_name: String) -> Array:
 	var parsed = JSON.parse_string(text)
 	if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("tiles"):
 		return ["Custom", "grass", "█"]
-	var name: String = parsed.get("name", file_name)
+	var name: String = parsed.get("name", fileName)
 	var theme: String = parsed.get("theme", "grass")
 	var rows: Array = parsed["tiles"]
 	return [name, theme] + rows
 
 ## 保存关卡到 JSON 文件
-static func save_custom_json(file_name: String, name: String, theme: String, rows: Array) -> bool:
+static func saveCustomJson(fileName: String, name: String, theme: String, rows: Array) -> bool:
 	DirAccess.make_dir_recursive_absolute(Settings.CUSTOM_LEVELS_DIR)
-	var path := Settings.CUSTOM_LEVELS_DIR + file_name + ".json"
+	var path := Settings.CUSTOM_LEVELS_DIR + fileName + ".json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		return false

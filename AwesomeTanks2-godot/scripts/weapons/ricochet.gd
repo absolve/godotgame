@@ -8,12 +8,12 @@ extends ATWeapon
 
 class_name ATWeaponRicochet
 
-@export var charge_max: float = 1.0
+@export var chargeMax: float = 1.0
 
 var charge: float = 0.0
-var _player_charging := false   # 玩家蓄力状态（不依赖基类 can_fire 默认值）
-var _charging_sfx := false
-var _spark_timer := 0.0
+var playerCharging := false   # 玩家蓄力状态（不依赖基类 can_fire 默认值）
+var chargingSfx := false
+var sparkTimer := 0.0
 
 const CHARGE_LOOP_KEY := "ricochet_charge"
 
@@ -24,88 +24,88 @@ func _ready() -> void:
 		id = "ricochet"
 
 
-func set_firing(on: bool) -> void:
+func setFiring(on: bool) -> void:
 	if team == Constants.Team.PLAYER:
-		_set_player_firing(on)
+		setPlayerFiring(on)
 	else:
-		can_fire = on
+		canFire = on
 
 
 ## 玩家：按下开始蓄力/松开发射
-func _set_player_firing(on: bool) -> void:
+func setPlayerFiring(on: bool) -> void:
 	if on:
-		if _player_charging:
+		if playerCharging:
 			return            # 正在蓄力
 		if ammo <= 0:
-			out_of_ammo.emit(self)
+			outOfAmmo.emit(self)
 			return
 		if ammo < 999999:
 			ammo -= 1         # 蓄力预留 1 发（H5：蓄力过程消耗弹药）
-		_player_charging = true
-		can_fire = true
-		Audio.play_sfx("ricochet_start.mp3")
-		Audio.start_loop(CHARGE_LOOP_KEY, "ricochet_loop.mp3")
-		_charging_sfx = true
+		playerCharging = true
+		canFire = true
+		Audio.playSfx("ricochet_start.mp3")
+		Audio.startLoop(CHARGE_LOOP_KEY, "ricochet_loop.mp3")
+		chargingSfx = true
 	else:
-		if not _player_charging:
+		if not playerCharging:
 			return
-		_player_charging = false
-		can_fire = false
-		_stop_charge_sfx()
+		playerCharging = false
+		canFire = false
+		stopChargeSfx()
 		if charge > 0.0:
-			_fire_charged()
+			fireCharged()
 
 
-func _physics_process(delta: float) -> void:
-	if team != Constants.Team.PLAYER:
-		# CPU：按住期间按 rate 自动发射（用 FireTimer 节流）
-		if can_fire and ammo > 0:
-			if _fire_timer.is_stopped():
-				_shoot()
-				if rate > 0.0:
-					_fire_timer.start(1.0 / rate)
-		return
-	# 玩家蓄力累计
-	if can_fire and _player_charging:
-		if charge < charge_max:
-			charge = minf(charge + delta, charge_max)
-		_spark_timer -= delta
-		if _spark_timer <= 0:
-			_spark_timer = 0.05
-			if tank != null and is_instance_valid(tank):
-				var muzzle: Vector2 = tank.get_turret_position(spawn_distance) \
-					if tank.has_method("get_turret_position") else global_position
-				Fx.spark(muzzle, tank.get_parent())
-
-
-func _fire_charged() -> void:
-	if bullet_scene == null or tank == null or not is_instance_valid(tank):
+func fireCharged() -> void:
+	if bulletScene == null or tank == null or not is_instance_valid(tank):
 		charge = 0.0
 		return
-	var dmg := damage * clampf(charge / maxf(charge_max, 0.0001), 0.0, 1.0)
-	var b: Node2D = bullet_scene.instantiate()
-	var pos: Vector2 = tank.get_turret_position(spawn_distance) \
-		if tank.has_method("get_turret_position") else tank.global_position
+	var dmg := damage * clampf(charge / maxf(chargeMax, 0.0001), 0.0, 1.0)
+	var b: Node2D = bulletScene.instantiate()
+	var pos: Vector2 = tank.getTurretPosition(spawnDistance) \
+		if tank.has_method("getTurretPosition") else tank.global_position
 	b.global_position = pos
-	b.rotation = _get_aim_angle()
+	b.rotation = getAimAngle()
 	if b.has_method("setup"):
-		b.setup(team, dmg, velocity, life, Color.WHITE, sound_alert_radius)
+		b.setup(team, dmg, velocity, life, Color.WHITE, soundAlertRadius)
 	if "owner_actor" in b:
-		b.owner_actor = tank
+		b.ownerActor = tank
 	for prop in ["impact_sfx", "bullet_spark", "bullet_puff"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()
 	if holder != null:
 		holder.add_child(b)
-	if _fire_sound != null and _fire_sound.stream != null:
-		_fire_sound.play()
-	_apply_recoil()
+	if fireSound != null and fireSound.stream != null:
+		fireSound.play()
+	applyRecoil()
 	shot.emit(self)
 	charge = 0.0
 
 
-func _stop_charge_sfx() -> void:
-	if _charging_sfx:
-		Audio.stop_loop(CHARGE_LOOP_KEY)
-		_charging_sfx = false
+func stopChargeSfx() -> void:
+	if chargingSfx:
+		Audio.stopLoop(CHARGE_LOOP_KEY)
+		chargingSfx = false
+
+
+func _physics_process(delta: float) -> void:
+	if team != Constants.Team.PLAYER:
+		# CPU：按住期间按 rate 自动发射（用 FireTimer 节流）
+		if canFire and ammo > 0:
+			if fireTimer.is_stopped():
+				shoot()
+				if rate > 0.0:
+					fireTimer.start(1.0 / rate)
+		return
+	# 玩家蓄力累计
+	if canFire and playerCharging:
+		if charge < chargeMax:
+			charge = minf(charge + delta, chargeMax)
+		sparkTimer -= delta
+		if sparkTimer <= 0:
+			sparkTimer = 0.05
+			if tank != null and is_instance_valid(tank):
+				var muzzle: Vector2 = tank.getTurretPosition(spawnDistance) \
+					if tank.has_method("getTurretPosition") else global_position
+				Fx.spark(muzzle, tank.get_parent())

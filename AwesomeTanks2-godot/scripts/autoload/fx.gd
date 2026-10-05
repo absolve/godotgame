@@ -18,26 +18,26 @@ func spawn(pos: Vector2, scene: PackedScene, holder: Node = null) -> void:
 		return
 	var fx: Node2D = scene.instantiate()
 	# 先禁发粒子：避免节点默认在 (0,0)=左上角喷一次
-	_set_emitting(fx, false)
+	setEmitting(fx, false)
 	#holder.call_deferred("add_child",fx)
 	holder.add_child(fx)
 	fx.global_position = pos
-	_set_emitting(fx, true)
-	_restart_particles(fx)
+	setEmitting(fx, true)
+	restartParticles(fx)
 
 
-func _set_emitting(node: Node, on: bool) -> void:
+func setEmitting(node: Node, on: bool) -> void:
 	for child in node.get_children():
 		if child is CPUParticles2D:
 			(child as CPUParticles2D).emitting = on
-		_set_emitting(child, on)
+		setEmitting(child, on)
 
 
-func _restart_particles(node: Node) -> void:
+func restartParticles(node: Node) -> void:
 	for child in node.get_children():
 		if child is CPUParticles2D:
 			(child as CPUParticles2D).restart()
-		_restart_particles(child)
+		restartParticles(child)
 
 
 func spark(pos: Vector2, holder: Node = null) -> void:

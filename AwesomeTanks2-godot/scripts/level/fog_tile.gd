@@ -24,19 +24,19 @@ signal disappeared(tile: ATFogTile)
 ## 贴图在 atlas 里的原始边长（fog_tile.png = 12×12），用于换算放大倍数
 const SOURCE_SIZE: float = 12.0
 
-@export var fade_time: float = 0.26      # 消失动画时长（秒）
-@export var grow_scale: float = 1.35     # 消失时放大倍数
-@export var spin_degrees: float = 14.0   # 消失时随机旋转角度
+@export var fadeTime: float = 0.26      # 消失动画时长（秒）
+@export var growScale: float = 1.35     # 消失时放大倍数
+@export var spinDegrees: float = 14.0   # 消失时随机旋转角度
 ## 判定区相对 tile 的放大倍数（>1 表示提前命中：射线不必贴近本格就能清掉它）。
 ## 上限约 3.0 —— 外扩量 = (scale-1)/2 格，只要 < 1 格（墙厚），射线就不会穿墙命中墙后的黑雾。
-@export var collision_scale: float = 1.8
+@export var collisionScale: float = 1.8
 
-var tile_x: int = 0
-var tile_y: int = 0
+var tileX: int = 0
+var tileY: int = 0
 var cleared: bool = false
 
-@onready var _sprite: Sprite2D = $Sprite
-@onready var _body: CollisionShape2D = $Body
+@onready var sprite: Sprite2D = $Sprite
+@onready var body: CollisionShape2D = $Body
 
 
 func _ready() -> void:
@@ -45,42 +45,42 @@ func _ready() -> void:
 	collision_mask = 0
 	monitoring = false
 	monitorable = true
-	_apply_tile_size()
+	applyTileSize()
 
 
 ## 按当前 tile 尺寸校正「贴图放大倍数」与「判定矩形」：
 ## 12×12 的贴图放大到 tile 边长，正好无缝铺满一个 tile；
 ## 判定区按 collision_scale 放大（比格子大一圈 → 射线提前命中，黑雾不用贴近才消失）。
-func _apply_tile_size() -> void:
+func applyTileSize() -> void:
 	var ts := float(Settings.TILE_SIZE)
-	if _sprite != null:
-		_sprite.scale = Vector2.ONE * (ts / SOURCE_SIZE)
-	if _body != null:
+	if sprite != null:
+		sprite.scale = Vector2.ONE * (ts / SOURCE_SIZE)
+	if body != null:
 		# 每个实例用独立形状，避免多实例共享场景 sub_resource
 		var rect := RectangleShape2D.new()
-		rect.size = Vector2(ts, ts) * maxf(collision_scale, 0.1)
-		_body.shape = rect
+		rect.size = Vector2(ts, ts) * maxf(collisionScale, 0.1)
+		body.shape = rect
 
 
 ## 让本瓦片消失（射线命中时调用）
-func clear(with_animation: bool = true) -> void:
+func clear(withAnimation: bool = true) -> void:
 	if cleared:
 		return
 	cleared = true
 	# 立刻不再被射线命中（同一帧内射线可继续向前推进）
 	monitorable = false
-	if not with_animation:
+	if not withAnimation:
 		disappeared.emit(self)
 		queue_free()
 		return
 	var tw := create_tween()
 	tw.set_parallel(true)
-	tw.tween_property(self, "scale", Vector2.ONE * grow_scale, fade_time) \
+	tw.tween_property(self, "scale", Vector2.ONE * growScale, fadeTime) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw.tween_property(self, "modulate:a", 0.0, fade_time) \
+	tw.tween_property(self, "modulate:a", 0.0, fadeTime) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	if spin_degrees > 0.0:
-		tw.tween_property(self, "rotation", deg_to_rad(randf_range(-spin_degrees, spin_degrees)), fade_time)
+	if spinDegrees > 0.0:
+		tw.tween_property(self, "rotation", deg_to_rad(randf_range(-spinDegrees, spinDegrees)), fadeTime)
 	tw.chain().tween_callback(func() -> void:
 		disappeared.emit(self)
 		queue_free())

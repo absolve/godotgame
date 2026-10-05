@@ -15,19 +15,19 @@ class_name ATWeaponRailgun
 const TEX_0: Texture2D = preload("res://sprites/atlas/game_51.png")
 const TEX_1: Texture2D = preload("res://sprites/atlas/game_262.png")
 
-@export var beam_range := 1200.0   # 无墙时的最长光束
-@export var beam_width := 20.0     # 判定带宽度 = 光束起始厚度
+@export var beamRange := 1200.0   # 无墙时的最长光束
+@export var beamWidth := 20.0     # 判定带宽度 = 光束起始厚度
 
-@onready var _wall_ray: RayCast2D = $WallRay
-@onready var _hit_area: Area2D = $HitArea
-@onready var _hit_shape: CollisionShape2D = $HitArea/HitShape
-@onready var _beam: Line2D = $Beam
+@onready var wallRay: RayCast2D = $WallRay
+@onready var hitArea: Area2D = $HitArea
+@onready var hitShape: CollisionShape2D = $HitArea/HitShape
+@onready var beam: Line2D = $Beam
 
-var _beam_t := 0.0          # 光束剩余可见时间
-var _beam_total := 0.1      # 本发光束总时长
-var _flicker_t := 0.0       # 贴图交替计时
-var _tex_alt := false       # 当前帧用 railgun_1？
-var _damaged: Dictionary = {}   # 本发已结算目标（避免同一目标多次受击）
+var beamT := 0.0          # 光束剩余可见时间
+var beamTotal := 0.1      # 本发光束总时长
+var flickerT := 0.0       # 贴图交替计时
+var texAlt := false       # 当前帧用 railgun_1？
+var damaged: Dictionary = {}   # 本发已结算目标（避免同一目标多次受击）
 
 
 func _ready() -> void:
@@ -35,119 +35,119 @@ func _ready() -> void:
 	if id == "":
 		id = "railgun"
 	super._ready()
-	_beam.visible = false
-	_hit_area.monitoring = false
+	beam.visible = false
+	hitArea.monitoring = false
 	# 独立形状副本：防止多实例共享场景 sub_resource 被 resize 相互影响
-	if _hit_shape.shape != null:
-		_hit_shape.shape = (_hit_shape.shape as Shape2D).duplicate()
-
-
-## 光束生命内的显示/命中结算
-func _physics_process(delta: float) -> void:
-	if _beam_t <= 0.0:
-		return
-	_beam_t -= delta
-	_collect_hits()
-	_flicker_t -= delta
-	if _flicker_t <= 0.0:
-		_flicker_t = 1.0 / 30.0
-		_tex_alt = not _tex_alt
-		_beam.texture = TEX_1 if _tex_alt else TEX_0
-	var p := clampf(_beam_t / maxf(_beam_total, 0.0001), 0.0, 1.0)
-	_beam.width = maxf(1.5, beam_width * 0.85 * p + 2.0)
-	_beam.modulate.a = p
-	if _beam_t <= 0.0:
-		_hide_beam()
+	if hitShape.shape != null:
+		hitShape.shape = (hitShape.shape as Shape2D).duplicate()
 
 
 ## 单发轨道炮：射线找墙 → 设判定区 → 显示光束（基类负责 can_fire/计时）
-func _shoot() -> void:
-	_fire_shot()
+func shoot() -> void:
+	fireShot()
 	# 音效 + 弹药（参考基类 _shoot 尾部；基类此处不生成子弹）
-	if _fire_sound != null and _fire_sound.stream != null:
-		_fire_sound.play()
+	if fireSound != null and fireSound.stream != null:
+		fireSound.play()
 	if ammo < 999999:
 		ammo -= 1
 		if ammo <= 0:
 			ammo = 0
-			out_of_ammo.emit(self)
-	_apply_recoil()
+			outOfAmmo.emit(self)
+	applyRecoil()
 	shot.emit(self)
 
 
-func _fire_shot() -> void:
+func fireShot() -> void:
 	if tank == null or not is_instance_valid(tank):
 		return
-	var angle: float = _get_aim_angle()
+	var angle: float = getAimAngle()
 	var dir := Vector2.from_angle(angle)
-	var muzzle: Vector2 = tank.get_turret_position(spawn_distance) \
-		if tank.has_method("get_turret_position") else tank.global_position
+	var muzzle: Vector2 = tank.getTurretPosition(spawnDistance) \
+		if tank.has_method("getTurretPosition") else tank.global_position
 
 	# 1) 射线找墙（只认 WALL 层 → 光束穿过敌人/障碍直到静态墙，与 H5 一致）
-	_wall_ray.global_position = muzzle
-	_wall_ray.rotation = angle
-	_wall_ray.force_raycast_update()
-	var length := beam_range
-	var end := muzzle + dir * beam_range
-	var hit_wall := false
-	if _wall_ray.is_colliding():
-		var cp: Vector2 = _wall_ray.get_collision_point()
-		length = clampf((cp - muzzle).length(), 4.0, beam_range)
+	wallRay.global_position = muzzle
+	wallRay.rotation = angle
+	wallRay.force_raycast_update()
+	var length := beamRange
+	var end := muzzle + dir * beamRange
+	var hitWall := false
+	if wallRay.is_colliding():
+		var cp: Vector2 = wallRay.get_collision_point()
+		length = clampf((cp - muzzle).length(), 4.0, beamRange)
 		end = muzzle + dir * length
-		hit_wall = true
+		hitWall = true
 
 	# 2) 判定区：矩形长=光束长、宽=beam_width，中心在光束中点（跟随当前朝向）
-	var rect := _hit_shape.shape as RectangleShape2D
+	var rect := hitShape.shape as RectangleShape2D
 	if rect != null:
-		rect.size = Vector2(maxf(length, 4.0), beam_width)
-	_hit_area.global_position = muzzle + dir * (length * 0.5)
-	_hit_area.rotation = angle
-	_hit_area.monitoring = true
+		rect.size = Vector2(maxf(length, 4.0), beamWidth)
+	hitArea.global_position = muzzle + dir * (length * 0.5)
+	hitArea.rotation = angle
+	hitArea.monitoring = true
 
 	# 3) 光束（Line2D）：从炮口到终点；贴图两帧交替 + 淡出在 _physics_process
-	_beam.global_position = muzzle
-	_beam.rotation = angle
-	_beam.points = PackedVector2Array([Vector2.ZERO, Vector2(maxf(length, 2.0), 0.0)])
-	_beam.width = beam_width
-	_beam.modulate = Color(1, 1, 1, 1)
-	_beam.visible = true
-	_beam_total = maxf(life, 0.1)
-	_beam_t = _beam_total
-	_damaged.clear()
+	beam.global_position = muzzle
+	beam.rotation = angle
+	beam.points = PackedVector2Array([Vector2.ZERO, Vector2(maxf(length, 2.0), 0.0)])
+	beam.width = beamWidth
+	beam.modulate = Color(1, 1, 1, 1)
+	beam.visible = true
+	beamTotal = maxf(life, 0.1)
+	beamT = beamTotal
+	damaged.clear()
 
 	# 4) 墙端火花（H5 star+10 spark）
-	if hit_wall:
-		Fx.spark(end, _fx_holder())
+	if hitWall:
+		Fx.spark(end, fxHolder())
 
 
 ## 结算当前判定区内未处理过的目标
-func _collect_hits() -> void:
-	if not _hit_area.monitoring:
+func collectHits() -> void:
+	if not hitArea.monitoring:
 		return
-	for body in _hit_area.get_overlapping_bodies():
+	for body in hitArea.get_overlapping_bodies():
 		if body == null or not is_instance_valid(body):
 			continue
 		if body == tank:
 			continue
-		if _damaged.has(body):
+		if damaged.has(body):
 			continue
-		if not body.has_method("on_bullet_hit"):
+		if not body.has_method("onBulletHit"):
 			continue
 		# 同队坦克不误伤；障碍物/生成器等无 team 属性 → 双方都可破坏
 		if "team" in body and int(body.team) == team:
 			continue
-		_damaged[body] = true
-		body.on_bullet_hit(damage, self, null)
+		damaged[body] = true
+		body.onBulletHit(damage, self, null)
 
 
-func _hide_beam() -> void:
-	_beam.visible = false
-	_hit_area.monitoring = false
-	_damaged.clear()
-	_beam_t = 0.0
+func hideBeam() -> void:
+	beam.visible = false
+	hitArea.monitoring = false
+	damaged.clear()
+	beamT = 0.0
 
 
-func _fx_holder() -> Node:
+func fxHolder() -> Node:
 	if tank != null and is_instance_valid(tank) and tank.get_parent() != null:
 		return tank.get_parent()
 	return get_tree().current_scene
+
+
+## 光束生命内的显示/命中结算
+func _physics_process(delta: float) -> void:
+	if beamT <= 0.0:
+		return
+	beamT -= delta
+	collectHits()
+	flickerT -= delta
+	if flickerT <= 0.0:
+		flickerT = 1.0 / 30.0
+		texAlt = not texAlt
+		beam.texture = TEX_1 if texAlt else TEX_0
+	var p := clampf(beamT / maxf(beamTotal, 0.0001), 0.0, 1.0)
+	beam.width = maxf(1.5, beamWidth * 0.85 * p + 2.0)
+	beam.modulate.a = p
+	if beamT <= 0.0:
+		hideBeam()

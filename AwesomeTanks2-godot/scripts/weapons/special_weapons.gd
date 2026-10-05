@@ -26,70 +26,58 @@ const SMOKE_INTERVAL := 1.0 / 6.0
 @export var radius: float = 85.0
 
 var target: Node2D = null          # 敌方追踪目标（H5 followPlayer）
-var _speed: float = 0.0            # 当前速度（H5: this.speed，从 0 加速）
-var _smoke_time: float = 0.0
-var _exploded: bool = false
-var _level: Node = null            # 关卡（发射者注入的 level，用来交还镜头/迷雾）
-var _guiding: bool = false         # 本发是否处于"玩家制导"状态
+var currentSpeed: float = 0.0     # 当前速度（H5: this.speed，从 0 加速）
+var smokeTime: float = 0.0
+var exploded: bool = false
+var weaponLevel: Node = null            # 关卡（发射者注入的 level，用来交还镜头/迷雾）
+var guiding: bool = false         # 本发是否处于"玩家制导"状态
 
 
 func _ready() -> void:
 	super._ready()
 	# owner_actor/owner_weapon 由武器在 add_child 之前就填好了（见 ATWeapon._spawn_bullet）
-	_level = owner_actor.get("level") if is_instance_valid(owner_actor) and "level" in owner_actor else null
+	weaponLevel = ownerActor.get("level") if is_instance_valid(ownerActor) and "level" in ownerActor else null
 	if team == Constants.Team.PLAYER:
-		_begin_guide()
-	elif _player() != null:
-		target = _player()          # 敌方火箭追踪玩家（H5 followPlayer）
-
-
-func _physics_process(delta: float) -> void:
-	# 自己管移动（要加速），所以不调用基类：寿命逻辑照抄基类
-	life -= delta
-	if life <= 0.0:
-		_explode()                  # H5：寿命到 → onBulletKilled → 爆炸
-		return
-	_steer(delta)
-	_speed = minf(_speed + speed / maxf(RAMP_TIME, 0.01) * delta, speed)
-	global_position += Vector2.RIGHT.rotated(rotation) * _speed * delta
-	_trail(delta)
+		beginGuide()
+	elif player() != null:
+		target = player()          # 敌方火箭追踪玩家（H5 followPlayer）
 
 
 # ============================================================
 # 转向
 # ============================================================
-func _steer(delta: float) -> void:
-	if _guiding:
+func steer(delta: float) -> void:
+	if guiding:
 		# 玩家：朝鼠标转（鼠标贴着导弹时不再转，避免原地抖）
 		var m := get_global_mouse_position()
-		var to_mouse := m - global_position
-		if absf(to_mouse.x) > 2.0 and absf(to_mouse.y) > 2.0:
-			var diff := wrapf(to_mouse.angle() - rotation, -PI, PI)
+		var toMouse := m - global_position
+		if absf(toMouse.x) > 2.0 and absf(toMouse.y) > 2.0:
+			var diff := wrapf(toMouse.angle() - rotation, -PI, PI)
 			rotation += MOUSE_TURN * minf(absf(diff), 0.3 * PI) * signf(diff) * delta
 		return
 	# 敌方：朝玩家转，但中间隔了墙/障碍就不追（H5 followPlayer 的 visibilityFilter）
-	if not is_instance_valid(target) or not _has_line_of_sight(target.global_position):
+	if not is_instance_valid(target) or not hasLineOfSight(target.global_position):
 		return
 	var wanted := wrapf((target.global_position - global_position).angle() - rotation, -PI, PI)
 	var step := deg_to_rad(CPU_TURN_SPEED) * delta
 	rotation += clampf(wanted, -step, step)
 
 
-func _has_line_of_sight(to: Vector2) -> bool:
+func hasLineOfSight(to: Vector2) -> bool:
 	var space := get_world_2d().direct_space_state
 	if space == null:
 		return true
 	var q := PhysicsRayQueryParameters2D.new()
 	q.from = global_position
 	q.to = to
-	q.collision_mask = Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
+	q.collision_mask = Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
 	return space.intersect_ray(q).is_empty()
 
 
-func _trail(delta: float) -> void:
-	_smoke_time -= delta
-	if _smoke_time <= 0.0:
-		_smoke_time = SMOKE_INTERVAL
+func trail(delta: float) -> void:
+	smokeTime -= delta
+	if smokeTime <= 0.0:
+		smokeTime = SMOKE_INTERVAL
 		# H5：在弹尾 5px 处冒烟
 		Fx.smoke(global_position - Vector2.RIGHT.rotated(rotation) * 5.0, get_parent())
 
@@ -97,58 +85,70 @@ func _trail(delta: float) -> void:
 # ============================================================
 # 制导的接管 / 交还（镜头、玩家操作权、迷雾都由 Level 统一处理）
 # ============================================================
-func _begin_guide() -> void:
-	_guiding = true
-	if _level != null and is_instance_valid(_level) and _level.has_method("set_guided_rocket"):
-		_level.call("set_guided_rocket", self)
+func beginGuide() -> void:
+	guiding = true
+	if weaponLevel != null and is_instance_valid(weaponLevel) and weaponLevel.has_method("setGuidedRocket"):
+		weaponLevel.call("setGuidedRocket", self)
 
 
-func _release_guide() -> void:
-	if not _guiding:
+func releaseGuide() -> void:
+	if not guiding:
 		return
-	_guiding = false
-	if _level != null and is_instance_valid(_level) and _level.has_method("clear_guided_rocket"):
-		_level.call("clear_guided_rocket", self)
+	guiding = false
+	if weaponLevel != null and is_instance_valid(weaponLevel) and weaponLevel.has_method("clearGuidedRocket"):
+		weaponLevel.call("clearGuidedRocket", self)
 
 
 ## 立刻引爆（H5 requestKill：玩家再按一次开火 / 切武器 / 玩家阵亡）
 func detonate() -> void:
-	_explode()
+	explode()
 
 
 # ============================================================
 # 命中 / 爆炸
 # ============================================================
-func _on_hit(other: Node) -> void:
-	if _is_owner(other):
+func onHit(other: Node) -> void:
+	if isOwner(other):
 		return
-	_explode()
+	explode()
 
 
 ## 兜底：万一有谁调基类的 _die（本类自己管寿命/命中），一样走爆炸而不是消散烟
-func _die(_hit_something: bool) -> void:
-	_explode()
+func die(hitSomething: bool) -> void:
+	explode()
 
 
-func _explode() -> void:
-	if _exploded:
+func explode() -> void:
+	if exploded:
 		return
-	_exploded = true
-	_release_guide()
+	exploded = true
+	releaseGuide()
 	if is_inside_tree():
-		ATBullet.explode(self, global_position, radius, damage, team)
+		ATBullet.explodeAt(self, global_position, radius, damage, team)
 	queue_free()
+
+
+func player() -> Node2D:
+	if weaponLevel == null or not is_instance_valid(weaponLevel):
+		return null
+	var p = weaponLevel.get("player")
+	if p is Node2D and is_instance_valid(p) and bool(p.get("alive")):
+		return p
+	return null
+
+
+func _physics_process(delta: float) -> void:
+	# 自己管移动（要加速），所以不调用基类：寿命逻辑照抄基类
+	life -= delta
+	if life <= 0.0:
+		explode()                  # H5：寿命到 → onBulletKilled → 爆炸
+		return
+	steer(delta)
+	currentSpeed = minf(currentSpeed + speed / maxf(RAMP_TIME, 0.01) * delta, speed)
+	global_position += Vector2.RIGHT.rotated(rotation) * currentSpeed * delta
+	trail(delta)
 
 
 func _exit_tree() -> void:
 	# 关卡结束/被释放时也要把镜头和操作权还回去，别留在导弹上
-	_release_guide()
-
-
-func _player() -> Node2D:
-	if _level == null or not is_instance_valid(_level):
-		return null
-	var p = _level.get("player")
-	if p is Node2D and is_instance_valid(p) and bool(p.get("alive")):
-		return p
-	return null
+	releaseGuide()

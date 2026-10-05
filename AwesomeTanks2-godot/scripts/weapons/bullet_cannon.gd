@@ -4,23 +4,23 @@ extends ATBullet
 class_name ATCannonBullet
 
 var radius: float = 90.0
-var _exploded := false
+var exploded := false
 
 
-func _on_hit(other: Node) -> void:
-	if _is_owner(other):
+func onHit(other: Node) -> void:
+	if isOwner(other):
 		return
-	_explode()
+	explode()
 
 
-func _die(_hit_something: bool) -> void:
+func die(hitSomething: bool) -> void:
 	# 寿命耗尽同样引爆（保证飞到头也会炸）
-	_explode()
+	explode()
 
 
-func _explode() -> void:
-	if _exploded or not is_inside_tree():
+func explode() -> void:
+	if exploded or not is_inside_tree():
 		return
-	_exploded = true
-	ATBullet.explode(self, global_position, radius, damage, team)
+	exploded = true
+	ATBullet.explodeAt(self, global_position, radius, damage, team)
 	queue_free()

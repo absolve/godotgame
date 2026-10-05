@@ -4,94 +4,84 @@ extends TextureButton
 ## 子节点在场景 weapon_card.tscn 中定义，mouse_filter=IGNORE 不拦截点击
 
 signal clicked(key: String)
-signal refill_held(key: String)
+signal refillHeld(key: String)
 
 const TEX_PIP_ON: Texture2D = preload("res://sprites/menu/upgrades/parts/buttons/on.png.tres")
 const TEX_PIP_OFF: Texture2D = preload("res://sprites/menu/upgrades/parts/buttons/off.png.tres")
 
 const HOLD_TIME: float = 0.333
 
-@export var weapon_key: String = ""
+@export var weaponKey: String = ""
 
-@onready var _icon: TextureRect = $Icon
-@onready var _title: Label = $Title
-@onready var _pips: Array[TextureRect] = [$Pip0, $Pip1, $Pip2, $Pip3, $Pip4]
-@onready var _price: Label = $Price
-@onready var _ammo_bg: TextureRect = $AmmoBg
-@onready var _ammo_bar: TextureRect = $AmmoBar
+@onready var icon: TextureRect = $Icon
+@onready var title: Label = $Title
+@onready var pips: Array[TextureRect] = [$Pip0, $Pip1, $Pip2, $Pip3, $Pip4]
+@onready var priceLabel: Label = $Price
+@onready var ammoBg: TextureRect = $AmmoBg
+@onready var ammoBar: TextureRect = $AmmoBar
 
-var _level: int = -1
-var _holding: bool = false
-var _hold_fired: bool = false
-var _hold_left: float = 0.0
+var weaponLevel: int = -1
+var holding: bool = false
+var holdFired: bool = false
+var holdLeft: float = 0.0
 
 
 func _ready() -> void:
-	button_down.connect(_on_down)
-	button_up.connect(_on_up)
-	if weapon_key != "":
-		setup(weapon_key)
+	button_down.connect(onDown)
+	button_up.connect(onUp)
+	if weaponKey != "":
+		setup(weaponKey)
 
 
 func setup(key: String) -> void:
-	weapon_key = key
-	var icon_path := "res://sprites/menu/upgrades/parts/%s.png.tres" % key
-	if ResourceLoader.exists(icon_path):
-		_icon.texture = load(icon_path)
-	_title.text = key.capitalize()
+	weaponKey = key
+	var iconPath := "res://sprites/menu/upgrades/parts/%s.png.tres" % key
+	if ResourceLoader.exists(iconPath):
+		icon.texture = load(iconPath)
+	title.text = key.capitalize()
 	refresh()
 
 
 func refresh() -> void:
-	_level = Game.get_weapon_level(weapon_key)
+	weaponLevel = Game.getWeaponLevel(weaponKey)
 	# 等级灯：拥有(level>=0)时显示，level>=i 的亮 on
-	for i in range(_pips.size()):
-		_pips[i].visible = _level >= 0
-		_pips[i].texture = TEX_PIP_ON if i < _level else TEX_PIP_OFF
+	for i in range(pips.size()):
+		pips[i].visible = weaponLevel >= 0
+		pips[i].texture = TEX_PIP_ON if i < weaponLevel else TEX_PIP_OFF
 	# 价格：未拥有→购买价；0..4→下一级升级价；5→MAX
-	if _level < 0:
-		_price.text = Game._format_money(int(Settings.PRICES[weapon_key][0]))
-	elif _level < 5:
-		_price.text = Game._format_money(int(Settings.PRICES[weapon_key][_level + 1]))
+	if weaponLevel < 0:
+		priceLabel.text = Game.formatMoney(int(Settings.PRICES[weaponKey][0]))
+	elif weaponLevel < 5:
+		priceLabel.text = Game.formatMoney(int(Settings.PRICES[weaponKey][weaponLevel + 1]))
 	else:
-		_price.text = "MAX"
+		priceLabel.text = "MAX"
 	# 弹药条：仅非 minigun 且拥有时显示，高度按百分比从底向上长
-	var show_ammo: bool = weapon_key != "minigun" and _level >= 0
-	if show_ammo:
-		var p: float = Game.get_ammo_percent(weapon_key)
+	var showAmmo: bool = weaponKey != "minigun" and weaponLevel >= 0
+	if showAmmo:
+		var p: float = Game.getAmmoPercent(weaponKey)
 		var h: float = max(44.0 * p, 1.0)
-		_ammo_bar.size = Vector2(10, h)
-		_ammo_bar.position = Vector2(75, 68.0 - h)
-		_ammo_bg.visible = true
-		_ammo_bar.visible = true
+		ammoBar.size = Vector2(10, h)
+		ammoBar.position = Vector2(75, 68.0 - h)
+		ammoBg.visible = true
+		ammoBar.visible = true
 	else:
-		_ammo_bg.visible = false
-		_ammo_bar.visible = false
+		ammoBg.visible = false
+		ammoBar.visible = false
 	# minigun 满级后禁用
-	disabled = (weapon_key == "minigun" and _level >= 5)
+	disabled = (weaponKey == "minigun" and weaponLevel >= 5)
 
 
-func _on_down() -> void:
-	Audio.play_button_down()
-	_holding = true
-	_hold_fired = false
-	_hold_left = HOLD_TIME
+func onDown() -> void:
+	Audio.playButtonDown()
+	holding = true
+	holdFired = false
+	holdLeft = HOLD_TIME
 
 
-func _on_up() -> void:
-	_holding = false
-	if not _hold_fired:
-		clicked.emit(weapon_key)
-
-
-func _process(delta: float) -> void:
-	if not _holding or _hold_fired:
-		return
-	_hold_left -= delta
-	if _hold_left <= 0.0:
-		_hold_fired = true
-		if _level >= 0 and weapon_key != "minigun":
-			refill_held.emit(weapon_key)
+func onUp() -> void:
+	holding = false
+	if not holdFired:
+		clicked.emit(weaponKey)
 
 
 # ---------- 闪烁提示（对应 H5 flashElement） ----------
@@ -99,9 +89,19 @@ func flash() -> void:
 	FlashFx.flash(self)        # 整卡：购买/升级成功
 
 
-func flash_price() -> void:
-	FlashFx.flash(_price)      # 价签：钱不够
+func flashPrice() -> void:
+	FlashFx.flash(priceLabel)      # 价签：钱不够
 
 
-func flash_ammo() -> void:
-	FlashFx.flash(_ammo_bar)   # 弹药条：补弹成功
+func flashAmmo() -> void:
+	FlashFx.flash(ammoBar)   # 弹药条：补弹成功
+
+
+func _process(delta: float) -> void:
+	if not holding or holdFired:
+		return
+	holdLeft -= delta
+	if holdLeft <= 0.0:
+		holdFired = true
+		if weaponLevel >= 0 and weaponKey != "minigun":
+			refillHeld.emit(weaponKey)

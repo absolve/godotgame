@@ -31,7 +31,7 @@
 
 文件：[level.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/level/level.gd)
 
-- [ ] 🔲 `_spawn_player(pos)`：实例化 [Player.tscn](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scenes/Player.tscn)，挂到 `player`，绑定 HUD（L62-63）
+- [ ] 🔲 `_spawn_player(pos)`：实例化 [player.tscn](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scenes/player.tscn)，挂到 `player`，绑定 HUD（L62-63）
 - [ ] 🔲 `_spawn_enemy(tile, pos)`：根据瓦片类型实例化 Enemy/TurretEnemy/Spawner，存入 `enemies[]`（L65-66）
 - [ ] 🔲 `_spawn_object(kind, pos)`：实例化 barrel/crate/gate/bricks 障碍物（L68-69）
 - [ ] 🔲 连接敌人 `killed` 信号 → `on_enemy_killed()`；玩家 `killed` → `on_player_killed()`
@@ -91,7 +91,7 @@
 敌人状态：`scripts/enemies/states/`（基类 `enemy_state.gd` 提供 `can_see_player()/aim_at_player()/fire()/navigate_to()/move_towards()` 等工具）
 寻路：`scripts/level/pathfinder.gd`（`ATPathfinder`，Godot 内置 `AStarGrid2D` 包装；由 `Level` 持有，见下）
 
-**已接入**（`scenes/Enemy.tscn` 里挂了 `StateMachine`，子节点为 4 个状态，初始 `Idle`）：
+**已接入**（`scenes/enemy.tscn` 里挂了 `StateMachine`，子节点为 4 个状态，初始 `Idle`）：
 
 | 状态 | 行为 |
 |---|---|
@@ -136,7 +136,7 @@
 
 ## 七、敌人类型（**已全部创建；重复类型已合并为形态场景**）
 
-基类：`scenes/Enemy.tscn`（`tank.tscn` + `scripts/enemies/enemy.gd`，另加 `BaseSprite` 供炮塔底座）
+基类：`scenes/enemy.tscn`（`tank.tscn` + `scripts/enemies/enemy.gd`，另加 `BaseSprite` 供炮塔底座）
 - 敌人基本参数都在 `ATEnemy` 的导出属性里：`enemy_id / tank_key / max_health / points / move_speed / turret_speed / view_angle / view_distance / shoot_angle / shoot_range / alert_radius / is_boss`
 - 坦克/Boss 的车体与炮塔贴图写在各独立场景的 `SpriteFrames` 上（车体两帧 `move` 动画，可扩展更多帧）
 - 武器 = `scenes/weapons/*.tscn` 作为**子节点实例**（独立场景）或运行时实例化（形态场景），并在其中覆盖 CPU 专用参数；`ATEnemy._collect_weapons()` 自动收集并注入 `tank`/`team`
@@ -147,8 +147,8 @@
 |---|---|---|
 | 移动坦克 9 种 | 各自独立场景：`EnemyMinigun / Shotgun / Cannon / Rockets / Ricochet / Laser / Railgun / Flamethrower / Kamikaze` | 9 |
 | Boss 7 种 | 各自独立场景：`BossShotgun / Cannon / Rockets / Laser / Ricochet / Railgun / Flamethrower`（boss_body + `*_boss` 炮塔，`is_boss=true`） | 7 |
-| 固定炮塔 8 种 | **合并为 1 个形态场景** `TurretEnemy.tscn`（底座+炮塔两 Sprite），类型数据在 `ATEnemyTypes.TURRETS`，生成时 `apply_type()` 应用 | 1 |
-| 生成器 7 种 | **合并为 1 个形态场景** `Spawner.tscn`，类型数据在 `ATEnemyTypes.SPAWNERS`，生成时 `apply_kind()` 应用（贴图 `spawners/<kind>.png`、血量、分数、6 只产出表） | 1 |
+| 固定炮塔 8 种 | **合并为 1 个形态场景** `turret_enemy.tscn`（底座+炮塔两 Sprite），类型数据在 `ATEnemyTypes.TURRETS`，生成时 `apply_type()` 应用 | 1 |
+| 生成器 7 种 | **合并为 1 个形态场景** `spawner.tscn`，类型数据在 `ATEnemyTypes.SPAWNERS`，生成时 `apply_kind()` 应用（贴图 `spawners/<kind>.png`、血量、分数、6 只产出表） | 1 |
 
 - [x] ✅ 数值取自 H5（坦克 L21975-22065 / 炮塔 L21775-21861 / Boss L22067-22145 / 生成器 L22299-22362），基准 `level.index=0, difficulty=1.0`
 - [x] ✅ 类型数据表：`scripts/enemies/enemy_types.gd`（`TURRETS` / `TILE_TURRET` / `SPAWNERS` / `TILE_SPAWNER` + 形态场景路径）
@@ -241,7 +241,7 @@
 - [ ] 🔲 [level.gd](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scripts/level/level.gd) `_show_summary()` 结算面板（L103）
 - [ ] 🔲 关卡成功：分数 + 金币奖励 → 解锁下一关 → 升级菜单
 - [ ] 🔲 关卡失败：返回升级菜单
-- [ ] 🔲 通关祝贺界面（[Congratulations.tscn](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scenes/Congratulations.tscn)）
+- [ ] 🔲 通关祝贺界面（[congratulations.tscn](file:///f:/AwesomeTanks.github.io-main/AwesomeTanks2-godot/scenes/congratulations.tscn)）
 - [ ] 🔲 Boot 场景资源预加载（`ResourceLoader.load_threaded_request`）
 
 ---

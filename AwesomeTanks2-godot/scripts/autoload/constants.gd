@@ -17,13 +17,6 @@ enum Layer {
 	FOG = 7,             # 黑雾瓦片（只被视野射线检测，不参与其它碰撞）
 }
 
-# 常用碰撞掩码工具
-func layer_mask(layers: Array) -> int:
-	var mask := 0
-	for l in layers:
-		mask |= 1 << (l - 1)
-	return mask
-
 # ============================================================
 # 队伍
 # ============================================================
@@ -122,16 +115,35 @@ const CHAR_TO_TILE: Dictionary = {
 	"❾": Tile.TANK_KAMIKAZE,
 }
 
+# ============================================================
+# 关卡主题
+# ============================================================
+enum GameTheme { GRASS, SNOW, DESERT }
+
+const THEME_NAMES: Dictionary = {
+	"grass": GameTheme.GRASS,
+	"snow": GameTheme.SNOW,
+	"desert": GameTheme.DESERT,
+}
+
+
+# 常用碰撞掩码工具
+func layerMask(layers: Array) -> int:
+	var mask := 0
+	for l in layers:
+		mask |= 1 << (l - 1)
+	return mask
+
 ## 判断瓦片是否为静态墙体（不可破坏）
-func is_static_wall(tile: int) -> bool:
+func isStaticWall(tile: int) -> bool:
 	return tile == Tile.WALL or tile == Tile.SECRET
 
 ## 判断瓦片是否为可破坏障碍物
-func is_destructible(tile: int) -> bool:
+func isDestructible(tile: int) -> bool:
 	return tile in [Tile.BRICKS_1, Tile.BRICKS_2, Tile.WOOD, Tile.CRATE, Tile.BARREL]
 
 ## 判断瓦片是否为敌人单位
-func is_enemy(tile: int) -> bool:
+func isEnemy(tile: int) -> bool:
 	return tile in [
 		Tile.SPAWNER_1, Tile.SPAWNER_2, Tile.SPAWNER_3, Tile.SPAWNER_4,
 		Tile.SPAWNER_5, Tile.SPAWNER_6, Tile.SPAWNER_7,
@@ -148,7 +160,7 @@ func is_enemy(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为炮塔（固定）
-func is_turret(tile: int) -> bool:
+func isTurret(tile: int) -> bool:
 	return tile in [
 		Tile.TURRET_MINIGUN, Tile.TURRET_SHOTGUN, Tile.TURRET_CANNON,
 		Tile.TURRET_ROCKETS, Tile.TURRET_LASER, Tile.TURRET_FLAMETHROWER,
@@ -156,7 +168,7 @@ func is_turret(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为 Boss
-func is_boss(tile: int) -> bool:
+func isBoss(tile: int) -> bool:
 	return tile in [
 		Tile.BOSS_SHOTGUN, Tile.BOSS_CANNON, Tile.BOSS_ROCKETS,
 		Tile.BOSS_LASER, Tile.BOSS_RICOCHET, Tile.BOSS_FLAMETHROWER,
@@ -164,19 +176,8 @@ func is_boss(tile: int) -> bool:
 	]
 
 ## 判断瓦片是否为生成器
-func is_spawner(tile: int) -> bool:
+func isSpawner(tile: int) -> bool:
 	return tile in [
 		Tile.SPAWNER_1, Tile.SPAWNER_2, Tile.SPAWNER_3, Tile.SPAWNER_4,
 		Tile.SPAWNER_5, Tile.SPAWNER_6, Tile.SPAWNER_7,
 	]
-
-# ============================================================
-# 关卡主题
-# ============================================================
-enum gameTheme { GRASS, SNOW, DESERT }
-
-const THEME_NAMES: Dictionary = {
-	"grass": gameTheme.GRASS,
-	"snow": gameTheme.SNOW,
-	"desert": gameTheme.DESERT,
-}

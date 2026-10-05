@@ -187,8 +187,8 @@ offset_bottom = 40.0
 texture_normal = ExtResource("18_x_n")
 texture_hover = ExtResource("19_x_h")
 
-[connection signal="pressed" from="TopRight/SoundBtn" to="." method="_on_sound_toggled"]
-[connection signal="pressed" from="TopRight/MusicBtn" to="." method="_on_music_toggled"]
-[connection signal="pressed" from="AboutBtn" to="." method="_on_about_pressed"]
-[connection signal="pressed" from="PlayBtn" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="CreditsLayer/CreditsCenter/CreditsHolder/CloseBtn" to="." method="_on_credits_close_pressed"]
+[connection signal="pressed" from="TopRight/SoundBtn" to="." method="onSoundToggled"]
+[connection signal="pressed" from="TopRight/MusicBtn" to="." method="onMusicToggled"]
+[connection signal="pressed" from="AboutBtn" to="." method="onAboutPressed"]
+[connection signal="pressed" from="PlayBtn" to="." method="onPlayPressed"]
+[connection signal="pressed" from="CreditsLayer/CreditsCenter/CreditsHolder/CloseBtn" to="." method="onCreditsClosePressed"]

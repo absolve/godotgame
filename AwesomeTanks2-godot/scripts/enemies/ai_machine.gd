@@ -26,37 +26,37 @@ func update(delta: float) -> void:
 	if current:
 		current.update(owner, delta)
 
-func on_player_in_sight() -> void:
-	if current: current.on_player_in_sight(owner)
-func on_sound_emitted(x: float, y: float) -> void:
-	if current: current.on_sound_emitted(owner, x, y)
-func on_freeze() -> void:
-	if current: current.on_freeze(owner)
-func on_unfreeze() -> void:
-	if current and current.has_method("on_unfreeze"):
-		current.on_unfreeze(owner)
+func onPlayerInSight() -> void:
+	if current: current.onPlayerInSight(owner)
+func onSoundEmitted(x: float, y: float) -> void:
+	if current: current.onSoundEmitted(owner, x, y)
+func onFreeze() -> void:
+	if current: current.onFreeze(owner)
+func onUnfreeze() -> void:
+	if current and current.has_method("onUnfreeze"):
+		current.onUnfreeze(owner)
 
 
 class ATAIState:
 	var machine: ATAIMachine = null
-	func enter(_o: Node2D) -> void: pass
-	func exit(_o: Node2D) -> void: pass
-	func update(_o: Node2D, _delta: float) -> void: pass
-	func on_player_in_sight(_o: Node2D) -> void: pass
-	func on_sound_emitted(_o: Node2D, _x: float, _y: float) -> void: pass
-	func on_freeze(_o: Node2D) -> void: pass
+	func enter(o: Node2D) -> void: pass
+	func exit(o: Node2D) -> void: pass
+	func update(o: Node2D, delta: float) -> void: pass
+	func onPlayerInSight(o: Node2D) -> void: pass
+	func onSoundEmitted(o: Node2D, x: float, y: float) -> void: pass
+	func onFreeze(o: Node2D) -> void: pass
 
 
 # 示例状态实现（骨架，逻辑待补）
 class StateIdle extends ATAIState:
-	func on_player_in_sight(_o: Node2D) -> void: machine.change(machine.owner.get("state_goto_player"))
-	func on_sound_emitted(_o: Node2D, _x: float, _y: float) -> void: pass
+	func onPlayerInSight(o: Node2D) -> void: machine.change(machine.owner.get("state_goto_player"))
+	func onSoundEmitted(o: Node2D, x: float, y: float) -> void: pass
 
 class StateGoToPlayer extends ATAIState:
-	func update(_o: Node2D, _delta: float) -> void: pass
+	func update(o: Node2D, delta: float) -> void: pass
 
 class StateFollowPlayer extends ATAIState:
-	func update(_o: Node2D, _delta: float) -> void: pass
+	func update(o: Node2D, delta: float) -> void: pass
 
 class StateFrozen extends ATAIState:
-	func on_unfreeze(_o: Node2D) -> void: machine.change(machine.owner.get("state_idle"))
+	func onUnfreeze(o: Node2D) -> void: machine.change(machine.owner.get("state_idle"))

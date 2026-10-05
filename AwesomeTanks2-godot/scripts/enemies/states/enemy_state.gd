@@ -32,7 +32,7 @@ func player() -> Node2D:
 	return null
 
 
-func player_distance() -> float:
+func playerDistance() -> float:
 	var p := player()
 	var e := enemy()
 	if p == null or e == null:
@@ -44,7 +44,7 @@ func player_distance() -> float:
 ##   距离 < 60px 直接算看见；超过视野距离/超出视野角/有遮挡则看不见。
 ##   刚挨打或被同伴喊话（alerted）时**不再要求玩家在炮塔视野角内**
 ##   （H5 searchForPlayer(alerted) 里的 `!e &&` 就是干这个的），所以从背后打它也会被发现。
-func can_see_player() -> bool:
+func canSeePlayer() -> bool:
 	var e := enemy()
 	var p := player()
 	if e == null or p == null:
@@ -52,18 +52,18 @@ func can_see_player() -> bool:
 	var d := e.global_position.distance_to(p.global_position)
 	if d < 60.0:
 		return true
-	if d > e.view_distance:
+	if d > e.viewDistance:
 		return false
 	if not e.alerted:
 		var aim := (p.global_position - e.global_position).angle()
-		var facing := e.get_turret_rotation()
-		if absf(wrapf(aim - facing, -PI, PI)) > maxf(e.view_angle, 0.1):
+		var facing := e.getTurretRotation()
+		if absf(wrapf(aim - facing, -PI, PI)) > maxf(e.viewAngle, 0.1):
 			return false
-	return line_of_sight(p.global_position)
+	return lineOfSight(p.global_position)
 
 
 ## 到指定点之间是否没有墙/障碍遮挡
-func line_of_sight(to: Vector2) -> bool:
+func lineOfSight(to: Vector2) -> bool:
 	var e := enemy()
 	if e == null:
 		return false
@@ -73,7 +73,7 @@ func line_of_sight(to: Vector2) -> bool:
 	var q := PhysicsRayQueryParameters2D.new()
 	q.from = e.global_position
 	q.to = to
-	q.collision_mask = Constants.layer_mask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
+	q.collision_mask = Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
 	var exclude: Array[RID] = []
 	if e is CollisionObject2D:
 		exclude.append((e as CollisionObject2D).get_rid())
@@ -82,22 +82,22 @@ func line_of_sight(to: Vector2) -> bool:
 
 
 ## 炮塔转向指定世界角度（限制转速的平滑转向）
-func aim_at(angle: float, delta: float) -> void:
+func aimAt(angle: float, delta: float) -> void:
 	var e := enemy()
 	if e != null:
-		e.rotate_turret(angle, delta)
+		e.rotateTurret(angle, delta)
 
 
 ## 炮塔转向玩家，返回是否已经对准（角度误差在 shoot_angle 内）
-func aim_at_player(delta: float) -> bool:
+func aimAtPlayer(delta: float) -> bool:
 	var e := enemy()
 	var p := player()
 	if e == null or p == null:
 		return false
 	var aim := (p.global_position - e.global_position).angle()
-	e.rotate_turret(aim, delta)
-	var facing := e.get_turret_rotation()
-	return absf(wrapf(aim - facing, -PI, PI)) <= deg_to_rad(maxf(e.shoot_angle, 1.0))
+	e.rotateTurret(aim, delta)
+	var facing := e.getTurretRotation()
+	return absf(wrapf(aim - facing, -PI, PI)) <= deg_to_rad(maxf(e.shootAngle, 1.0))
 
 
 ## 开火/停火（持续武器如激光/电枪也适用）
@@ -106,32 +106,32 @@ func fire(on: bool) -> void:
 	if e == null:
 		return
 	if on:
-		e.start_fire()
+		e.startFire()
 	else:
-		e.stop_fire()
+		e.stopFire()
 
 
 ## 朝目标点寻路移动（能直线到达就直冲，被墙/障碍挡住则走 A* 路径绕开）
-func navigate_to(target: Vector2) -> void:
+func navigateTo(target: Vector2) -> void:
 	var e := enemy()
-	if e == null or e.move_speed <= 0.0:
+	if e == null or e.moveSpeed <= 0.0:
 		return
-	e.navigate_to(target)
+	e.navigateTo(target)
 
 
 ## 朝目标点直线移动（不寻路；坦克按 move_speed 推进，炮塔/生成器会忽略）
-func move_towards(target: Vector2) -> void:
+func moveTowards(target: Vector2) -> void:
 	var e := enemy()
-	if e == null or e.move_speed <= 0.0:
+	if e == null or e.moveSpeed <= 0.0:
 		return
 	var dir := (target - e.global_position)
 	if dir.length() < 1.0:
-		stop_moving()
+		stopMoving()
 		return
 	e.move(dir.normalized())
 
 
-func stop_moving() -> void:
+func stopMoving() -> void:
 	var e := enemy()
 	if e == null:
 		return

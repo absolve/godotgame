@@ -14,30 +14,30 @@ var team: int = Constants.Team.CPU
 var damage: float = 10.0
 var speed: float = 600.0
 var life: float = 1.0
-var hit_color: Color = Color.WHITE
-var sound_alert_radius: float = 0.0
-var owner_actor: Node = null      # 布设者（射击坦克），避免自撞
-var owner_weapon: Node = null     # 发射它的武器（命中回调要用来判断火焰/激光等特性）
+var hitColor: Color = Color.WHITE
+var soundAlertRadius: float = 0.0
+var ownerActor: Node = null      # 布设者（射击坦克），避免自撞
+var ownerWeapon: Node = null     # 发射它的武器（命中回调要用来判断火焰/激光等特性）
 
 # —— 由武器下发（见 ATWeapon._spawn_bullet）——
-var impact_sfx := ""
-var bullet_spark := true          # 命中时爆火花
-var bullet_puff := false          # 寿命耗尽时冒消散烟
+var impactSfx := ""
+var bulletSpark := true          # 命中时爆火花
+var bulletPuff := false          # 寿命耗尽时冒消散烟
 
-@onready var _sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite") as AnimatedSprite2D
+@onready var sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite") as AnimatedSprite2D
 
 
 func _ready() -> void:
 	collision_layer = 1 << (Constants.Layer.PROJECTILE - 1)
-	collision_mask = Constants.layer_mask([
+	collision_mask = Constants.layerMask([
 		Constants.Layer.WALL, Constants.Layer.OBSTACLE,
 		Constants.Layer.PLAYER, Constants.Layer.ENEMY, Constants.Layer.ENEMY_SPAWNER,
 	])
-	body_entered.connect(_on_hit)
+	body_entered.connect(onHit)
 	# 贴图/动画由派生子弹场景的 SpriteFrames 提供，自动播第一个动画
-	if _sprite != null and _sprite.sprite_frames != null \
-			and _sprite.sprite_frames.get_animation_names().size() > 0:
-		_sprite.play(_sprite.sprite_frames.get_animation_names()[0])
+	if sprite != null and sprite.sprite_frames != null \
+			and sprite.sprite_frames.get_animation_names().size() > 0:
+		sprite.play(sprite.sprite_frames.get_animation_names()[0])
 
 
 func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Color, alert_: float) -> void:
@@ -45,70 +45,62 @@ func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Colo
 	damage = damage_
 	speed = speed_
 	life = life_
-	hit_color = color_
-	sound_alert_radius = alert_
+	hitColor = color_
+	soundAlertRadius = alert_
 
 
 ## 运行时替换贴图（已废弃：贴图由派生子弹场景直接设置）
-func set_bullet_texture(_tex: Texture2D) -> void:
+func setBulletTexture(tex: Texture2D) -> void:
 	pass
 
 
-func _physics_process(delta: float) -> void:
-	life -= delta
-	if life <= 0:
-		_die(false)
+func onHit(other: Node) -> void:
+	if isOwner(other):
 		return
-	global_position += Vector2.RIGHT.rotated(rotation) * speed * delta
-
-
-func _on_hit(other: Node) -> void:
-	if _is_owner(other):
-		return
-	if other.has_method("on_bullet_hit"):
-		var other_team: int = other.team if "team" in other else Constants.Team.CPU
-		if other_team != team:
+	if other.has_method("onBulletHit"):
+		var otherTeam: int = other.team if "team" in other else Constants.Team.CPU
+		if otherTeam != team:
 			# 发射者在子弹飞行途中可能已经被销毁（坦克被击毁 → 它的武器子节点一起释放，
 			# 而子弹挂在 ObjectsLayer 上还活着）。这里必须传 null 而不是"已释放的对象"，
 			# 否则受击方的 on_bullet_hit(src: Node) 形参会报 "previously freed is not a subclass"。
-			other.on_bullet_hit(damage, owner_weapon if is_instance_valid(owner_weapon) else null, self)
-	_die(true)
+			other.onBulletHit(damage, ownerWeapon if is_instance_valid(ownerWeapon) else null, self)
+	die(true)
 
 
 ## 是否是布设者自身（生成瞬间贴脸时会先碰撞到自己）
-func _is_owner(other: Node) -> bool:
-	return is_instance_valid(owner_actor) and other == owner_actor
+func isOwner(other: Node) -> bool:
+	return is_instance_valid(ownerActor) and other == ownerActor
 
 
-func _die(hit_something: bool) -> void:
+func die(hitSomething: bool) -> void:
 	if not is_inside_tree():
 		return
-	if hit_something:
-		_on_contact_effects()
-	elif bullet_puff:
+	if hitSomething:
+		onContactEffects()
+	elif bulletPuff:
 		Fx.puff(global_position, get_parent())
 	queue_free()
 
 
 ## 命中任何东西：火花 + 命中音（H5 spawnSparks + bullet_hit.mp3）
-func _on_contact_effects() -> void:
+func onContactEffects() -> void:
 	if not is_inside_tree():
 		return
-	if bullet_spark:
+	if bulletSpark:
 		Fx.spark(global_position, get_parent())
-	if impact_sfx != "":
-		Audio.play_sfx(impact_sfx)
+	if impactSfx != "":
+		Audio.playSfx(impactSfx)
 
 
 ## 半径爆炸/范围伤害 + 爆炸特效（供 cannon/rocket/mine 复用）
-static func explode(owner: Node2D, origin: Vector2, radius: float, dmg: float, my_team: int) -> void:
-	Audio.play_sfx("explosion.mp3")
+static func explodeAt(owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
+	Audio.playSfx("explosion.mp3")
 	Fx.explosion(origin, owner.get_parent())
-	damage_in_radius(owner, origin, radius, dmg, my_team)
+	damageInRadius(owner, origin, radius, dmg, myTeam)
 
 
 ## 半径爆炸/范围伤害（仅伤害，不播特效）
-static func damage_in_radius(owner: Node2D, origin: Vector2, radius: float, dmg: float, my_team: int) -> void:
+static func damageInRadius(owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
 	var space := owner.get_world_2d().direct_space_state
 	var query := PhysicsShapeQueryParameters2D.new()
 	var shape := CircleShape2D.new()
@@ -116,7 +108,7 @@ static func damage_in_radius(owner: Node2D, origin: Vector2, radius: float, dmg:
 	query.shape = shape
 	query.transform = Transform2D(0.0, origin)
 	# H5 Explosion.damageObject：玩家 / 障碍物 / 生成器 / 敌人都吃爆炸伤害
-	query.collision_mask = Constants.layer_mask([
+	query.collision_mask = Constants.layerMask([
 		Constants.Layer.PLAYER, Constants.Layer.ENEMY,
 		Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER,
 	])
@@ -124,9 +116,17 @@ static func damage_in_radius(owner: Node2D, origin: Vector2, radius: float, dmg:
 		var obj := hit.get("collider") as Node
 		if obj == null or obj == owner:
 			continue
-		if not obj.has_method("on_bullet_hit"):
+		if not obj.has_method("onBulletHit"):
 			continue
 		# 有队伍属性的单位不打同队；没有队伍属性的（障碍物）一律可打（H5 同款）
-		if "team" in obj and int(obj.team) == my_team:
+		if "team" in obj and int(obj.team) == myTeam:
 			continue
-		obj.on_bullet_hit(dmg, null, owner)
+		obj.onBulletHit(dmg, null, owner)
+
+
+func _physics_process(delta: float) -> void:
+	life -= delta
+	if life <= 0:
+		die(false)
+		return
+	global_position += Vector2.RIGHT.rotated(rotation) * speed * delta
