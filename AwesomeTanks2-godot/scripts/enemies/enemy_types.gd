@@ -28,42 +28,42 @@ const TURRETS: Dictionary = {
 	"minigun": {
 		"id": "turret_minigun", "base": "minigun_base", "turret": "minigun", "weapon": "minigun",
 		"max_health": 400.0, "points": 400, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 10.0,
-		"params": {"damage": 10.0, "rate": 6.0, "life": 0.5, "spawnDistance": 22.0},
+		"params": {"damage": 10.0, "rate": 6.0, "life": 0.5, "muzzleOffset": 22.0},
 	},
 	"shotgun": {
 		"id": "turret_shotgun", "base": "shotgun_base", "turret": "shotgun", "weapon": "shotgun",
 		"max_health": 400.0, "points": 500, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 20.0,
-		"params": {"damage": 15.0, "rate": 1.5, "life": 1.667, "spawnCount": 6, "spawnDistance": 20.0},
+		"params": {"damage": 15.0, "rate": 1.5, "life": 1.667, "spawnCount": 6, "muzzleOffset": 20.0},
 	},
 	"cannon": {
 		"id": "turret_cannon", "base": "cannon_base", "turret": "cannon", "weapon": "cannon",
 		"max_health": 500.0, "points": 800, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 20.0,
-		"params": {"damage": 200.0, "rate": 1.5, "life": 1.667, "spawnDistance": 30.0},
+		"params": {"damage": 200.0, "rate": 1.5, "life": 1.667, "muzzleOffset": 30.0},
 	},
 	"rockets": {
 		"id": "turret_rockets", "base": "rockets_base", "turret": "rockets", "weapon": "rockets",
 		"max_health": 1000.0, "points": 900, "view_distance": 400.0, "turret_speed": 3.0, "shoot_angle": 25.0,
-		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "spawnDistance": 15.0},
+		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "muzzleOffset": 15.0},
 	},
 	"laser": {
 		"id": "turret_laser", "base": "laser_base", "turret": "laser", "weapon": "laser",
 		"max_health": 1250.0, "points": 1000, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 15.0,
-		"params": {"damage": 6.0, "beamDps": 360.0, "spawnDistance": 26.0},
+		"params": {"damage": 6.0, "beamDps": 360.0, "muzzleOffset": 26.0},
 	},
 	"ricochet": {
 		"id": "turret_ricochet", "base": "generic_base", "turret": "ricochet", "weapon": "ricochet",
 		"max_health": 2000.0, "points": 600, "view_distance": 600.0, "turret_speed": 3.0, "shoot_angle": 30.0,
-		"params": {"damage": 80.0, "rate": 6.0, "life": 1.667, "spawnDistance": 23.0},
+		"params": {"damage": 80.0, "rate": 6.0, "life": 1.667, "muzzleOffset": 23.0},
 	},
 	"railgun": {
 		"id": "turret_railgun", "base": "generic_base", "turret": "railgun", "weapon": "railgun",
 		"max_health": 1500.0, "points": 1100, "view_distance": 400.0, "turret_speed": 1.75, "shoot_angle": 15.0,
-		"params": {"damage": 333.0, "rate": 1.091, "spawnDistance": 30.0},
+		"params": {"damage": 333.0, "rate": 1.091, "muzzleOffset": 30.0},
 	},
 	"flamethrower": {
 		"id": "turret_flamethrower", "base": "generic_base", "turret": "flamethrower", "weapon": "flamethrower",
 		"max_health": 1250.0, "points": 700, "view_distance": 400.0, "turret_speed": 3.0, "shoot_angle": 25.0,
-		"params": {"damage": 1.0, "rate": 10.0, "life": 1.667, "spawnDistance": 26.0},
+		"params": {"damage": 1.0, "rate": 10.0, "life": 1.667, "muzzleOffset": 26.0},
 	},
 }
 
@@ -82,19 +82,19 @@ const TILE_TURRET: Dictionary = {
 ## 生成器定义：kind(0..6) → 血量/分数/产出表（H5 spawnTypes 展开为敌人场景名）
 const SPAWNERS: Dictionary = {
 	0: {"max_health": 150.0, "points": 1400, "spawn_types": [
-		"EnemyMinigun", "EnemyMinigun", "EnemyMinigun", "EnemyShotgun", "EnemyShotgun", "EnemyRicochet"]},
+		"enemy_minigun", "enemy_minigun", "enemy_minigun", "enemy_shotgun", "enemy_shotgun", "enemy_ricochet"]},
 	1: {"max_health": 250.0, "points": 1900, "spawn_types": [
-		"EnemyShotgun", "EnemyShotgun", "EnemyShotgun", "EnemyRicochet", "EnemyRicochet", "EnemyFlamethrower"]},
+		"enemy_shotgun", "enemy_shotgun", "enemy_shotgun", "enemy_ricochet", "enemy_ricochet", "enemy_flamethrower"]},
 	2: {"max_health": 400.0, "points": 2400, "spawn_types": [
-		"EnemyRicochet", "EnemyRicochet", "EnemyRicochet", "EnemyFlamethrower", "EnemyFlamethrower", "EnemyCannon"]},
+		"enemy_ricochet", "enemy_ricochet", "enemy_ricochet", "enemy_flamethrower", "enemy_flamethrower", "enemy_cannon"]},
 	3: {"max_health": 600.0, "points": 2900, "spawn_types": [
-		"EnemyFlamethrower", "EnemyFlamethrower", "EnemyFlamethrower", "EnemyCannon", "EnemyCannon", "EnemyRockets"]},
+		"enemy_flamethrower", "enemy_flamethrower", "enemy_flamethrower", "enemy_cannon", "enemy_cannon", "enemy_rockets"]},
 	4: {"max_health": 800.0, "points": 3400, "spawn_types": [
-		"EnemyCannon", "EnemyCannon", "EnemyCannon", "EnemyRockets", "EnemyRockets", "EnemyKamikaze"]},
+		"enemy_cannon", "enemy_cannon", "enemy_cannon", "enemy_rockets", "enemy_rockets", "enemy_kamikaze"]},
 	5: {"max_health": 1000.0, "points": 3900, "spawn_types": [
-		"EnemyRockets", "EnemyRockets", "EnemyRockets", "EnemyKamikaze", "EnemyKamikaze", "EnemyLaser"]},
+		"enemy_rockets", "enemy_rockets", "enemy_rockets", "enemy_kamikaze", "enemy_kamikaze", "enemy_laser"]},
 	6: {"max_health": 1000.0, "points": 4400, "spawn_types": [
-		"EnemyKamikaze", "EnemyKamikaze", "EnemyKamikaze", "EnemyLaser", "EnemyLaser", "EnemyRailgun"]},
+		"enemy_kamikaze", "enemy_kamikaze", "enemy_kamikaze", "enemy_laser", "enemy_laser", "enemy_railgun"]},
 }
 
 ## 瓦片 → 生成器 kind

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/fx/fx_burst.gd" id="1_fx"]
+[ext_resource type="Texture2D" path="res://sprites/game/particles/spark_3.png.tres" id="2_tex"]
+
+[node name="SparkBurst" type="Node2D"]
+script = ExtResource("1_fx")
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 10
+texture = ExtResource("2_tex")
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.9
+spread = 180.0
+gravity = Vector2(0, 60)
+initial_velocity_min = 40.0
+initial_velocity_max = 140.0
+scale_amount_min = 0.5
+scale_amount_max = 1.0

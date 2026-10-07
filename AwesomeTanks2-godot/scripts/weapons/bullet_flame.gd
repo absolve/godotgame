@@ -45,11 +45,13 @@ func updateFlame() -> void:
 	flame.texture = TEX_FLAME[randi() % TEX_FLAME.size()]
 
 
-## 命中任何东西：H5 火焰撞墙/命中目标都是喷 3 个烟（不爆火花、不播命中音）
+## 命中任何东西：H5 Flamethrower.onBulletHitWall 只喷 3 个烟（不冒命中星、不爆火花、不播命中音），
+## 但同样会 alertSound(命中点) 惊动附近敌人
 func onContactEffects() -> void:
 	if not is_inside_tree():
 		return
 	Fx.smoke(global_position, get_parent())
+	alertOnHit()
 
 
 func _physics_process(delta: float) -> void:

@@ -14,20 +14,28 @@ extends Node2D
 
 class_name ATWeapon
 
+## 无限弹武器的弹药数值（只是"一个大数"，逻辑一律看 infiniteAmmo，不再比较这个数）
+const INFINITE_AMMO := 999999
+
 var tank: Node2D = null
 var team: int = Constants.Team.CPU
 var id: String = ""
 
 # —— 弹道/伤害参数 ——
-@export var ammo: int = 999999 # 弹药（>=999999 视为无限）
-@export var maxAmmo: int = 999999
+## 无限弹标记：装填无限弹的武器（敌人武器全部、玩家的 minigun 等）置 true，
+## 有它之后不用再靠"弹药数 >= 999999"去猜（玩家武器在 ATPlayer._setupWeapons 里按存档改成有限）
+@export var infiniteAmmo: bool = true
+## 弹药数 / 上限（只有有限弹武器使用；无限弹武器不看这两个值）
+@export var ammo: int = INFINITE_AMMO
+@export var maxAmmo: int = INFINITE_AMMO
 @export var damage: float = 10.0
 @export var rate: float = 4.0 # 每秒射次（<=0 = 无开火延迟，每帧直接开火/由子类处理）
 @export var life: float = 1.0 # 子弹存活时间（秒）
 @export var velocity: float = 600.0
 @export var spread: float = 0.0
 @export var spawnCount: int = 1
-@export var spawnDistance: float = 20.0
+## 炮口偏移：从坦克中心沿炮塔朝向前方多少像素出膛（H5 spawnDistance，各武器/敌人场景各自调）
+@export var muzzleOffset: float = 20.0
 @export var soundAlertRadius: float = 0.0
 
 # —— 炮塔后坐力（H5：开火时 tank.recoil=数值，minigun=3、shotgun/cannon/ricochet/railgun=5）——
@@ -44,7 +52,8 @@ var id: String = ""
 @export var fireStartSfx := "" # 开始持续开火时的单发音
 @export var fireLoopSfx := "" # 持续开火循环音
 @export var impactSfx := "" # 子弹撞墙/物体音效
-@export var bulletSpark := true
+@export var bulletSpark := true # 命中时爆火花（H5 Minigun/Shotgun 的 spawnSparks）
+@export var bulletStar := true # 命中时冒"命中星"（H5 基类 onBulletHitWall 的 starEmitter）
 @export var bulletPuff := false
 
 # —— 是否允许开火（坦克输入层设置）——
@@ -68,8 +77,9 @@ const PRESETS: Dictionary = {
 	"shotgun": {
 		"fireSfx": "shotgun.mp3", "impactSfx": "bullet_hit.mp3",
 	},
+	# 反弹弹命中只有"命中星 + ricochet_bounce.mp3"（H5 不用火花、也没有 bullet_hit）
 	"ricochet": {
-		"fireSfx": "ricochet_shot.mp3", "impactSfx": "bullet_hit.mp3",
+		"fireSfx": "ricochet_shot.mp3", "bulletSpark": false,
 	},
 	"flamethrower": {
 		"fireStartSfx": "flame_start.mp3", "fireLoopSfx": "flame_loop.mp3",
@@ -100,7 +110,7 @@ func setFiring(on: bool) -> void:
 	if not on:
 		endFireSession()
 		return
-	if ammo <= 0:
+	if not infiniteAmmo and ammo <= 0:
 		outOfAmmo.emit(self)
 		endFireSession()
 		return
@@ -181,7 +191,7 @@ func applyParams(p: Dictionary) -> void:
 
 
 func hasInfiniteAmmo() -> bool:
-	return maxAmmo >= 999999
+	return infiniteAmmo
 
 
 func applyFireSound() -> void:
@@ -206,7 +216,7 @@ func shoot() -> void:
 	# 开火音（FireSound 节点）
 	if fireSfx != "" and fireSound != null and fireSound.stream != null:
 		fireSound.play()
-	if ammo < 999999:
+	if not infiniteAmmo:
 		ammo -= 1
 		if ammo <= 0:
 			ammo = 0
@@ -248,7 +258,7 @@ func spawnBullet(angle: float) -> Node2D:
 	if bulletScene == null or tank == null or not is_instance_valid(tank):
 		return null
 	var b: Node2D = bulletScene.instantiate()
-	var pos: Vector2 = tank.getTurretPosition(spawnDistance) \
+	var pos: Vector2 = tank.getTurretPosition(muzzleOffset) \
 		if tank.has_method("getTurretPosition") else tank.global_position
 	b.global_position = pos
 	b.rotation = angle
@@ -261,7 +271,7 @@ func spawnBullet(angle: float) -> Node2D:
 	# 命中回调需要知道"是谁打的"（H5 用 srcWeapon instanceof 判断火焰/激光等）
 	if "ownerWeapon" in b:
 		b.ownerWeapon = self
-	for prop in ["impactSfx", "bulletSpark", "bulletPuff"]:
+	for prop in ["impactSfx", "bulletSpark", "bulletStar", "bulletPuff"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()

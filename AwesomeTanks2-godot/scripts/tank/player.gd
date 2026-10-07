@@ -69,9 +69,10 @@ func setupWeapons() -> void:
 		w.set("team", Constants.Team.PLAYER)
 		if "id" in w:
 			w.id = key
-		# 弹药（minigun 无限；其余按 AMMO_LIMITS/存档设置——场景默认是无限，需显式改为有限）
+		# 弹药（minigun 无限；其余按 AMMO_LIMITS/存档改成有限弹——场景默认是"无限弹"）
 		if Settings.AMMO_LIMITS.has(key):
 			var limit: int = int(Settings.AMMO_LIMITS[key])
+			w.infiniteAmmo = false
 			w.maxAmmo = limit
 			w.ammo = int(g.get(key + "Ammo", limit))
 		# 等级参数注入（WEAPON_STATS 表后续接入后生效；无则用场景默认值）

@@ -40,7 +40,7 @@ func setFiring(on: bool) -> void:
 func aimBeam() -> void:
 	if tank == null or not is_instance_valid(tank):
 		return
-	muzzle = tank.getTurretPosition(spawnDistance) \
+	muzzle = tank.getTurretPosition(muzzleOffset) \
 		if tank.has_method("getTurretPosition") else global_position
 	muzzleLocal = to_local(muzzle)
 	var angle := getAimAngle()

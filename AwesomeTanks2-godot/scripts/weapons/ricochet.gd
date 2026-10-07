@@ -36,10 +36,10 @@ func setPlayerFiring(on: bool) -> void:
 	if on:
 		if playerCharging:
 			return            # 正在蓄力
-		if ammo <= 0:
+		if not infiniteAmmo and ammo <= 0:
 			outOfAmmo.emit(self)
 			return
-		if ammo < 999999:
+		if not infiniteAmmo:
 			ammo -= 1         # 蓄力预留 1 发（H5：蓄力过程消耗弹药）
 		playerCharging = true
 		canFire = true
@@ -62,7 +62,7 @@ func fireCharged() -> void:
 		return
 	var dmg := damage * clampf(charge / maxf(chargeMax, 0.0001), 0.0, 1.0)
 	var b: Node2D = bulletScene.instantiate()
-	var pos: Vector2 = tank.getTurretPosition(spawnDistance) \
+	var pos: Vector2 = tank.getTurretPosition(muzzleOffset) \
 		if tank.has_method("getTurretPosition") else tank.global_position
 	b.global_position = pos
 	b.rotation = getAimAngle()
@@ -109,6 +109,6 @@ func _physics_process(delta: float) -> void:
 		if sparkTimer <= 0:
 			sparkTimer = 0.05
 			if tank != null and is_instance_valid(tank):
-				var muzzle: Vector2 = tank.getTurretPosition(spawnDistance) \
+				var muzzle: Vector2 = tank.getTurretPosition(muzzleOffset) \
 					if tank.has_method("getTurretPosition") else global_position
 				Fx.spark(muzzle, tank.get_parent())

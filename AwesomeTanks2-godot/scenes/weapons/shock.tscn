@@ -15,7 +15,7 @@ drainPerSec = 60.0
 damage = 2.0
 rate = 0.0
 velocity = 0.0
-spawnDistance = 24.0
+muzzleOffset = 24.0
 soundAlertRadius = 100.0
 
 [node name="Ray" type="RayCast2D" parent="." index="2" unique_id=1554075075]

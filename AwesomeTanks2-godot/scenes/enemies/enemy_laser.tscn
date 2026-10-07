@@ -53,4 +53,4 @@ sprite_frames = SubResource("Frames_turret")
 [node name="Weapon" parent="." index="4" instance=ExtResource("4_w")]
 damage = 6.0
 beamDps = 360.0
-spawnDistance = 22.0
+muzzleOffset = 22.0

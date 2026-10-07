@@ -55,4 +55,4 @@ sprite_frames = SubResource("Frames_turret")
 damage = 200.0
 rate = 1.5
 life = 1.667
-spawnDistance = 26.0
+muzzleOffset = 26.0

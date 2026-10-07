@@ -17,7 +17,8 @@ func setFiring(on: bool) -> void:
 
 
 func layMine() -> void:
-	if ammo <= 0 or cooldown > 0.0 or mineScene == null or tank == null or not is_instance_valid(tank):
+	if (not infiniteAmmo and ammo <= 0) or cooldown > 0.0 or mineScene == null \
+			or tank == null or not is_instance_valid(tank):
 		return
 	cooldown = 0.45
 	var mine: Area2D = mineScene.instantiate()

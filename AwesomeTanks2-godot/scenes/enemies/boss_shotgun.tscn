@@ -56,4 +56,4 @@ damage = 15.0
 rate = 1.5
 life = 1.667
 spawnCount = 6
-spawnDistance = 24.0
+muzzleOffset = 24.0

@@ -13,7 +13,7 @@ beamWidth = 20.0
 damage = 800.0
 rate = 1.2
 life = 0.16
-spawnDistance = 22.0
+muzzleOffset = 22.0
 soundAlertRadius = 120.0
 recoil = 5.0
 

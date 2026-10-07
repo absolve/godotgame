@@ -3,6 +3,8 @@ extends Node
 ## 供子弹、爆炸、可破坏物体共用：在目标位置生成一次性粒子并自动销毁。
 
 const SCENE_SPARK: PackedScene = preload("res://scenes/fx/spark.tscn")
+const SCENE_SPARK_BURST: PackedScene = preload("res://scenes/fx/sparkBurst.tscn")
+const SCENE_STAR: PackedScene = preload("res://scenes/fx/star.tscn")
 const SCENE_PUFF: PackedScene = preload("res://scenes/fx/puff.tscn")
 const SCENE_EXPLOSION: PackedScene = preload("res://scenes/fx/explosion.tscn")
 const SCENE_SMOKE: PackedScene = preload("res://scenes/fx/smoke.tscn")
@@ -42,6 +44,17 @@ func restartParticles(node: Node) -> void:
 
 func spark(pos: Vector2, holder: Node = null) -> void:
 	spawn(pos, SCENE_SPARK, holder)
+
+
+## 火花爆发（H5 Railgun 命中点：1 颗星 + 10 个 spark_3、速度 ±100）
+func sparkBurst(pos: Vector2, holder: Node = null) -> void:
+	spawn(pos, SCENE_SPARK_BURST, holder)
+
+
+## 命中星（H5 starEmitter 用的 game/particles/star_object.png）：
+## 子弹打到墙/物体/敌人身上的"命中标记" —— 原地随机角度、200ms 内 alpha 1→0.05
+func star(pos: Vector2, holder: Node = null) -> void:
+	spawn(pos, SCENE_STAR, holder)
 
 
 func puff(pos: Vector2, holder: Node = null) -> void:

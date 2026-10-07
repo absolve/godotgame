@@ -124,23 +124,23 @@ const OBJECT_SCENES: Dictionary = {
 const ENEMY_DIR := "res://scenes/enemies/"
 const ENEMY_NAMES: Dictionary = {
 	# 移动坦克 9 种
-	Constants.Tile.TANK_MINIGUN: "EnemyMinigun",
-	Constants.Tile.TANK_SHOTGUN: "EnemyShotgun",
-	Constants.Tile.TANK_CANNON: "EnemyCannon",
-	Constants.Tile.TANK_ROCKETS: "EnemyRockets",
-	Constants.Tile.TANK_LASER: "EnemyLaser",
-	Constants.Tile.TANK_RICOCHET: "EnemyRicochet",
-	Constants.Tile.TANK_FLAMETHROWER: "EnemyFlamethrower",
-	Constants.Tile.TANK_RAILGUN: "EnemyRailgun",
-	Constants.Tile.TANK_KAMIKAZE: "EnemyKamikaze",
+	Constants.Tile.TANK_MINIGUN: "enemy_minigun",
+	Constants.Tile.TANK_SHOTGUN: "enemy_shotgun",
+	Constants.Tile.TANK_CANNON: "enemy_cannon",
+	Constants.Tile.TANK_ROCKETS: "enemy_rockets",
+	Constants.Tile.TANK_LASER: "enemy_laser",
+	Constants.Tile.TANK_RICOCHET: "enemy_ricochet",
+	Constants.Tile.TANK_FLAMETHROWER: "enemy_flamethrower",
+	Constants.Tile.TANK_RAILGUN: "enemy_railgun",
+	Constants.Tile.TANK_KAMIKAZE: "enemy_kamikaze",
 	# Boss 7 种
-	Constants.Tile.BOSS_SHOTGUN: "BossShotgun",
-	Constants.Tile.BOSS_CANNON: "BossCannon",
-	Constants.Tile.BOSS_ROCKETS: "BossRockets",
-	Constants.Tile.BOSS_LASER: "BossLaser",
-	Constants.Tile.BOSS_RICOCHET: "BossRicochet",
-	Constants.Tile.BOSS_RAILGUN: "BossRailgun",
-	Constants.Tile.BOSS_FLAMETHROWER: "BossFlamethrower",
+	Constants.Tile.BOSS_SHOTGUN: "boss_shotgun",
+	Constants.Tile.BOSS_CANNON: "boss_cannon",
+	Constants.Tile.BOSS_ROCKETS: "boss_rockets",
+	Constants.Tile.BOSS_LASER: "boss_laser",
+	Constants.Tile.BOSS_RICOCHET: "boss_ricochet",
+	Constants.Tile.BOSS_RAILGUN: "boss_railgun",
+	Constants.Tile.BOSS_FLAMETHROWER: "boss_flamethrower",
 }
 
 var enemySceneCache: Dictionary = {}
@@ -415,7 +415,7 @@ func refreshHud() -> void:
 		var w = weapons[i] if i < weapons.size() else null
 		var owned: bool = w != null
 		var pct := -1.0
-		if owned and "maxAmmo" in w and float(w.maxAmmo) < 999999.0:
+		if owned and "infiniteAmmo" in w and not bool(w.infiniteAmmo):
 			pct = clampf(float(w.ammo) / maxf(float(w.maxAmmo), 1.0), 0.0, 1.0)
 		slotNodes[i].call("refresh", owned, owned and index == i, pct)
 

@@ -70,7 +70,7 @@ func setFiring(on: bool) -> void:
 func dischargeFrame() -> void:
 	var aim := getAimAngle()
 	#var dir := Vector2.from_angle(aim)
-	var muzzle: Vector2 = tank.getTurretPosition(spawnDistance) \
+	var muzzle: Vector2 = tank.getTurretPosition(muzzleOffset) \
 		if tank.has_method("getTurretPosition") else global_position
 
 	ray.global_position = muzzle

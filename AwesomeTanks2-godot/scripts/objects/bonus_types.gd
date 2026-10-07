@@ -175,8 +175,10 @@ static func ammoWeight(player: Node, weaponKey: String) -> float:
 	var w = weapons[idx] if idx < weapons.size() else null
 	if w == null or not is_instance_valid(w):
 		return 0.0
+	if bool(w.get("infiniteAmmo")):
+		return 0.0                      # 无限弹武器不吃弹药权重（H5: ammo !== Infinity 才算）
 	var maxAmmo := float(w.get("maxAmmo"))
-	if maxAmmo <= 0.0 or maxAmmo >= 999999.0:
+	if maxAmmo <= 0.0:
 		return 0.0
 	return 2.0 * (1.0 - float(w.get("ammo")) / maxAmmo)
 

@@ -48,7 +48,7 @@ func shoot() -> void:
 	# 音效 + 弹药（参考基类 _shoot 尾部；基类此处不生成子弹）
 	if fireSound != null and fireSound.stream != null:
 		fireSound.play()
-	if ammo < 999999:
+	if not infiniteAmmo:
 		ammo -= 1
 		if ammo <= 0:
 			ammo = 0
@@ -62,7 +62,7 @@ func fireShot() -> void:
 		return
 	var angle: float = getAimAngle()
 	var dir := Vector2.from_angle(angle)
-	var muzzle: Vector2 = tank.getTurretPosition(spawnDistance) \
+	var muzzle: Vector2 = tank.getTurretPosition(muzzleOffset) \
 		if tank.has_method("getTurretPosition") else tank.global_position
 
 	# 1) 射线找墙（只认 WALL 层 → 光束穿过敌人/障碍直到静态墙，与 H5 一致）
@@ -97,9 +97,11 @@ func fireShot() -> void:
 	beamT = beamTotal
 	damaged.clear()
 
-	# 4) 墙端火花（H5 star+10 spark）
+	# 4) 墙端命中效果（H5 Railgun：命中点 1 颗命中星 + 10 个 spark_3 火花）
 	if hitWall:
-		Fx.spark(end, fxHolder())
+		var holder := fxHolder()
+		Fx.star(end, holder)
+		Fx.sparkBurst(end, holder)
 
 
 ## 结算当前判定区内未处理过的目标
