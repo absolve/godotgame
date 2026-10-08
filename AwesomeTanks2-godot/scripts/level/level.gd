@@ -90,6 +90,9 @@ var mapTheme: int = 0 # Constants.GameTheme
 var occupancy: Array = [] # 动态对象占据标记（tiles 同尺寸）
 
 var fog: ATFog = null       # 黑雾（scenes/level/fog.tscn，_ready 中实例化）
+## 开场补几帧视野：黑雾瓦片刚进树时物理空间还没登记，当帧射线扫不到雾，
+## 会在出生点周围留下零星空格；这里让开场的几次惰性更新强制重发视野射线补上
+var initialFogFrames: int = 0
 var fogFrame: int = 0      # 惰性更新计数（约每 3 帧发射一次视野射线）
 
 ## 寻路网格（scripts/level/pathfinder.gd；敌人 AI 用它绕开墙/障碍）
@@ -324,6 +327,24 @@ func isTileClearForUnit(x: int, y: int) -> bool:
 	return pathfinder == null or not pathfinder.isSolid(x, y)
 
 
+## 这一格是否站着"会走路的单位"（玩家 / 敌人；生成器不算 —— H5 里坦克能压过生成器）。
+## 生成器判断门口有没有人、挑出生后要开去的落点都用它，
+## 对应 H5 isTileFree 里那份"坦克占格"（H5 的 tank.occupyTile/freeTile）。
+func hasUnitAtTile(x: int, y: int, ignore: Node = null) -> bool:
+	if player != null and is_instance_valid(player) and player != ignore \
+			and pxToTile(player.global_position.x) == x \
+			and pxToTile(player.global_position.y) == y:
+		return true
+	for e in enemies:
+		if e == ignore or not is_instance_valid(e) or e is ATSpawner:
+			continue
+		if not bool(e.get("alive")):
+			continue
+		if pxToTile(e.global_position.x) == x and pxToTile(e.global_position.y) == y:
+			return true
+	return false
+
+
 func occupyTile(x: int, y: int) -> void:
 	if x >= 0 and x < mapWidth and y >= 0 and y < mapHeight:
 		occupancy[y][x] = true
@@ -391,10 +412,15 @@ func setupFog() -> void:
 	fog.z_index = 100   # 盖在静态层/物体层之上
 	fog.configure(0, 0, mapWidth, mapHeight)
 	fog.buildTiles()
-	# 出生点先清一圈：本帧物理空间可能还没登记新瓦片，随后每 3 帧的
-	# _update_fog 会再补一次（清掉缓存确保一定发射线）
-	updateFog()
+	# 出生点先清一圈：纯格子计算、不依赖物理，当帧立即生效（坦克身边先亮）
+	var ts := Settings.TILE_SIZE
+	if player != null and is_instance_valid(player):
+		fog.clearArea(int(player.global_position.x / ts),
+			int(player.global_position.y / ts), fog.clearRadiusTiles)
+	# 视野射线要等黑雾瓦片在物理空间登记完（下一个物理帧之后）才会命中，
+	# 当帧扫只会漏成零星，所以这里不扫：交给开场几次惰性更新强制重发（第 3 帧一次扫干净）
 	fog.invalidateCache()
+	initialFogFrames = 2
 
 
 ## 每帧同步血瓶 / 武器槽（幂等；数据没变化时开销可忽略）
@@ -1009,6 +1035,10 @@ func _physics_process(delta: float) -> void:
 	fogFrame += 1
 	if fog != null and player != null and is_instance_valid(player) \
 			and fogFrame % 3 == 0:
+		# 开场几帧：黑雾瓦片的物理登记可能晚一两帧，强制重发视野射线把漏掉的补上
+		if initialFogFrames > 0:
+			initialFogFrames -= 1
+			fog.invalidateCache()
 		updateFog()
 
 

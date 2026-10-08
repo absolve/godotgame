@@ -144,46 +144,103 @@ func trySpawn() -> void:
 		e.flash(Color.WHITE)          # H5 ai.Spawn.enter：出生白闪一下
 	level.registerEnemy(e)
 	spawned.append(e)
+	pauseEnemyCollision(e)               # 出生瞬间先不和其它坦克碰撞（见文件下半部分说明）
 	timer = spawnInterval
 	updateProgress()
 	updatePoints()
 	sendOff(e)
 
 
-## 出生后先离开生成器门口（H5 ai.Spawn：随机挑一个相邻空格开过去，到了再回 Idle）。
-## 这里直接复用 GoToSound（同样是"走到某点 → 到达/超时回 Idle、途中看见玩家就追击"）；
-## 目标取两格外的空格（没空位再退一格），因为 GoToSound 的到达判定是 40px，
-## 只给相邻格的话坦克可能还没走出这一格就停下了，会把生成器门口一直堵着。
+## 出生后先离开生成器门口（H5 ai.Spawn：随机挑一个附近空格开过去，到了再回 Idle）。
+## 这里复用 GoToSound（"走到某点 → 到达/超时回 Idle、途中看见玩家就追击"）。
+## 落点规则：
+##   · 一步格必须空（不能隔着墙把落点放到墙后面，那样坦克会一直顶着墙慢慢蹭）；
+##   · 一步格空、两步格也空 → 优先两步（GoToSound 到达判定 40px，只给相邻格会没走出门就停下）；
+##   · 落点不能已经有别的单位站着（H5 的 isTileFree 含坦克占格），否则两只坦克互推卡在门口。
 func sendOff(tank: Node2D) -> void:
 	if tank == null or not is_instance_valid(tank) or not tank.has_method("setAiState"):
 		return
 	var tx: int = level.pxToTile(global_position.x)
 	var ty: int = level.pxToTile(global_position.y)
 	var dirs: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
-	var free: Array[Vector2i] = []
-	for step in [2, 1]:
-		for d in dirs:
-			var c := Vector2i(tx + d.x * step, ty + d.y * step)
-			if bool(level.isTileClearForUnit(c.x, c.y)):
-				free.append(c)
-		if not free.is_empty():
-			break
-	if free.is_empty():
+	var oneStep: Array[Vector2i] = []
+	var twoStep: Array[Vector2i] = []
+	for d in dirs:
+		var c1 := Vector2i(tx + d.x, ty + d.y)
+		if not isSendOffCellFree(tank, c1):
+			continue
+		oneStep.append(c1)
+		var c2 := Vector2i(tx + d.x * 2, ty + d.y * 2)
+		if isSendOffCellFree(tank, c2):
+			twoStep.append(c2)
+	var pool: Array[Vector2i] = twoStep if not twoStep.is_empty() else oneStep
+	if pool.is_empty():
 		return
-	var cell: Vector2i = free[randi() % free.size()]
+	var cell: Vector2i = pool[randi() % pool.size()]
 	tank.call("setAiState", "GoToSound", {"pos": level.cellCenter(cell.x, cell.y)})
 
 
-## 本格能不能产出：H5 用"坦克占格"判断；本项目坦克不维护占格 → 直接看上一只是否还堵在门口
+## 出生落点能不能用：格子本身要能站（非墙/障碍）+ 不能有别的单位站着
+func isSendOffCellFree(tank: Node2D, c: Vector2i) -> bool:
+	if not bool(level.isTileClearForUnit(c.x, c.y)):
+		return false
+	return not bool(level.hasUnitAtTile(c.x, c.y, tank))
+
+
+## 本格能不能产出：H5 用"坦克占格"判断（isTileFree 含 occupancy）→ 门口站着任何单位都先不产
 func isSpawnTileFree(tx: int, ty: int) -> bool:
 	if not bool(level.isTileFree(tx, ty)):
 		return false
-	for t in spawned:
-		if not is_instance_valid(t) or not bool(t.get("alive")):
+	return not bool(level.hasUnitAtTile(tx, ty, self))
+
+
+# ============================================================
+# 出生瞬间的坦克间碰撞：临时关掉
+# H5 里坦克是 Box2D 动力学体，被同伴顶住也能挤开；这里是 CharacterBody2D +
+# 直线 AI，新出生的坦克和"还站在门口那一格的同伴"会互推，看起来就是卡住慢慢挪。
+# 所以出生后先把它和其它坦克的碰撞关掉，等它走出生成器那一格、且过了
+# PAUSE_ENEMY_COLLISION_TIME 秒再恢复（只关 ENEMY 这一层，墙/障碍照旧挡着）。
+# ============================================================
+const PAUSE_ENEMY_COLLISION_TIME := 0.6
+
+var pausedTanks: Dictionary = {}     # 坦克 -> 已经暂停了多久
+
+
+func pauseEnemyCollision(tank: Node2D) -> void:
+	if tank == null or not is_instance_valid(tank):
+		return
+	tank.set_collision_mask_value(Constants.Layer.ENEMY, false)
+	pausedTanks[tank] = 0.0
+
+
+func restoreEnemyCollision(tank: Node2D) -> void:
+	if tank == null or not is_instance_valid(tank):
+		return
+	tank.set_collision_mask_value(Constants.Layer.ENEMY, true)
+
+
+func updatePausedTanks(delta: float) -> void:
+	if pausedTanks.is_empty() or level == null or not is_instance_valid(level):
+		return
+	var tx: int = level.pxToTile(global_position.x)
+	var ty: int = level.pxToTile(global_position.y)
+	for t in pausedTanks.keys():
+		if not is_instance_valid(t):
+			pausedTanks.erase(t)
 			continue
-		if level.pxToTile(t.global_position.x) == tx and level.pxToTile(t.global_position.y) == ty:
-			return false
-	return true
+		pausedTanks[t] = float(pausedTanks[t]) + delta
+		var left: bool = level.pxToTile((t as Node2D).global_position.x) != tx \
+			or level.pxToTile((t as Node2D).global_position.y) != ty
+		if left and float(pausedTanks[t]) >= PAUSE_ENEMY_COLLISION_TIME:
+			restoreEnemyCollision(t)
+			pausedTanks.erase(t)
+
+
+func _exit_tree() -> void:
+	# 生成器被拆掉时，别把"暂停碰撞"的坦克留在无碰撞状态
+	for t in pausedTanks.keys():
+		restoreEnemyCollision(t)
+	pausedTanks.clear()
 
 
 ## 场上还活着的产出坦克数（H5 aliveCount）
@@ -222,6 +279,8 @@ func configureEnemyVisuals() -> void:
 # 产出（H5 update / spawnTank / aliveCount）
 # ============================================================
 func _physics_process(delta: float) -> void:
+	# 先恢复"出生撞击豁免"（生成器自己死了也要恢复，所以放在最前面）
+	updatePausedTanks(delta)
 	# 不跑移动 AI：只推进产出计时（H5：血量 > 0、冰冻中、产出已满都不产出）
 	if not alive or health <= 0.0 or spawned.size() >= MAX_SPAWNED:
 		return

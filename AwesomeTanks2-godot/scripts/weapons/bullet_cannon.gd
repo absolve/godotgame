@@ -3,7 +3,8 @@ extends ATBullet
 
 class_name ATCannonBullet
 
-var radius: float = 90.0
+## H5 炮弹爆炸半径固定 75（L21563/21565），不是武器配的 radius
+var radius: float = 75.0
 var exploded := false
 
 

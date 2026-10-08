@@ -97,11 +97,9 @@ func fireShot() -> void:
 	beamT = beamTotal
 	damaged.clear()
 
-	# 4) 墙端命中效果（H5 Railgun：命中点 1 颗命中星 + 10 个 spark_3 火花）
+	# 4) 墙端命中特效：只用场景里配的那一种（H5 是 1 星 + 10 个 spark_3，这里默认配 sparkBurst）
 	if hitWall:
-		var holder := fxHolder()
-		Fx.star(end, holder)
-		Fx.sparkBurst(end, holder)
+		Fx.spawnNamed(impactFx, end, fxHolder())
 
 
 ## 结算当前判定区内未处理过的目标
@@ -129,12 +127,6 @@ func hideBeam() -> void:
 	hitArea.monitoring = false
 	damaged.clear()
 	beamT = 0.0
-
-
-func fxHolder() -> Node:
-	if tank != null and is_instance_valid(tank) and tank.get_parent() != null:
-		return tank.get_parent()
-	return get_tree().current_scene
 
 
 ## 光束生命内的显示/命中结算

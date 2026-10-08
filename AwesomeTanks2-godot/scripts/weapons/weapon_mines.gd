@@ -4,7 +4,7 @@ extends ATWeapon
 class_name ATMinesWeapon
 
 @export var mineScene: PackedScene = null
-@export var mineRadius: float = 85.0
+@export var mineRadius: float = 75.0
 
 var cooldown: float = 0.0
 

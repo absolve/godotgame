@@ -74,7 +74,6 @@ offset_right = 300.0
 offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_lock_ = true
 
 [node name="TopBar" type="HBoxContainer" parent="Design" unique_id=1349523785]
 layout_mode = 1

@@ -12,6 +12,7 @@ rate = 1.091
 life = 1.0
 velocity = 900.0
 muzzleOffset = 22.0
+impactFx = ""
 soundAlertRadius = 150.0
 recoil = 5.0
 bulletScene = ExtResource("3_bs")

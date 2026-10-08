@@ -63,7 +63,9 @@ func applyTileSize() -> void:
 
 
 ## 让本瓦片消失（射线命中时调用）
-func clear(withAnimation: bool = true) -> void:
+## delay：淡出动画的延迟（秒）——逻辑上立刻算已清除（射线可以继续往前），
+##        只是视觉上晚一点开始淡出，用来做"视野从坦克向外扫开"
+func clear(withAnimation: bool = true, delay: float = 0.0) -> void:
 	if cleared:
 		return
 	cleared = true
@@ -73,14 +75,17 @@ func clear(withAnimation: bool = true) -> void:
 		disappeared.emit(self)
 		queue_free()
 		return
+	if delay <= 0.0:
+		delay = 0.0
 	var tw := create_tween()
 	tw.set_parallel(true)
 	tw.tween_property(self, "scale", Vector2.ONE * growScale, fadeTime) \
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT).set_delay(delay)
 	tw.tween_property(self, "modulate:a", 0.0, fadeTime) \
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN).set_delay(delay)
 	if spinDegrees > 0.0:
-		tw.tween_property(self, "rotation", deg_to_rad(randf_range(-spinDegrees, spinDegrees)), fadeTime)
+		tw.tween_property(self, "rotation", deg_to_rad(randf_range(-spinDegrees, spinDegrees)), fadeTime) \
+			.set_delay(delay)
 	tw.chain().tween_callback(func() -> void:
 		disappeared.emit(self)
 		queue_free())

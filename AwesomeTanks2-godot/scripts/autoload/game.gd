@@ -184,7 +184,16 @@ func finishLevel(index: int, points: int, success: bool) -> void:
 # ============================================================
 # 场景切换
 # ============================================================
-func changeScene(path: String) -> void:
+## 切场景（所有切场景都走这里 → 转发给 SceneTransition 自动加载做擦除过渡）
+## SceneTransition 不在时退回引擎直接切，保证任何时候都能切
+func changeScene(path: String, duration: float = 0.0) -> void:
+	var st := get_node_or_null("/root/SceneTransition")
+	if st != null and st.has_method("changeScene"):
+		if duration > 0.0:
+			st.call("changeScene", path, duration)
+		else:
+			st.call("changeScene", path)
+		return
 	get_tree().change_scene_to_file(path)
 
 func gotoLevel(index: int) -> void:

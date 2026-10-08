@@ -211,7 +211,7 @@ func refreshStatCards() -> void:
 		statsByKey[key].refresh()
 
 
-func onMoneyChanged(value: int) -> void:
+func onMoneyChanged(_value: int) -> void:
 	moneyLabel.text = Game.formatMoney(Game.getMoney())
 
 

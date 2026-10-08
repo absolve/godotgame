@@ -14,6 +14,7 @@ damage = 800.0
 rate = 1.2
 life = 0.16
 muzzleOffset = 22.0
+impactFx = "sparkBurst"
 soundAlertRadius = 120.0
 recoil = 5.0
 

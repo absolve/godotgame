@@ -21,14 +21,18 @@ const TILE_SCENE: PackedScene = preload("res://scenes/level/fog_tile.tscn")
 const MAX_RAY_STEPS: int = 64
 ## 射线推进的最小剩余距离（小于它就不再发射线）
 const MIN_REMAIN: float = 2.0
+## 视线清雾时"每格延迟"（秒）：离坦克越远越晚淡出，看起来就是视野从坦克向外扫开
+const CLEAR_STAGGER: float = 0.035
 
 @export var tileSize: int = Settings.TILE_SIZE
 ## 玩家脚下清除半径（瓦片）
 @export var clearRadiusTiles: float = 1.35
 ## 是否打开位置/朝向缓存（玩家不动不转时不重复发射线）
 @export var cacheEnabled: bool = true
-## 黑雾瓦片判定区相对 tile 的放大倍数（>1：射线提前命中，黑雾不用贴近才消失）
-@export var tileCollisionScale: float = 1.8
+## 黑雾瓦片判定区相对 tile 的放大倍数。
+## 1.0 = 判定框正好一格：配合 clearSegment（沿射线走过的格子逐个清）不会漏格，
+## 也不会因为框比格子大而在视野边缘多清出孤立的一两格（看起来像零星消失）。
+@export var tileCollisionScale: float = 1.0
 
 var fogWidth: int = 0
 var fogHeight: int = 0
@@ -109,12 +113,13 @@ func remainingCount() -> int:
 
 
 ## 清除一格（射线命中或外部调用）。返回是否真的清掉。
-func clearTile(x: int, y: int, animate: bool = true) -> bool:
+## delay：淡出动画的延迟（秒），用来做"从坦克身边往外扫"的效果（逻辑上立刻算已清除）
+func clearTile(x: int, y: int, animate: bool = true, delay: float = 0.0) -> bool:
 	var t := tileAt(x, y)
 	if t == null or not is_instance_valid(t) or t.cleared:
 		return false
 	tiles[y][x] = null
-	t.clear(animate)
+	t.clear(animate, delay)
 	return true
 
 
@@ -134,6 +139,32 @@ func clearArea(centerX: int, centerY: int, radius: float) -> int:
 				if clearTile(x, y, true):
 					n += 1
 	return n
+
+
+## 沿线段 from→to 经过的每一格都清掉（每半格取样一次，保证不漏格）。
+## 这是"视野射线漏清成零星"的修正：黑雾判定框比格子大（tileCollisionScale），
+## 只清射线"命中"的那一格会跳过中间格子，所以这里按走过的格子逐个清。
+## delay 按离 origin 的距离递增 → 视觉上从坦克身边向外扫开。
+func clearSegment(from: Vector2, to: Vector2, origin: Vector2, stagger: float = 0.0) -> int:
+	var seg := to - from
+	var length := seg.length()
+	if length <= 0.001:
+		return clearPoint(from, origin, stagger)
+	var step := tileSize * 0.5
+	var steps := int(ceil(length / step))
+	var dir := seg / length
+	var n := 0
+	for i in range(steps + 1):
+		n += clearPoint(from + dir * minf(float(i) * step, length), origin, stagger)
+	return n
+
+
+## 清除某点所在格；delay 按它离 origin 的距离算（近的先淡出）
+func clearPoint(p: Vector2, origin: Vector2, stagger: float = 0.0) -> int:
+	var x := int(p.x / tileSize) - tileOffsetX
+	var y := int(p.y / tileSize) - tileOffsetY
+	var delay := origin.distance_to(p) / float(tileSize) * stagger if stagger > 0.0 else 0.0
+	return 1 if clearTile(x, y, true, delay) else 0
 
 
 # ============================================================
@@ -157,7 +188,8 @@ func revealFov(center: Vector2, aim: float, halfAngle: float, dist: float) -> in
 	var oty := int(center.y / tileSize) - tileOffsetY
 	if clearTile(otx, oty, true):
 		cleared += 1
-	var stepA := TAU / 36.0            # 每 10° 一条射线（同 H5）
+	# 每 5° 一条射线（H5 是 10°；5° 可以避免远距离相邻射线之间漏掉一整格）
+	var stepA := TAU / 72.0
 	var a := aim - halfAngle
 	while a <= aim + halfAngle + 0.0001:
 		cleared += castRay(center, a, dist)
@@ -166,8 +198,8 @@ func revealFov(center: Vector2, aim: float, halfAngle: float, dist: float) -> in
 
 
 ## 单条射线：反复与“黑雾瓦片 / 墙”碰撞
-##   命中黑雾 → 清除该瓦片并从命中点继续前进（exclude 掉它，避免重复命中）
-##   命中墙/障碍 → 结束
+##   命中黑雾 → 沿这段线段把经过的格子全清掉（近→远），再从命中点继续前进
+##   命中墙/障碍 → 墙前这一段也清掉（贴墙的格子是看得见的），然后结束
 func castRay(origin: Vector2, angle: float, dist: float) -> int:
 	var space := get_world_2d().direct_space_state
 	if space == null:
@@ -195,17 +227,24 @@ func castRay(origin: Vector2, angle: float, dist: float) -> int:
 			break
 		var collider = hit.get("collider")
 		var point: Vector2 = hit.get("position")
+		# 命中点正好在格子边界上，往回缩半像素，免得把边界那一侧的下一格也清掉
+		var segEnd := point - dir * 0.5
 		if collider is ATFogTile:
 			var ft := collider as ATFogTile
-			# 命中黑雾：清除（带动画）并继续
+			# 命中黑雾：这一段走过的格子全清（判定框比格子大时只清命中格会漏）
+			cleared += clearSegment(pos, segEnd, origin, CLEAR_STAGGER)
 			if not ft.cleared:
-				clearTile(ft.tileX, ft.tileY, true)
-				cleared += 1
+				if clearTile(ft.tileX, ft.tileY, true,
+						origin.distance_to(point) / float(tileSize) * CLEAR_STAGGER):
+					cleared += 1
 			if not exclude.has(ft.get_rid()):
 				exclude.append(ft.get_rid())
 			pos = point + dir * 1.0
 			continue
-		# 墙/障碍/其它实体：射线被挡住，结束
+		# 墙/障碍/其它实体：墙前这一段清掉，墙自己那一格也算"看见了"（H5：先揭格再判阻挡），
+		# 然后射线结束（墙后不揭）
+		cleared += clearSegment(pos, segEnd, origin, CLEAR_STAGGER)
+		cleared += clearPoint(point, origin, CLEAR_STAGGER)
 		break
 	return cleared
 

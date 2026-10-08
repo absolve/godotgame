@@ -52,14 +52,22 @@ var id: String = ""
 @export var fireStartSfx := "" # 开始持续开火时的单发音
 @export var fireLoopSfx := "" # 持续开火循环音
 @export var impactSfx := "" # 子弹撞墙/物体音效
-@export var bulletSpark := true # 命中时爆火花（H5 Minigun/Shotgun 的 spawnSparks）
-@export var bulletStar := true # 命中时冒"命中星"（H5 基类 onBulletHitWall 的 starEmitter）
-@export var bulletPuff := false
+## 命中特效（**只有一种**；名字见 Fx.SCENES：spark / sparkCyan / sparkBurst / star / smoke / puff / explosion）
+## 每把武器在自己的场景里挑一种；光束武器（laser / shock / railgun）在命中点上也用它；空 = 不放
+@export var impactFx := "star"
+## 寿命耗尽时的特效（H5 disappearingEmitter 的消散烟）
+@export var expireFx := ""
+## 飞行拖尾特效（H5 Ricochet 飞行时每帧随机冒火花）；空 = 无拖尾
+@export var trailFx := ""
+## 拖尾间隔（秒）；H5 是每帧 50% 概率冒 2 个，这里等价成每 0.06s 冒一个
+@export var trailInterval := 0.06
 
 # —— 是否允许开火（坦克输入层设置）——
 var canFire: bool = true
 ## 当前是否处于"一次连发"中（用于持续音的启停，见 _begin/_end_fire_session）
 var firing: bool = false
+## 光束命中点特效的节流（秒，见 tickImpactFx）
+var fxTimer: float = 0.0
 
 #var _loop_started := false
 #var _fire_start_played := false
@@ -68,18 +76,19 @@ signal shot(weapon)
 signal outOfAmmo(weapon)
 
 const LOOP_KEY := "weapon_fire"
+## 光束武器命中点特效的最小间隔（秒）
+const FX_INTERVAL := 0.12
 
 const PRESETS: Dictionary = {
 	"minigun": {
 		"fireSfx": "minigun.mp3", "impactSfx": "bullet_hit.mp3",
-		"bulletSpark": true, "bulletPuff": true,
 	},
 	"shotgun": {
 		"fireSfx": "shotgun.mp3", "impactSfx": "bullet_hit.mp3",
 	},
-	# 反弹弹命中只有"命中星 + ricochet_bounce.mp3"（H5 不用火花、也没有 bullet_hit）
+	# 反弹弹命中只有 ricochet_bounce.mp3（视觉特效看场景里的 impactFx）
 	"ricochet": {
-		"fireSfx": "ricochet_shot.mp3", "bulletSpark": false,
+		"fireSfx": "ricochet_shot.mp3",
 	},
 	"flamethrower": {
 		"fireStartSfx": "flame_start.mp3", "fireLoopSfx": "flame_loop.mp3",
@@ -227,6 +236,24 @@ func shoot() -> void:
 	shot.emit(self)
 
 
+## 特效挂载点：坦克所在的 ObjectsLayer（拿不到就退回自己的父节点）
+func fxHolder() -> Node:
+	if tank != null and is_instance_valid(tank) and tank.get_parent() != null:
+		return tank.get_parent()
+	return get_parent()
+
+
+## 光束武器命中点的特效（带节流）：光束每帧都命中，不能每帧都生成特效节点
+func tickImpactFx(delta: float, pos: Vector2) -> void:
+	if impactFx == "":
+		return
+	fxTimer -= delta
+	if fxTimer > 0.0:
+		return
+	fxTimer = FX_INTERVAL
+	Fx.spawnNamed(impactFx, pos, fxHolder())
+
+
 ## 枪声惊动附近敌人（H5：玩家武器的 onShot → level.alertSound；敌人开火不惊动同伴）
 func alertNearbyEnemies() -> void:
 	if soundAlertRadius <= 0.0 or team != Constants.Team.PLAYER or tank == null \
@@ -271,7 +298,7 @@ func spawnBullet(angle: float) -> Node2D:
 	# 命中回调需要知道"是谁打的"（H5 用 srcWeapon instanceof 判断火焰/激光等）
 	if "ownerWeapon" in b:
 		b.ownerWeapon = self
-	for prop in ["impactSfx", "bulletSpark", "bulletStar", "bulletPuff"]:
+	for prop in ["impactSfx", "impactFx", "expireFx", "trailFx", "trailInterval"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()

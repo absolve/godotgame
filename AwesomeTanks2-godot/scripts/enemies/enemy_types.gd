@@ -43,7 +43,7 @@ const TURRETS: Dictionary = {
 	"rockets": {
 		"id": "turret_rockets", "base": "rockets_base", "turret": "rockets", "weapon": "rockets",
 		"max_health": 1000.0, "points": 900, "view_distance": 400.0, "turret_speed": 3.0, "shoot_angle": 25.0,
-		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "muzzleOffset": 15.0},
+		"params": {"damage": 180.0, "rate": 0.5, "life": 3.333, "velocity": 168.0, "muzzleOffset": 15.0},
 	},
 	"laser": {
 		"id": "turret_laser", "base": "laser_base", "turret": "laser", "weapon": "laser",

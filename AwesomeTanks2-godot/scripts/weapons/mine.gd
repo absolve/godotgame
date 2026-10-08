@@ -6,7 +6,7 @@ class_name ATMine
 
 var team: int = Constants.Team.PLAYER
 var damage: float = 80.0
-var radius: float = 85.0
+var radius: float = 75.0
 var armed: bool = false
 var armDelay: float = 0.5
 var ownerActor: Node = null     # 布设者：自己踩自己的雷不引爆

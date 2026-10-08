@@ -75,7 +75,7 @@ func playHitSfx(file: String, volumeDb: float = 0.0) -> void:
 		p.stream = load(path)
 		add_child(p)
 		hitPlayers[file] = p
-	p.volumeDb = volumeDb
+	p.volume_db = volumeDb
 	p.play()
 
 # ============================================================

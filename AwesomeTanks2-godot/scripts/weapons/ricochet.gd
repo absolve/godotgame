@@ -73,7 +73,7 @@ func fireCharged() -> void:
 	# 命中回调需要知道"是谁打的"（与基类 ATWeapon.spawnBullet 保持一致）
 	if "ownerWeapon" in b:
 		b.ownerWeapon = self
-	for prop in ["impactSfx", "bulletSpark", "bulletPuff"]:
+	for prop in ["impactSfx", "impactFx", "expireFx", "trailFx", "trailInterval"]:
 		if prop in b:
 			b.set(prop, get(prop))
 	var holder: Node = tank.get_parent()

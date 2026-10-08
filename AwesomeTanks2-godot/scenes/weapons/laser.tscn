@@ -8,7 +8,7 @@ script = ExtResource("2_script")
 beamRange = 620.0
 beamDps = 900.0
 drainPerSec = 60.0
-muzzleOffset = 30.0
+impactFx = "sparkRed"
 
 [node name="Ray" type="RayCast2D" parent="." index="2" unique_id=53866911]
 target_position = Vector2(620, 0)

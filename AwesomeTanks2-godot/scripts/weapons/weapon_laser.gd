@@ -62,6 +62,8 @@ func hitScan(delta: float) -> void:
 	if ray.is_colliding():
 		var point: Vector2 = ray.get_collision_point()
 		endGlobal = point
+		# 命中点特效（每把武器在场景里配一种，见 impactFx；带节流，不会每帧都生成）
+		tickImpactFx(delta, point)
 		var collider := ray.get_collider()
 		if collider and collider.has_method("onBulletHit") and collider != tank:
 			var ot: int = collider.team if "team" in collider else Constants.Team.CPU
@@ -87,7 +89,7 @@ func _physics_process(delta: float) -> void:
 	if not canFire:
 		finishBurst()
 		return
-	if ammo <= 0:
+	if not infiniteAmmo and ammo <= 0:
 		outOfAmmo.emit(self)
 		finishBurst()
 		return

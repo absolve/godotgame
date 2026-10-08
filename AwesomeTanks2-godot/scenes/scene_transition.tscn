@@ -1,0 +1,58 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/autoload/scene_transition.gd" id="1_script"]
+[ext_resource type="Shader" path="res://shaders/transition.gdshader" id="2_shader"]
+
+[sub_resource type="Gradient" id="Gradient_wipe"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_wipe"]
+gradient = SubResource("Gradient_wipe")
+width = 64
+height = 64
+fill_from = Vector2(0, 0)
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_solid"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_solid"]
+gradient = SubResource("Gradient_solid")
+width = 8
+height = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_transition"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/base_color = Color(0.07, 0.08, 0.1, 1)
+shader_parameter/node_resolution = Vector2(800, 600)
+shader_parameter/factor = 0.0
+shader_parameter/width = 0.35
+shader_parameter/gradient_texture = SubResource("GradientTexture2D_wipe")
+shader_parameter/gradient_fixed = false
+shader_parameter/shape_texture = SubResource("GradientTexture2D_solid")
+shader_parameter/shape_tiling = 32.0
+shader_parameter/shape_rotation = 0.0
+shader_parameter/shape_scroll = Vector2(0, 0)
+shader_parameter/shape_feathering = 0.35
+shader_parameter/shape_treshold = 1.0
+
+[node name="SceneTransition" type="Node"]
+process_mode = 3
+script = ExtResource("1_script")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 100
+process_mode = 3
+
+[node name="Overlay" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_transition")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(1, 1, 1, 1)

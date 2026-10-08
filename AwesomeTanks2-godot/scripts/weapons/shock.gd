@@ -67,7 +67,7 @@ func setFiring(on: bool) -> void:
 # ============================================================
 # 单帧放电：主射线命中 + 链目标搜索 + 伤害 + 绘制
 # ============================================================
-func dischargeFrame() -> void:
+func dischargeFrame(delta: float) -> void:
 	var aim := getAimAngle()
 	#var dir := Vector2.from_angle(aim)
 	var muzzle: Vector2 = tank.getTurretPosition(muzzleOffset) \
@@ -87,6 +87,8 @@ func dischargeFrame() -> void:
 	# 主光束画到最近命中点（墙/障碍/敌人 都挡光）
 	var mainLen := clampf((end - muzzle).length(), 1.0, beamRange)
 	showLine(0, muzzle, end, mainLen)
+	# 命中点特效（每把武器在场景里配一种，见 impactFx；带节流）
+	tickImpactFx(delta, end)
 
 	# 主射线命中：H5 只要命中体有 onBulletHit 就先电一次——
 	# 敌人坦克/炮塔/生成器、以及可破坏障碍(crate/砖/油桶)都会受伤；
@@ -246,7 +248,7 @@ func _physics_process(delta: float) -> void:
 	if not canFire:
 		finishBurst()
 		return
-	if ammo <= 0:
+	if not infiniteAmmo and ammo <= 0:
 		outOfAmmo.emit(self)
 		finishBurst()
 		return
@@ -262,5 +264,5 @@ func _physics_process(delta: float) -> void:
 	if not hasInfiniteAmmo():
 		ammo = maxi(0, ammo - int(drainPerSec * delta + 0.5))
 
-	dischargeFrame()
+	dischargeFrame(delta)
 	canFire = false  # 本帧信号已消耗；持续放电由坦克每帧 set_firing(true) 维持

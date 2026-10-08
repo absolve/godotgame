@@ -32,11 +32,15 @@ TestResults/
 *.csproj.user
 *.sln.DotSettings.user
 
-# ---------- Godot 导出配置（可能含签名口令，官方模板建议不入库）----------
+# ---------- Godot 导出配置 ----------
+# export_credentials.cfg / export.cfg 可能含签名口令、部署密钥，不入库
 export.cfg
 export_credentials.cfg
-export_presets.cfg
+# export_presets.cfg 只有导出预设（版本号/产品名/图标路径等，没有口令），要入库；
+# 仓库根 .gitignore 也忽略了它，但子目录规则更靠内、优先级更高，这里反忽略一次
+!export_presets.cfg
 *.translation
+build/
 
 # ---------- 导入设置：沿用现状忽略 ----------
 # 严格说 Godot 官方模板**不**忽略 *.import（它是每个资源的导入设置，换机器重新导入会用默认值）。
