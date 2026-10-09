@@ -71,6 +71,8 @@ func hasLineOfSight(to: Vector2) -> bool:
 	q.from = global_position
 	q.to = to
 	q.collision_mask = Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
+	# 火箭卡在墙/障碍里时，起点在几何体内部也要算被挡
+	q.hit_from_inside = true
 	return space.intersect_ray(q).is_empty()
 
 
@@ -129,12 +131,7 @@ func explode() -> void:
 
 
 func player() -> Node2D:
-	if weaponLevel == null or not is_instance_valid(weaponLevel):
-		return null
-	var p = weaponLevel.get("player")
-	if p is Node2D and is_instance_valid(p) and bool(p.get("alive")):
-		return p
-	return null
+	return Game.getLevelPlayer(weaponLevel)
 
 
 func _physics_process(delta: float) -> void:

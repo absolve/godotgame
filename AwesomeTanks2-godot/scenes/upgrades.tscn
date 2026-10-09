@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://w5b106i6sm80"]
+[gd_scene format=3 uid="uid://dttm1q42mdimy"]
 
 [ext_resource type="Script" uid="uid://i8eqppyb5l0a" path="res://scripts/menu/upgrades.gd" id="1_up"]
 [ext_resource type="Theme" uid="uid://b8sqbd1lp03rs" path="res://theme/new_theme.tres" id="1_yxxwd"]
@@ -112,6 +112,7 @@ offset_right = 615.0
 offset_bottom = 95.0
 texture_normal = ExtResource("10_music_off")
 texture_pressed = ExtResource("7_yxxwd")
+kind = 1
 
 [node name="WeaponsPanel" type="Control" parent="Design" unique_id=739305059]
 layout_mode = 1
@@ -397,8 +398,6 @@ stretch_mode = 0
 [node name="WeaponAlert" parent="." unique_id=2015145372 instance=ExtResource("41_alert")]
 layout_mode = 1
 
-[connection signal="pressed" from="Design/SoundBtn" to="." method="onSoundToggled"]
-[connection signal="pressed" from="Design/MusicBtn" to="." method="onMusicToggled"]
 [connection signal="pressed" from="Design/TabPerformance" to="." method="onPerformanceTabPressed"]
 [connection signal="pressed" from="Design/TabWeapons" to="." method="onWeaponsTabPressed"]
 [connection signal="pressed" from="Design/MenuBtn" to="." method="onMenuPressed"]

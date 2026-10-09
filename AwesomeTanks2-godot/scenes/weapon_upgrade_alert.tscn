@@ -201,10 +201,15 @@ offset_bottom = 176.0
 texture = ExtResource("16_ammo_bg")
 stretch_mode = 4
 
-[node name="AmmoBar" type="TextureRect" parent="Center/Panel" unique_id=1863294921]
+[node name="AmmoBar" type="TextureProgressBar" parent="Center/Panel" unique_id=1863294921]
 layout_mode = 0
 offset_left = 365.0
 offset_top = 108.0
 offset_right = 381.0
 offset_bottom = 173.0
-texture = ExtResource("17_ammo_bar")
+max_value = 65.0
+step = 1.0
+value = 65.0
+fill_mode = 3
+nine_patch_stretch = true
+texture_progress = ExtResource("17_ammo_bar")

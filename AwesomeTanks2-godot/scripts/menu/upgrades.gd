@@ -38,8 +38,6 @@ const TAB_WP: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons
 const TAB_WP_A: Texture2D = preload("res://sprites/menu/upgrades/parts/tab_weapons_active.png.tres")
 
 @onready var moneyLabel: Label = $Design/TopBar/MoneyLabel
-@onready var soundBtn: TextureButton = $Design/SoundBtn
-@onready var musicBtn: TextureButton = $Design/MusicBtn
 @onready var cards: Control = $Design/WeaponsPanel/Cards
 @onready var perfCards: Control = $Design/PerformancePanel/PerfCards
 @onready var tabPerf: TextureButton = $Design/TabPerformance
@@ -68,9 +66,7 @@ func _ready() -> void:
 	tabWp.texture_pressed = TAB_WP_A
 	perfPanel.visible = false
 	weaponsPanel.visible = true
-	# Sound/Music 状态
-	refreshSoundBtn(bool(Game.current.get("game", {}).get("sound", true)))
-	refreshMusicBtn(bool(Game.current.get("game", {}).get("music", true)))
+	# Sound/Music 开关由 scenes/sound_btn.tscn 组件自己同步（读存档 + 连 Audio 信号）
 	refresh()
 	Game.moneyChanged.connect(onMoneyChanged)
 	weaponAlert.purchased.connect(onWeaponAlertPurchased)
@@ -213,27 +209,6 @@ func refreshStatCards() -> void:
 
 func onMoneyChanged(_value: int) -> void:
 	moneyLabel.text = Game.formatMoney(Game.getMoney())
-
-
-# ---------- Sound/Music ----------
-func refreshSoundBtn(on: bool) -> void:
-	soundBtn.button_pressed = on
-
-
-func refreshMusicBtn(on: bool) -> void:
-	musicBtn.button_pressed = on
-
-
-func onSoundToggled() -> void:
-	var wantOn: bool = soundBtn.button_pressed
-	refreshSoundBtn(wantOn)
-	Audio.setSoundEnabled(wantOn)
-
-
-func onMusicToggled() -> void:
-	var wantOn: bool = musicBtn.button_pressed
-	refreshMusicBtn(wantOn)
-	Audio.setMusicEnabled(wantOn)
 
 
 # ---------- 底栏 ----------

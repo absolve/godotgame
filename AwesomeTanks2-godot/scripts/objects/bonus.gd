@@ -111,12 +111,7 @@ func onBodyExited(body: Node) -> void:
 # 环境查询
 # ============================================================
 func player() -> Node2D:
-	if weaponLevel == null or not is_instance_valid(weaponLevel):
-		return null
-	var p = weaponLevel.get("player")
-	if p is Node2D and is_instance_valid(p) and bool(p.get("alive")):
-		return p
-	return null
+	return Game.getLevelPlayer(weaponLevel)
 
 
 ## 敌人全清 → 全场吸附（H5: enemiesAlive === 0 时吸附半径变 4e6 = 2000px）

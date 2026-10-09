@@ -7,5 +7,3 @@ custom_minimum_size = Vector2(56, 50)
 toggle_mode = true
 button_pressed = true
 script = ExtResource("1_oaxhh")
-
-[connection signal="pressed" from="." to="." method="onPressed"]

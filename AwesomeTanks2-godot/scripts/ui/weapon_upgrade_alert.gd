@@ -35,9 +35,8 @@ const TEX_UPGRADE := [
 # Panel(451x296) 内坐标（由 H5 弹窗中心坐标系换算而来）
 const POS_BUY: Vector2 = Vector2(164, 218)     # BUY 按钮（未拥有 / minigun）
 const POS_UPGRADE: Vector2 = Vector2(26, 218)  # UPGRADE 按钮（已拥有，靠左）
-const AMMO_BAR_X: float = 365.5
-const AMMO_BAR_BOTTOM: float = 173.0
-const AMMO_BAR_MAX_H: float = 65.0
+# 弹药条 AmmoBar 的位置/尺寸固定在场景里（365,108 ~ 381,173 = 16×65），
+# max_value 就是它的像素高度，脚本只改 value
 
 @onready var title: Label = $Center/Panel/Title
 @onready var desc: Label = $Center/Panel/Desc
@@ -51,7 +50,7 @@ const AMMO_BAR_MAX_H: float = 65.0
 @onready var ammoTitle: Label = $Center/Panel/AmmoTitle
 @onready var ammoPrice: Label = $Center/Panel/AmmoPrice
 @onready var ammoBg: TextureRect = $Center/Panel/AmmoBg
-@onready var ammoBar: TextureRect = $Center/Panel/AmmoBar
+@onready var ammoBar: TextureProgressBar = $Center/Panel/AmmoBar
 
 var weaponKey: String = ""
 var weaponLevel: int = -1
@@ -69,7 +68,7 @@ func open(key: String) -> void:
 	title.text = key
 	desc.text = DESCRIPTIONS.get(key, "")
 	var iconPath := "res://sprites/menu/upgrades/parts/%s.png.tres" % key
-	icon.texture = load(iconPath) if ResourceLoader.exists(iconPath) else null
+	icon.texture = Game.loadTextureOrNull(iconPath)
 	refresh()
 	visible = true
 
@@ -108,10 +107,13 @@ func refresh() -> void:
 
 
 func refreshAmmo() -> void:
-	var p: float = Game.getAmmoPercent(weaponKey)
-	var h: float = max(AMMO_BAR_MAX_H * p, 1.0)
-	ammoBar.size = Vector2(16, h)
-	ammoBar.position = Vector2(AMMO_BAR_X, AMMO_BAR_BOTTOM - h)
+	# AmmoBar 是固定的 TextureProgressBar（16×65，场景里定好位置），只改 value：
+	# 0..65 整格像素、从下往上，不再每帧改 size/position（那会抖）
+	var p: float = clampf(Game.getAmmoPercent(weaponKey), 0.0, 1.0)
+	var px := roundf(p * ammoBar.max_value)
+	if px > 0.0:
+		px = maxf(px, 1.0)              # H5: max(65 * pct, 1)
+	ammoBar.value = px
 	if p < 1.0:
 		refillBtn.visible = true
 		ammoPrice.text = Game.formatMoney(int(Settings.AMMO_PRICES.get(weaponKey, 0)))

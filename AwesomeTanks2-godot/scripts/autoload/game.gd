@@ -218,6 +218,24 @@ func formatMoney(v: int) -> String:
 		return "$%.1fk" % (v / 1000.0)
 	return "$%d" % v
 
+# ---------- 关卡查询 ----------
+## 取关卡里"还活着"的玩家（H5: level.player + player.alive）。
+## 奖励吸附、火箭追踪等地方原来各自抄了一份，统一放这里。
+func getLevelPlayer(level: Node) -> Node2D:
+	if level == null or not is_instance_valid(level):
+		return null
+	var p = level.get("player")
+	if p is Node2D and is_instance_valid(p) and bool(p.get("alive")):
+		return p
+	return null
+
+# ---------- 资源加载 ----------
+## 加载贴图：资源不存在就返回 null。
+## UI 里到处都有"有这个贴图才 load，没有就当 null"的写法（武器槽/武器卡/属性卡/补弹弹窗），
+## 统一放这里，免得每个脚本各写一遍、也避免出现同名小工具函数跟局部变量撞名。
+func loadTextureOrNull(path: String) -> Texture2D:
+	return load(path) as Texture2D if ResourceLoader.exists(path) else null
+
 # ============================================================
 # 内部工具
 # ============================================================

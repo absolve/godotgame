@@ -74,6 +74,7 @@ offset_bottom = 50.0
 texture_normal = ExtResource("10_m_off")
 texture_pressed = ExtResource("11_m_on")
 texture_hover = ExtResource("10_m_off")
+kind = 1
 
 [node name="ContinueBtn" type="TextureButton" parent="Center/Panel" unique_id=795799776]
 layout_mode = 0

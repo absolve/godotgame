@@ -36,7 +36,9 @@ SceneTransition="*res://scenes/scene_transition.tscn"
 window/size/viewport_width=800
 window/size/viewport_height=600
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+; keep：固定 800×600 设计分辨率，窗口变大时整体等比缩放 + 留黑边。
+; 用 expand 的话画布会随窗口变大，绝对定位/锚点没做自适应的界面就会错位（打包 exe 后尤其明显）。
+window/stretch/aspect="keep"
 
 [dotnet]
 

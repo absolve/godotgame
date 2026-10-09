@@ -9,7 +9,7 @@ extends Camera2D
 #@export var max_offset: Vector2 = Vector2(100, 100)
 @export var edgeThreshold: float = 0.2
 @export var smoothSpeed: float = 6.0 # 平滑速度
-@export var scalingFactor = 0.10
+@export var scalingFactor: float = 0.10
 ## 冻结跟随（入场 FIGHT 横幅期间用；震屏也一并暂停，与 H5 一致）
 @export var frozen: bool = false
 

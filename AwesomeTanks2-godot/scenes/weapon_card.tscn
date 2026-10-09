@@ -108,15 +108,20 @@ mouse_filter = 2
 texture = ExtResource("4_ammo_bg")
 stretch_mode = 4
 
-[node name="AmmoBar" type="TextureRect" parent="." unique_id=346380626]
+[node name="AmmoBar" type="TextureProgressBar" parent="." unique_id=346380626]
 visible = false
 layout_mode = 0
 offset_left = 75.0
-offset_top = 23.0
+offset_top = 24.0
 offset_right = 85.0
 offset_bottom = 68.0
 mouse_filter = 2
-texture = ExtResource("5_ammo_bar")
+max_value = 44.0
+step = 1.0
+value = 44.0
+fill_mode = 3
+nine_patch_stretch = true
+texture_progress = ExtResource("5_ammo_bar")
 
 [node name="Price" type="Label" parent="." unique_id=1977100330]
 layout_mode = 0

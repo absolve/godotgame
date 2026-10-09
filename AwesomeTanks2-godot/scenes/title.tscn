@@ -106,6 +106,7 @@ texture_pressed = ExtResource("13_sound_on")
 layout_mode = 2
 texture_normal = ExtResource("8_ostn1")
 texture_pressed = ExtResource("15_music_on")
+kind = 1
 
 [node name="AboutBtn" type="TextureButton" parent="." unique_id=1330385002]
 layout_mode = 1
@@ -187,8 +188,6 @@ offset_bottom = 40.0
 texture_normal = ExtResource("18_x_n")
 texture_hover = ExtResource("19_x_h")
 
-[connection signal="pressed" from="TopRight/SoundBtn" to="." method="onSoundToggled"]
-[connection signal="pressed" from="TopRight/MusicBtn" to="." method="onMusicToggled"]
 [connection signal="pressed" from="AboutBtn" to="." method="onAboutPressed"]
 [connection signal="pressed" from="PlayBtn" to="." method="onPlayPressed"]
 [connection signal="pressed" from="CreditsLayer/CreditsCenter/CreditsHolder/CloseBtn" to="." method="onCreditsClosePressed"]

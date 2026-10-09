@@ -12,7 +12,7 @@ extends Area2D
 ##
 ## 行为：
 ##   - 地图加载时由 ATFog 按地图逐格创建（每个格子一个瓦片，铺满全图）；
-##   - 视野射线（Fog.reveal_fov 的物理射线）命中本瓦片即调用 clear()；
+##   - 视野射线（ATFog.castRay 的物理射线）命中本瓦片即调用 clear()；
 ##   - clear() 先立刻关闭 monitorable（避免射线重复命中/继续前进时卡住），
 ##     再播放“放大 + 淡出 + 随机旋转”消失动画，动画结束 queue_free。
 ##
@@ -45,7 +45,7 @@ func _ready() -> void:
 	collision_mask = 0
 	monitoring = false
 	monitorable = true
-	applyTileSize()
+	#applyTileSize()
 
 
 ## 按当前 tile 尺寸校正「贴图放大倍数」与「判定矩形」：

@@ -201,6 +201,30 @@ func stopFire() -> void:
 	if weapon and weapon.has_method("setFiring"):
 		weapon.setFiring(false)
 
+# ---------- 点燃（火焰类弹药命中） ----------
+## 燃烧伤害。H5：目标 onBulletHit 里判断 instanceof Flamethrower 后挂 Fire；
+## 敌人与玩家原来各抄一份 tryIgnite，统一收到基类（时长走 igniteDuration()）。
+@export var burnDamage: float = 2.0
+
+
+## 命中后如果是火焰类弹药就点燃自己（H5：目标 onBulletHit 里判断 instanceof Flamethrower）
+func tryIgnite(src: Node) -> void:
+	if not ATBurning.isFlameSource(src, team):
+		return
+	onBeforeIgnite()
+	ATBurning.attachFrom(self, burnDamage, src, igniteDuration())
+
+
+## 点燃前的额外处理（敌人用它处理"冰冻中被点燃先解冻"，对应 H5 onUnfreeze）
+func onBeforeIgnite() -> void:
+	pass
+
+
+## 燃烧时长（秒；<0 = 无限）。子类覆写：敌人用 @export burnDuration，玩家按关卡算。
+func igniteDuration() -> float:
+	return -1.0
+
+
 # ============================================================
 # 受击 / 死亡
 # ============================================================

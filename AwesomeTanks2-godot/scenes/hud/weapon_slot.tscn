@@ -9,9 +9,17 @@ focus_mode = 0
 stretch_mode = 5
 script = ExtResource("1_slot")
 
-[node name="AmmoBar" type="TextureRect" parent="." unique_id=1592878814]
+[node name="AmmoBar" type="TextureProgressBar" parent="." unique_id=1592878814]
 visible = false
 layout_mode = 0
+offset_left = 44.0
+offset_top = 6.0
+offset_right = 51.0
+offset_bottom = 37.0
 mouse_filter = 2
-texture = ExtResource("2_ammo")
-expand_mode = 1
+max_value = 31.0
+step = 1.0
+value = 31.0
+fill_mode = 3
+nine_patch_stretch = true
+texture_progress = ExtResource("2_ammo")

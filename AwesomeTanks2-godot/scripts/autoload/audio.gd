@@ -6,6 +6,11 @@ extends Node
 ##   - 背景音乐淡入淡出
 ##   - 全局静音开关（音效/音乐分离）
 
+## 音效 / 音乐开关变化（setSoundEnabled / setMusicEnabled 发出来）。
+## 界面上的开关按钮与 HUD 图标都靠它自动同步，不用各处手写 refresh 逻辑。
+signal soundToggled(on: bool)
+signal musicToggled(on: bool)
+
 var sfxPool: Array[AudioStreamPlayer] = []
 var musicPlayer: AudioStreamPlayer = null
 var musicTween: Tween = null
@@ -29,7 +34,7 @@ func _ready() -> void:
 # 音效（一次性）
 # ============================================================
 func playSfx(soundName: String, volumeDb: float = 0.0) -> AudioStreamPlayer:
-	if not Game.current["game"]["sound"]:
+	if not isSoundEnabled():
 		return null
 	var path := SOUND_DIR + soundName
 	if not ResourceLoader.exists(path):
@@ -63,7 +68,7 @@ func playSpawnerHit() -> void:
 ## H5 走 Phaser SoundManager（同一音效不会叠成多路），而火焰武器每秒 20+ 次命中，
 ## 若每次都新建播放器会叠成噪音，故按文件名复用。
 func playHitSfx(file: String, volumeDb: float = 0.0) -> void:
-	if not Game.current["game"]["sound"]:
+	if not isSoundEnabled():
 		return
 	var path := SOUND_DIR + file
 	if not ResourceLoader.exists(path):
@@ -82,7 +87,7 @@ func playHitSfx(file: String, volumeDb: float = 0.0) -> void:
 # 循环音（武器持续音）
 # ============================================================
 func startLoop(key: String, file: String) -> void:
-	if not Game.current["game"]["sound"]:
+	if not isSoundEnabled():
 		return
 	if not ResourceLoader.exists(SOUND_DIR + file):
 		return
@@ -132,7 +137,7 @@ func stopRicochetLoop() -> void: stopLoop("ricochet")
 # 背景音乐
 # ============================================================
 func playMusic(file: String, fadeMs: int = 200, volume: float = 1.0) -> void:
-	if not Game.current["game"]["music"]:
+	if not isMusicEnabled():
 		return
 	var path := SOUND_DIR + file
 	if not ResourceLoader.exists(path):
@@ -161,12 +166,21 @@ func fadeTo(volume: float, ms: int) -> void:
 # ============================================================
 # 全局开关
 # ============================================================
+## 当前音效/音乐是否开启（存档 game.sound / game.music）。
+## 各个菜单界面原来都自己写一遍 Game.current.get("game", {}).get(...)，统一从这里读。
+func isSoundEnabled() -> bool:
+	return bool(Game.current.get("game", {}).get("sound", true))
+
+func isMusicEnabled() -> bool:
+	return bool(Game.current.get("game", {}).get("music", true))
+
 func setSoundEnabled(enabled: bool) -> void:
 	Game.current["game"]["sound"] = enabled
 	if not enabled:
 		for key in loops.keys():
 			cancelLoop(key)
 	Game.save()
+	soundToggled.emit(enabled)
 
 func setMusicEnabled(enabled: bool) -> void:
 	Game.current["game"]["music"] = enabled
@@ -178,6 +192,7 @@ func setMusicEnabled(enabled: bool) -> void:
 	else:
 		stopMusic()
 	Game.save()
+	musicToggled.emit(enabled)
 
 # ============================================================
 # 内部：对象池

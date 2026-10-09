@@ -89,11 +89,7 @@ var mapHeight: int = 0
 var mapTheme: int = 0 # Constants.GameTheme
 var occupancy: Array = [] # 动态对象占据标记（tiles 同尺寸）
 
-var fog: ATFog = null       # 黑雾（scenes/level/fog.tscn，_ready 中实例化）
-## 开场补几帧视野：黑雾瓦片刚进树时物理空间还没登记，当帧射线扫不到雾，
-## 会在出生点周围留下零星空格；这里让开场的几次惰性更新强制重发视野射线补上
-var initialFogFrames: int = 0
-var fogFrame: int = 0      # 惰性更新计数（约每 3 帧发射一次视野射线）
+var fog: ATFog = null       # 黑雾（scenes/level/fog.tscn，_ready 中实例化；视野揭示由玩家坦克驱动）
 
 ## 寻路网格（scripts/level/pathfinder.gd；敌人 AI 用它绕开墙/障碍）
 var pathfinder: ATPathfinder = null
@@ -162,6 +158,9 @@ func _ready() -> void:
 	spawnObjects()
 	setupFog()
 	collectHudNodes()
+	# 音效/音乐开关变化（HUD 按钮或暂停面板里的组件）→ 同步 HUD 图标
+	Audio.soundToggled.connect(onAudioToggled)
+	Audio.musicToggled.connect(onAudioToggled)
 	syncAudioIcons()
 	connectPopups()
 	levelStarted.emit()
@@ -171,8 +170,6 @@ func _ready() -> void:
 
 func connectPopups() -> void:
 	pauseAlert.continuePressed.connect(resumeGame)
-	pauseAlert.musicToggled.connect(onMusicSet)
-	pauseAlert.soundToggled.connect(onSoundSet)
 	abandonAlert.confirmed.connect(onAbandonConfirmed)
 	abandonAlert.canceled.connect(onAbandonCanceled)
 	helpAlert.closed.connect(onHelpClosed)
@@ -380,31 +377,9 @@ func bindPlayer(p: Node) -> void:
 	refreshHud()
 
 
-## 按玩家位置/炮塔朝向刷新黑雾：
-##   1) 清掉玩家脚下周围一圈黑雾瓦片（能看到自己）；
-##   2) 按炮塔方向发射扇形视野射线清雾（射线与墙/黑雾碰撞，墙后不生效）。
-func updateFog() -> void:
-	if fog == null or player == null or not is_instance_valid(player):
-		return
-	var ts := Settings.TILE_SIZE
-	# 玩家正在制导火箭：视野跟着导弹（H5 updateFog：player.follow 时只揭开导弹周围那一圈）
-	if "follow" in player:
-		var r = player.get("follow")
-		if r is Node2D and is_instance_valid(r):
-			fog.clearArea(int((r as Node2D).global_position.x / ts),
-				int((r as Node2D).global_position.y / ts), fog.clearRadiusTiles)
-			return
-	var px := int(player.global_position.x / ts)
-	var py := int(player.global_position.y / ts)
-	fog.clearArea(px, py, fog.clearRadiusTiles)
-	var viewAngle := float(player.get("viewAngle")) if "viewAngle" in player else PI / 4.0
-	var viewDist := float(player.get("viewDistance")) if "viewDistance" in player else 300.0
-	var aim: float = player.getTurretRotation() if player.has_method("getTurretRotation") \
-		else float(player.rotation)
-	fog.revealFov(player.global_position, aim, viewAngle, viewDist)
-
-
 ## 地图加载完成后创建黑雾：实例化 fog.tscn 并逐格铺满整张地图
+## 视野揭示完全不在这里做 —— 由玩家坦克自己驱动（ATPlayer.updateFogReveal）：
+## 开场以很小半径向四周扫一圈，之后每物理帧只按炮口方向扫扇形。
 func setupFog() -> void:
 	fog = (preload("res://scenes/level/fog.tscn") as PackedScene).instantiate()
 	fog.name = "Fog"
@@ -412,15 +387,6 @@ func setupFog() -> void:
 	fog.z_index = 100   # 盖在静态层/物体层之上
 	fog.configure(0, 0, mapWidth, mapHeight)
 	fog.buildTiles()
-	# 出生点先清一圈：纯格子计算、不依赖物理，当帧立即生效（坦克身边先亮）
-	var ts := Settings.TILE_SIZE
-	if player != null and is_instance_valid(player):
-		fog.clearArea(int(player.global_position.x / ts),
-			int(player.global_position.y / ts), fog.clearRadiusTiles)
-	# 视野射线要等黑雾瓦片在物理空间登记完（下一个物理帧之后）才会命中，
-	# 当帧扫只会漏成零星，所以这里不扫：交给开场几次惰性更新强制重发（第 3 帧一次扫干净）
-	fog.invalidateCache()
-	initialFogFrames = 2
 
 
 ## 每帧同步血瓶 / 武器槽（幂等；数据没变化时开销可忽略）
@@ -503,33 +469,33 @@ func onHelpClosed() -> void:
 
 func onHudMusicPressed() -> void:
 	Audio.playButtonDown()
-	onMusicSet(not bool(Game.current["game"].get("music", true)))
+	onMusicSet(not Audio.isMusicEnabled())
 
 
 func onHudSoundPressed() -> void:
 	Audio.playButtonDown()
-	onSoundSet(not bool(Game.current["game"].get("sound", true)))
+	onSoundSet(not Audio.isSoundEnabled())
 
 
 func onMusicSet(on: bool) -> void:
 	Audio.setMusicEnabled(on)
-	syncAudioIcons()
 
 
 func onSoundSet(on: bool) -> void:
 	Audio.setSoundEnabled(on)
+
+
+## Audio 的开关信号回调：只负责同步 HUD 图标（暂停面板里的组件自己会同步）
+func onAudioToggled(_on: bool) -> void:
 	syncAudioIcons()
 
 
-## 同步 HUD 主栏图标与暂停面板开关的状态
+## 同步 HUD 主栏图标（暂停面板的开关按钮由 SoundBtn 组件自己跟着 Audio 信号同步）
 func syncAudioIcons() -> void:
-	var game: Dictionary = Game.current.get("game", {})
-	var musicOn := bool(game.get("music", true))
-	var soundOn := bool(game.get("sound", true))
+	var musicOn := Audio.isMusicEnabled()
+	var soundOn := Audio.isSoundEnabled()
 	musicIcon.texture_normal = TEX_MUSIC_ON if musicOn else TEX_MUSIC_OFF
 	soundIcon.texture_normal = TEX_SOUND_ON if soundOn else TEX_SOUND_OFF
-	if is_instance_valid(pauseAlert):
-		pauseAlert.setAudioStates(musicOn, soundOn)
 
 
 # ---------- 结算 ----------
@@ -1031,15 +997,6 @@ func _physics_process(delta: float) -> void:
 		if freezeTime <= 0:
 			unfreezeEnemies()
 	refreshHud()
-	# 迷雾惰性更新（H5 updateFogLazy：约每 3 帧一次）
-	fogFrame += 1
-	if fog != null and player != null and is_instance_valid(player) \
-			and fogFrame % 3 == 0:
-		# 开场几帧：黑雾瓦片的物理登记可能晚一两帧，强制重发视野射线把漏掉的补上
-		if initialFogFrames > 0:
-			initialFogFrames -= 1
-			fog.invalidateCache()
-		updateFog()
 
 
 func _unhandled_input(event: InputEvent) -> void:

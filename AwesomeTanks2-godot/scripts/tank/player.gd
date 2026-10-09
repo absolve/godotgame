@@ -18,8 +18,18 @@ var controlLocked: bool = false
 ## 正在制导的火箭（H5 player.follow）：非空时不能开车（镜头在导弹上），
 ## 导弹一没（命中/引爆）就自动清空、控制权还回来（由 Level.clear_guided_rocket 处理）
 var follow: Node2D = null
-## 被点燃时每物理帧受到的灼烧伤害（H5：玩家 = 2）
-@export var burnDamage: float = 2.0
+
+# ---------- 黑雾视野（见 updateFogReveal） ----------
+## 每帧从炮口发射的射线数（正前方 + 左右各半个间隔，合计 FOG_CONE_DEG 度）
+const FOG_RAY_COUNT: int = 3
+## 这三条射线张开的角度（度）
+const FOG_CONE_DEG: float = 45.0
+## 出生时向四周发射多少条射线清雾（长度按视野距离；0 = 不扫）
+@export var fogSpawnSweepRays: int = 72
+## 出生扫描重发几次（黑雾瓦片进物理空间比第一帧晚，多扫几帧把漏的补上）
+@export var fogSpawnSweepFrames: int = 3
+## 出生扫描剩余帧数（-1 = 还没开始）
+var fogSpawnFramesLeft: int = -1
 
 const DIR_WEAPONS = "res://scenes/weapons/"
 
@@ -109,7 +119,7 @@ func levelParams(key: String, weaponLevel: int) -> Dictionary:
 # ============================================================
 # 换武器表现（切炮塔动画 + 弹性缩放 + 声音在基类播放）
 # ============================================================
-func onWeaponChanged(index: int) -> void:
+func onWeaponChanged(_index: int) -> void:
 	var key := ""
 	if weapon != null and "id" in weapon:
 		key = str(weapon.id)
@@ -134,14 +144,8 @@ func onBulletHit(damage: float, srcWeapon: Node, bullet: Node) -> void:
 	tryIgnite(srcWeapon)
 
 
-## 被敌方火焰命中 → 点燃；时长 = (55 + 40×关卡序号)/60 秒（H5 L22561）
-func tryIgnite(src: Node) -> void:
-	if not ATBurning.isFlameSource(src, team):
-		return
-	ATBurning.attachFrom(self, burnDamage, src, burnDuration())
-
-
-func burnDuration() -> float:
+## 燃烧时长 = (55 + 40×关卡序号)/60 秒（H5 L22561）；点燃本身在 ATTank.tryIgnite
+func igniteDuration() -> float:
 	var index := 0
 	if level != null and is_instance_valid(level) and "levelIndex" in level:
 		index = int(level.get("levelIndex"))
@@ -159,7 +163,7 @@ func kill() -> void:
 # ============================================================
 # 输入/战斗（沿用原实现）
 # ============================================================
-func _unhandled_input(event: InputEvent) -> void:
+func _unhandled_input(_event: InputEvent) -> void:
 	#if not alive:
 		#return
 	## 移动
@@ -191,6 +195,8 @@ func _physics_process(delta: float) -> void:
 	#var aim := (get_global_mouse_position() - global_position).angle()
 	#rotate_turret(aim, delta)
 	turretSprite.look_at(get_global_mouse_position())
+	# 黑雾：按刚刚定下的炮口方向扫视野（开场几帧先四周扫一圈）
+	updateFogReveal()
 	if not alive:
 		return
 	if not is_instance_valid(follow):
@@ -223,3 +229,38 @@ func _physics_process(delta: float) -> void:
 		nextWeapon()
 	if Input.is_action_just_pressed("prev_weapon"):
 		prevWeapon()
+
+
+# ============================================================
+# 黑雾视野（玩家坦克自己驱动；射线工具在 ATFog.castRay）
+# ============================================================
+## 1) 每物理帧：从炮口朝 3 个方向（正前方 + 左右各 22.5°，合计约 45°）发射射线，
+##    射线只跟墙壁/黑雾碰撞、撞墙即停 → 墙后面的黑雾不会被清掉；看过的格子永久保持亮。
+## 2) 出生时：按视野长度向四周发射一圈射线，把出生点周围清一遍
+##    （黑雾瓦片进物理空间比第一帧晚，所以前几帧重发几次）。
+## 3) 制导火箭期间：视野跟着导弹（H5 updateFog 的 player.follow 分支）。
+func updateFogReveal() -> void:
+	if level == null or not is_instance_valid(level):
+		return
+	var f: ATFog = level.get("fog")
+	if f == null:
+		return
+	if follow is Node2D and is_instance_valid(follow):
+		f.clearArea(int(follow.global_position.x / f.tileSize),
+			int(follow.global_position.y / f.tileSize), f.clearRadiusTiles)
+		return
+	var dist := viewDistance
+	# 出生扫描
+	if fogSpawnFramesLeft != 0:
+		if fogSpawnFramesLeft < 0:
+			fogSpawnFramesLeft = maxi(fogSpawnSweepFrames, 1)
+		fogSpawnFramesLeft -= 1
+		if fogSpawnSweepRays > 0:
+			for i in fogSpawnSweepRays:
+				f.castRay(global_position, TAU * float(i) / float(fogSpawnSweepRays), dist)
+	# 每帧：炮口方向的 3 条射线
+	var half := deg_to_rad(FOG_CONE_DEG) * 0.5
+	var step := deg_to_rad(FOG_CONE_DEG) / float(maxi(FOG_RAY_COUNT - 1, 1))
+	var aim := getTurretRotation()
+	for i in FOG_RAY_COUNT:
+		f.castRay(global_position, aim - half + step * float(i), dist)

@@ -4,7 +4,7 @@ extends State
 ##
 ## 提供状态内常用的判定/动作工具，具体状态只写"这个状态做什么"：
 ##   enemy()           —— 取宿主敌人（ATEnemy）
-##   player()          —— 取玩家（可能为空）
+##   player()          —— 取"还活着"的玩家（阵亡/无效时为空 → 状态机会停手）
 ##   player_distance() —— 到玩家距离（px，玩家无效时返回 INF）
 ##   can_see_player()  —— 是否看见玩家（H5 searchForPlayer 简化版：近距/视野角/距离/视线）
 ##   aim_at_player()   —— 炮塔转向玩家，返回是否已对准
@@ -22,14 +22,14 @@ func enemy() -> ATEnemy:
 	return actor as ATEnemy
 
 
+## 取"还活着"的玩家：玩家阵亡后返回 null。
+## 这样各状态自然就停手了 —— GoToPlayer 见到 null 直接转 Idle（exit 里 fire(false) 停火），
+## Idle / GoToSound 的 can_see_player 也不再对尸体成立。对应 H5 各处 `!level.player.alive` 判定。
 func player() -> Node2D:
 	var e := enemy()
-	if e == null or e.level == null:
+	if e == null:
 		return null
-	var p = e.level.get("player")
-	if p is Node2D and is_instance_valid(p):
-		return p
-	return null
+	return Game.getLevelPlayer(e.level)
 
 
 func playerDistance() -> float:
@@ -74,6 +74,9 @@ func lineOfSight(to: Vector2) -> bool:
 	q.from = e.global_position
 	q.to = to
 	q.collision_mask = Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
+	# 和黑雾射线同一个坑：坦克若正好卡在墙/障碍里（生成时挤在一起、被同伴顶进去），
+	# 射线从墙体内部出发，不开 hit_from_inside 就会漏掉这堵墙 → 隔墙也"看得见"→ 一直开火
+	q.hit_from_inside = true
 	var exclude: Array[RID] = []
 	if e is CollisionObject2D:
 		exclude.append((e as CollisionObject2D).get_rid())

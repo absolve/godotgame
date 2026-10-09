@@ -171,6 +171,8 @@ func losClear(a: Node2D, target: Node2D) -> bool:
 	if tank != null and tank is CollisionObject2D:
 		exclude.append((tank as CollisionObject2D).get_rid())
 	q.exclude = exclude
+	# 起点若落在墙/障碍内部（坦克卡墙里），同样要靠这个才判定得出阻挡
+	q.hit_from_inside = true
 	var hit := space.intersect_ray(q)
 	return hit and hit.get("collider") == target
 

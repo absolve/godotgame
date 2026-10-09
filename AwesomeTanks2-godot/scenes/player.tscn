@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://4ilqhpdnf5rb"]
+[gd_scene format=3 uid="uid://dwfqdxsg6jxaw"]
 
 [ext_resource type="PackedScene" uid="uid://bt5bhxqr0n4ll" path="res://scenes/tanks/tank.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://cumb3negtvyio" path="res://scripts/tank/player.gd" id="2_player"]
@@ -15,6 +15,8 @@ shader_parameter/flash_color = Color(1, 1, 1, 1)
 [node name="Player" unique_id=310059283 instance=ExtResource("1_base")]
 collision_layer = 2
 script = ExtResource("2_player")
+fogSpawnSweepRays = 72
+fogSpawnSweepFrames = 3
 
 [node name="BodySprite" parent="." index="1" unique_id=146121314]
 material = SubResource("ShaderMaterial_qu4a1")

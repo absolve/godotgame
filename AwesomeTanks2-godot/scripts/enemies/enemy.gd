@@ -36,8 +36,6 @@ class_name ATEnemy
 @export var repathInterval: float = 0.45
 ## 路径点到达判定距离（px）
 @export var waypointReach: float = 14.0
-## 被点燃时每物理帧受到的灼烧伤害（H5：敌坦克/Boss = 2，炮塔 = 4，生成器 = 0.5）
-@export var burnDamage: float = 2.0
 ## 燃烧时长（秒）；< 0 时用 H5 默认 (85 + 30×随机)/60
 @export var burnDuration: float = -1.0
 
@@ -233,12 +231,14 @@ func onBulletHit(damage: float, srcWeapon: Node, bullet: Node) -> void:
 # 火焰点燃（H5：命中体 onBulletHit 里 instanceof Flamethrower/Fire 就挂 window.AT.Fire）
 # ============================================================
 ## 被火焰命中 → 点燃（已在燃烧则不叠加），并解冻（H5 同：火烧到冰就化）
-func tryIgnite(src: Node) -> void:
-	if not ATBurning.isFlameSource(src, team):
-		return
+## 冰冻中被点燃：先解冻（H5 onUnfreeze），点燃本身在 ATTank.tryIgnite
+func onBeforeIgnite() -> void:
 	if aiStateName() == "Frozen":
 		unfreeze()
-	ATBurning.attachFrom(self, burnDamage, src, burnDuration)
+
+
+func igniteDuration() -> float:
+	return burnDuration
 
 
 # ============================================================
