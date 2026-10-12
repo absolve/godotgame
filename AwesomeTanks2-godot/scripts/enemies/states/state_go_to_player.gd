@@ -1,11 +1,13 @@
 extends EnemyState
 ## GoToPlayer —— 追击并射击玩家
-##   行为：保持 shoot_range 距离向前推进（走 A* 寻路绕开墙/障碍，直线可达时直冲）；
+##   行为：走 A* 寻路绕开墙/障碍靠近玩家，**进到自己射程(shootRange)就停下**，不贴脸；
 ##         炮塔瞄准玩家；对准且视线通畅时开火。
-##         看不见玩家超过 lose_sight_time 秒 → 回到 Idle（并保留最后位置记忆，后续可接 GoToSound）。
-## 复杂功能（走位/保持距离、预判射击、自动瞄准）后续再加。
+##         看不见玩家超过 lose_sight_time 秒 → 回到 Idle（记忆最后位置）。
+## 依据 H5 FollowPlayer（L20708~20710）：
+##   只有"看不见玩家"或 `distanceToPlayer > shootRange` 时才继续推进，否则原地不动。
+## 各类型敌人的 shootRange 在 scenes/enemies/*.tscn 里配：
+##   机枪 100 / 霰弹 125 / 加农 150 / 激光·火箭·电磁 175 / 喷火 200 / 自爆 50。
 
-@export var keepDistance: float = 60.0     # 距离小于它就不再前进（避免贴脸）
 @export var loseSightTime: float = 4.0    # 连续看不见玩家的时长上限（H5 FollowPlayer: forgetTime >= 4 放弃）
 @export var fireCheckInterval: float = 0.15  # 开火判定间隔（秒），节流用
 
@@ -29,12 +31,15 @@ func physicsUpdate(delta: float) -> void:
 	if p == null:
 		transitionTo("Idle")
 		return
-	lastKnown = p.global_position
+	var canSee := canSeePlayer()
+	# 看得见才更新"最后已知位置"：看不见时朝上次看见的地方走（H5 用 target 记录玩家瓦片）
+	if canSee:
+		lastKnown = p.global_position
 
 	# 看不见玩家：累计到上限就放弃追击（H5 FollowPlayer: forgetTime >= 4 → Idle）。
 	# 被惊动（alerted，刚挨打/被同伴喊话）期间算"知道玩家在哪"，不掉计数，
 	# 所以挨了打一定会朝你追过来（H5 里被击中会直接切 GoToPlayer 且 10s 才放弃）。
-	if canSeePlayer() or e.alerted:
+	if canSee or e.alerted:
 		noSightTime = 0.0
 	else:
 		noSightTime += delta
@@ -42,10 +47,11 @@ func physicsUpdate(delta: float) -> void:
 			transitionTo("Idle")
 			return
 
-	# 移动：贴近到 keep_distance 就停下（寻路绕开墙/障碍）
+	# 移动（H5 FollowPlayer L20710）：只有"看不见玩家"或"距离 > 自己的射程"才继续推进，
+	# 进了射程就停下 —— 这样敌人不会一路紧贴玩家（原来的 60px 硬阈值就是贴脸的元凶）。
 	var dist := e.global_position.distance_to(p.global_position)
-	if dist > keepDistance and e.moveSpeed > 0.0:
-		navigateTo(p.global_position)
+	if e.moveSpeed > 0.0 and ((not canSee) or dist > e.shootRange):
+		navigateTo(lastKnown if not canSee else p.global_position)
 	else:
 		stopMoving()
 
