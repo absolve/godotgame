@@ -55,7 +55,7 @@ func setup(team_: int, damage_: float, speed_: float, life_: float, color_: Colo
 
 
 ## 运行时替换贴图（已废弃：贴图由派生子弹场景直接设置）
-func setBulletTexture(tex: Texture2D) -> void:
+func setBulletTexture(_tex: Texture2D) -> void:
 	pass
 
 
@@ -110,15 +110,15 @@ func alertOnHit() -> void:
 
 
 ## 半径爆炸/范围伤害 + 爆炸特效（供 cannon/rocket/mine 复用）
-static func explodeAt(owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
+static func explodeAt(_owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
 	Audio.playSfx("explosion.mp3")
-	Fx.explosion(origin, owner.get_parent())
-	damageInRadius(owner, origin, radius, dmg, myTeam)
+	Fx.explosion(origin, _owner.get_parent())
+	damageInRadius(_owner, origin, radius, dmg, myTeam)
 
 
 ## 半径爆炸/范围伤害（仅伤害，不播特效）
-static func damageInRadius(owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
-	var space := owner.get_world_2d().direct_space_state
+static func damageInRadius(_owner: Node2D, origin: Vector2, radius: float, dmg: float, myTeam: int) -> void:
+	var space := _owner.get_world_2d().direct_space_state
 	var query := PhysicsShapeQueryParameters2D.new()
 	var shape := CircleShape2D.new()
 	shape.radius = radius
@@ -131,14 +131,14 @@ static func damageInRadius(owner: Node2D, origin: Vector2, radius: float, dmg: f
 	])
 	for hit in space.intersect_shape(query, 32):
 		var obj := hit.get("collider") as Node
-		if obj == null or obj == owner:
+		if obj == null or obj == _owner:
 			continue
 		if not obj.has_method("onBulletHit"):
 			continue
 		# 有队伍属性的单位不打同队；没有队伍属性的（障碍物）一律可打（H5 同款）
 		if "team" in obj and int(obj.team) == myTeam:
 			continue
-		obj.onBulletHit(dmg, null, owner)
+		obj.onBulletHit(dmg, null, _owner)
 
 
 func _physics_process(delta: float) -> void:
