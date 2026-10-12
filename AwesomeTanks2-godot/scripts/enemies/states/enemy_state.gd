@@ -41,7 +41,8 @@ func playerDistance() -> float:
 
 
 ## 看见玩家：H5 Tank.searchForPlayer 的简化移植
-##   距离 < 60px 直接算看见；超过视野距离/超出视野角/有遮挡则看不见。
+##   距离 < 60px 贴脸快查（不做视野角判定，但同样要求视线通畅）；
+##   超过视野距离/超出视野角/有遮挡则看不见。
 ##   刚挨打或被同伴喊话（alerted）时**不再要求玩家在炮塔视野角内**
 ##   （H5 searchForPlayer(alerted) 里的 `!e &&` 就是干这个的），所以从背后打它也会被发现。
 func canSeePlayer() -> bool:
@@ -51,7 +52,9 @@ func canSeePlayer() -> bool:
 		return false
 	var d := e.global_position.distance_to(p.global_position)
 	if d < 60.0:
-		return true
+		# 贴脸也要有视线：出生坦克就站在生成器体内、玩家又常贴着生成器打，
+		# 不查视线的话隔着生成器/薄墙也算"看见" → 追过去对着墙不停开火
+		return lineOfSight(p.global_position)
 	if d > e.viewDistance:
 		return false
 	if not e.alerted:
@@ -73,7 +76,12 @@ func lineOfSight(to: Vector2) -> bool:
 	var q := PhysicsRayQueryParameters2D.new()
 	q.from = e.global_position
 	q.to = to
-	q.collision_mask = Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE])
+	# 生成器（ENEMY_SPAWNER）也是 52×52 的实体块，必须挡视线：出生的坦克就站在它体内，
+	# 不挡的话它会"隔块看见"玩家并开火，子弹（mask 含 ENEMY_SPAWNER）又全打在生成器身上
+	# —— 看起来就是"没看见玩家也不停开火"，尤其生成器刚产出敌人时。
+	q.collision_mask = Constants.layerMask([
+		Constants.Layer.WALL, Constants.Layer.OBSTACLE, Constants.Layer.ENEMY_SPAWNER,
+	])
 	# 和黑雾射线同一个坑：坦克若正好卡在墙/障碍里（生成时挤在一起、被同伴顶进去），
 	# 射线从墙体内部出发，不开 hit_from_inside 就会漏掉这堵墙 → 隔墙也"看得见"→ 一直开火
 	q.hit_from_inside = true

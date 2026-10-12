@@ -8,10 +8,10 @@ extends Node2D
 ##
 ## 视野揭示由玩家坦克驱动（ATPlayer.updateFogReveal），本类用 Godot 原生的一次形状查询：
 ##   PhysicsDirectSpaceState2D.intersect_shape() —— 拿一个细长矩形盖住整条射线，
-##   **一次**就返回沿途所有重叠的碰撞体（不排序，所以这里按到起点的距离自己排），然后从近到远处理：
-##     · 命中黑雾瓦片   → 清掉它（播放消失动画），继续下一个；
-##     · 命中墙壁/障碍物 → 它自己那一格算"看见了"（先揭格再判阻挡），后面的一律不管
-##                        —— 所以它们后面的黑雾不会被清掉。
+##   **一次**就返回沿途所有重叠的碰撞体（黑雾瓦片 + 墙壁/障碍物，不保证顺序）：
+##     · 先从结果里取"最近的墙/障碍"作阻挡点（格子中心沿射线的投影最小者）；
+##     · 再清掉阻挡点之前（含墙自己那一格）的黑雾瓦片，墙后的一律不管
+##                       —— 所以墙后面的黑雾不会被清掉。
 ##   · 被清掉的瓦片永久保持清除（看过的区域不再变黑）。
 ##
 ## 说明：这里没用 ShapeCast2D —— 它是"运动扫描"，撞到第一个障碍就停，
@@ -142,10 +142,12 @@ func clearArea(centerX: int, centerY: int, radius: float) -> int:
 # ============================================================
 # 视野射线（核心，全程用 Godot 原生查询）
 # ============================================================
-## 一条视野射线：从 origin 沿 angle 前进 dist。全程用 Godot 原生查询，两个：
-##   ① intersect_shape —— 细长矩形盖住整条射线，一次拿到沿途所有黑雾瓦片；
-##   ② intersect_ray   —— 同样这条射线，只看墙壁/障碍物，拿到"第一个挡住的点"。
-## 然后：清掉挡点之前的雾瓦片 + 挡点自己那一格（先揭格再判阻挡），墙后的一律不管。
+## 一条视野射线：从 origin 沿 angle 前进 dist。**只做一次** intersect_shape 查询：
+##   细长矩形盖住整条射线，一次返回沿途所有碰撞体（黑雾瓦片 + 墙壁/障碍物）。
+##   先从结果里取"最近的墙/障碍"作阻挡点（其格子中心沿 dir 的投影），再清掉
+##   阻挡点之前（含墙自己那一格）的黑雾瓦片，墙后的一律不管。
+##   墙的阻挡点直接取自这次 shape 结果，不再另开 intersect_ray —— 后者一旦没命中，
+##   stop 会回退成整条射线长，墙就"透明"了（墙后黑雾被误清）。
 func castRay(origin: Vector2, angle: float, dist: float) -> int:
 	if rayShape == null or dist <= 0.0:
 		return 0
@@ -154,7 +156,7 @@ func castRay(origin: Vector2, angle: float, dist: float) -> int:
 		return 0
 	var dir := Vector2.RIGHT.rotated(angle)
 
-	# ① 沿途的黑雾瓦片
+	# 细长矩形盖住整条射线：一次拿到沿途所有黑雾瓦片 + 墙壁/障碍物
 	rayShape.size = Vector2(dist, RAY_THICKNESS)
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = rayShape
@@ -165,28 +167,34 @@ func castRay(origin: Vector2, angle: float, dist: float) -> int:
 	query.collide_with_areas = true     # 黑雾是 Area2D
 	query.collide_with_bodies = true    # 墙壁/可破坏障碍物是 StaticBody2D
 
-	# ② 第一个挡住视线的点（只看实体：墙 + 可破坏障碍物）
-	var ray := PhysicsRayQueryParameters2D.create(origin, origin + dir * dist,
-		Constants.layerMask([Constants.Layer.WALL, Constants.Layer.OBSTACLE]))
-	ray.collide_with_areas = false
-	ray.collide_with_bodies = true
-	#ray.hit_from_inside = true          # 起点若落在墙/障碍内部也要算被挡
-	var wall := space.intersect_ray(ray)
-	var stop := dist
-	if not wall.is_empty():
-		stop = (Vector2(wall.get("position")) - origin).dot(dir)
+	var hits := space.intersect_shape(query, MAX_HITS)
+
+	# 先从结果里找最近的墙/障碍（StaticBody2D）作阻挡点：取其格子中心沿 dir 的投影
+	# ATObstacle 也是 StaticBody2D，所以可破坏障碍同样会挡视野（被毁后自然不再挡）
+	var wallStop := INF
+	var wallPos := Vector2.ZERO
+	for hit in hits:
+		var c = hit.get("collider")
+		if c is StaticBody2D:
+			var p := (c as StaticBody2D).global_position
+			var proj := (p - origin).dot(dir)
+			if proj < wallStop:
+				wallStop = proj
+				wallPos = p
+	var hasWall := wallStop < INF
 
 	var cleared := clearPoint(origin)   # 自己脚下那一格
-	for hit in space.intersect_shape(query, MAX_HITS):
+	for hit in hits:
 		var collider = hit.get("collider")
 		if not (collider is ATFogTile):
 			continue
 		var ft := collider as ATFogTile
-		if (cellCenter(ft.tileX, ft.tileY) - origin).dot(dir) > stop + 1.0:
+		var proj := (cellCenter(ft.tileX, ft.tileY) - origin).dot(dir)
+		if hasWall and proj > wallStop + 1.0:
 			continue                    # 在墙/障碍后面 → 不揭
 		if clearTile(ft.tileX, ft.tileY):
 			cleared += 1
-	# 墙/障碍自己那一格算"看见了"（先揭格再判阻挡）
-	if not wall.is_empty():
-		cleared += clearPoint(Vector2(wall.get("position")) + dir * 1.0)
+	# 墙/障碍自己那一格算"看见了"（shape 没返回该格雾瓦片时的兜底；已清则 no-op）
+	if hasWall:
+		cleared += clearPoint(wallPos)
 	return cleared

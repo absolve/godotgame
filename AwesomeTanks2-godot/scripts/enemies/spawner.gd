@@ -121,6 +121,9 @@ func trySpawn() -> void:
 	var ty: int = level.pxToTile(global_position.y)
 	if not isSpawnTileFree(tx, ty):
 		return
+	# 四周都没有落脚点就先不产（下帧重试）：产出来也只能站在生成器身上出不去
+	if pickSendOffCell().x < 0:
+		return
 	# 随机抽取一种，抽到就从表里移除（H5 spawnTypes.splice，6 只不重复）
 	var pick := randi() % spawnTypes.size()
 	var sceneName: String = spawnTypes[pick]
@@ -153,13 +156,22 @@ func trySpawn() -> void:
 
 ## 出生后先离开生成器门口（H5 ai.Spawn：随机挑一个附近空格开过去，到了再回 Idle）。
 ## 这里复用 GoToSound（"走到某点 → 到达/超时回 Idle、途中看见玩家就追击"）。
+## 挑不到落点（四周全被占/墙）就不切状态 —— trySpawn 已保证产出前有落点，这里只兜底。
+func sendOff(tank: Node2D) -> void:
+	if tank == null or not is_instance_valid(tank) or not tank.has_method("setAiState"):
+		return
+	var cell := pickSendOffCell(tank)
+	if cell.x < 0:
+		return
+	tank.call("setAiState", "GoToSound", {"pos": level.cellCenter(cell.x, cell.y)})
+
+
+## 从生成器四周挑一个可用的出生落点：优先两步格，其次一步格；都没有返回 (-1,-1)。
 ## 落点规则：
 ##   · 一步格必须空（不能隔着墙把落点放到墙后面，那样坦克会一直顶着墙慢慢蹭）；
 ##   · 一步格空、两步格也空 → 优先两步（GoToSound 到达判定 40px，只给相邻格会没走出门就停下）；
 ##   · 落点不能已经有别的单位站着（H5 的 isTileFree 含坦克占格），否则两只坦克互推卡在门口。
-func sendOff(tank: Node2D) -> void:
-	if tank == null or not is_instance_valid(tank) or not tank.has_method("setAiState"):
-		return
+func pickSendOffCell(ignore: Node2D = null) -> Vector2i:
 	var tx: int = level.pxToTile(global_position.x)
 	var ty: int = level.pxToTile(global_position.y)
 	var dirs: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
@@ -167,17 +179,16 @@ func sendOff(tank: Node2D) -> void:
 	var twoStep: Array[Vector2i] = []
 	for d in dirs:
 		var c1 := Vector2i(tx + d.x, ty + d.y)
-		if not isSendOffCellFree(tank, c1):
+		if not isSendOffCellFree(ignore, c1):
 			continue
 		oneStep.append(c1)
 		var c2 := Vector2i(tx + d.x * 2, ty + d.y * 2)
-		if isSendOffCellFree(tank, c2):
+		if isSendOffCellFree(ignore, c2):
 			twoStep.append(c2)
 	var pool: Array[Vector2i] = twoStep if not twoStep.is_empty() else oneStep
 	if pool.is_empty():
-		return
-	var cell: Vector2i = pool[randi() % pool.size()]
-	tank.call("setAiState", "GoToSound", {"pos": level.cellCenter(cell.x, cell.y)})
+		return Vector2i(-1, -1)
+	return pool[randi() % pool.size()]
 
 
 ## 出生落点能不能用：格子本身要能站（非墙/障碍）+ 不能有别的单位站着
@@ -198,8 +209,10 @@ func isSpawnTileFree(tx: int, ty: int) -> bool:
 # 出生瞬间的坦克间碰撞：临时关掉
 # H5 里坦克是 Box2D 动力学体，被同伴顶住也能挤开；这里是 CharacterBody2D +
 # 直线 AI，新出生的坦克和"还站在门口那一格的同伴"会互推，看起来就是卡住慢慢挪。
-# 所以出生后先把它和其它坦克的碰撞关掉，等它走出生成器那一格、且过了
-# PAUSE_ENEMY_COLLISION_TIME 秒再恢复（只关 ENEMY 这一层，墙/障碍照旧挡着）。
+# 所以出生后先把它和其它坦克的碰撞关掉（只关 ENEMY 这一层，墙/障碍照旧挡着），
+# 等它**走出生成器那一格、过了 PAUSE_ENEMY_COLLISION_TIME 秒、且不再和任何同伴
+# 重叠**再恢复。最后这个条件是关键：它恢复的瞬间可能刚从同伴身体里穿出来，
+# 立刻恢复会让两者互相挤开、顶在墙边抖成一团 —— 看起来就是"卡在一起"。
 # ============================================================
 const PAUSE_ENEMY_COLLISION_TIME := 0.6
 
@@ -231,9 +244,28 @@ func updatePausedTanks(delta: float) -> void:
 		pausedTanks[t] = float(pausedTanks[t]) + delta
 		var left: bool = level.pxToTile((t as Node2D).global_position.x) != tx \
 			or level.pxToTile((t as Node2D).global_position.y) != ty
-		if left and float(pausedTanks[t]) >= PAUSE_ENEMY_COLLISION_TIME:
+		if left and float(pausedTanks[t]) >= PAUSE_ENEMY_COLLISION_TIME \
+				and not overlapsEnemy(t):
 			restoreEnemyCollision(t)
 			pausedTanks.erase(t)
+
+
+## 该坦克当前是否与其它坦克（ENEMY 层）重叠 —— 恢复碰撞前先确认身体已经让开
+func overlapsEnemy(tank: Node2D) -> bool:
+	var cs: CollisionShape2D = tank.get("body")
+	if cs == null or cs.shape == null:
+		return false
+	var space := tank.get_world_2d().direct_space_state
+	if space == null:
+		return false
+	var q := PhysicsShapeQueryParameters2D.new()
+	q.shape = cs.shape
+	q.transform = Transform2D(0.0, tank.global_position)
+	q.collision_mask = Constants.layerMask([Constants.Layer.ENEMY])
+	q.collide_with_bodies = true
+	q.collide_with_areas = false
+	q.exclude = [(tank as CollisionObject2D).get_rid()]
+	return not space.intersect_shape(q, 8).is_empty()
 
 
 func _exit_tree() -> void:
