@@ -10,6 +10,7 @@ const SCENE_STAR: PackedScene = preload("res://scenes/fx/star.tscn")
 const SCENE_PUFF: PackedScene = preload("res://scenes/fx/puff.tscn")
 const SCENE_EXPLOSION: PackedScene = preload("res://scenes/fx/explosion.tscn")
 const SCENE_SMOKE: PackedScene = preload("res://scenes/fx/smoke.tscn")
+const SCENE_ICE: PackedScene = preload("res://scenes/fx/ice.tscn")
 
 ## 特效名 → 场景。武器场景里的 impactFx / expireFx / trailFx 填这些名字（空字符串 = 不放特效）：
 ##   每把武器只挑一种命中特效，别在同一个弹上叠好几种
@@ -22,6 +23,7 @@ const SCENES: Dictionary = {
 	"smoke": SCENE_SMOKE,
 	"puff": SCENE_PUFF,
 	"explosion": SCENE_EXPLOSION,
+	"ice": SCENE_ICE,
 }
 
 
@@ -83,6 +85,11 @@ func explosion(pos: Vector2, holder: Node = null) -> void:
 ## 烟雾（H5 spawnSmoke）；一次 3 个粒子，火焰撞墙/物体被毁时用
 func smoke(pos: Vector2, holder: Node = null) -> void:
 	spawn(pos, SCENE_SMOKE, holder)
+
+
+## 碎冰（H5 spawnIce）：冰冻/解冻时在坦克位置喷一圈冰块
+func ice(pos: Vector2, holder: Node = null) -> void:
+	spawn(pos, SCENE_ICE, holder)
 
 
 ## 按名字放特效（武器场景里的 impactFx / expireFx 走这里）；名字为空或不认识 = 什么都不放

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dqrs6n6spml17" path="res://scripts/tank/tank.gd" id="1_tank"]
 [ext_resource type="Shader" uid="uid://cq5bxn6b0ro1j" path="res://shaders/hit_flash.gdshader" id="2_fwlk1"]
+[ext_resource type="Texture2D" path="res://sprites/game/ice.png.tres" id="3_ice"]
 
 [sub_resource type="CircleShape2D" id="CircleBody"]
 radius = 22.0
@@ -23,3 +24,7 @@ shape = SubResource("CircleBody")
 material = SubResource("ShaderMaterial_5efal")
 
 [node name="TurretSprite" type="AnimatedSprite2D" parent="." unique_id=1814935764]
+
+[node name="Ice" type="Sprite2D" parent="." unique_id=1123581321]
+visible = false
+texture = ExtResource("3_ice")

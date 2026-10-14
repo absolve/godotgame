@@ -16,6 +16,8 @@ signal killed
 @onready var body: CollisionShape2D = $Body
 ## 头顶血条（scenes/objects/lifebar.tscn；只有敌人场景 enemy.tscn 里挂了，玩家没有 → null）
 @onready var lifebar: ATLifebar = get_node_or_null("Lifebar") as ATLifebar
+## 冰冻时盖在坦克上的冰壳（场景里默认隐藏；H5 是把这个 sprite addChild 到坦克上）
+@onready var iceSprite: Sprite2D = get_node_or_null("Ice") as Sprite2D
 #@onready var _hit_flash: Node = $BodySprite/HitFlash  # 受击闪光组件（基座场景自带，全坦克共用）
 
 # 物理参数（由子类根据升级等级设置）
@@ -257,7 +259,6 @@ func playHitSound(src: Node) -> void:
 ## 触发受击闪光（由 BodySprite/HitFlash 着色器组件统一播放）
 func flashHit(color := Color.WHITE) -> void:
 	flash(color)
-
 func kill() -> void:
 	alive = false
 	if weapon and weapon.has_method("setFiring"):
@@ -265,12 +266,18 @@ func kill() -> void:
 	killed.emit()
 	Audio.playSfx("explosion.mp3", 2.0)
 
+## 冰冻（对应 H5 onFreeze）：给坦克挂上冰壳贴图 + 在脚下喷一圈碎冰
 func freeze() -> void:
-	# TODO: 冰冻效果（冰覆盖层/减速）
-	pass
+	if iceSprite != null:
+		iceSprite.visible = true
+	Fx.ice(global_position, get_parent())
 
+
+## 解冻（对应 H5 onUnfreeze）：摘掉冰壳 + 再喷一次碎冰
 func unfreeze() -> void:
-	pass
+	if iceSprite != null:
+		iceSprite.visible = false
+	Fx.ice(global_position, get_parent())
 
 ## 触发一次受击闪光
 func flash(color := Color.WHITE, duration := 0.2) -> void:

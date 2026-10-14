@@ -149,6 +149,8 @@ func move(dir: Vector2) -> void:
 func _physics_process(delta: float) -> void:
 	# 不跑移动 AI：只更新后坐力偏移 + 原地转向
 	updateTurretRecoil(delta)
+	if aiStateName() == "Frozen":
+		return                       # 冰冻期间炮塔也不转（H5 冻结时完全静止）
 	# H5 Turret.patrol（L22224）：看得见玩家才跟着转，看不见就转回朝向 0。
 	# 原来是无条件盯着玩家（隔着墙也会锁人），现在改用 hasLineOfSight 判定。
 	var aim := 0.0

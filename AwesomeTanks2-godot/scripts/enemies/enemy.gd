@@ -246,12 +246,14 @@ func igniteDuration() -> float:
 # ============================================================
 func freeze() -> void:
 	ATBurning.extinguish(self)   # H5 onFreeze：fire.time = 0（冰冻灭火）
+	super.freeze()               # 冰壳 + 碎冰（ATTank.freeze）
 	setAiState("Frozen")
 
 
 func unfreeze() -> void:
 	if aiStateName() == "Frozen":
 		setAiState("Idle")
+		super.unfreeze()         # 摘冰壳 + 碎冰
 
 
 func kill() -> void:
