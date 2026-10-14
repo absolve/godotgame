@@ -14,6 +14,10 @@ signal musicToggled(on: bool)
 var sfxPool: Array[AudioStreamPlayer] = []
 var musicPlayer: AudioStreamPlayer = null
 var musicTween: Tween = null
+# 当前场景"想要"的曲子：音乐被关掉时 playMusic 会提前返回不落 stream，
+# 记住它，重新打开音乐时才能立刻续上，而不必等切场景。
+var pendingMusicPath: String = ""
+var pendingMusicVolume: float = 1.0
 
 # 循环音句柄（key -> AudioStreamPlayer）
 var loops: Dictionary = {}
@@ -137,11 +141,15 @@ func stopRicochetLoop() -> void: stopLoop("ricochet")
 # 背景音乐
 # ============================================================
 func playMusic(file: String, fadeMs: int = 200, volume: float = 1.0) -> void:
-	if not isMusicEnabled():
-		return
 	var path := SOUND_DIR + file
 	if not ResourceLoader.exists(path):
 		return  # 资源尚未导入
+	# 先记住本场景要播的曲子，即使此刻音乐是关的也一样记住，
+	# 这样 setMusicEnabled(true) 能直接把这首续上（切场景才响的 bug 就没了）。
+	pendingMusicPath = path
+	pendingMusicVolume = volume
+	if not isMusicEnabled():
+		return
 	var stream := load(path)
 	if musicPlayer.stream == stream and musicPlayer.playing:
 		return
@@ -186,9 +194,12 @@ func setMusicEnabled(enabled: bool) -> void:
 	Game.current["game"]["music"] = enabled
 	if enabled:
 		# 恢复当前曲
-		if musicPlayer.stream:
-			musicPlayer.play()
-			fadeTo(1.0, 200)
+		if musicPlayer.stream and musicPlayer.playing:
+			# 仍在播放（或正在淡出）→ 直接淡回目标音量
+			fadeTo(pendingMusicVolume, 200)
+		elif pendingMusicPath != "":
+			# 之前音乐关闭时 playMusic 没起播（stream 为空）或已停止 → 用记下的曲目补播
+			playMusic(pendingMusicPath.get_file(), 200, pendingMusicVolume)
 	else:
 		stopMusic()
 	Game.save()
