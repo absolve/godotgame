@@ -71,6 +71,9 @@ func _ready() -> void:
 	Game.moneyChanged.connect(onMoneyChanged)
 	weaponAlert.purchased.connect(onWeaponAlertPurchased)
 	weaponAlert.failed.connect(onWeaponAlertFailed)
+	# 还没选过难度：进来就直接弹出难度选择（H5: -1 === difficulty && new DifficultyAlert）
+	if int(Game.current["game"]["difficulty"]) < 0:
+		difficultyLayer.visible = true
 
 
 # ---------- Tab 切换 ----------

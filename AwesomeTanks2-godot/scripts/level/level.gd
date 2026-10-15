@@ -81,6 +81,8 @@ var profit: float = 0.0
 var freezeTime: float = 0.0
 var freeCamera: bool = false
 var difficultyMult: float = 1.0
+## 难度档位（0/1/2 = 简/中/难；未选时按 1=中等算，H5 同）
+var difficultyIndex: int = 1
 
 # ---- 瓦片地图（原 tile_map.gd 合并而来） ----
 var tiles: Array = [] # tiles[y][x] = Tile 枚举
@@ -151,8 +153,11 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(Color.BLACK)
 	levelIndex = Game.consumePendingLevelIndex()
 	levelData = ATLevels.getLevel(levelIndex)
-	difficultyMult = Settings.DIFFICULTIES[int(Game.current["game"]["difficulty"])] \
-		if int(Game.current["game"]["difficulty"]) >= 0 else 1.0
+	# 难度：存档里 -1（未选）时按"中等"算，和 H5 一致
+	# （H5 Level: difficultyIndex = -1 === difficulty ? 1 : difficulty; difficulty = DIFFICULTIES[index]）
+	var diffSaved: int = int(Game.current["game"]["difficulty"])
+	difficultyIndex = diffSaved if diffSaved >= 0 else 1
+	difficultyMult = Settings.DIFFICULTIES[difficultyIndex]
 	parse(levelData)
 	setupPathfinder()
 	spawnObjects()
@@ -642,6 +647,8 @@ func spawnEnemyByTile(tile: int, pos: Vector2, x: int, y: int) -> void:
 			push_warning("Level: 敌人场景缺失: ", ENEMY_NAMES.get(tile, "?"))
 			return
 		e = scene.instantiate()
+		# 坦克/Boss：血量按难度缩放（炮塔/生成器不缩放，H5 里它们的血量是固定值）
+		applyDifficultyToEnemy(e, tile)
 	e.position = pos
 	if "level" in e:
 		e.level = self
@@ -665,6 +672,27 @@ func spawnEnemyByTile(tile: int, pos: Vector2, x: int, y: int) -> void:
 		pathfinder.setSolid(x, y, true)
 		if e.has_signal("killed"):
 			e.killed.connect(onStaticUnitKilled.bind(x, y))
+
+
+## 按难度调整刚实例化出来的坦克/Boss（在入树前调用，这样 _ready 里的 health = maxHealth 会带上缩放）
+##   · 血量：H5 每个坦克/Boss 都是 `setHealth(基础值 * level.difficulty)` → 乘 difficultyMult
+##   · Boss 速度：H5 `speedMax = 2 * (30 + 15 * difficultyIndex)` → 相对"中等(45)"的倍率
+##   · Boss 视距：H5 `sightRange = 350 * level.difficulty` → 乘 difficultyMult
+## 炮塔血量在 H5 里固定不缩放，所以这里只处理走 else 分支的场景（坦克/Boss）
+func applyDifficultyToEnemy(e: Node2D, tile: int) -> void:
+	if e == null or not ("maxHealth" in e):
+		return
+	var hp := float(e.get("maxHealth")) * difficultyMult
+	e.set("maxHealth", hp)
+	e.set("health", hp)
+	if not Constants.isBoss(tile):
+		return
+	# 30 + 15*index：简/中/难 = 30/45/60 → 相对中等的 0.667 / 1.0 / 1.333
+	var speedRatio := (30.0 + 15.0 * float(difficultyIndex)) / 45.0
+	if "moveSpeed" in e:
+		e.set("moveSpeed", float(e.get("moveSpeed")) * speedRatio)
+	if "viewDistance" in e:
+		e.set("viewDistance", float(e.get("viewDistance")) * difficultyMult)
 
 
 func onStaticUnitKilled(x: int, y: int) -> void:
